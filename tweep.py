@@ -37,7 +37,7 @@ class tweep:
         if self.year != None:
             url+= "%20until%3A{0.year}-1-1".format(self)
         if arg.pics:
-            url+= "%20pic.twitter.com"
+            url+= "%20filter%3Aimages"
         if arg.fruit:
             url+= "%20myspace.com%20OR%20last.fm%20OR"
             url+= "%20mail%20OR%20email%20OR%20gmail%20OR%20e-mail"
