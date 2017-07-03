@@ -33,7 +33,8 @@ class tweep:
         if self.author != None:
             url+= "from%3A{0.author}".format(self)
         if self.search != None:
-            url+= "%20{0.search}".format(self)
+            search = self.search.replace(' ','%20')
+            url+= "%20{}".format(search)
         if self.year != None:
             url+= "%20until%3A{0.year}-1-1".format(self)
         if arg.pics:
