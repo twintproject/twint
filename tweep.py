@@ -42,7 +42,7 @@ class tweep:
         if arg.fruit:
             url+= "%20myspace.com%20OR%20last.fm%20OR"
             url+= "%20mail%20OR%20email%20OR%20gmail%20OR%20e-mail"
-            url+= "%20OR%20phone"
+            url+= "%20OR%20phone%20OR%20call%20me%20OR%20text%20me"
         return url
 
     def get_feed(self):
