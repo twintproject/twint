@@ -1,27 +1,6 @@
 # tweep
 [![Python 2.6|2.7](https://img.shields.io/badge/python-2.6|2.7-yellow.svg)](https://www.python.org/)
 
-Tweep is an advanced Twitter scraping tool written in python that allows for scraping Tweets and pictures from Twitter profiles **without** using Twitter's API, bypassing any rate limitations.
-
-## Requirements
-- BeautifulSoup4 `pip install beautifulsoup4`
-
-## Usage
-- `-u` The user's Tweets you want to scrape.
-- `-s` Search for Tweets containing this word or phrase.
-- `--year` Filter tweets before the specified year. 
-- `--pics` Download all the pictures from Tweets.
-- `--fruit` Display Tweets with "low-hanging-fruit".
-- `--tweets` Display Tweets only.
-- `--verified` Display Tweets only from verified users (Use with `-s`).
-- `--users` Display users only (Use with `-s`).
-
-## Basic Examples and Combos.
-These are just a few simple examples to help you understand the basics of how to use Tweep:
-
-# tweep
-[![Python 2.6|2.7](https://img.shields.io/badge/python-2.6|2.7-yellow.svg)](https://www.python.org/)
-
 Tweep is an advanced Twitter scraping tool written in python that allows for scraping Tweets and pictures from Twitter profiles **without** using Twitter's API.
 
 ## Benefits
