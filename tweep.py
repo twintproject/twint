@@ -10,6 +10,7 @@ import os
 import Queue
 import re
 import requests
+import sys
 import threading
 
 q = Queue.Queue()
@@ -33,7 +34,7 @@ class tweep:
         if self.author != None:
             url+= "from%3A{0.author}".format(self)
         if self.search != None:
-            search = self.search.replace(' ','%20')
+            search = self.search.replace(' ','%20').replace('#','%23')
             url+= "%20{}".format(search)
         if self.year != None:
             url+= "%20until%3A{0.year}-1-1".format(self)
@@ -43,6 +44,8 @@ class tweep:
             url+= "%20myspace.com%20OR%20last.fm%20OR"
             url+= "%20mail%20OR%20email%20OR%20gmail%20OR%20e-mail"
             url+= "%20OR%20phone%20OR%20call%20me%20OR%20text%20me"
+        if arg.verified:
+            url+= "%20filter%3Averified"
         return url
 
     def get_feed(self):
@@ -84,7 +87,12 @@ class tweep:
                 tweet_url = "https://twitter.com/{0}/status/{1}/photo/1".format(username,tweetid)
                 self.tweet_urls.append(tweet_url)
             else:
-                print("{} {} {} {} <{}> {}".format(tweetid, date, time, timezone, username, text))
+                if arg.users:
+                    print(username)
+                elif arg.tweets:
+                    print(text)
+                else:
+                    print("{} {} {} {} <{}> {}".format(tweetid, date, time, timezone, username, text))
 
     def save_pic(self,picture):
         if not os.path.exists('tweep_img'):
@@ -122,7 +130,7 @@ class tweep:
         if arg.pics:
             total = len(self.tweet_urls) - 1
             print("[+] {} pictures found. Collecting Pictures.".format(total))
-            for i in range(20):
+            for i in range(10):
                 t = threading.Thread(target=self.fetch_pics)
                 t.daemon = True
                 t.start()
@@ -131,13 +139,29 @@ class tweep:
             q.join()
             print("[+] Done. {t.pic_count} pictures saved from {t.author}.".format(t=self))
 
+def check():
+    if arg.u is not None:
+        if arg.users:
+            print("Please use --users in combination with -s.")
+            sys.exit(0)
+        if arg.verified:
+            print("Please use --verified in combination with -s.")
+            sys.exit(0)
+    if arg.tweets and arg.users:
+        print("--users and --tweets cannot be used together.")
+        sys.exit(0)
+
 if __name__ == '__main__':
+    agent = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
     ap = argparse.ArgumentParser(prog='tweep.py',usage='python %(prog)s [options]',description="tweep.py - An Advanced Twitter Scraping Tool")
     ap.add_argument('-u',help="User's tweets you want to scrape.")
     ap.add_argument('-s',help='Search for tweets containing this word or phrase.')
     ap.add_argument('--year',help='Filter tweets before specified year.')
     ap.add_argument('--pics',help='Save pictures.',action='store_true')
     ap.add_argument('--fruit',help='Display "low-hanging-fruit" tweets.',action='store_true')
+    ap.add_argument('--tweets',help='Display tweets only.',action='store_true')
+    ap.add_argument('--verified',help='Display Tweets only from verified users (Use with -s).',action='store_true')
+    ap.add_argument('--users',help='Display users only (Use with -s).',action='store_true')
     arg = ap.parse_args()
-    agent = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+    check()
     tweep().main()
