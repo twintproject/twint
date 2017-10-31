@@ -11,9 +11,11 @@ Some of the benefits of using Tweep vs Twitter API:
 - Can fetch __all__ Tweets (Twitter API limits to last 3200 Tweets)
 
 ## Requirements
-- BeautifulSoup4 `pip install beautifulsoup4`
-- Image `pip install image`
-- Requests `pip install requests`
+- BeautifulSoup4
+- Image
+- Requests
+- Lxml
+`pip install -r requirements.txt`
 
 ## Usage
 - `-u` The user's Tweets you want to scrape.
