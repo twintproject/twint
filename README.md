@@ -11,9 +11,11 @@ Some of the benefits of using Tweep vs Twitter API:
 - Can fetch __all__ Tweets (Twitter API limits to last 3200 Tweets)
 
 ## Requirements
-- BeautifulSoup4 `pip install beautifulsoup4`
-- Image `pip install image`
-- Requests `pip install requests`
+- BeautifulSoup4
+- Image
+- Requests
+- Lxml
+- `pip install -r requirements.txt`
 
 ## Usage
 - `-u` The user's Tweets you want to scrape.
@@ -24,6 +26,7 @@ Some of the benefits of using Tweep vs Twitter API:
 - `--tweets` Display Tweets only.
 - `--verified` Display Tweets only from verified users (Use with `-s`).
 - `--users` Display users only (Use with `-s`).
+- `--json` Save all tweets to json file (Use with `-u`).
 
 ## Low-Hanging Fruit
 The `--fruit` feature will display Tweets that *might* contain sensitive info such as:

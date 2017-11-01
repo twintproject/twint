@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from time import gmtime, strftime
 from PIL import Image
 from io import BytesIO
+from collections import defaultdict
 import argparse
 import datetime
 import json
@@ -25,6 +26,7 @@ class tweep:
         self.tweets = 0
         self.tweet_urls = []
         self.pic_count = 0
+        self.tweets_dict = defaultdict()
 
     def get_url(self):
         url_1 = "https://twitter.com/search?f=tweets&vertical=default&lang=en&q="
@@ -67,7 +69,11 @@ class tweep:
                 minsplit = json_response['min_position'].split('-')
                 minsplit[1] = lastid
                 self.min = "-".join(minsplit)
-        except: pass
+        except IndexError, msg:
+            print 'No Result'
+        except Exception, msg:
+            print 'Something Happened'
+            print 'Technical:' + str(msg)
         return self.feed
 
     def get_tweets(self):
@@ -93,6 +99,7 @@ class tweep:
                     print(text)
                 else:
                     print("{} {} {} {} <{}> {}".format(tweetid, date, time, timezone, username, text))
+                    self.tweets_dict[tweetid] = {'date': date, 'time': time, 'timezone': timezone, 'text': text}
 
     def save_pic(self,picture):
         if not os.path.exists('tweep_img'):
@@ -138,6 +145,10 @@ class tweep:
                 q.put(tweet_url)
             q.join()
             print("[+] Done. {t.pic_count} pictures saved from {t.author}.".format(t=self))
+        if arg.json:
+            file_name = str(arg.u) + '.json'
+            with open(file_name, 'w') as fp:
+                json.dump(self.tweets_dict, fp=fp, sort_keys=True, indent=4, separators=(',', ': '))
 
 def check():
     if arg.u is not None:
@@ -149,6 +160,9 @@ def check():
             sys.exit(0)
     if arg.tweets and arg.users:
         print("--users and --tweets cannot be used together.")
+        sys.exit(0)
+    if arg.json and not arg.u:
+        print("--json and -u must be used together.")
         sys.exit(0)
 
 if __name__ == '__main__':
@@ -162,6 +176,7 @@ if __name__ == '__main__':
     ap.add_argument('--tweets',help='Display tweets only.',action='store_true')
     ap.add_argument('--verified',help='Display Tweets only from verified users (Use with -s).',action='store_true')
     ap.add_argument('--users',help='Display users only (Use with -s).',action='store_true')
+    ap.add_argument('--json', help='Save all tweets to json file (Use with -u).', action='store_true')
     arg = ap.parse_args()
     check()
     tweep().main()
