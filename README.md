@@ -14,6 +14,7 @@ Some of the benefits of using Tweep vs Twitter API:
 - BeautifulSoup4 `pip install beautifulsoup4`
 - Image `pip install image`
 - Requests `pip install requests`
+- lxml `pip install lxml`
 
 ## Usage
 - `-u` The user's Tweets you want to scrape.
