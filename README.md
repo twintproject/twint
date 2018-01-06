@@ -30,6 +30,7 @@ The `--fruit` feature will display Tweets that *might* contain sensitive info su
 - Profiles from leaked databases (Myspace or LastFM)
 - Email addresses
 - Phone numbers
+- Keybase.io profiles
 
 ## Basic Examples and Combos.
 A few simple examples to help you understand the basics:
