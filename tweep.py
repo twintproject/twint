@@ -84,6 +84,11 @@ class tweep:
             username = tweet.find('span','username').text.encode('utf8').replace('@','')
             timezone = strftime("%Z", gmtime())
             text = tweet.find('p','tweet-text').text.encode('utf8').replace('\n',' ')
+            try:
+                mentions = tweet.find("div", "js-original-tweet")['data-mentions'].split(" ")
+                for i in range(len(mentions)):
+                    text = "@{} {}".format(mentions[i], text)
+            except: pass
             if arg.pics:
                 tweet_url = "https://twitter.com/{0}/status/{1}/photo/1".format(username,tweetid)
                 self.tweet_urls.append(tweet_url)
