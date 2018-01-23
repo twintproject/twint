@@ -13,7 +13,8 @@ Some of the benefits of using Tweep vs Twitter API:
 - No rate limitations
 
 ## Requirements
-`pip3 install -r requirements.txt`
+- Python 3.5/3.6
+- `pip install -r requirements.txt`
 
 ## Usage
 - `-u` The user's Tweets you want to scrape.
