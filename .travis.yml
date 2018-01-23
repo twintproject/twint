@@ -1,8 +1,19 @@
 language: python
+
+# Python Version
 python: 
 - 3.5
 - 3.6
+
+# Operating Systems
+os:
+- linux
+- osx
+
+# Install Dependencies
 install: 
 - pip install -r requirements.txt
+
+# Test
 script: 
-- python tweep.py
+- python tweep.py -u now -s pineapple
