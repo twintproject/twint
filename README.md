@@ -39,6 +39,7 @@ A few simple examples to help you understand the basics:
 - `python3 tweep.py -u username -s pineapple` - Scrape all Tweets from the *user*'s timeline containing _pineapple_.
 - `python3 tweep.py -s pineapple` - Collect every Tweet containing *pineapple* from everyone's Tweets.
 - `python3 tweep.py -u username --year 2014` - Collect Tweets that were tweeted **before** 2014.
+- `python3 tweep.py -u username --since 2015-12-20` - Collect Tweets that were tweeted since 2015-12-20.
 - `python3 tweep.py -u username -o file.txt` - Scrape Tweets and save to file.txt.
 - `python3 tweep.py -u username --fruit` - Show Tweets with low-hanging fruit.
 - `python3 tweep.py -s "Donald Trump" --verified --users` - List verified users that Tweet about Donald Trump.
