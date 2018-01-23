@@ -33,13 +33,13 @@ The `--fruit` feature will display Tweets that *might* contain sensitive info su
 ## Basic Examples and Combos.
 A few simple examples to help you understand the basics:
 
-- `python tweep.py -u username` - Scrape all the Tweets from *user*'s timeline.
-- `python tweep.py -u username -s pineapple` - Scrape all Tweets from the *user*'s timeline containing _pineapple_.
-- `python tweep.py -s pineapple` - Collect every Tweet containing *pineapple* from everyone's Tweets.
-- `python tweep.py -u username --year 2014` - Collect Tweets that were tweeted **before** 2014.
-- `python tweep.py -u username -o file.txt` - Scrape Tweets and save to file.txt.
-- `python tweep.py -u username --fruit` - Show Tweets with low-hanging fruit.
-- `python tweep.py -s "Donald Trump" --verified --users` - List verified users that Tweet about Donald Trump.
+- `python3 tweep.py -u username` - Scrape all the Tweets from *user*'s timeline.
+- `python3 tweep.py -u username -s pineapple` - Scrape all Tweets from the *user*'s timeline containing _pineapple_.
+- `python3 tweep.py -s pineapple` - Collect every Tweet containing *pineapple* from everyone's Tweets.
+- `python3 tweep.py -u username --year 2014` - Collect Tweets that were tweeted **before** 2014.
+- `python3 tweep.py -u username -o file.txt` - Scrape Tweets and save to file.txt.
+- `python3 tweep.py -u username --fruit` - Show Tweets with low-hanging fruit.
+- `python3 tweep.py -s "Donald Trump" --verified --users` - List verified users that Tweet about Donald Trump.
 
 ## Example String
 `955511208597184512 2018-01-22 18:43:19 GMT <now> pineapples are the best fruit`
