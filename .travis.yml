@@ -5,11 +5,6 @@ python:
 - 3.5
 - 3.6
 
-# Operating Systems
-os:
-- linux
-- osx
-
 # Install Dependencies
 install: 
 - pip install -r requirements.txt
