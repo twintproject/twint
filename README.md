@@ -3,12 +3,14 @@
 
 Tweep is an advanced Twitter scraping tool written in Python that allows for scraping Tweets from Twitter profiles **without** using Twitter's API.
 
-## Benefits
+Tweep utilizes Twitter's search operators to let you scrape Tweets from specific users, scrape Tweets relating to certain topics, hashtags & trends, or sort out *sensitive* information from Tweets like e-mail and phone numbers. I find this very useful, and you can get really creative with it too.
+
+## tl;dr Benefits
 Some of the benefits of using Tweep vs Twitter API:
+- Can fetch almost __all__ Tweets (Twitter API limits to last 3200 Tweets only)
 - Fast initial setup
-- Can be used anonymously
+- Can be used anonymously and without sign up
 - No rate limitations
-- Can fetch __all__ Tweets (Twitter API limits to last 3200 Tweets)
 
 ## Requirements
 `pip3 install -r requirements.txt`
