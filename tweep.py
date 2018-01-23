@@ -125,6 +125,7 @@ if __name__ == "__main__":
 			sys.exit(0)
 		if arg.verified:
 			print("[-] Contradicting Args: Please use --verified in combination with -s.")
+			sys.exit(0)
 	if arg.tweets and arg.users:
 		print("[-] Contradicting Args: --users and --tweets cannot be used together.")
 		sys.exit(0)
