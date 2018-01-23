@@ -1,7 +1,7 @@
 # tweep
 [![Python 3.5|3.6](https://img.shields.io/badge/Python-3.5%2F3.6-blue.svg)](https://www.python.org/download/releases/3.0/) [![GitHub license](https://img.shields.io/github/license/haccer/tweep.svg)](https://github.com/haccer/tweep/blob/master/LICENSE)
 
-Tweep is an advanced Twitter scraping tool written in python that allows for scraping Tweets from Twitter profiles **without** using Twitter's API.
+Tweep is an advanced Twitter scraping tool written in Python that allows for scraping Tweets from Twitter profiles **without** using Twitter's API.
 
 ## Benefits
 Some of the benefits of using Tweep vs Twitter API:
