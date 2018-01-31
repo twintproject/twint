@@ -5,18 +5,8 @@ python:
 - 3.5
 - 3.6
 
+# Linux Only. Travis doesn't support Python for osx
 os: linux
-
-# Test on OSX
-matrix:
-  include:
-    - langauge: generic
-      os: osx
-      before_install:
-      - brew update
-      - brew install python3
-      - virtualenv env -p python3
-      - source env/bin/activate
 
 # Install Dependencies
 install: 
