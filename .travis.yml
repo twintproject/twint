@@ -10,6 +10,16 @@ os:
 - linux
 - osx
 
+matrix:
+  include:
+    - langauge: generic
+      os: osx
+      before_install:
+      - brew update
+      - brew install python3
+      - virtualenv env -p python3
+      - source env/bin/activate
+
 # Install Dependencies
 install: 
 - pip install -r requirements.txt
