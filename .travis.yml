@@ -5,11 +5,9 @@ python:
 - 3.5
 - 3.6
 
-# Os
-os:
-- linux
-- osx
+os: linux
 
+# Test on OSX
 matrix:
   include:
     - langauge: generic
