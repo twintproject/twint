@@ -5,6 +5,7 @@ import argparse
 import aiohttp
 import asyncio
 import async_timeout
+import csv
 import datetime
 import json
 import sys
@@ -94,7 +95,13 @@ async def getTweets(init):
 			output = "{} {} {} {} <{}> {}".format(tweetid, date, time, timezone, username, text)
 
 		if arg.o != None:
-			print(output, file=open(arg.o, "a"))
+			if arg.csv:
+				dat = [tweetid, date, time, timezone, username, text]
+				with open(arg.o, "a", newline='') as csv_file:
+					writer = csv.writer(csv_file, delimiter=",")
+					writer.writerow(dat)
+			else:
+				print(output, file=open(arg.o, "a"))
 
 		print(output)
 
@@ -120,6 +127,7 @@ if __name__ == "__main__":
 	ap.add_argument("--tweets", help="Display Tweets only.", action="store_true")
 	ap.add_argument("--verified", help="Display Tweets only from verified users (Use with -s).", action="store_true")
 	ap.add_argument("--users", help="Display users only (Use with -s).", action="store_true")
+	ap.add_argument("--csv", help="Write as .csv file.", action="store_true")
 	arg = ap.parse_args()
 
 	if arg.u is not None:
