@@ -8,6 +8,7 @@ import async_timeout
 import csv
 import datetime
 import json
+import re
 import sys
 
 async def getUrl(init):
@@ -77,7 +78,8 @@ async def getTweets(init):
 		time = t.strftime("%H:%M:%S")
 		username = tweet.find("span", "username").text.replace("@", "")
 		timezone = strftime("%Z", gmtime())
-		text = tweet.find("p", "tweet-text").text.replace("\n", " ")
+		text = tweet.find("p", "tweet-text").text.replace("\n", " ").replace("http"," http").replace("pic.twitter"," pic.twitter")
+		hashtags = ",".join(re.findall(r'(?i)\#\w+', text, flags=re.UNICODE))
 		try:
 			mentions = tweet.find("div", "js-original-tweet")["data-mentions"].split(" ")
 			for i in range(len(mentions)):
@@ -93,10 +95,12 @@ async def getTweets(init):
 			output = tweets
 		else:
 			output = "{} {} {} {} <{}> {}".format(tweetid, date, time, timezone, username, text)
+			if arg.hashtags:
+				output+= " {}".format(hashtags)
 
 		if arg.o != None:
 			if arg.csv:
-				dat = [tweetid, date, time, timezone, username, text]
+				dat = [tweetid, date, time, timezone, username, text, hashtags]
 				with open(arg.o, "a", newline='') as csv_file:
 					writer = csv.writer(csv_file, delimiter="|")
 					writer.writerow(dat)
@@ -128,6 +132,7 @@ if __name__ == "__main__":
 	ap.add_argument("--verified", help="Display Tweets only from verified users (Use with -s).", action="store_true")
 	ap.add_argument("--users", help="Display users only (Use with -s).", action="store_true")
 	ap.add_argument("--csv", help="Write as .csv file.", action="store_true")
+	ap.add_argument("--hashtags", help="Output hashtags in seperate column.", action="store_true")
 	arg = ap.parse_args()
 
 	if arg.u is not None:
