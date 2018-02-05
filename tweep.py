@@ -140,6 +140,11 @@ if __name__ == "__main__":
 	if arg.tweets and arg.users:
 		print("[-] Contradicting Args: --users and --tweets cannot be used together.")
 		sys.exit(0)
+	if arg.csv and arg.o is None:
+		print("[-] Error: Please specify an output file (Example: -o file.csv).")
+		sys.exit(0)
+	if arg.u is None and arg.s is None:
+		print("[-] Error: Please specify a user or search.")
 
 	loop = asyncio.get_event_loop()
 	loop.run_until_complete(main())
