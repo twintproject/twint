@@ -8,9 +8,8 @@ import async_timeout
 import csv
 import datetime
 import json
-import sys
 import re
-
+import sys
 
 async def getUrl(init):
 	if init == -1:
@@ -95,7 +94,9 @@ async def getTweets(init):
 		elif arg.tweets:
 			output = tweets
 		else:
-			output = "{} {} {} {} <{}> {} {}".format(tweetid, date, time, timezone, username, text, hashtags)
+			output = "{} {} {} {} <{}> {}".format(tweetid, date, time, timezone, username, text)
+			if arg.hashtags:
+				output+= " {}".format(hashtags)
 
 		if arg.o != None:
 			if arg.csv:
@@ -131,6 +132,7 @@ if __name__ == "__main__":
 	ap.add_argument("--verified", help="Display Tweets only from verified users (Use with -s).", action="store_true")
 	ap.add_argument("--users", help="Display users only (Use with -s).", action="store_true")
 	ap.add_argument("--csv", help="Write as .csv file.", action="store_true")
+	ap.add_argument("--hashtags", help="Output hashtags in seperate column.", action="store_true")
 	arg = ap.parse_args()
 
 	if arg.u is not None:
