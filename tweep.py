@@ -9,6 +9,8 @@ import csv
 import datetime
 import json
 import sys
+import re
+
 
 async def getUrl(init):
 	if init == -1:
@@ -77,7 +79,8 @@ async def getTweets(init):
 		time = t.strftime("%H:%M:%S")
 		username = tweet.find("span", "username").text.replace("@", "")
 		timezone = strftime("%Z", gmtime())
-		text = tweet.find("p", "tweet-text").text.replace("\n", " ")
+		text = tweet.find("p", "tweet-text").text.replace("\n", " ").replace("http"," http").replace("pic.twitter"," pic.twitter")
+		hashtags = ",".join(re.findall(r'(?i)\#\w+', text, flags=re.UNICODE))
 		try:
 			mentions = tweet.find("div", "js-original-tweet")["data-mentions"].split(" ")
 			for i in range(len(mentions)):
@@ -92,11 +95,11 @@ async def getTweets(init):
 		elif arg.tweets:
 			output = tweets
 		else:
-			output = "{} {} {} {} <{}> {}".format(tweetid, date, time, timezone, username, text)
+			output = "{} {} {} {} <{}> {} {}".format(tweetid, date, time, timezone, username, text, hashtags)
 
 		if arg.o != None:
 			if arg.csv:
-				dat = [tweetid, date, time, timezone, username, text]
+				dat = [tweetid, date, time, timezone, username, text, hashtags]
 				with open(arg.o, "a", newline='') as csv_file:
 					writer = csv.writer(csv_file, delimiter="|")
 					writer.writerow(dat)
