@@ -26,6 +26,7 @@ Some of the benefits of using Tweep vs Twitter API:
 - `--verified` Display Tweets only from verified users (Use with `-s`).
 - `--users` Display users only (Use with `-s`).
 - `--csv` Write as a .csv file.
+- `--hashtags` Extract hashtags.
 
 ## Low-Hanging Fruit
 The `--fruit` feature will display Tweets that *might* contain sensitive info such as:
