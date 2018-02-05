@@ -98,7 +98,7 @@ async def getTweets(init):
 			if arg.csv:
 				dat = [tweetid, date, time, timezone, username, text]
 				with open(arg.o, "a", newline='') as csv_file:
-					writer = csv.writer(csv_file, delimiter=",")
+					writer = csv.writer(csv_file, delimiter="|")
 					writer.writerow(dat)
 			else:
 				print(output, file=open(arg.o, "a"))
