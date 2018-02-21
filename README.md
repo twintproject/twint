@@ -27,6 +27,10 @@ Some of the benefits of using Tweep vs Twitter API:
 - `--users` Display users only (Use with `-s`).
 - `--csv` Write as a .csv file.
 - `--hashtags` Extract hashtags.
+- `--limit` Number of Tweets to pull (Increments of 20).
+- `--count` Display number Tweets scraped at the end of session.
+- `--stats` Show number of replies, retweets, and likes.
+- `--rawpic` Display the raw photo URL.
 
 ## Low-Hanging Fruit
 The `--fruit` feature will display Tweets that *might* contain sensitive info such as:
@@ -55,6 +59,13 @@ A few simple examples to help you understand the basics:
 <img src="https://i.imgur.com/RKdBrHr.png" />
 
 ## Changelog
+### 2/21/18
+- Added new features:
+    - `--limit` feature allowing a user to specify how many Tweets get scraped (Incriments of 20).
+    - `--count` feature to display the total number of Tweets collected at the end of a Tweep session.
+    - `--stats` feature to display the number of replies, retweets, and likes.
+- Fixed:
+    - `Error handling` - Moved to a seperate function and better organized.
 ### 1/21/18
 - Added:
     - `Python3` update and rewriten using asyncio. Fetching Tweets should be a lot more faster naturally. 
