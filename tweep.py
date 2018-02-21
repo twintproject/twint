@@ -68,6 +68,7 @@ async def getFeed(init):
 
 async def getTweets(init):
     tweets, init = await getFeed(init)
+    count = 0
     for tweet in tweets:
         tweetid = tweet["data-item-id"]
         datestamp = tweet.find("a", "tweet-timestamp")["title"].rpartition(" - ")[-1]
@@ -80,6 +81,9 @@ async def getTweets(init):
         timezone = strftime("%Z", gmtime())
         text = tweet.find("p", "tweet-text").text.replace("\n", " ").replace("http"," http").replace("pic.twitter"," pic.twitter")
         hashtags = ",".join(re.findall(r'(?i)\#\w+', text, flags=re.UNICODE))
+        replies = tweet.find("span", "ProfileTweet-action--reply u-hiddenVisually").find("span")["data-tweet-stat-count"]
+        retweets = tweet.find("span", "ProfileTweet-action--retweet u-hiddenVisually").find("span")["data-tweet-stat-count"]
+        likes = tweet.find("span", "ProfileTweet-action--favorite u-hiddenVisually").find("span")["data-tweet-stat-count"]
         try:
             mentions = tweet.find("div", "js-original-tweet")["data-mentions"].split(" ")
             for i in range(len(mentions)):
@@ -97,28 +101,66 @@ async def getTweets(init):
             output = "{} {} {} {} <{}> {}".format(tweetid, date, time, timezone, username, text)
             if arg.hashtags:
                 output+= " {}".format(hashtags)
+            if arg.stats:
+                output+= " | {} replies {} retweets {} likes".format(replies, retweets, likes)
 
         if arg.o != None:
             if arg.csv:
-                dat = [tweetid, date, time, timezone, username, text, hashtags]
+                dat = [tweetid, date, time, timezone, username, text, hashtags, replies, retweets, likes]
                 with open(arg.o, "a", newline='') as csv_file:
                     writer = csv.writer(csv_file, delimiter="|")
                     writer.writerow(dat)
             else:
                 print(output, file=open(arg.o, "a"))
 
+        count += 1
         print(output)
 
-    return tweets, init
+    return tweets, init, count
+
+async def getUsername():
+    async with aiohttp.ClientSession() as session:
+        r = await fetch(session, "https://twitter.com/intent/user?user_id={0.userid}".format(arg))
+    soup = BeautifulSoup(r, "html.parser")
+    return soup.find("a", "fn url alternate-context")["href"].replace("/", "")
 
 async def main():
+    if arg.userid is not None:
+        arg.u = await getUsername()
+
     feed = [-1]
     init = -1
+    num = 0
     while True:
         if len(feed) > 0:
-            feed, init = await getTweets(init)
+            feed, init, count = await getTweets(init)
+            num += count
         else:
             break
+        if arg.limit is not None and num <= int(arg.limit):
+            break
+    if arg.count:
+        print("Finished: Successfully collected {} Tweets.".format(num))
+
+
+def Error(error, message):
+    print("[-] {}: {}".format(error, message))
+    sys.exit(0)
+
+def check():
+    if arg.u is not None:
+        if arg.users:
+            Error("Contradicting Args", "Please use --users in combination with -s.")
+        if arg.verified:
+            Error("Contradicting Args", "Please use --verified in combination with -s.")
+        if arg.userid:
+            Error("Contradicting Args", "--userid and -u cannot be used together.")
+    if arg.tweets and arg.users:
+        Error("Contradicting Args", "--users and --tweets cannot be used together.")
+    if arg.csv and arg.o is None:
+        Error("Error", "Please specify an output file (Example: -o file.csv")
+    if arg.u is None and arg.s is None and arg.userid is None:
+        Error("Error", "Please specify a username, user id or search.")
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(prog="tweep.py", usage="python3 %(prog)s [options]", description="tweep.py - An Advanced Twitter Scraping Tool")
@@ -133,24 +175,13 @@ if __name__ == "__main__":
     ap.add_argument("--users", help="Display users only (Use with -s).", action="store_true")
     ap.add_argument("--csv", help="Write as .csv file.", action="store_true")
     ap.add_argument("--hashtags", help="Output hashtags in seperate column.", action="store_true")
+    ap.add_argument("--userid", help="Twitter user id")
+    ap.add_argument("--limit", help="Number of Tweets to pull (Increments of 20).")
+    ap.add_argument("--count", help="Display number Tweets scraped at the end of session.", action="store_true")
+    ap.add_argument("--stats", help="Show number of replies, retweets, and likes", action="store_true")
     arg = ap.parse_args()
 
-    if arg.u is not None:
-        if arg.users:
-            print("[-] Contradicting Args: Please use --users in combination with -s.")
-            sys.exit(0)
-        if arg.verified:
-            print("[-] Contradicting Args: Please use --verified in combination with -s.")
-            sys.exit(0)
-        if arg.tweets and arg.users:
-            print("[-] Contradicting Args: --users and --tweets cannot be used together.")
-            sys.exit(0)
-        if arg.csv and arg.o is None:
-            print("[-] Error: Please specify an output file (Example: -o file.csv).")
-            sys.exit(0)
-        if arg.u is None and arg.s is None:
-            print("[-] Error: Please specify a user or search.")
-            sys.exit(0)
+    check()
 
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main())
