@@ -28,6 +28,7 @@ Some of the benefits of using Tweep vs Twitter API:
 - `--users` Display users only (Use with `-s`).
 - `--csv` Write as a .csv file.
 - `--hashtags` Extract hashtags.
+- `--userid` Search from Twitter user's ID.
 - `--limit` Number of Tweets to pull (Increments of 20).
 - `--count` Display number Tweets scraped at the end of session.
 - `--stats` Show number of replies, retweets, and likes.
@@ -63,6 +64,7 @@ A few simple examples to help you understand the basics:
 ## Changelog
 ### 2/21/18
 - Added new features:
+    - `--userid` feature allowing a user to search Tweets from a Twitter user's user-id.
     - `--limit` feature allowing a user to specify how many Tweets get scraped (Incriments of 20).
     - `--count` feature to display the total number of Tweets collected at the end of a Tweep session.
     - `--stats` feature to display the number of replies, retweets, and likes.
