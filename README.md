@@ -51,6 +51,8 @@ A few simple examples to help you understand the basics:
 - `python3 tweep.py -u username -o file.csv --csv` - Scrape Tweets and save as a csv file.
 - `python3 tweep.py -u username --fruit` - Show Tweets with low-hanging fruit.
 - `python3 tweep.py -s "Donald Trump" --verified --users` - List verified users that Tweet about Donald Trump.
+- `python3 tweep.py -g 48.880048,2.385939,1km -o file.csv --csv` - Scrape Tweets in a radius of 1km around a place in Paris a export them to a csv file.
+
 
 ## Example String
 `955511208597184512 2018-01-22 18:43:19 GMT <now> pineapples are the best fruit`
@@ -64,6 +66,7 @@ A few simple examples to help you understand the basics:
     - `--limit` feature allowing a user to specify how many Tweets get scraped (Incriments of 20).
     - `--count` feature to display the total number of Tweets collected at the end of a Tweep session.
     - `--stats` feature to display the number of replies, retweets, and likes.
+    - `-g` feature to scrape tweets in a radius of a gps location.
 - Fixed:
     - `Error handling` - Moved to a seperate function and better organized.
 ### 1/21/18
