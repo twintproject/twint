@@ -11,6 +11,8 @@ import json
 import re
 import sys
 
+
+
 async def getUrl(init):
     if init == -1:
         url = "https://twitter.com/search?f=tweets&vertical=default&lang=en&q="
@@ -21,6 +23,9 @@ async def getUrl(init):
 
     if arg.u != None:
         url+= "from%3A{0.u}".format(arg)
+    if arg.g != None:
+        arg.g = arg.g.replace(" ", "")
+        url+= "geocode%3A{0.g}".format(arg)
     if arg.s != None:
         arg.s = arg.s.replace(" ", "%20").replace("#", "%23")
         url+= "%20{0.s}".format(arg)
@@ -167,6 +172,7 @@ if __name__ == "__main__":
     ap.add_argument("-u", help="User's Tweets you want to scrape.")
     ap.add_argument("-s", help="Search for Tweets containing this word or phrase.")
     ap.add_argument("-o", help="Save output to a file.")
+    ap.add_argument("-g", help="Search for geocoded tweets.")
     ap.add_argument("--year", help="Filter Tweets before specified year.")
     ap.add_argument("--since", help="Filter Tweets sent since date (Example: 2017-12-27).")
     ap.add_argument("--fruit", help="Display 'low-hanging-fruit' Tweets.", action="store_true")
@@ -184,4 +190,4 @@ if __name__ == "__main__":
     check()
 
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
+loop.run_until_complete(main())
