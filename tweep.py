@@ -95,14 +95,6 @@ async def getTweets(init):
         replies = tweet.find("span", "ProfileTweet-action--reply u-hiddenVisually").find("span")["data-tweet-stat-count"]
         retweets = tweet.find("span", "ProfileTweet-action--retweet u-hiddenVisually").find("span")["data-tweet-stat-count"]
         likes = tweet.find("span", "ProfileTweet-action--favorite u-hiddenVisually").find("span")["data-tweet-stat-count"]
-        if arg.rawpic and "pic.twitter.com" in text:
-            try:
-                picture = await getPic("https://twitter.com/{0}/status/{1}/photo/1".format(username, tweetid))
-                if picture is not None:
-                    pic = re.findall(r"pic.twitter.com/\w+", text)[-1]
-                    text = text.replace(pic, picture)
-            except:
-                pass
         try:
             mentions = tweet.find("div", "js-original-tweet")["data-mentions"].split(" ")
             for i in range(len(mentions)):
@@ -199,7 +191,6 @@ if __name__ == "__main__":
     ap.add_argument("--limit", help="Number of Tweets to pull (Increments of 20).")
     ap.add_argument("--count", help="Display number Tweets scraped at the end of session.", action="store_true")
     ap.add_argument("--stats", help="Show number of replies, retweets, and likes", action="store_true")
-    ap.add_argument("--rawpic", help="Display raw picture URL (Slow).", action="store_true")
     arg = ap.parse_args()
 
     check()
