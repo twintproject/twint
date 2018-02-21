@@ -11,8 +11,6 @@ import json
 import re
 import sys
 
-
-
 async def getUrl(init):
     if init == -1:
         url = "https://twitter.com/search?f=tweets&vertical=default&lang=en&q="
@@ -190,4 +188,4 @@ if __name__ == "__main__":
     check()
 
     loop = asyncio.get_event_loop()
-loop.run_until_complete(main())
+    loop.run_until_complete(main())
