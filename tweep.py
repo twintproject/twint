@@ -24,6 +24,7 @@ async def getUrl(init):
     if arg.g != None:
         arg.g = arg.g.replace(" ", "")
         url+= "geocode%3A{0.g}".format(arg)
+        url+= "km"
     if arg.s != None:
         arg.s = arg.s.replace(" ", "%20").replace("#", "%23")
         url+= "%20{0.s}".format(arg)
