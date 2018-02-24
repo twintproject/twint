@@ -12,6 +12,17 @@ import re
 import sys
 
 async def getUrl(init):
+    '''
+    URL Descision:
+    Tweep utilizes positions of Tweet's from Twitter's search feature to 
+    iterate through a user's Twitter feed. This section decides whether
+    this is the first URL request or not and develops the URL based on the
+    args given.
+
+    Returns complete URL.
+
+    Todo: Make everything URL encoded at the end.
+    '''
     if init == -1:
         url = "https://twitter.com/search?f=tweets&vertical=default&lang=en&q="
     else:
@@ -42,48 +53,94 @@ async def getUrl(init):
     return url
 
 async def fetch(session, url):
+    '''
+    Basic aiohttp request with a 30 second timeout.
+    '''
     with async_timeout.timeout(30):
         async with session.get(url) as response:
             return await response.text()
 
+async def initial(response):
+    '''
+    Initial response parsing and collecting the position ID
+    '''
+    soup = BeautifulSoup(response, "html.parser")
+    feed = soup.find_all("li", "js-stream-item")
+    init = "TWEET-{}-{}".format(feed[-1]["data-item-id"], feed[0]["data-item-id"])
+
+    return feed, init
+
+async def cont(response):
+    '''
+    Regular json response parsing and collecting Position ID
+    '''
+    json_response = json.loads(response)
+    html = json_response["items_html"]
+    soup = BeautifulSoup(html, "html.parser")
+    feed = soup.find_all("li", "js-stream-item")
+    split = json_response["min_position"].split("-")
+    split[1] = feed[-1]["data-item-id"]
+    init = "-".join(split)
+
+    return feed, init
+
 async def getFeed(init):
+    '''
+    Parsing Descision:
+    Responses from requests with the position id's are JSON,
+    so this section decides whether this is an initial request
+    or not to use the approriate response reading for parsing
+    with BeautifulSoup4.
+
+    Returns html for Tweets and position id.
+    '''
     async with aiohttp.ClientSession() as session:
-        r = await fetch(session, await getUrl(init))
+        response = await fetch(session, await getUrl(init))
     feed = []
     try:
         if init == -1:
-            html = r
+            feed, init = await initial(response)
         else:
-            json_response = json.loads(r)
-            html = json_response["items_html"]
-        soup = BeautifulSoup(html, "html.parser")
-        feed = soup.find_all("li", "js-stream-item")
-        if init == -1:
-            init = "TWEET-{}-{}".format(feed[-1]["data-item-id"], feed[0]["data-item-id"])
-        else:
-            split = json_response["min_position"].split("-")
-            split[1] = feed[-1]["data-item-id"]
-            init = "-".join(split)
+            feed, init = await cont(response) 
     except:
+        # Tweep will realize that it's done scraping.
         pass
 
     return feed, init
 
 async def outTweet(tweet):
+    '''
+    Parsing Section:
+    This function will create the desired output string and 
+    write it to a file or csv if specified.
+
+    Returns output.
+    '''
     tweetid = tweet["data-item-id"]
+    # Formatting the date & time stamps just how I like it.
     datestamp = tweet.find("a", "tweet-timestamp")["title"].rpartition(" - ")[-1]
     d = datetime.datetime.strptime(datestamp, "%d %b %Y")
     date = d.strftime("%Y-%m-%d")
     timestamp = str(datetime.timedelta(seconds=int(tweet.find("span", "_timestamp")["data-time"]))).rpartition(", ")[-1]
     t = datetime.datetime.strptime(timestamp, "%H:%M:%S")
     time = t.strftime("%H:%M:%S")
+    # The @ in the username annoys me.
     username = tweet.find("span", "username").text.replace("@", "")
     timezone = strftime("%Z", gmtime())
+    # The context of the Tweet compressed into a single line.
     text = tweet.find("p", "tweet-text").text.replace("\n", "").replace("http", " http").replace("pic.twitter", " pic.twitter")
+    # Regex for gathering hashtags
     hashtags = ",".join(re.findall(r'(?i)\#\w+', text, flags=re.UNICODE))
     replies = tweet.find("span", "ProfileTweet-action--reply u-hiddenVisually").find("span")["data-tweet-stat-count"]
     retweets = tweet.find("span", "ProfileTweet-action--retweet u-hiddenVisually").find("span")["data-tweet-stat-count"]
     likes = tweet.find("span", "ProfileTweet-action--favorite u-hiddenVisually").find("span")["data-tweet-stat-count"]
+    '''
+    This part tries to get a list of mentions.
+    It sometimes gets slow with Tweets that contain
+    40+ mentioned people.. rather than just appending
+    the whole list to the Tweet, it goes through each
+    one to make sure there arn't any duplicates.
+    '''
     try:
         mentions = tweet.find("div", "js-original-tweet")["data-mentions"].split(" ")
         for i in range(len(mentions)):
@@ -93,32 +150,62 @@ async def outTweet(tweet):
     except:
         pass
 
+    # Preparing to output
+
+    '''
+    There were certain cases where I used Tweep
+    to gather a list of users and then fed that
+    generated list into Tweep. That's why these
+    modes exist.
+    '''
     if arg.users:
         output = username
     elif arg.tweets:
         output = tweets
     else:
+        '''
+        The standard output is how I like it, although
+        this can be modified to your desire. Uncomment
+        the bottom line and add in the variables in the
+        order you want them or how you want it to look.
+        '''
+        # output = ""
         output = "{} {} {} {} <{}> {}".format(tweetid, date, time, timezone, username, text)
         if arg.hashtags:
             output+= " {}".format(hashtags)
         if arg.stats:
             output+= " | {} replies {} retweets {} likes".format(replies, retweets, likes)
 
+    # Output section
+
     if arg.o != None:
         if arg.csv:
+            # Write all variables scraped to CSV
             dat = [tweetid, date, time, timezone, username, text, replies, retweets, likes, hashtags]
             with open(arg.o, "a", newline='') as csv_file:
                 writer = csv.writer(csv_file, delimiter="|")
                 writer.writerow(dat)
         else:
+            # Writes or appends to a file.
             print(output, file=open(arg.o, "a"))
 
     return output
 
 async def getTweets(init):
+    '''
+    This function uses the html responses from getFeed()
+    and sends that info to the Tweet parser outTweet() and
+    outputs it.
+
+    Returns response feed, if it's first-run, and Tweet count.
+    '''
     tweets, init = await getFeed(init)
     count = 0
     for tweet in tweets:
+        '''
+        Certain Tweets get taken down for copyright but are still
+        visible in the search. We want to avoid those.
+        '''
         copyright = tweet.find("div","StreamItemContent--withheld")
         if copyright is None:
             count +=1
@@ -127,12 +214,19 @@ async def getTweets(init):
     return tweets, init, count
 
 async def getUsername():
+    '''
+    This function uses a Twitter ID search to resolve a Twitter User
+    ID and return it's corresponding username.
+    '''
     async with aiohttp.ClientSession() as session:
         r = await fetch(session, "https://twitter.com/intent/user?user_id={0.userid}".format(arg))
     soup = BeautifulSoup(r, "html.parser")
     return soup.find("a", "fn url alternate-context")["href"].replace("/", "")
 
 async def main():
+    '''
+    Putting it all together.
+    '''
     if arg.userid is not None:
         arg.u = await getUsername()
 
@@ -140,22 +234,29 @@ async def main():
     init = -1
     num = 0
     while True:
+        '''
+        If our response from getFeed() has an exception,
+        it signifies there are no position IDs to continue
+        with, telling Tweep it's finished scraping.
+        '''
         if len(feed) > 0:
             feed, init, count = await getTweets(init)
             num += count
         else:
             break
+        # Control when we want to stop scraping.
         if arg.limit is not None and num <= int(arg.limit):
             break
     if arg.count:
         print("Finished: Successfully collected {} Tweets.".format(num))
 
-
 def Error(error, message):
+    # Error formatting
     print("[-] {}: {}".format(error, message))
     sys.exit(0)
 
 def check():
+    # Performs main argument checks so nothing unintended happens. 
     if arg.u is not None:
         if arg.users:
             Error("Contradicting Args", "Please use --users in combination with -s.")
