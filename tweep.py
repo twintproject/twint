@@ -69,63 +69,60 @@ async def getFeed(init):
 
     return feed, init
 
-async def getPic(url):
-    async with aiohttp.ClientSession() as session:
-        r = await fetch(session, url)
-    soup = BeautifulSoup(r, "html.parser")
-    picture = soup.find("div", "AdaptiveMedia-photoContainer js-adaptive-photo ")
-    if picture is not None:
-        return picture["data-image-url"].replace(" ", "")
+async def outTweet(tweet):
+    tweetid = tweet["data-item-id"]
+    datestamp = tweet.find("a", "tweet-timestamp")["title"].rpartition(" - ")[-1]
+    d = datetime.datetime.strptime(datestamp, "%d %b %Y")
+    date = d.strftime("%Y-%m-%d")
+    timestamp = str(datetime.timedelta(seconds=int(tweet.find("span", "_timestamp")["data-time"]))).rpartition(", ")[-1]
+    t = datetime.datetime.strptime(timestamp, "%H:%M:%S")
+    time = t.strftime("%H:%M:%S")
+    username = tweet.find("span", "username").text.replace("@", "")
+    timezone = strftime("%Z", gmtime())
+    text = tweet.find("p", "tweet-text").text.replace("\n", "").replace("http", " http").replace("pic.twitter", " pic.twitter")
+    hashtags = ",".join(re.findall(r'(?i)\#\w+', text, flags=re.UNICODE))
+    replies = tweet.find("span", "ProfileTweet-action--reply u-hiddenVisually").find("span")["data-tweet-stat-count"]
+    retweets = tweet.find("span", "ProfileTweet-action--retweet u-hiddenVisually").find("span")["data-tweet-stat-count"]
+    likes = tweet.find("span", "ProfileTweet-action--favorite u-hiddenVisually").find("span")["data-tweet-stat-count"]
+    try:
+        mentions = tweet.find("div", "js-original-tweet")["data-mentions"].split(" ")
+        for i in range(len(mentions)):
+            mention = "@{}".format(mentions[i])
+            if mention not in text:
+                text = "{} {}".format(mention, text)
+    except:
+        pass
+
+    if arg.users:
+        output = username
+    elif arg.tweets:
+        output = tweets
+    else:
+        output = "{} {} {} {} <{}> {}".format(tweetid, date, time, timezone, username, text)
+        if arg.hashtags:
+            output+= " {}".format(hashtags)
+        if arg.stats:
+            output+= " | {} replies {} retweets {} likes".format(replies, retweets, likes)
+
+    if arg.o != None:
+        if arg.csv:
+            dat = [tweetid, date, time, timezone, username, text, replies, retweets, likes, hashtags]
+            with open(arg.o, "a", newline='') as csv_file:
+                writer = csv.writer(csv_file, delimiter="|")
+                writer.writerow(dat)
+        else:
+            print(output, file=open(arg.o, "a"))
+
+    return output
 
 async def getTweets(init):
     tweets, init = await getFeed(init)
     count = 0
     for tweet in tweets:
-        tweetid = tweet["data-item-id"]
-        datestamp = tweet.find("a", "tweet-timestamp")["title"].rpartition(" - ")[-1]
-        d = datetime.datetime.strptime(datestamp, "%d %b %Y")
-        date = d.strftime("%Y-%m-%d")
-        timestamp = str(datetime.timedelta(seconds=int(tweet.find("span", "_timestamp")["data-time"]))).rpartition(", ")[-1]
-        t = datetime.datetime.strptime(timestamp, "%H:%M:%S")
-        time = t.strftime("%H:%M:%S")
-        username = tweet.find("span", "username").text.replace("@", "")
-        timezone = strftime("%Z", gmtime())
-        text = tweet.find("p", "tweet-text").text.replace("\n", " ").replace("http"," http").replace("pic.twitter"," pic.twitter")
-        hashtags = ",".join(re.findall(r'(?i)\#\w+', text, flags=re.UNICODE))
-        replies = tweet.find("span", "ProfileTweet-action--reply u-hiddenVisually").find("span")["data-tweet-stat-count"]
-        retweets = tweet.find("span", "ProfileTweet-action--retweet u-hiddenVisually").find("span")["data-tweet-stat-count"]
-        likes = tweet.find("span", "ProfileTweet-action--favorite u-hiddenVisually").find("span")["data-tweet-stat-count"]
-        try:
-            mentions = tweet.find("div", "js-original-tweet")["data-mentions"].split(" ")
-            for i in range(len(mentions)):
-                mention = "@{}".format(mentions[i])
-                if mention not in text:
-                    text = "{} {}".format(mention, text)
-        except:
-            pass
-
-        if arg.users:
-            output = username
-        elif arg.tweets:
-            output = tweets
-        else:
-            output = "{} {} {} {} <{}> {}".format(tweetid, date, time, timezone, username, text)
-            if arg.hashtags:
-                output+= " {}".format(hashtags)
-            if arg.stats:
-                output+= " | {} replies {} retweets {} likes".format(replies, retweets, likes)
-
-        if arg.o != None:
-            if arg.csv:
-                dat = [tweetid, date, time, timezone, username, text, hashtags, replies, retweets, likes]
-                with open(arg.o, "a", newline='') as csv_file:
-                    writer = csv.writer(csv_file, delimiter="|")
-                    writer.writerow(dat)
-            else:
-                print(output, file=open(arg.o, "a"))
-
-        count += 1
-        print(output)
+        copyright = tweet.find("div","StreamItemContent--withheld")
+        if copyright is None:
+            count +=1
+            print(await outTweet(tweet))
 
     return tweets, init, count
 
