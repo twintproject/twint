@@ -268,8 +268,8 @@ def check():
         Error("Contradicting Args", "--users and --tweets cannot be used together.")
     if arg.csv and arg.o is None:
         Error("Error", "Please specify an output file (Example: -o file.csv")
-    if arg.u is None and arg.s is None and arg.userid is None:
-        Error("Error", "Please specify a username, user id or search.")
+    if arg.u is None and arg.s is None and arg.userid is None and arg.g is None:
+        Error("Error", "Please specify a username, user id, search or geotag.")
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(prog="tweep.py", usage="python3 %(prog)s [options]", description="tweep.py - An Advanced Twitter Scraping Tool")
