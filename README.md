@@ -52,7 +52,7 @@ A few simple examples to help you understand the basics:
 - `python3 tweep.py -u username -o file.csv --csv` - Scrape Tweets and save as a csv file.
 - `python3 tweep.py -u username --fruit` - Show Tweets with low-hanging fruit.
 - `python3 tweep.py -s "Donald Trump" --verified --users` - List verified users that Tweet about Donald Trump.
-- `python3 tweep.py -g 48.880048,2.385939,1km -o file.csv --csv` - Scrape Tweets in a radius of 1km around a place in Paris a export them to a csv file.
+- `python3 tweep.py -g 48.880048,2.385939,1km -o file.csv --csv` - Scrape Tweets from a radius of 1km around a place in Paris and export them to a csv file.
 
 
 ## Example String
