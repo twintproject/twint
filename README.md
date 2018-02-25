@@ -19,7 +19,7 @@ Some of the benefits of using Tweep vs Twitter API:
 ## Usage
 - `-u` The user's Tweets you want to scrape.
 - `-s` Search for Tweets containing this word or phrase.
-- `-g` Retrieve tweets by geolocation. Format of the argument is lat,lon,range(in km) . ex : 48.01009,36.09876,0.5km - Please note that km has to be included.
+- `-g` Retrieve tweets by geolocation. Format of the argument is lat,lon,range(km or mi) . ex : 48.01009,36.09876,0.5km
 - `-o` Save output to a file.
 - `--year` Filter Tweets before the specified year. 
 - `--fruit` Display Tweets with "low-hanging-fruit".
