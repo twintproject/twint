@@ -53,6 +53,7 @@ A few simple examples to help you understand the basics:
 - `python3 tweep.py -u username --fruit` - Show Tweets with low-hanging fruit.
 - `python3 tweep.py -s "Donald Trump" --verified --users` - List verified users that Tweet about Donald Trump.
 - `python3 tweep.py -g 48.880048,2.385939,1km -o file.csv --csv` - Scrape Tweets from a radius of 1km around a place in Paris and export them to a csv file.
+- `python3 tweep.py -s hello -g " -38.416097,-63.616671999999994,100km" -o file.csv --csv` - Same for a radius of 100km around Buenos Aires and export them to a csv file. Quote your argument and add a space after the first quote, to correctly parse the `minus` sign of lat and lon as a character and not an option.
 
 
 ## Example String
