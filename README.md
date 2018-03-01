@@ -1,5 +1,5 @@
 # tweep
-[![Build Status](https://travis-ci.org/haccer/tweep.svg?branch=master)](https://travis-ci.org/haccer/tweep/) [![Python 3.5|3.6](https://img.shields.io/badge/Python-3.5%2F3.6-blue.svg)](https://www.python.org/download/releases/3.0/) [![GitHub license](https://img.shields.io/github/license/haccer/tweep.svg)](https://github.com/haccer/tweep/blob/master/LICENSE)
+![Version](https://img.shields.io/badge/Version-1.0-blue.svg) [![Build Status](https://travis-ci.org/haccer/tweep.svg?branch=master)](https://travis-ci.org/haccer/tweep/) [![Python 3.5|3.6](https://img.shields.io/badge/Python-3.5%2F3.6-blue.svg)](https://www.python.org/download/releases/3.0/) [![GitHub license](https://img.shields.io/github/license/haccer/tweep.svg)](https://github.com/haccer/tweep/blob/master/LICENSE)
 
 Tweep is an advanced Twitter scraping tool written in Python that allows for scraping Tweets from Twitter profiles **without** using Twitter's API.
 
@@ -52,9 +52,9 @@ A few simple examples to help you understand the basics:
 - `python3 tweep.py -u username -o file.csv --csv` - Scrape Tweets and save as a csv file.
 - `python3 tweep.py -u username --fruit` - Show Tweets with low-hanging fruit.
 - `python3 tweep.py -s "Donald Trump" --verified --users` - List verified users that Tweet about Donald Trump.
-- `python3 tweep.py -g 48.880048,2.385939,1km -o file.csv --csv` - Scrape Tweets from a radius of 1km around a place in Paris and export them to a csv file.
-- `python3 tweep.py -s hello -g " -38.416097,-63.616671999999994,100km" -o file.csv --csv` - Same for a radius of 100km around Buenos Aires and export them to a csv file. Quote your argument and add a space after the first quote, to correctly parse the `minus` sign of lat and lon as a character and not an option.
+- `python3 tweep.py -g "48.880048,2.385939,1km" -o file.csv --csv` - Scrape Tweets from a radius of 1km around a place in Paris and export them to a csv file.
 
+**Tip:** To avoid an arguement error, wrap your arguments in quotes.
 
 ## Example String
 `955511208597184512 2018-01-22 18:43:19 GMT <now> pineapples are the best fruit`
@@ -62,23 +62,8 @@ A few simple examples to help you understand the basics:
 ## Screenshot
 <img src="https://i.imgur.com/RKdBrHr.png" />
 
-## Changelog
-### 2/21/18
-- Added new features:
-    - `--userid` feature allowing a user to search Tweets from a Twitter user's user-id.
-    - `--limit` feature allowing a user to specify how many Tweets get scraped (Incriments of 20).
-    - `--count` feature to display the total number of Tweets collected at the end of a Tweep session.
-    - `--stats` feature to display the number of replies, retweets, and likes.
-    - `-g` feature to scrape tweets in a radius of a gps location.
-- Fixed:
-    - `Error handling` - Moved to a seperate function and better organized.
-### 1/21/18
-- Added:
-    - `Python3` update and rewriten using asyncio. Fetching Tweets should be a lot more faster naturally. 
-    - `Output` can be saved.
-    - `Replies` are now visible in the scrapes.
- - Removed:
-    - `Pics` feature, I'll re-add this on a later date.
+## Thanks
+Thanks to [@hpiedcoq](https://github.com/hpiedcoq) for contributing several features!
 
 ## Contact
 Shout me out on Twitter: [@now](https://twitter.com/now)
