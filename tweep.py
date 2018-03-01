@@ -20,8 +20,6 @@ async def getUrl(init):
     args given.
 
     Returns complete URL.
-
-    Todo: Make everything URL encoded at the end.
     '''
     if init == -1:
         url = "https://twitter.com/search?f=tweets&vertical=default&lang=en&q="
