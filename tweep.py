@@ -194,16 +194,16 @@ async def outTweet(tweet):
 
         # Output section
 
-        if arg.o != None:
-            if arg.csv:
-                # Write all variables scraped to CSV
-                dat = [tweetid, date, time, timezone, username, text, replies, retweets, likes, hashtags]
-                with open(arg.o, "a", newline='') as csv_file:
-                    writer = csv.writer(csv_file, delimiter="|")
-                    writer.writerow(dat)
-            else:
-                # Writes or appends to a file.
-                print(output, file=open(arg.o, "a"))
+    if arg.o != None:
+        if arg.csv:
+            # Write all variables scraped to CSV
+            dat = [tweetid, date, time, timezone, username, text, replies, retweets, likes, hashtags]
+            with open(arg.o, "a", newline='') as csv_file:
+                writer = csv.writer(csv_file, delimiter="|")
+                writer.writerow(dat)
+        else:
+            # Writes or appends to a file.
+            print(output, file=open(arg.o, "a"))
 
     return output
 
