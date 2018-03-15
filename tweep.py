@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 from bs4 import BeautifulSoup
+from elasticsearch import Elasticsearch
 from time import gmtime, strftime
 import argparse
 import aiohttp
@@ -7,6 +8,7 @@ import asyncio
 import async_timeout
 import csv
 import datetime
+import hashlib
 import json
 import re
 import sys
@@ -14,7 +16,7 @@ import sys
 async def getUrl(init):
     '''
     URL Descision:
-    Tweep utilizes positions of Tweet's from Twitter's search feature to 
+    Tweep utilizes positions of Tweet's from Twitter's search feature to
     iterate through a user's Twitter feed. This section decides whether
     this is the first URL request or not and develops the URL based on the
     args given.
@@ -99,7 +101,7 @@ async def getFeed(init):
         if init == -1:
             feed, init = await initial(response)
         else:
-            feed, init = await cont(response) 
+            feed, init = await cont(response)
     except:
         # Tweep will realize that it's done scraping.
         pass
@@ -109,7 +111,7 @@ async def getFeed(init):
 async def outTweet(tweet):
     '''
     Parsing Section:
-    This function will create the desired output string and 
+    This function will create the desired output string and
     write it to a file or csv if specified.
 
     Returns output.
@@ -147,7 +149,7 @@ async def outTweet(tweet):
                 text = "{} {}".format(mention, text)
     except:
         pass
-
+    
     # Preparing to output
 
     '''
@@ -156,7 +158,23 @@ async def outTweet(tweet):
     generated list into Tweep. That's why these
     modes exist.
     '''
-    if arg.users:
+    if arg.elasticsearch:
+        jObject = {
+            "tweetid": tweetid,
+            "datestamp": date + " " + time,
+            "timezone": timezone,
+            "text": text,
+            "hashtags": re.findall(r'(?i)\#\w+', text, flags=re.UNICODE),
+            "replies": replies,
+            "retweets": retweets,
+            "likes": likes,
+            "username": username
+        }
+        
+        es = Elasticsearch(arg.elasticsearch)
+        es.index(index="tweep", doc_type="items", id=tweetid, body=json.dumps(jObject))
+        output = ""
+    elif arg.users:
         output = username
     elif arg.tweets:
         output = tweets
@@ -174,7 +192,7 @@ async def outTweet(tweet):
         if arg.stats:
             output+= " | {} replies {} retweets {} likes".format(replies, retweets, likes)
 
-    # Output section
+        # Output section
 
     if arg.o != None:
         if arg.csv:
@@ -207,7 +225,10 @@ async def getTweets(init):
         copyright = tweet.find("div","StreamItemContent--withheld")
         if copyright is None:
             count +=1
-            print(await outTweet(tweet))
+            if arg.elasticsearch:
+                print(await outTweet(tweet),end=".", flush=True)
+            else:
+                print(await outTweet(tweet))
 
     return tweets, init, count
 
@@ -225,6 +246,10 @@ async def main():
     '''
     Putting it all together.
     '''
+
+    if arg.elasticsearch:
+        print("Indexing to Elasticsearch @" + str(arg.elasticsearch))
+
     if arg.userid is not None:
         arg.u = await getUsername()
 
@@ -254,7 +279,7 @@ def Error(error, message):
     sys.exit(0)
 
 def check():
-    # Performs main argument checks so nothing unintended happens. 
+    # Performs main argument checks so nothing unintended happens.
     if arg.u is not None:
         if arg.users:
             Error("Contradicting Args", "Please use --users in combination with -s.")
@@ -271,8 +296,9 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser(prog="tweep.py", usage="python3 %(prog)s [options]", description="tweep.py - An Advanced Twitter Scraping Tool")
     ap.add_argument("-u", help="User's Tweets you want to scrape.")
     ap.add_argument("-s", help="Search for Tweets containing this word or phrase.")
-    ap.add_argument("-o", help="Save output to a file.")
     ap.add_argument("-g", help="Search for geocoded tweets.")
+    ap.add_argument("-o", help="Save output to a file.")
+    ap.add_argument("-es", "--elasticsearch", help="Index to Elasticsearch")
     ap.add_argument("--year", help="Filter Tweets before specified year.")
     ap.add_argument("--since", help="Filter Tweets sent since date (Example: 2017-12-27).")
     ap.add_argument("--fruit", help="Display 'low-hanging-fruit' Tweets.", action="store_true")
