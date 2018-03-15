@@ -1,0 +1,21 @@
+PUT tweep
+{
+  "mappings" : {
+    "items": {
+      "properties": { 
+        "tweetid": {"type": "long"},
+        "datestamp": {"type": "date", "format": "yyyy-MM-dd HH:mm:ss"},
+        "timezone": {"type": "text"},
+        "hashtags": {"type": "text"},
+        "replies": {"type": "integer"},
+        "retweets": {"type": "integer"},
+        "likes": {"type": "integer"},
+        "username": {"type": "keyword"}
+      }
+    }
+  }
+  ,
+  "settings": {
+    "number_of_shards": 1
+  }
+}
