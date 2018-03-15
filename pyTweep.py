@@ -135,7 +135,7 @@ async def outTweet(tweet,hashtags,stats):
     # The context of the Tweet compressed into a single line.
     text = tweet.find("p", "tweet-text").text.replace("\n", "").replace("http", " http").replace("pic.twitter", " pic.twitter")
     # Regex for gathering hashtags
-    hashtags = ",".join(re.findall(r'(?i)\#\w+', text, flags=re.UNICODE))
+    tweet_hashtags = ",".join(re.findall(r'(?i)\#\w+', text, flags=re.UNICODE))
     replies = tweet.find("span", "ProfileTweet-action--reply u-hiddenVisually").find("span")["data-tweet-stat-count"]
     retweets = tweet.find("span", "ProfileTweet-action--retweet u-hiddenVisually").find("span")["data-tweet-stat-count"]
     likes = tweet.find("span", "ProfileTweet-action--favorite u-hiddenVisually").find("span")["data-tweet-stat-count"]
@@ -166,10 +166,10 @@ async def outTweet(tweet,hashtags,stats):
     '''
     # output = ""
     output = [tweetid, date, time, timezone, username, text]
-    if hashtags:
-        output+= [hashtags]
-    if stats:
-        output += [replies, retweets, likes,hashtags]
+    if hashtags == True:
+        output += [tweet_hashtags]
+    if stats == True:
+        output += [replies, retweets, likes, tweet_hashtags]
 
     # Output section
 
@@ -194,6 +194,12 @@ async def getTweets(init,user_name,search_term,geo,year,since,
     '''
     tweets, init = await getFeed(init,user_name,search_term,geo,year,since,fruit,verified)
     count = 0
+    columns = ['tweetid', 'date', 'time', 'timezone', 'username', 'text']
+    if hashtags == True:
+        columns+= ['hashtags']
+    if stats == True:
+        columns += ['replies', 'retweets', 'likes','hashtags']
+    df = pd.DataFrame(columns=columns)
     for tweet in tweets:
         '''
         Certain Tweets get taken down for copyright but are still
@@ -201,8 +207,12 @@ async def getTweets(init,user_name,search_term,geo,year,since,
         '''
         copyright = tweet.find("div","StreamItemContent--withheld")
         if copyright is None:
+            dat = await outTweet(tweet,hashtags,stats)
+            print(dat)
+            df.loc[count] = dat
+            print('data length = '+str(len(dat)))
+            print('df length ='+str(len(df.columns)))
             count +=1
-            print(await outTweet(tweet,hashtags,stats))
 
     return tweets, init, count
 
@@ -263,7 +273,6 @@ def check(user_names,verified,userid):
             Error("Contradicting Args", "userid and username cannot be used together.")
 
 
-
 def Tweep(user_names = None,        
           search_terms = None,            
           geo = None,               
@@ -271,11 +280,11 @@ def Tweep(user_names = None,
           since = None,             
           fruit = None,                        
           verified = None,                               
-          hashtags = None,          
+          hashtags = False,          
           userid = None,             
           limit = None,             
           count = None,             
-          stats = None):            
+          stats = False):            
     '''
     This is a wrapper function for tweep.py which will allow it to be implemented in pure python, without interfacing with with bash,
     and with updated output functionality integrated with pandas, and with pure python interation capabilities,
@@ -287,9 +296,7 @@ def Tweep(user_names = None,
     :param since: filter Tweets sent since date, usage: since = '2017-12-27', default = None
     :param fruit: use to display 'low-hanging-fruit' Tweets, i.e. tweets containing: profiles from leaked databases (Myspace or LastFM),
     email addresses, phone numbers, or keybase.io profiles. usage: fruit = True, default = False
-    :param tweets: use to display tweets only, usage: tweets=True, default = False
     :param verified: use to display Tweets only from verified users, usage: verified=True, default = False
-    :param users: use to display users only, usage: users=True, default = None
     :param hashtags: use to output hashtags in a seperate column, usage: hashtags=True, default = False
     :param userid: string. twitter userid if you want to use (can't be used with "user_name"), default = None
     :param limit: int value for Number of Tweets to pull (Increments of 20), default = None
@@ -320,7 +327,7 @@ def Tweep(user_names = None,
 
 
 if __name__ == '__main__':
-    test = Tweep(user_names = ['realDonaldTrump'],search_terms=['Kudlow'])
+    test = Tweep(user_names = ['realDonaldTrump'],search_terms=['Kudlow'],hashtags=True)
 
         
                 
