@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 from bs4 import BeautifulSoup
+from elasticsearch import Elasticsearch
 from time import gmtime, strftime
 import argparse
 import aiohttp
@@ -7,12 +8,10 @@ import asyncio
 import async_timeout
 import csv
 import datetime
+import hashlib
 import json
 import re
 import sys
-import hashlib
-
-from elasticsearch import Elasticsearch
 
 async def getUrl(init):
     '''
@@ -151,18 +150,6 @@ async def outTweet(tweet):
     except:
         pass
     
-    jObject = {
-        "tweetid": tweetid,
-        "datestamp": date + " " + time,
-        "timezone": timezone,
-        "text": text,
-        "hashtags": re.findall(r'(?i)\#\w+', text, flags=re.UNICODE),
-        "replies": replies,
-        "retweets": retweets,
-        "likes": likes,
-        "username": username
-    }
-
     # Preparing to output
 
     '''
@@ -172,28 +159,38 @@ async def outTweet(tweet):
     modes exist.
     '''
     if arg.elasticsearch:
+        jObject = {
+            "tweetid": tweetid,
+            "datestamp": date + " " + time,
+            "timezone": timezone,
+            "text": text,
+            "hashtags": re.findall(r'(?i)\#\w+', text, flags=re.UNICODE),
+            "replies": replies,
+            "retweets": retweets,
+            "likes": likes,
+            "username": username
+        }
+        
         es = Elasticsearch(arg.elasticsearch)
         es.index(index="tweep", doc_type="items", id=tweetid, body=json.dumps(jObject))
-        return ""
-
+        output = ""
+    elif arg.users:
+        output = username
+    elif arg.tweets:
+        output = tweets
     else:
-        if arg.users:
-            output = username
-        elif arg.tweets:
-            output = tweets
-        else:
-            '''
-            The standard output is how I like it, although
-            this can be modified to your desire. Uncomment
-            the bottom line and add in the variables in the
-            order you want them or how you want it to look.
-            '''
-            # output = ""
-            output = "{} {} {} {} <{}> {}".format(tweetid, date, time, timezone, username, text)
-            if arg.hashtags:
-                output+= " {}".format(hashtags)
-            if arg.stats:
-                output+= " | {} replies {} retweets {} likes".format(replies, retweets, likes)
+        '''
+        The standard output is how I like it, although
+        this can be modified to your desire. Uncomment
+        the bottom line and add in the variables in the
+        order you want them or how you want it to look.
+        '''
+        # output = ""
+        output = "{} {} {} {} <{}> {}".format(tweetid, date, time, timezone, username, text)
+        if arg.hashtags:
+            output+= " {}".format(hashtags)
+        if arg.stats:
+            output+= " | {} replies {} retweets {} likes".format(replies, retweets, likes)
 
         # Output section
 
@@ -208,7 +205,7 @@ async def outTweet(tweet):
                 # Writes or appends to a file.
                 print(output, file=open(arg.o, "a"))
 
-        return output
+    return output
 
 async def getTweets(init):
     '''
@@ -249,6 +246,10 @@ async def main():
     '''
     Putting it all together.
     '''
+
+    if arg.elasticsearch:
+        print("Indexing to Elasticsearch @" + str(arg.elasticsearch))
+
     if arg.userid is not None:
         arg.u = await getUsername()
 
@@ -313,8 +314,6 @@ if __name__ == "__main__":
     arg = ap.parse_args()
 
     check()
-    if arg.elasticsearch:
-        print("Indexing to Elasticsearch @" + str(arg.elasticsearch))
 
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main())
