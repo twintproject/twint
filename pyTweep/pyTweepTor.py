@@ -1,22 +1,28 @@
 #!/usr/bin/python3
 from bs4 import BeautifulSoup, UnicodeDammit
 from time import gmtime, strftime
-import aiohttp
-import asyncio
-import async_timeout
-import csv
 import datetime
 import json
 import re
 import sys
 import pandas as pd
+from random import choice
+from TorCrawler import TorCrawler
+from loadAgents import get_agents
+
+#import torcrawler
+crawler = TorCrawler(n_requests=20)
+
+#import random headers
+USER_AGENT_LIST = get_agents()
+
+#define random choice of agents function
+def random_headers(user_agent_list):
+    return {'User-Agent': user_agent_list[choice(list(user_agent_list.keys()))]}
 
 
-SEARCH_TERMS = ['Marines']
-USER_NAMES = ['realDonaldTrump']
-SINCE = '2018-03-13'
 
-async def getUrl(init,user_name,search_term,geo,year,since,fruit,verified):
+def getUrl(init,user_name,search_term,geo,year,since,fruit,verified):
     '''
     URL Descision:
     Tweep utilizes positions of Tweet's from Twitter's search feature to 
@@ -55,40 +61,35 @@ async def getUrl(init,user_name,search_term,geo,year,since,fruit,verified):
 
     return url
 
-async def fetch(session, url):
+def fetch(url):
     '''
     Basic aiohttp request with a 30 second timeout.
-    '''
-    with async_timeout.timeout(30):
-        async with session.get(url) as response:
-            _bytes = await response.read()
-            return UnicodeDammit(_bytes).unicode_markup
+    '''    
+    response = crawler.get(url,headers=random_headers(USER_AGENT_LIST))
+    return response
         
-async def initial(response):
+def initial(response):
     '''
     Initial response parsing and collecting the position ID
     '''
-    soup = BeautifulSoup(response, "html.parser")
-    feed = soup.find_all("li", "js-stream-item")
+    feed = response.find_all("li", "js-stream-item")
     init = "TWEET-{}-{}".format(feed[-1]["data-item-id"], feed[0]["data-item-id"])
 
     return feed, init
 
-async def cont(response):
+def cont(response):
     '''
     Regular json response parsing and collecting Position ID
     '''
     json_response = json.loads(response)
     html = json_response["items_html"]
-    soup = BeautifulSoup(html, "html.parser")
-    feed = soup.find_all("li", "js-stream-item")
+    feed = response.find_all("li", "js-stream-item")
     split = json_response["min_position"].split("-")
     split[1] = feed[-1]["data-item-id"]
     init = "-".join(split)
-
     return feed, init
 
-async def getFeed(init,user_name,search_term,geo,year,since,fruit,verified):
+def getFeed(init,user_name,search_term,geo,year,since,fruit,verified):
     '''
     Parsing Descision:
     Responses from requests with the position id's are JSON,
@@ -98,21 +99,21 @@ async def getFeed(init,user_name,search_term,geo,year,since,fruit,verified):
 
     Returns html for Tweets and position id.
     '''
-    async with aiohttp.ClientSession() as session:
-        response = await fetch(session, await getUrl(init,user_name,search_term,geo,year,since,fruit,verified))
+
+    response =  fetch(getUrl(init,user_name,search_term,geo,year,since,fruit,verified))
     feed = []
     try:
         if init == -1:
-            feed, init = await initial(response)
+            feed, init = initial(response)
         else:
-            feed, init = await cont(response) 
+            feed, init = cont(response) 
     except:
         # Tweep will realize that it's done scraping.
         pass
 
     return feed, init
 
-async def outTweet(tweet,hashtags,stats):
+def outTweet(tweet,hashtags,stats):
 
     '''
     Parsing Section:
@@ -181,8 +182,7 @@ async def outTweet(tweet,hashtags,stats):
 
 
 
-
-async def getTweets(init,user_name,search_term,geo,year,since,
+def getTweets(init,user_name,search_term,geo,year,since,
                                                 fruit,verified,hashtags,
                                                 limit,count,stats):
     '''
@@ -192,7 +192,7 @@ async def getTweets(init,user_name,search_term,geo,year,since,
 
     Returns response feed, if it's first-run, and Tweet count.
     '''
-    tweets, init = await getFeed(init,user_name,search_term,geo,year,since,fruit,verified)
+    tweets, init = getFeed(init,user_name,search_term,geo,year,since,fruit,verified)
     count = 0
     columns = ['tweetid', 'date', 'time', 'timezone', 'username', 'text']
     if hashtags == True:
@@ -210,7 +210,7 @@ async def getTweets(init,user_name,search_term,geo,year,since,
         '''
         copyright = tweet.find("div","StreamItemContent--withheld")
         if copyright is None:
-            dat = await outTweet(tweet,hashtags,stats)
+            dat = outTweet(tweet,hashtags,stats)
             #print(dat)
             df.loc[count] = dat
             #print('data length = '+str(len(dat)))
@@ -223,30 +223,28 @@ async def getTweets(init,user_name,search_term,geo,year,since,
 
 
 
-async def getUsername(userid):
+def getUsername(userid):
     '''
     This function uses a Twitter ID search to resolve a Twitter User
     ID and return it's corresponding username.
     '''
-    async with aiohttp.ClientSession() as session:
-        r = await fetch(session, "https://twitter.com/intent/user?user_id={0.userid}".format(userid))
-    soup = BeautifulSoup(r, "html.parser")
-    return soup.find("a", "fn url alternate-context")["href"].replace("/", "")
+    r = fetch("https://twitter.com/intent/user?user_id={0.userid}".format(userid))
+    return r.find("a", "fn url alternate-context")["href"].replace("/", "")
 
 
-async def main(user_name,search_term,geo,year,since,fruit,verified,hashtags,userid,limit,count,stats):
+def main(user_name,search_term,geo,year,since,fruit,verified,hashtags,userid,limit,count,stats):
     '''
     Putting it all together.
     '''
     if userid is not None:
-        user_name = await getUsername(userid)
+        user_name = getUsername(userid)
 
     feed = [-1]
     init = -1
     num = 0
     if user_name and search_term:
         if len(feed) > 0:
-            feed, init, count, df = await getTweets(init,user_name,search_term,geo,year,since,fruit,verified,hashtags,limit,count,stats)
+            feed, init, count, df = getTweets(init,user_name,search_term,geo,year,since,fruit,verified,hashtags,limit,count,stats)
     else:
         while True:
             '''
@@ -255,14 +253,14 @@ async def main(user_name,search_term,geo,year,since,fruit,verified,hashtags,user
             with, telling Tweep it's finished scraping.
             '''
             if len(feed) > 0:
-                feed, init, count, df = await getTweets(init,user_name,search_term,geo,year,since,fruit,verified,hashtags,limit,count,stats)
+                feed, init, count, df = getTweets(init,user_name,search_term,geo,year,since,fruit,verified,hashtags,limit,count,stats)
                 num += count
             else:
                 break
             # Control when we want to stop scraping.
             if limit is not None and num == int(limit):
                 break
-        if count:
+        #if count:
             #print("Finished: Successfully collected {} Tweets.".format(num))
     #print(df)
     return df 
@@ -324,19 +322,16 @@ def Tweep(user_names = None,
             for search_term in search_terms:
                 print(user_name)
                 print(search_term)
-                loop = asyncio.get_event_loop()
-                dx = loop.run_until_complete(main(user_name,search_term,geo,year,since,fruit,verified,hashtags,userid,limit,count,stats))
+                dx = main(user_name,search_term,geo,year,since,fruit,verified,hashtags,userid,limit,count,stats)
                 df = pd.concat([df,dx])
     elif user_names:
         for user_name in user_names:
             print(user_name)
-            loop = asyncio.get_event_loop()
-            dx = loop.run_until_complete(main(user_name,search_terms,geo,year,since,fruit,verified,hashtags,userid,limit,count,stats))
+            dx = main(user_name,search_terms,geo,year,since,fruit,verified,hashtags,userid,limit,count,stats)
             df = pd.concat([df,dx])
     elif search_terms:
         for search_term in search_terms:
-            loop = asyncio.get_event_loop()
-            dx = loop.run_until_complete(main(user_names,search_term,geo,year,since,fruit,verified,hashtags,userid,limit,count,stats))
+            dx = main(user_names,search_term,geo,year,since,fruit,verified,hashtags,userid,limit,count,stats)
             df = pd.concat([df,dx])
     else:
         print('You must enter either a user name or a search term for Tweep to work')
@@ -346,8 +341,9 @@ def Tweep(user_names = None,
 
 
 if __name__ == '__main__':
-    test = Tweep(user_names = ['realDonaldTrump','BarackObama'],limit=20,hashtags=True)
+    test = Tweep(user_names = ['realDonaldTrump'],limit=20,hashtags=True)
 
         
                 
                       
+
