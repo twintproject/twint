@@ -7,8 +7,8 @@ import re
 import sys
 import pandas as pd
 from random import choice
-from TorCrawler import TorCrawler
-from loadAgents import get_agents
+from pyTweep.TorCrawler import TorCrawler
+from pyTweep.loadAgents import get_agents
 
 #import torcrawler
 crawler = TorCrawler(n_requests=20)
