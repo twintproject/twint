@@ -199,7 +199,10 @@ async def getTweets(init,user_name,search_term,geo,year,since,
         columns+= ['hashtags']
     if stats == True:
         columns += ['replies', 'retweets', 'likes','hashtags']
-    df = pd.DataFrame(columns=columns)
+    x = 0
+    if x == 0:
+        df = pd.DataFrame(columns=columns)
+        x = 1
     for tweet in tweets:
         '''
         Certain Tweets get taken down for copyright but are still
@@ -208,13 +211,14 @@ async def getTweets(init,user_name,search_term,geo,year,since,
         copyright = tweet.find("div","StreamItemContent--withheld")
         if copyright is None:
             dat = await outTweet(tweet,hashtags,stats)
-            print(dat)
+            #print(dat)
             df.loc[count] = dat
-            print('data length = '+str(len(dat)))
-            print('df length ='+str(len(df.columns)))
+            #print('data length = '+str(len(dat)))
+            #print('df length ='+str(len(df.columns)))
             count +=1
+    #print(len(df))
 
-    return tweets, init, count
+    return tweets, init, count, df
 
 
 
@@ -240,24 +244,28 @@ async def main(user_name,search_term,geo,year,since,fruit,verified,hashtags,user
     feed = [-1]
     init = -1
     num = 0
-    while True:
-        '''
-        If our response from getFeed() has an exception,
-        it signifies there are no position IDs to continue
-        with, telling Tweep it's finished scraping.
-        '''
+    if user_name and search_term:
         if len(feed) > 0:
-            feed, init, count = await getTweets(init,user_name,search_term,geo,year,since,
-                                                fruit,verified,hashtags,
-                                                limit,count,stats)
-            num += count
-        else:
-            break
-        # Control when we want to stop scraping.
-        if limit is not None and num <= int(limit):
-            break
-    if count:
-        print("Finished: Successfully collected {} Tweets.".format(num))
+            feed, init, count, df = await getTweets(init,user_name,search_term,geo,year,since,fruit,verified,hashtags,limit,count,stats)
+    else:
+        while True:
+            '''
+            If our response from getFeed() has an exception,
+            it signifies there are no position IDs to continue
+            with, telling Tweep it's finished scraping.
+            '''
+            if len(feed) > 0:
+                feed, init, count, df = await getTweets(init,user_name,search_term,geo,year,since,fruit,verified,hashtags,limit,count,stats)
+                num += count
+            else:
+                break
+            # Control when we want to stop scraping.
+            if limit is not None and num == int(limit):
+                break
+        if count:
+            #print("Finished: Successfully collected {} Tweets.".format(num))
+    #print(df)
+    return df 
 
 def Error(error, message):
     # Error formatting
@@ -305,29 +313,40 @@ def Tweep(user_names = None,
     :return: a pandas dataframe corresponding to the specified parameters
     '''
     check(user_names,verified,userid)
-
+    columns = ['tweetid', 'date', 'time', 'timezone', 'username', 'text']
+    if hashtags == True:
+        columns+= ['hashtags']
+    if stats == True:
+        columns += ['replies', 'retweets', 'likes','hashtags']
+    df = pd.DataFrame(columns=columns)
     if search_terms and user_names:
         for user_name in user_names:
             for search_term in search_terms:
+                print(user_name)
+                print(search_term)
                 loop = asyncio.get_event_loop()
-                loop.run_until_complete(main(user_name,search_term,geo,year,since,fruit,verified,hashtags,userid,limit,count,stats))
+                dx = loop.run_until_complete(main(user_name,search_term,geo,year,since,fruit,verified,hashtags,userid,limit,count,stats))
+                df = pd.concat([df,dx])
     elif user_names:
         for user_name in user_names:
+            print(user_name)
             loop = asyncio.get_event_loop()
-            loop.run_until_complete(main(user_name,search_term,geo,year,since,fruit,verified,hashtags,userid,limit,count,stats))
-
+            dx = loop.run_until_complete(main(user_name,search_terms,geo,year,since,fruit,verified,hashtags,userid,limit,count,stats))
+            df = pd.concat([df,dx])
     elif search_terms:
         for search_term in search_terms:
             loop = asyncio.get_event_loop()
-            loop.run_until_complete(main(user_name,search_term,geo,year,since,fruit,verified,hashtags,userid,limit,count,stats))
+            dx = loop.run_until_complete(main(user_names,search_term,geo,year,since,fruit,verified,hashtags,userid,limit,count,stats))
+            df = pd.concat([df,dx])
     else:
         print('You must enter either a user name or a search term for Tweep to work')
+    return df
 
     
 
 
 if __name__ == '__main__':
-    test = Tweep(user_names = ['realDonaldTrump'],search_terms=['Kudlow'],hashtags=True)
+    test = Tweep(user_names = ['realDonaldTrump','BarackObama'],limit=20,hashtags=True)
 
         
                 
