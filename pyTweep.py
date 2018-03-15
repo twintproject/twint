@@ -112,7 +112,8 @@ async def getFeed(init,user_name,search_term,geo,year,since,fruit,verified):
 
     return feed, init
 
-async def outTweet(tweet,df_output,users,hashtags,stats):
+async def outTweet(tweet,hashtags,stats):
+
     '''
     Parsing Section:
     This function will create the desired output string and 
@@ -156,45 +157,36 @@ async def outTweet(tweet,df_output,users,hashtags,stats):
 
     # Preparing to output
 
+
     '''
-    There were certain cases where I used Tweep
-    to gather a list of users and then fed that
-    generated list into Tweep. That's why these
-    modes exist.
+    The standard output is how I like it, although
+    this can be modified to your desire. Uncomment
+    the bottom line and add in the variables in the
+    order you want them or how you want it to look.
     '''
-    if users:
-        output = username
-    elif users:
-        output = tweet
-    else:
-        '''
-        The standard output is how I like it, although
-        this can be modified to your desire. Uncomment
-        the bottom line and add in the variables in the
-        order you want them or how you want it to look.
-        '''
-        # output = ""
-        output = "{} {} {} {} <{}> {}".format(tweetid, date, time, timezone, username, text)
-        if hashtags:
-            output+= " {}".format(hashtags)
-        if stats:
-            output+= " | {} replies {} retweets {} likes".format(replies, retweets, likes)
+    # output = ""
+    output = "{} {} {} {} <{}> {}".format(tweetid, date, time, timezone, username, text)
+    if hashtags:
+        output+= " {}".format(hashtags)
+    if stats:
+        output += " | {} replies {} retweets {} likes".format(replies, retweets, likes)
 
     # Output section
 
-    if df_output != False:
-        dat = [tweetid, date, time, timezone, username, text]
-        if hashtags:
-            dat = [tweetid, date, time, timezone, username, text, hashtags]
-        # Write all variables to a list to be passed to a dataframe
-        if stats:
-            dat = [tweetid, date, time, timezone, username, text, replies, retweets, likes,hashtags]
-
+    # Write all variables scraped to CSV
+    dat = [tweetid, date, time, timezone, username, text, replies, retweets, likes, hashtags]
+    with open('test.csv', "a", newline='',encoding='utf-8') as csv_file:
+        writer = csv.writer(csv_file, delimiter="|")
+        writer.writerow(dat)
+        
     return output
 
 
-async def getTweets(init,user_name,search_term,geo,year,since,fruit,
-                    verified,users,df_output,hashtags,limit,count,stats):
+
+
+async def getTweets(init,user_name,search_term,geo,year,since,
+                                                fruit,verified,hashtags,
+                                                limit,count,stats):
     '''
     This function uses the html responses from getFeed()
     and sends that info to the Tweet parser outTweet() and
@@ -204,12 +196,6 @@ async def getTweets(init,user_name,search_term,geo,year,since,fruit,
     '''
     tweets, init = await getFeed(init,user_name,search_term,geo,year,since,fruit,verified)
     count = 0
-    if df_output:
-        df = pd.DataFrame(columns=['tweetid','date','time','timezone','username','text'])
-        if hashtags:
-            df = pd.DataFrame(columns=['tweetid','date','time','timezone','username','text','hashtags'])
-        if stats:
-            df = pd.DataFrame(columns=['tweetid','date','time','timezone','username','text','replies','retweets','likes','hashtags'])
     for tweet in tweets:
         '''
         Certain Tweets get taken down for copyright but are still
@@ -217,11 +203,123 @@ async def getTweets(init,user_name,search_term,geo,year,since,fruit,
         '''
         copyright = tweet.find("div","StreamItemContent--withheld")
         if copyright is None:
-            print(await outTweet(tweet,df_output,users,hashtags,stats))
-            #df.loc[count] = dat
-            count += 1
-            
+            count +=1
+            print(await outTweet(tweet,hashtags,stats))
+
     return tweets, init, count
+
+
+
+##    '''
+##    Parsing Section:
+##    This function will create the desired output string and 
+##    write it to a file or csv if specified.
+##
+##    Returns output.
+##    '''
+##    tweetid = tweet["data-item-id"]
+##    # Formatting the date & time stamps just how I like it.
+##    datestamp = tweet.find("a", "tweet-timestamp")["title"].rpartition(" - ")[-1]
+##    d = datetime.datetime.strptime(datestamp, "%d %b %Y")
+##    date = d.strftime("%Y-%m-%d")
+##    timestamp = str(datetime.timedelta(seconds=int(tweet.find("span", "_timestamp")["data-time"]))).rpartition(", ")[-1]
+##    t = datetime.datetime.strptime(timestamp, "%H:%M:%S")
+##    time = t.strftime("%H:%M:%S")
+##    # The @ in the username annoys me.
+##    username = tweet.find("span", "username").text.replace("@", "")
+##    timezone = strftime("%Z", gmtime())
+##    # The context of the Tweet compressed into a single line.
+##    text = tweet.find("p", "tweet-text").text.replace("\n", "").replace("http", " http").replace("pic.twitter", " pic.twitter")
+##    # Regex for gathering hashtags
+##    hashtags = ",".join(re.findall(r'(?i)\#\w+', text, flags=re.UNICODE))
+##    replies = tweet.find("span", "ProfileTweet-action--reply u-hiddenVisually").find("span")["data-tweet-stat-count"]
+##    retweets = tweet.find("span", "ProfileTweet-action--retweet u-hiddenVisually").find("span")["data-tweet-stat-count"]
+##    likes = tweet.find("span", "ProfileTweet-action--favorite u-hiddenVisually").find("span")["data-tweet-stat-count"]
+##    '''
+##    This part tries to get a list of mentions.
+##    It sometimes gets slow with Tweets that contain
+##    40+ mentioned people.. rather than just appending
+##    the whole list to the Tweet, it goes through each
+##    one to make sure there arn't any duplicates.
+##    '''
+##    try:
+##        mentions = tweet.find("div", "js-original-tweet")["data-mentions"].split(" ")
+##        for i in range(len(mentions)):
+##            mention = "@{}".format(mentions[i])
+##            if mention not in text:
+##                text = "{} {}".format(mention, text)
+##    except:
+##        pass
+##
+##    # Preparing to output
+##
+##    '''
+##    There were certain cases where I used Tweep
+##    to gather a list of users and then fed that
+##    generated list into Tweep. That's why these
+##    modes exist.
+##    '''
+##    if users:
+##        output = username
+##    elif tweets:
+##        output = tweet
+##    else:
+##        '''
+##        The standard output is how I like it, although
+##        this can be modified to your desire. Uncomment
+##        the bottom line and add in the variables in the
+##        order you want them or how you want it to look.
+##        '''
+##        # output = ""
+##        output = "{} {} {} {} <{}> {}".format(tweetid, date, time, timezone, username, text)
+##        if hashtags:
+##            output+= " {}".format(hashtags)
+##        if stats:
+##            output+= " | {} replies {} retweets {} likes".format(replies, retweets, likes)
+##
+##    # Output section
+##
+##    if XXXXXXXX != False:
+##        dat = [tweetid, date, time, timezone, username, text]
+##        if hashtags:
+##            dat = [tweetid, date, time, timezone, username, text, hashtags]
+##        # Write all variables to a list to be passed to a dataframe
+##        if stats:
+##            dat = [tweetid, date, time, timezone, username, text, replies, retweets, likes,hashtags]
+##
+##    return output
+
+
+
+##async def getTweets(init,user_name,search_term,geo,year,since,fruit,
+##                    verified,users,XXXXXXXX,hashtags,limit,count,stats):
+##    '''
+##    This function uses the html responses from getFeed()
+##    and sends that info to the Tweet parser outTweet() and
+##    outputs it.
+##
+##    Returns response feed, if it's first-run, and Tweet count.
+##    '''
+##    tweets, init = await getFeed(init,user_name,search_term,geo,year,since,fruit,verified)
+##    count = 0
+##    if XXXXXXXX:
+##        df = pd.DataFrame(columns=['tweetid','date','time','timezone','username','text'])
+##        if hashtags:
+##            df = pd.DataFrame(columns=['tweetid','date','time','timezone','username','text','hashtags'])
+##        if stats:
+##            df = pd.DataFrame(columns=['tweetid','date','time','timezone','username','text','replies','retweets','likes','hashtags'])
+##    for tweet in tweets:
+##        '''
+##        Certain Tweets get taken down for copyright but are still
+##        visible in the search. We want to avoid those.
+##        '''
+##        copyright = tweet.find("div","StreamItemContent--withheld")
+##        if copyright is None:
+##            count += 1
+##            print(await outTweet(tweet,XXXXXXXX,users,hashtags,stats))
+##            #df.loc[count] = dat
+##            
+##    return tweets, init, count
 
 
 async def getUsername(userid):
@@ -235,7 +333,7 @@ async def getUsername(userid):
     return soup.find("a", "fn url alternate-context")["href"].replace("/", "")
 
 
-async def main(user_name,search_term,geo,year,since,fruit,tweets,verified,users,df_output,hashtags,userid,limit,count,stats):
+async def main(user_name,search_term,geo,year,since,fruit,verified,hashtags,userid,limit,count,stats):
     '''
     Putting it all together.
     '''
@@ -253,7 +351,7 @@ async def main(user_name,search_term,geo,year,since,fruit,tweets,verified,users,
         '''
         if len(feed) > 0:
             feed, init, count = await getTweets(init,user_name,search_term,geo,year,since,
-                                                fruit,verified,users,df_output,hashtags,
+                                                fruit,verified,hashtags,
                                                 limit,count,stats)
             num += count
         else:
@@ -263,24 +361,20 @@ async def main(user_name,search_term,geo,year,since,fruit,tweets,verified,users,
             break
     if count:
         print("Finished: Successfully collected {} Tweets.".format(num))
-    #return df
 
 def Error(error, message):
     # Error formatting
     print("[-] {}: {}".format(error, message))
     sys.exit(0)
 
-def check(user_names,users,verified,userid,tweets,df_output):
+def check(user_names,verified,userid):
     # Performs main argument checks so nothing unintended happens. 
     if user_names is not None:
-        if users:
-            Error("Contradicting Args", "Please use users in combination with search_terms.")
         if verified:
             Error("Contradicting Args", "Please use verified in combination with search_terms.")
         if userid:
             Error("Contradicting Args", "userid and username cannot be used together.")
-    if tweets and users:
-        Error("Contradicting Args", "users and tweets cannot be used together.")
+
 
 
 def Tweep(user_names = None,        
@@ -288,16 +382,13 @@ def Tweep(user_names = None,
           geo = None,               
           year = None,              
           since = None,             
-          fruit = False,             
-          tweets = False,            
-          verified = False,          
-          users = None,             
-          df_output = True,         
-          hashtags = False,          
+          fruit = None,                        
+          verified = None,                               
+          hashtags = None,          
           userid = None,             
           limit = None,             
-          count = False,             
-          stats = False):            
+          count = None,             
+          stats = None):            
     '''
     This is a wrapper function for tweep.py which will allow it to be implemented in pure python, without interfacing with with bash,
     and with updated output functionality integrated with pandas, and with pure python interation capabilities,
@@ -312,7 +403,6 @@ def Tweep(user_names = None,
     :param tweets: use to display tweets only, usage: tweets=True, default = False
     :param verified: use to display Tweets only from verified users, usage: verified=True, default = False
     :param users: use to display users only, usage: users=True, default = None
-    :param df_output: use to output to pandas dataframe boolian, default = True
     :param hashtags: use to output hashtags in a seperate column, usage: hashtags=True, default = False
     :param userid: string. twitter userid if you want to use (can't be used with "user_name"), default = None
     :param limit: int value for Number of Tweets to pull (Increments of 20), default = None
@@ -320,37 +410,30 @@ def Tweep(user_names = None,
     :param stats: use to show number of replies, retweets, and likes in output, usage: stats=True, default=False
     :return: a pandas dataframe corresponding to the specified parameters
     '''
-    check(user_names,users,verified,userid,tweets,df_output)
-    if df_output:
-        df = pd.DataFrame(columns=['tweetid','date','time','timezone','username','text'])
-        if hashtags:
-            df = pd.DataFrame(columns=['tweetid','date','time','timezone','username','text','hashtags'])
-        if stats:
-            df = pd.DataFrame(columns=['tweetid','date','time','timezone','username','text','replies','retweets','likes','hashtags'])
+    check(user_names,verified,userid)
+
     if search_terms and user_names:
         for user_name in user_names:
             for search_term in search_terms:
                 loop = asyncio.get_event_loop()
-                test = loop.run_until_complete(main(user_name,search_term,geo,year,since,fruit,tweets,verified,users,df_output,hashtags,userid,limit,count,stats))
-                two = pd.concat([df,test])
+                loop.run_until_complete(main(user_name,search_term,geo,year,since,fruit,verified,hashtags,userid,limit,count,stats))
     elif user_names:
         for user_name in user_names:
             loop = asyncio.get_event_loop()
-            test = loop.run_until_complete(main(user_name,search_term,geo,year,since,fruit,tweets,verified,users,df_output,hashtags,userid,limit,count,stats))
-            two = pd.concat([df,test])
+            loop.run_until_complete(main(user_name,search_term,geo,year,since,fruit,verified,hashtags,userid,limit,count,stats))
+
     elif search_terms:
         for search_term in search_terms:
             loop = asyncio.get_event_loop()
-            test = loop.run_until_complete(main(user_name,search_term,geo,year,since,fruit,tweets,verified,users,df_output,hashtags,userid,limit,count,stats))
-            two = pd.concat([df,test])
+            loop.run_until_complete(main(user_name,search_term,geo,year,since,fruit,verified,hashtags,userid,limit,count,stats))
     else:
         print('You must enter either a user name or a search term for Tweep to work')
-    return two
+
     
 
 
 if __name__ == '__main__':
-    bron = Tweep(user_names = ['realDonaldTrump'],search_terms=['Kudlow'],stats=True)
+    test = Tweep(user_names = ['realDonaldTrump'],search_terms=['Kudlow'])
 
         
                 
