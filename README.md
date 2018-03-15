@@ -63,7 +63,7 @@ A few simple examples to help you understand the basics:
 <img src="https://i.imgur.com/RKdBrHr.png" />
 
 ## Thanks
-Thanks to [@hpiedcoq](https://github.com/hpiedcoq) for contributing several features!
+Thanks to [@hpiedcoq](https://github.com/hpiedcoq) & [@pielco11](https://github.com/pielco11) for contributing several features!
 
 ## Contact
 Shout me out on Twitter: [@now](https://twitter.com/now)
