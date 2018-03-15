@@ -119,7 +119,7 @@ async def outTweet(tweet,hashtags,stats):
     This function will create the desired output string and 
     write it to a file or csv if specified.
 
-    Returns output.
+    Returns output, dat 
     '''
     tweetid = tweet["data-item-id"]
     # Formatting the date & time stamps just how I like it.
@@ -165,19 +165,17 @@ async def outTweet(tweet,hashtags,stats):
     order you want them or how you want it to look.
     '''
     # output = ""
-    output = "{} {} {} {} <{}> {}".format(tweetid, date, time, timezone, username, text)
+    output = [tweetid, date, time, timezone, username, text]
     if hashtags:
-        output+= " {}".format(hashtags)
+        output+= [hashtags]
     if stats:
-        output += " | {} replies {} retweets {} likes".format(replies, retweets, likes)
+        output += [replies, retweets, likes,hashtags]
 
     # Output section
 
-    # Write all variables scraped to CSV
-    dat = [tweetid, date, time, timezone, username, text, replies, retweets, likes, hashtags]
     with open('test.csv', "a", newline='',encoding='utf-8') as csv_file:
         writer = csv.writer(csv_file, delimiter="|")
-        writer.writerow(dat)
+        writer.writerow(output)
         
     return output
 
@@ -209,117 +207,6 @@ async def getTweets(init,user_name,search_term,geo,year,since,
     return tweets, init, count
 
 
-
-##    '''
-##    Parsing Section:
-##    This function will create the desired output string and 
-##    write it to a file or csv if specified.
-##
-##    Returns output.
-##    '''
-##    tweetid = tweet["data-item-id"]
-##    # Formatting the date & time stamps just how I like it.
-##    datestamp = tweet.find("a", "tweet-timestamp")["title"].rpartition(" - ")[-1]
-##    d = datetime.datetime.strptime(datestamp, "%d %b %Y")
-##    date = d.strftime("%Y-%m-%d")
-##    timestamp = str(datetime.timedelta(seconds=int(tweet.find("span", "_timestamp")["data-time"]))).rpartition(", ")[-1]
-##    t = datetime.datetime.strptime(timestamp, "%H:%M:%S")
-##    time = t.strftime("%H:%M:%S")
-##    # The @ in the username annoys me.
-##    username = tweet.find("span", "username").text.replace("@", "")
-##    timezone = strftime("%Z", gmtime())
-##    # The context of the Tweet compressed into a single line.
-##    text = tweet.find("p", "tweet-text").text.replace("\n", "").replace("http", " http").replace("pic.twitter", " pic.twitter")
-##    # Regex for gathering hashtags
-##    hashtags = ",".join(re.findall(r'(?i)\#\w+', text, flags=re.UNICODE))
-##    replies = tweet.find("span", "ProfileTweet-action--reply u-hiddenVisually").find("span")["data-tweet-stat-count"]
-##    retweets = tweet.find("span", "ProfileTweet-action--retweet u-hiddenVisually").find("span")["data-tweet-stat-count"]
-##    likes = tweet.find("span", "ProfileTweet-action--favorite u-hiddenVisually").find("span")["data-tweet-stat-count"]
-##    '''
-##    This part tries to get a list of mentions.
-##    It sometimes gets slow with Tweets that contain
-##    40+ mentioned people.. rather than just appending
-##    the whole list to the Tweet, it goes through each
-##    one to make sure there arn't any duplicates.
-##    '''
-##    try:
-##        mentions = tweet.find("div", "js-original-tweet")["data-mentions"].split(" ")
-##        for i in range(len(mentions)):
-##            mention = "@{}".format(mentions[i])
-##            if mention not in text:
-##                text = "{} {}".format(mention, text)
-##    except:
-##        pass
-##
-##    # Preparing to output
-##
-##    '''
-##    There were certain cases where I used Tweep
-##    to gather a list of users and then fed that
-##    generated list into Tweep. That's why these
-##    modes exist.
-##    '''
-##    if users:
-##        output = username
-##    elif tweets:
-##        output = tweet
-##    else:
-##        '''
-##        The standard output is how I like it, although
-##        this can be modified to your desire. Uncomment
-##        the bottom line and add in the variables in the
-##        order you want them or how you want it to look.
-##        '''
-##        # output = ""
-##        output = "{} {} {} {} <{}> {}".format(tweetid, date, time, timezone, username, text)
-##        if hashtags:
-##            output+= " {}".format(hashtags)
-##        if stats:
-##            output+= " | {} replies {} retweets {} likes".format(replies, retweets, likes)
-##
-##    # Output section
-##
-##    if XXXXXXXX != False:
-##        dat = [tweetid, date, time, timezone, username, text]
-##        if hashtags:
-##            dat = [tweetid, date, time, timezone, username, text, hashtags]
-##        # Write all variables to a list to be passed to a dataframe
-##        if stats:
-##            dat = [tweetid, date, time, timezone, username, text, replies, retweets, likes,hashtags]
-##
-##    return output
-
-
-
-##async def getTweets(init,user_name,search_term,geo,year,since,fruit,
-##                    verified,users,XXXXXXXX,hashtags,limit,count,stats):
-##    '''
-##    This function uses the html responses from getFeed()
-##    and sends that info to the Tweet parser outTweet() and
-##    outputs it.
-##
-##    Returns response feed, if it's first-run, and Tweet count.
-##    '''
-##    tweets, init = await getFeed(init,user_name,search_term,geo,year,since,fruit,verified)
-##    count = 0
-##    if XXXXXXXX:
-##        df = pd.DataFrame(columns=['tweetid','date','time','timezone','username','text'])
-##        if hashtags:
-##            df = pd.DataFrame(columns=['tweetid','date','time','timezone','username','text','hashtags'])
-##        if stats:
-##            df = pd.DataFrame(columns=['tweetid','date','time','timezone','username','text','replies','retweets','likes','hashtags'])
-##    for tweet in tweets:
-##        '''
-##        Certain Tweets get taken down for copyright but are still
-##        visible in the search. We want to avoid those.
-##        '''
-##        copyright = tweet.find("div","StreamItemContent--withheld")
-##        if copyright is None:
-##            count += 1
-##            print(await outTweet(tweet,XXXXXXXX,users,hashtags,stats))
-##            #df.loc[count] = dat
-##            
-##    return tweets, init, count
 
 
 async def getUsername(userid):
