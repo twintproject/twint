@@ -2,3 +2,4 @@ aiohttp
 aiodns
 beautifulsoup4
 cchardet
+elasticsearch

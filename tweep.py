@@ -10,11 +10,14 @@ import datetime
 import json
 import re
 import sys
+import hashlib
+
+from elasticsearch import Elasticsearch
 
 async def getUrl(init):
     '''
     URL Descision:
-    Tweep utilizes positions of Tweet's from Twitter's search feature to 
+    Tweep utilizes positions of Tweet's from Twitter's search feature to
     iterate through a user's Twitter feed. This section decides whether
     this is the first URL request or not and develops the URL based on the
     args given.
@@ -99,7 +102,7 @@ async def getFeed(init):
         if init == -1:
             feed, init = await initial(response)
         else:
-            feed, init = await cont(response) 
+            feed, init = await cont(response)
     except:
         # Tweep will realize that it's done scraping.
         pass
@@ -109,7 +112,7 @@ async def getFeed(init):
 async def outTweet(tweet):
     '''
     Parsing Section:
-    This function will create the desired output string and 
+    This function will create the desired output string and
     write it to a file or csv if specified.
 
     Returns output.
@@ -147,6 +150,18 @@ async def outTweet(tweet):
                 text = "{} {}".format(mention, text)
     except:
         pass
+    
+    jObject = {
+        "tweetid": tweetid,
+        "datestamp": date + " " + time,
+        "timezone": timezone,
+        "text": text,
+        "hashtags": re.findall(r'(?i)\#\w+', text, flags=re.UNICODE),
+        "replies": replies,
+        "retweets": retweets,
+        "likes": likes,
+        "username": username
+    }
 
     # Preparing to output
 
@@ -156,38 +171,44 @@ async def outTweet(tweet):
     generated list into Tweep. That's why these
     modes exist.
     '''
-    if arg.users:
-        output = username
-    elif arg.tweets:
-        output = tweets
+    if arg.elasticsearch:
+        es = Elasticsearch(arg.elasticsearch)
+        es.index(index="tweep", doc_type="items", id=tweetid, body=json.dumps(jObject))
+        return ""
+
     else:
-        '''
-        The standard output is how I like it, although
-        this can be modified to your desire. Uncomment
-        the bottom line and add in the variables in the
-        order you want them or how you want it to look.
-        '''
-        # output = ""
-        output = "{} {} {} {} <{}> {}".format(tweetid, date, time, timezone, username, text)
-        if arg.hashtags:
-            output+= " {}".format(hashtags)
-        if arg.stats:
-            output+= " | {} replies {} retweets {} likes".format(replies, retweets, likes)
-
-    # Output section
-
-    if arg.o != None:
-        if arg.csv:
-            # Write all variables scraped to CSV
-            dat = [tweetid, date, time, timezone, username, text, replies, retweets, likes, hashtags]
-            with open(arg.o, "a", newline='') as csv_file:
-                writer = csv.writer(csv_file, delimiter="|")
-                writer.writerow(dat)
+        if arg.users:
+            output = username
+        elif arg.tweets:
+            output = tweets
         else:
-            # Writes or appends to a file.
-            print(output, file=open(arg.o, "a"))
+            '''
+            The standard output is how I like it, although
+            this can be modified to your desire. Uncomment
+            the bottom line and add in the variables in the
+            order you want them or how you want it to look.
+            '''
+            # output = ""
+            output = "{} {} {} {} <{}> {}".format(tweetid, date, time, timezone, username, text)
+            if arg.hashtags:
+                output+= " {}".format(hashtags)
+            if arg.stats:
+                output+= " | {} replies {} retweets {} likes".format(replies, retweets, likes)
 
-    return output
+        # Output section
+
+        if arg.o != None:
+            if arg.csv:
+                # Write all variables scraped to CSV
+                dat = [tweetid, date, time, timezone, username, text, replies, retweets, likes, hashtags]
+                with open(arg.o, "a", newline='') as csv_file:
+                    writer = csv.writer(csv_file, delimiter="|")
+                    writer.writerow(dat)
+            else:
+                # Writes or appends to a file.
+                print(output, file=open(arg.o, "a"))
+
+            return output
 
 async def getTweets(init):
     '''
@@ -207,7 +228,10 @@ async def getTweets(init):
         copyright = tweet.find("div","StreamItemContent--withheld")
         if copyright is None:
             count +=1
-            print(await outTweet(tweet))
+            if arg.elasticsearch:
+                print(await outTweet(tweet),end=".", flush=True)
+            else:
+                print(await outTweet(tweet))
 
     return tweets, init, count
 
@@ -254,7 +278,7 @@ def Error(error, message):
     sys.exit(0)
 
 def check():
-    # Performs main argument checks so nothing unintended happens. 
+    # Performs main argument checks so nothing unintended happens.
     if arg.u is not None:
         if arg.users:
             Error("Contradicting Args", "Please use --users in combination with -s.")
@@ -285,9 +309,12 @@ if __name__ == "__main__":
     ap.add_argument("--limit", help="Number of Tweets to pull (Increments of 20).")
     ap.add_argument("--count", help="Display number Tweets scraped at the end of session.", action="store_true")
     ap.add_argument("--stats", help="Show number of replies, retweets, and likes", action="store_true")
+    ap.add_argument("-es", "--elasticsearch", help="Index to Elasticsearch")
     arg = ap.parse_args()
 
     check()
+    if arg.elasticsearch:
+        print("Indexing to Elasticsearch @" + str(arg.elasticsearch))
 
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main())
