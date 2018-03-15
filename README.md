@@ -21,6 +21,7 @@ Some of the benefits of using Tweep vs Twitter API:
 - `-s` Search for Tweets containing this word or phrase.
 - `-g` Retrieve tweets by geolocation. Format of the argument is lat,lon,range(km or mi).
 - `-o` Save output to a file.
+- `-es` Output to Elasticsearch
 - `--year` Filter Tweets before the specified year. 
 - `--fruit` Display Tweets with "low-hanging-fruit".
 - `--tweets` Display Tweets only.
@@ -53,6 +54,7 @@ A few simple examples to help you understand the basics:
 - `python3 tweep.py -u username --fruit` - Show Tweets with low-hanging fruit.
 - `python3 tweep.py -s "Donald Trump" --verified --users` - List verified users that Tweet about Donald Trump.
 - `python3 tweep.py -g="48.880048,2.385939,1km" -o file.csv --csv` - Scrape Tweets from a radius of 1km around a place in Paris and export them to a csv file.
+- `python3 tweep.py -u username -es localhost:9200` - Output Tweets to Elasticsearch
 
 ## Example String
 `955511208597184512 2018-01-22 18:43:19 GMT <now> pineapples are the best fruit`
