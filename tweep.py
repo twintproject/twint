@@ -208,7 +208,7 @@ async def outTweet(tweet):
                 # Writes or appends to a file.
                 print(output, file=open(arg.o, "a"))
 
-            return output
+        return output
 
 async def getTweets(init):
     '''
