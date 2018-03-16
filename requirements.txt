@@ -5,3 +5,4 @@ cchardet
 pandas
 random
 
+#pyTweepTor needs tor installed and running the background, see: https://github.com/alex-miller-0/Tor_Crawler

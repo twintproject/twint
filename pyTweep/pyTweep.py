@@ -4,7 +4,6 @@ from time import gmtime, strftime
 import aiohttp
 import asyncio
 import async_timeout
-import csv
 import datetime
 import json
 import re
@@ -59,6 +58,7 @@ async def fetch(session, url):
     with async_timeout.timeout(30):
         async with session.get(url) as response:
             _bytes = await response.read()
+
             return UnicodeDammit(_bytes).unicode_markup
         
 async def initial(response):
@@ -113,8 +113,7 @@ async def outTweet(tweet,hashtags,stats):
 
     '''
     Parsing Section:
-    This function will create the desired output string and 
-    write it to a file or csv if specified.
+    This function will create the desired write it to a pandas dataframe
 
     Returns output, dat 
     '''
@@ -159,7 +158,8 @@ async def outTweet(tweet,hashtags,stats):
     The standard output is how I like it, although
     this can be modified to your desire. Uncomment
     the bottom line and add in the variables in the
-    order you want them or how you want it to look.
+    order you want them or how you want it to look. -- you must also
+    update the dataframe column specification inside getTweets() to match changes made here
     '''
     # output = ""
     output = [tweetid, date, time, timezone, username, text]
@@ -168,12 +168,6 @@ async def outTweet(tweet,hashtags,stats):
     if stats == True:
         output += [replies, retweets, likes, tweet_hashtags]
 
-    # Output section
-
-    with open('test.csv', "a", newline='',encoding='utf-8') as csv_file:
-        writer = csv.writer(csv_file, delimiter="|")
-        writer.writerow(output)
-        
     return output
 
 
@@ -196,10 +190,7 @@ async def getTweets(init,user_name,search_term,geo,year,since,
         columns+= ['hashtags']
     if stats == True:
         columns += ['replies', 'retweets', 'likes','hashtags']
-    x = 0
-    if x == 0:
-        df = pd.DataFrame(columns=columns)
-        x = 1
+    df = pd.DataFrame(columns=columns)
     for tweet in tweets:
         '''
         Certain Tweets get taken down for copyright but are still
@@ -208,13 +199,9 @@ async def getTweets(init,user_name,search_term,geo,year,since,
         copyright = tweet.find("div","StreamItemContent--withheld")
         if copyright is None:
             dat = await outTweet(tweet,hashtags,stats)
-            #print(dat)
             df.loc[count] = dat
-            #print('data length = '+str(len(dat)))
-            #print('df length ='+str(len(df.columns)))
             count +=1
-    #print(len(df))
-
+            print(dat+'\n\n')
     return tweets, init, count, df
 
 
@@ -259,9 +246,8 @@ async def main(user_name,search_term,geo,year,since,fruit,verified,hashtags,user
             # Control when we want to stop scraping.
             if limit is not None and num == int(limit):
                 break
-        #if count:
-            #print("Finished: Successfully collected {} Tweets.".format(num))
-    #print(df)
+        if count:
+            print("Finished: Successfully collected {} Tweets.".format(num))
     return df 
 
 def Error(error, message):
@@ -278,18 +264,7 @@ def check(user_names,verified,userid):
             Error("Contradicting Args", "userid and username cannot be used together.")
 
 
-def Tweep(user_names = None,        
-          search_terms = None,            
-          geo = None,               
-          year = None,              
-          since = None,             
-          fruit = None,                        
-          verified = None,                               
-          hashtags = False,          
-          userid = None,             
-          limit = None,             
-          count = None,             
-          stats = False):            
+def pyTweep(user_names = None,search_terms = None,geo = None,year = None,since = None,fruit = None,verified = None,hashtags = False,userid = None,limit = None,count = None,stats = False):            
     '''
     This is a wrapper function for tweep.py which will allow it to be implemented in pure python, without interfacing with with bash,
     and with updated output functionality integrated with pandas, and with pure python interation capabilities,
@@ -300,13 +275,13 @@ def Tweep(user_names = None,
     :param year: filter Tweets before specified year, usage: year = 2014, default = None
     :param since: filter Tweets sent since date, usage: since = '2017-12-27', default = None
     :param fruit: use to display 'low-hanging-fruit' Tweets, i.e. tweets containing: profiles from leaked databases (Myspace or LastFM),
-    email addresses, phone numbers, or keybase.io profiles. usage: fruit = True, default = False
-    :param verified: use to display Tweets only from verified users, usage: verified=True, default = False
-    :param hashtags: use to output hashtags in a seperate column, usage: hashtags=True, default = False
+    email addresses, phone numbers, or keybase.io profiles. usage: fruit = True, default = None
+    :param verified: use to display Tweets only from verified users, usage: verified=True, default = None
+    :param hashtags: use to output hashtags in a seperate column, usage: hashtags=True, default = None
     :param userid: string. twitter userid if you want to use (can't be used with "user_name"), default = None
     :param limit: int value for Number of Tweets to pull (Increments of 20), default = None
-    :param count: boolian, display number Tweets scraped at the end of session, default = False
-    :param stats: use to show number of replies, retweets, and likes in output, usage: stats=True, default=False
+    :param count: boolian, display number Tweets scraped at the end of session, default = None
+    :param stats: use to show number of replies, retweets, and likes in output, usage: stats=True, default=None
     :return: a pandas dataframe corresponding to the specified parameters
     '''
     check(user_names,verified,userid)
@@ -335,5 +310,4 @@ def Tweep(user_names = None,
     else:
         print('You must enter either a user name or a search term for Tweep to work')
     return df
-                
                       
