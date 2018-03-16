@@ -94,7 +94,7 @@ async def getFeed(init):
 
     Returns html for Tweets and position id.
     '''
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as session:
         response = await fetch(session, await getUrl(init))
     feed = []
     try:
@@ -237,7 +237,7 @@ async def getUsername():
     This function uses a Twitter ID search to resolve a Twitter User
     ID and return it's corresponding username.
     '''
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as session:
         r = await fetch(session, "https://twitter.com/intent/user?user_id={0.userid}".format(arg))
     soup = BeautifulSoup(r, "html.parser")
     return soup.find("a", "fn url alternate-context")["href"].replace("/", "")
