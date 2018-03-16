@@ -33,8 +33,11 @@ The `fruit = True` feature will display Tweets that *might* contain sensitive in
 - Keybase.io profiles
 
 ## Usage
-from pyTweep.pyTweep import pyTweep
-- for first 20 tweets on the feed of twitter user 'christianbok' containing the term 'palindrome'
+- importing:
+
+`from pyTweep.pyTweep import pyTweep`
+
+- for first 20 tweets on the feed of twitter user 'christianbok' containing the term 'palindrome':
 
 `Tweep(user_names = ['christianbok'],search_terms=['palindrome'],limit=20)`
 
