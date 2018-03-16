@@ -156,10 +156,12 @@ async def outTweet(tweet,hashtags,stats):
 
     '''
     The standard output is how I like it, although
-    this can be modified to your desire. Uncomment
-    the bottom line and add in the variables in the
-    order you want them or how you want it to look. -- you must also
-    update the dataframe column specification inside getTweets() to match changes made here
+    this can be modified to your desire. Change
+    the order in the output lists as you wish,
+    but make sure you update the same list
+    specifications in getTweets() and main()
+    otherwise the dataframes won't match in
+    dimensions and it will cause errors
     '''
     # output = ""
     output = [tweetid, date, time, timezone, username, text]

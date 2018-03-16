@@ -10,8 +10,11 @@ from random import choice
 from pyTweep.TorCrawler import TorCrawler
 from pyTweep.loadAgents import get_agents
 
+#set TorCrawler defaults, this can be changed as the user wishes, see https://github.com/alex-miller-0/Tor_Crawler for details
+N_REQUESTS = 24
+
 #import torcrawler
-crawler = TorCrawler(n_requests=20)
+crawler = TorCrawler(n_requests=N_REQUESTS)
 
 #import random headers
 USER_AGENT_LIST = get_agents()
@@ -117,8 +120,8 @@ def outTweet(tweet,hashtags,stats):
 
     '''
     Parsing Section:
-    This function will create the desired output string and 
-    write it to a file or csv if specified.
+    This function will create the desired output list and write it
+    to a pandas data frame.
 
     Returns output, dat 
     '''
@@ -157,27 +160,18 @@ def outTweet(tweet,hashtags,stats):
         pass
 
     # Preparing to output
-
-
     '''
     The standard output is how I like it, although
-    this can be modified to your desire. Uncomment
-    the bottom line and add in the variables in the
-    order you want them or how you want it to look.
+    this can be modified to your desire. Change the order in the output lists as you wish,
+    but make sure you update the same list specifications in getTweets() and main() otherwise
+    the dataframes won't match in dimensions and it will cause errors
     '''
-    # output = ""
     output = [tweetid, date, time, timezone, username, text]
     if hashtags == True:
         output += [tweet_hashtags]
     if stats == True:
         output += [replies, retweets, likes, tweet_hashtags]
 
-    # Output section
-
-    with open('test.csv', "a", newline='',encoding='utf-8') as csv_file:
-        writer = csv.writer(csv_file, delimiter="|")
-        writer.writerow(output)
-        
     return output
 
 
@@ -211,12 +205,8 @@ def getTweets(init,user_name,search_term,geo,year,since,
         copyright = tweet.find("div","StreamItemContent--withheld")
         if copyright is None:
             dat = outTweet(tweet,hashtags,stats)
-            #print(dat)
             df.loc[count] = dat
-            #print('data length = '+str(len(dat)))
-            #print('df length ='+str(len(df.columns)))
             count +=1
-    #print(len(df))
 
     return tweets, init, count, df
 
@@ -260,9 +250,9 @@ def main(user_name,search_term,geo,year,since,fruit,verified,hashtags,userid,lim
             # Control when we want to stop scraping.
             if limit is not None and num == int(limit):
                 break
-        #if count:
-            #print("Finished: Successfully collected {} Tweets.".format(num))
-    #print(df)
+        if count:
+            print("Finished: Successfully collected {} Tweets.".format(num))
+            
     return df 
 
 def Error(error, message):
@@ -279,18 +269,7 @@ def check(user_names,verified,userid):
             Error("Contradicting Args", "userid and username cannot be used together.")
 
 
-def Tweep(user_names = None,        
-          search_terms = None,            
-          geo = None,               
-          year = None,              
-          since = None,             
-          fruit = None,                        
-          verified = None,                               
-          hashtags = False,          
-          userid = None,             
-          limit = None,             
-          count = None,             
-          stats = False):            
+def pyTweepTor(user_names = None,search_terms = None,geo = None,year = None,since = None,fruit = None,verified = None,hashtags = False,userid = None,limit = None,count = None,stats = False):                       
     '''
     This is a wrapper function for tweep.py which will allow it to be implemented in pure python, without interfacing with with bash,
     and with updated output functionality integrated with pandas, and with pure python interation capabilities,
@@ -301,13 +280,14 @@ def Tweep(user_names = None,
     :param year: filter Tweets before specified year, usage: year = 2014, default = None
     :param since: filter Tweets sent since date, usage: since = '2017-12-27', default = None
     :param fruit: use to display 'low-hanging-fruit' Tweets, i.e. tweets containing: profiles from leaked databases (Myspace or LastFM),
-    email addresses, phone numbers, or keybase.io profiles. usage: fruit = True, default = False
-    :param verified: use to display Tweets only from verified users, usage: verified=True, default = False
-    :param hashtags: use to output hashtags in a seperate column, usage: hashtags=True, default = False
+    email addresses, phone numbers, or keybase.io profiles. usage: fruit = True, default = None
+    :param verified: use to display Tweets only from verified users, usage: verified=True, default = None
+    :param hashtags: use to output hashtags in a seperate column, usage: hashtags=True, default = None
     :param userid: string. twitter userid if you want to use (can't be used with "user_name"), default = None
     :param limit: int value for Number of Tweets to pull (Increments of 20), default = None
-    :param count: boolian, display number Tweets scraped at the end of session, default = False
-    :param stats: use to show number of replies, retweets, and likes in output, usage: stats=True, default=False
+    :param count: boolian, display number Tweets scraped at the end of session, default = None
+    :param stats: use to show number of replies, retweets, and likes in output, usage: stats=True, default=None
+    :param N_Requests: int, sets number of requests 
     :return: a pandas dataframe corresponding to the specified parameters
     '''
     check(user_names,verified,userid)
@@ -320,13 +300,10 @@ def Tweep(user_names = None,
     if search_terms and user_names:
         for user_name in user_names:
             for search_term in search_terms:
-                print(user_name)
-                print(search_term)
                 dx = main(user_name,search_term,geo,year,since,fruit,verified,hashtags,userid,limit,count,stats)
                 df = pd.concat([df,dx])
     elif user_names:
         for user_name in user_names:
-            print(user_name)
             dx = main(user_name,search_terms,geo,year,since,fruit,verified,hashtags,userid,limit,count,stats)
             df = pd.concat([df,dx])
     elif search_terms:
@@ -335,15 +312,7 @@ def Tweep(user_names = None,
             df = pd.concat([df,dx])
     else:
         print('You must enter either a user name or a search term for Tweep to work')
-    return df
-
-    
-
-
-if __name__ == '__main__':
-    test = Tweep(user_names = ['realDonaldTrump'],limit=20,hashtags=True)
-
-        
+    return df        
                 
                       
 

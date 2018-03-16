@@ -11,11 +11,18 @@ Some of the benefits of using pyTweep vs Twitter API:
 - Fast initial setup
 - Can be used anonymously and without sign up
 - No rate limitations
+-compared to tweep.py pyTweep runs entirely in python and supports installation as a python package. It can also accept iterables (lists) as inputs for 'user_names' and 'search_terms' meaning any iteration that is desired can be handled within python
+-pyTweepTor supports ip anonymization relying on Tor_Crawler, as well as user agent randomization, though it does not use asynchronous requests so may be slower than tweep or pyTweep
 
 ## Requirements
 - Python 3.5/3.6
 - `pip3 install -r requirements.txt`
 PyTweepTor requries  tor be installed and running in the background, see: https://github.com/alex-miller-0/Tor_Crawler
+
+## Installation
+> git clone https://github.com/cbjrobertson/pytweep
+> cd pytweep
+> python setup.py install
 
 
 ## Low-Hanging Fruit
@@ -24,6 +31,12 @@ The `fruit = True` feature will display Tweets that *might* contain sensitive in
 - Email addresses
 - Phone numbers
 - Keybase.io profiles
+
+## Usage
+from pyTweep.pyTweep import pyTweep
+#for first 20 tweets on the feed of twitter user 'christianbok' containing the term 'palindrome'
+Tweep(user_names = ['christianbok'],search_terms=['palindrome'],limit=20)
+#for full functionality, see: https://github.com/haccer/tweep. Argument names are slightly different but the correspondence should be self-explanatory.
 
 
 ## Thanks
