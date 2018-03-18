@@ -325,11 +325,12 @@ async def main():
         if arg.limit is not None and num <= int(arg.limit):
             break
 
-    cursor = conn.cursor()
-    entry = (str(arg.u), str(datetime.datetime.now()), num,)
-    cursor.execute('INSERT OR REPLACE INTO users VALUES(?,?,?)', entry)
-    conn.commit()
-    conn.close()
+    if arg.database:
+        cursor = conn.cursor()
+        entry = (str(arg.u), str(datetime.datetime.now()), num,)
+        cursor.execute('INSERT OR REPLACE INTO users VALUES(?,?,?)', entry)
+        conn.commit()
+        conn.close()
 
     if arg.count:
         print("Finished: Successfully collected {} Tweets.".format(num))
