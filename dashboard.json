@@ -1,0 +1,18 @@
+[
+  {
+    "_id": "b82b0210-2b04-11e8-b48f-dbf856df4d4c",
+    "_type": "dashboard",
+    "_source": {
+      "title": "[tweep] Overview",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[\n  {\n    \"panelIndex\": \"1\",\n    \"gridData\": {\n      \"x\": 6,\n      \"y\": 5,\n      \"w\": 6,\n      \"h\": 3,\n      \"i\": \"1\"\n    },\n    \"id\": \"fcda84d0-2afa-11e8-b48f-dbf856df4d4c\",\n    \"type\": \"visualization\",\n    \"version\": \"6.2.2\"\n  },\n  {\n    \"panelIndex\": \"2\",\n    \"gridData\": {\n      \"x\": 0,\n      \"y\": 0,\n      \"w\": 12,\n      \"h\": 2,\n      \"i\": \"2\"\n    },\n    \"id\": \"81446af0-2afc-11e8-b48f-dbf856df4d4c\",\n    \"type\": \"visualization\",\n    \"version\": \"6.2.2\"\n  },\n  {\n    \"panelIndex\": \"3\",\n    \"gridData\": {\n      \"x\": 0,\n      \"y\": 5,\n      \"w\": 6,\n      \"h\": 3,\n      \"i\": \"3\"\n    },\n    \"id\": \"6683d0c0-2afc-11e8-b48f-dbf856df4d4c\",\n    \"type\": \"visualization\",\n    \"version\": \"6.2.2\"\n  },\n  {\n    \"panelIndex\": \"4\",\n    \"gridData\": {\n      \"x\": 0,\n      \"y\": 2,\n      \"w\": 12,\n      \"h\": 3,\n      \"i\": \"4\"\n    },\n    \"id\": \"4f4f4380-2afc-11e8-b48f-dbf856df4d4c\",\n    \"type\": \"visualization\",\n    \"version\": \"6.2.2\"\n  },\n  {\n    \"panelIndex\": \"5\",\n    \"gridData\": {\n      \"x\": 0,\n      \"y\": 8,\n      \"w\": 4,\n      \"h\": 3,\n      \"i\": \"5\"\n    },\n    \"version\": \"6.2.2\",\n    \"type\": \"visualization\",\n    \"id\": \"38bacd30-2b04-11e8-b48f-dbf856df4d4c\"\n  },\n  {\n    \"panelIndex\": \"6\",\n    \"gridData\": {\n      \"x\": 8,\n      \"y\": 8,\n      \"w\": 4,\n      \"h\": 3,\n      \"i\": \"6\"\n    },\n    \"version\": \"6.2.2\",\n    \"type\": \"visualization\",\n    \"id\": \"45a0f4c0-2b04-11e8-b48f-dbf856df4d4c\"\n  },\n  {\n    \"panelIndex\": \"7\",\n    \"gridData\": {\n      \"x\": 4,\n      \"y\": 8,\n      \"w\": 4,\n      \"h\": 3,\n      \"i\": \"7\"\n    },\n    \"version\": \"6.2.2\",\n    \"type\": \"visualization\",\n    \"id\": \"50ac41d0-2b04-11e8-b48f-dbf856df4d4c\"\n  }\n]",
+      "optionsJSON": "{\n  \"darkTheme\": false,\n  \"hidePanelTitles\": false,\n  \"useMargins\": true\n}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\n  \"query\": {\n    \"language\": \"lucene\",\n    \"query\": \"\"\n  },\n  \"filter\": [],\n  \"highlightAll\": true,\n  \"version\": true\n}"
+      }
+    }
+  }
+]

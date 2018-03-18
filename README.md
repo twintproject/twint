@@ -43,6 +43,9 @@ Some of the benefits of using Tweep vs Twitter API:
 6. Go back to `Management`, `Saved Objects`, Import `dashboard.json`; (do this once)
 7. Have fun.
 
+If you have problems don't hesitate to write to the mainteiner [@pielco11](https://github.com/pielco11) or open an issue.
+Feel free to edit the dashboard and don't hesitate to share it if you want.
+
 ## Low-Hanging Fruit
 The `--fruit` feature will display Tweets that *might* contain sensitive info such as:
 - Profiles from leaked databases (Myspace or LastFM)
