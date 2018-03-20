@@ -40,7 +40,7 @@ Some of the benefits of using Tweep vs Twitter API:
 3. Go to `http://localhost:5601`, `Dev Tools`, copy&paste from `index.json` and select the **green arrow**; (do this once)
 4. Index some data: `python3.6 tweep.py --elasticsearch localhost:9200 -u whatsoever`;
 5. Back to Kibana's interface, `Management`, `Index Pattern`, `Create Index Pattern`, type `tweep`, choose `datestamp` as Time filter; (do this once)
-6. Go back to `Management`, `Saved Objects`, Import `dashboard.json`; (do this once)
+6. Go back to `Management`, `Saved Objects`, Import `dashboard.json` and than `visualization.json`; (do this once)
 7. Have fun.
 
 If you have problems don't hesitate to write to the mainteiner [@pielco11](https://github.com/pielco11) or open an issue.
