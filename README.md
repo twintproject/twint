@@ -16,23 +16,25 @@ Some of the benefits of using Tweep vs Twitter API:
 - Python 3.5/3.6
 - `pip3 install -r requirements.txt`
 
-## Usage
-- `-u` The user's Tweets you want to scrape.
-- `-s` Search for Tweets containing this word or phrase.
-- `-g` Retrieve tweets by geolocation. Format of the argument is lat,lon,range(km or mi).
-- `-o` Save output to a file.
-- `-es` Output to Elasticsearch
-- `--year` Filter Tweets before the specified year. 
-- `--fruit` Display Tweets with "low-hanging-fruit".
-- `--tweets` Display Tweets only.
-- `--verified` Display Tweets only from verified users (Use with `-s`).
-- `--users` Display users only (Use with `-s`).
-- `--csv` Write as a .csv file.
-- `--hashtags` Extract hashtags.
-- `--userid` Search from Twitter user's ID.
-- `--limit` Number of Tweets to pull (Increments of 20).
-- `--count` Display number Tweets scraped at the end of session.
-- `--stats` Show number of replies, retweets, and likes.
+## Options
+Command|Usage
+-------|-----------
+`-u`|The user's Tweets you want to scrape.
+`-s`|Search for Tweets containing this word or phrase.
+`-g`|Retrieve tweets by geolocation. Format of the argument is lat,lon,range(km or mi).
+`-o`|Save output to a file.
+`-es`|Output to Elasticsearch
+`--year`|Filter Tweets before the specified year. 
+`--fruit`|Display Tweets with "low-hanging-fruit".
+`--tweets`|Display Tweets only.
+`--verified`|Display Tweets only from verified users (Use with `-s`).
+`--users`|Display users only (Use with `-s`).
+`--csv`|Write as a .csv file.
+`--hashtags`|Extract hashtags.
+`--userid`|Search from Twitter user's ID.
+`--limit`|Number of Tweets to pull (Increments of 20).
+`--count`|Display number Tweets scraped at the end of session.
+`--stats`|Show number of replies, retweets, and likes.
 
 ## Low-Hanging Fruit
 The `--fruit` feature will display Tweets that *might* contain sensitive info such as:
