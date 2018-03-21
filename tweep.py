@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 from bs4 import BeautifulSoup
-from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch, helpers
 from time import gmtime, strftime
 import argparse
 import aiohttp
 import asyncio
 import async_timeout
+import contextlib
 import csv
 import datetime
 import hashlib
@@ -13,6 +14,17 @@ import json
 import re
 import sys
 import sqlite3
+
+## clean some output
+class RecycleObject(object):
+    def write(self, junk): pass
+
+@contextlib.contextmanager
+def nostdout():
+    savestdout = sys.stdout
+    sys.stdout = RecycleObject()
+    yield
+    sys.stdout = savestdout
 
 def initdb(db):
     '''
@@ -204,43 +216,99 @@ async def outTweet(tweet):
         except sqlite3.IntegrityError: # this happens if the tweet is already in the db
             return ""
 
-    day = d.strftime("%A")
-    if day == "Monday":
-        _day = 1
-    elif day == "Tuesday":
-        _day = 2
-    elif day == "Wednesday":
-        _day = 3
-    elif day == "Thursday":
-        _day = 4
-    elif day == "Friday":
-        _day = 5
-    elif day == "Saturday":
-        _day = 6
-    elif day == "Sunday":
-        _day = 7
-    else:
-        print("[x] Something is going wrong!")
-        sys.exit(1)
-
 
     if arg.elasticsearch:
-        jObject = {
-            "tweetid": tweetid,
-            "datestamp": date + " " + time,
-            "timezone": timezone,
-            "text": text,
-            "hashtags": re.findall(r'(?i)\#\w+', text, flags=re.UNICODE),
-            "replies": replies,
-            "retweets": retweets,
-            "likes": likes,
-            "username": username,
-            "day": _day,
-            "hour": time.split(":")[0]
-        }
+
+        day = d.strftime("%A")
+        if day == "Monday":
+            _day = 1
+        elif day == "Tuesday":
+            _day = 2
+        elif day == "Wednesday":
+            _day = 3
+        elif day == "Thursday":
+            _day = 4
+        elif day == "Friday":
+            _day = 5
+        elif day == "Saturday":
+            _day = 6
+        elif day == "Sunday":
+            _day = 7
+        else:
+            print("[x] Something is going wrong!")
+            sys.exit(1)
+
+        hashtags = re.findall(r'(?i)\#\w+', text, flags=re.UNICODE)
+        actions = []
+        nLikes = 0
+        nReplies = 0
+        nRetweets = 0
+
+        for l in range(int(likes)):
+            jObject = {
+                "tweetid": tweetid,
+                "datestamp": date + " " + time,
+                "timezone": timezone,
+                "text": text,
+                "hashtags": hashtags,
+                "likes": True,
+                "username": username,
+                "day": _day,
+                "hour": time.split(":")[0]
+                }
+            j_data = {
+                "_index": "tweep",
+                "_type": "items",
+                "_id": tweetid + "_likes_" + str(nLikes),
+                "_source": jObject
+            }
+            actions.append(j_data)
+            nLikes += 1
+        for rep in range(int(replies)):
+            jObject = {
+                "tweetid": tweetid,
+                "datestamp": date + " " + time,
+                "timezone": timezone,
+                "text": text,
+                "hashtags": hashtags,
+                "replies": True,
+                "username": username,
+                "day": _day,
+                "hour": time.split(":")[0]
+                }
+            j_data = {
+                "_index": "tweep",
+                "_type": "items",
+                "_id": tweetid + "_replies_" + str(nReplies),
+                "_source": jObject
+            }
+            actions.append(j_data)
+            nReplies += 1
+        for rep in range(int(retweets)):
+            jObject = {
+                "tweetid": tweetid,
+                "datestamp": date + " " + time,
+                "timezone": timezone,
+                "text": text,
+                "hashtags": hashtags,
+                "retweets": True,
+                "username": username,
+                "day": _day,
+                "hour": time.split(":")[0]
+                }
+            j_data = {
+                "_index": "tweep",
+                "_type": "items",
+                "_id": tweetid + "_retweets_" + str(nRetweets),
+                "_source": jObject
+            }
+            actions.append(j_data)
+            nRetweets += 1
 
         es = Elasticsearch(arg.elasticsearch)
-        es.index(index="tweep", doc_type="items", id=tweetid, body=json.dumps(jObject))
+        with nostdout():
+            helpers.bulk(es, actions, chunk_size=2000, request_timeout=200)
+        actions = []
         output = ""
     elif arg.users:
         output = username
