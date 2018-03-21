@@ -7,9 +7,9 @@ PUT tweep
         "datestamp": {"type": "date", "format": "yyyy-MM-dd HH:mm:ss"},
         "timezone": {"type": "text"},
         "hashtags": {"type": "text"},
-        "replies": {"type": "integer"},
-        "retweets": {"type": "integer"},
-        "likes": {"type": "integer"},
+        "replies": {"type": "boolean"},
+        "retweets": {"type": "boolean"},
+        "likes": {"type": "boolean"},
         "username": {"type": "keyword"},
         "day": {"type": "keyword"},
         "hour": {"type": "keyword"}
