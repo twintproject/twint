@@ -177,7 +177,7 @@ async def outTweet(tweet):
     elif arg.users:
         output = username
     elif arg.tweets:
-        output = tweets
+        output = text
     else:
         '''
         The standard output is how I like it, although
