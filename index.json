@@ -2,7 +2,7 @@ PUT tweep
 {
   "mappings" : {
     "items": {
-      "properties": { 
+      "properties": {
         "tweetid": {"type": "long"},
         "datestamp": {"type": "date", "format": "yyyy-MM-dd HH:mm:ss"},
         "timezone": {"type": "text"},
@@ -10,7 +10,9 @@ PUT tweep
         "replies": {"type": "integer"},
         "retweets": {"type": "integer"},
         "likes": {"type": "integer"},
-        "username": {"type": "keyword"}
+        "username": {"type": "keyword"},
+        "day": {"type": "keyword"},
+        "hour": {"type": "keyword"}
       }
     }
   }
