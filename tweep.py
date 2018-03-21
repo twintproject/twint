@@ -204,6 +204,26 @@ async def outTweet(tweet):
         except sqlite3.IntegrityError: # this happens if the tweet is already in the db
             return ""
 
+    day = d.strftime("%A")
+    if day == "Monday":
+        _day = 1
+    elif day == "Tuesday":
+        _day = 2
+    elif day == "Wednesday":
+        _day = 3
+    elif day == "Thursday":
+        _day = 4
+    elif day == "Friday":
+        _day = 5
+    elif day == "Saturday":
+        _day = 6
+    elif day == "Sunday":
+        _day = 7
+    else:
+        print("[x] Something is going wrong!")
+        sys.exit(1)
+
+
     if arg.elasticsearch:
         jObject = {
             "tweetid": tweetid,
@@ -214,7 +234,9 @@ async def outTweet(tweet):
             "replies": replies,
             "retweets": retweets,
             "likes": likes,
-            "username": username
+            "username": username,
+            "day": _day,
+            "hour": time.split(":")[0]
         }
 
         es = Elasticsearch(arg.elasticsearch)
