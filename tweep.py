@@ -127,6 +127,9 @@ async def outTweet(tweet):
     # The @ in the username annoys me.
     username = tweet.find("span", "username").text.replace("@", "")
     timezone = strftime("%Z", gmtime())
+    # Replace all emoticons with their title, to be included in the tweet text
+    for img in tweet.findAll("img", "Emoji Emoji--forText"):
+        img.replaceWith("<%s>" % img['aria-label'])
     # The context of the Tweet compressed into a single line.
     text = tweet.find("p", "tweet-text").text.replace("\n", "").replace("http", " http").replace("pic.twitter", " pic.twitter")
     # Regex for gathering hashtags
