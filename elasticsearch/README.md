@@ -8,8 +8,8 @@ From now on I'm assuming that you:
 
 From the terminal open `elasticsearch` and when it's up and running open `kibana`. 
 Go to `http://localhost:5601` (default setting), go to `Discover` tab, choose `tweep` and you should see something like this:
- 
-![first view]('some1.png')
+
+![first view](some1.png)
 
 (if you are having some troubles with elasticsearch or kibana setup I suggest you to look into the corresponding documentation).
 
@@ -17,7 +17,8 @@ Go to `http://localhost:5601` (default setting), go to `Discover` tab, choose `t
 So now we have some data to play with but we need to visualize it as we want some meaning.
 
 Here is a histogram based on daily activity:
-![daily]('daily.png')
+
+![daily](daily.png)
 
 How to:
 - `Visulize` tab and than the blue `+` symbol;
