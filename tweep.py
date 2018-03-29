@@ -1,17 +1,66 @@
 #!/usr/bin/python3
 from bs4 import BeautifulSoup
-from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch, helpers
 from time import gmtime, strftime
 import argparse
 import aiohttp
 import asyncio
 import async_timeout
+import contextlib
 import csv
 import datetime
 import hashlib
 import json
 import re
 import sys
+import sqlite3
+
+## clean some output
+class RecycleObject(object):
+    def write(self, junk): pass
+
+@contextlib.contextmanager
+def nostdout():
+    savestdout = sys.stdout
+    sys.stdout = RecycleObject()
+    yield
+    sys.stdout = savestdout
+
+def initdb(db):
+    '''
+    Creates a new SQLite database or connects to it if exists
+    '''
+    try:
+        conn = sqlite3.connect(db)
+        cursor = conn.cursor()
+        table_tweets = """
+            CREATE TABLE IF NOT EXISTS
+                tweets (
+                    id integer primary key,
+                    date text not null,
+                    time text not null,
+                    timezone text not null,
+                    user text not null,
+                    tweet text not null,
+                    replies integer,
+                    likes integer,
+                    retweets integer,
+                    hashtags text
+                    );
+            """
+        cursor.execute(table_tweets)
+        table_users = """
+            CREATE TABLE IF NOT EXISTS
+                users (
+                    user text primary key,
+                    date_update text not null,
+                    num_tweets integer
+                );
+            """
+        cursor.execute(table_users)
+        return conn
+    except Exception as e:
+        return str(e)
 
 async def getUrl(init):
     '''
@@ -152,7 +201,7 @@ async def outTweet(tweet):
                 text = "{} {}".format(mention, text)
     except:
         pass
-    
+
     # Preparing to output
 
     '''
@@ -161,21 +210,108 @@ async def outTweet(tweet):
     generated list into Tweep. That's why these
     modes exist.
     '''
+    if arg.database:
+        try:
+            cursor = conn.cursor()
+            entry = (tweetid, date, time, timezone, username, text, replies, likes, retweets, hashtags,)
+            cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?)', entry)
+            conn.commit()
+        except sqlite3.IntegrityError: # this happens if the tweet is already in the db
+            return ""
+
+
     if arg.elasticsearch:
-        jObject = {
-            "tweetid": tweetid,
-            "datestamp": date + " " + time,
-            "timezone": timezone,
-            "text": text,
-            "hashtags": re.findall(r'(?i)\#\w+', text, flags=re.UNICODE),
-            "replies": replies,
-            "retweets": retweets,
-            "likes": likes,
-            "username": username
-        }
-        
+
+        day = d.strftime("%A")
+        if day == "Monday":
+            _day = 1
+        elif day == "Tuesday":
+            _day = 2
+        elif day == "Wednesday":
+            _day = 3
+        elif day == "Thursday":
+            _day = 4
+        elif day == "Friday":
+            _day = 5
+        elif day == "Saturday":
+            _day = 6
+        elif day == "Sunday":
+            _day = 7
+        else:
+            print("[x] Something is going wrong!")
+            sys.exit(1)
+
+        hashtags = re.findall(r'(?i)\#\w+', text, flags=re.UNICODE)
+        actions = []
+        nLikes = 0
+        nReplies = 0
+        nRetweets = 0
+
+        for l in range(int(likes)):
+            jObject = {
+                "tweetid": tweetid,
+                "datestamp": date + " " + time,
+                "timezone": timezone,
+                "text": text,
+                "hashtags": hashtags,
+                "likes": True,
+                "username": username,
+                "day": _day,
+                "hour": time.split(":")[0]
+                }
+            j_data = {
+                "_index": "tweep",
+                "_type": "items",
+                "_id": tweetid + "_likes_" + str(nLikes),
+                "_source": jObject
+            }
+            actions.append(j_data)
+            nLikes += 1
+        for rep in range(int(replies)):
+            jObject = {
+                "tweetid": tweetid,
+                "datestamp": date + " " + time,
+                "timezone": timezone,
+                "text": text,
+                "hashtags": hashtags,
+                "replies": True,
+                "username": username,
+                "day": _day,
+                "hour": time.split(":")[0]
+                }
+            j_data = {
+                "_index": "tweep",
+                "_type": "items",
+                "_id": tweetid + "_replies_" + str(nReplies),
+                "_source": jObject
+            }
+            actions.append(j_data)
+            nReplies += 1
+        for rep in range(int(retweets)):
+            jObject = {
+                "tweetid": tweetid,
+                "datestamp": date + " " + time,
+                "timezone": timezone,
+                "text": text,
+                "hashtags": hashtags,
+                "retweets": True,
+                "username": username,
+                "day": _day,
+                "hour": time.split(":")[0]
+                }
+            j_data = {
+                "_index": "tweep",
+                "_type": "items",
+                "_id": tweetid + "_retweets_" + str(nRetweets),
+                "_source": jObject
+            }
+            actions.append(j_data)
+            nRetweets += 1
+
         es = Elasticsearch(arg.elasticsearch)
-        es.index(index="tweep", doc_type="items", id=tweetid, body=json.dumps(jObject))
+        with nostdout():
+            helpers.bulk(es, actions, chunk_size=2000, request_timeout=200)
+        actions = []
         output = ""
     elif arg.users:
         output = username
@@ -259,6 +395,14 @@ async def main():
     if arg.elasticsearch:
         print("Indexing to Elasticsearch @" + str(arg.elasticsearch))
 
+    if arg.database:
+        print("Inserting into Database: " + str(arg.database))
+        global conn
+        conn = initdb(arg.database)
+        if isinstance(conn, str):
+            print(str)
+            sys.exit(1)
+
     if arg.userid is not None:
         arg.u = await getUsername()
 
@@ -279,6 +423,14 @@ async def main():
         # Control when we want to stop scraping.
         if arg.limit is not None and num <= int(arg.limit):
             break
+
+    if arg.database:
+        cursor = conn.cursor()
+        entry = (str(arg.u), str(datetime.datetime.now()), num,)
+        cursor.execute('INSERT OR REPLACE INTO users VALUES(?,?,?)', entry)
+        conn.commit()
+        conn.close()
+
     if arg.count:
         print("Finished: Successfully collected {} Tweets.".format(num))
 
@@ -321,6 +473,7 @@ if __name__ == "__main__":
     ap.add_argument("--limit", help="Number of Tweets to pull (Increments of 20).")
     ap.add_argument("--count", help="Display number Tweets scraped at the end of session.", action="store_true")
     ap.add_argument("--stats", help="Show number of replies, retweets, and likes", action="store_true")
+    ap.add_argument("--database", help="Store tweets in the database")
     arg = ap.parse_args()
 
     check()
