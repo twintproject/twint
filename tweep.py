@@ -421,7 +421,7 @@ async def main():
         else:
             break
         # Control when we want to stop scraping.
-        if arg.limit is not None and num <= int(arg.limit):
+        if arg.limit is not None and num >= int(arg.limit):
             break
 
     if arg.database:
