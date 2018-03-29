@@ -203,7 +203,7 @@ async def outTweet(tweet):
                 writer.writerow(dat)
         else:
             # Writes or appends to a file.
-            print(output, file=open(arg.o, "a"))
+            print(output, file=open(arg.o, "a", encoding="utf-8"))
 
     return output
 
