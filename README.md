@@ -36,6 +36,18 @@ Command|Usage
 `--count`|Display number Tweets scraped at the end of session.
 `--stats`|Show number of replies, retweets, and likes.
 
+## Elasticsearch Setup
+1. Go [here](https://www.elastic.co/downloads) and download `Elasticsearch` and `Kibana`, install both; (do this once)
+2. Run `Elasticsearch` and than `Kibana`, in the Kibana output you should see "[info][status][plugin:elasticsearch@6.2.2] Status changed from yellow to green - Ready";
+3. Go to `http://localhost:5601`, `Dev Tools`, copy&paste from `index.json` and select the **green arrow**; (do this once)
+4. Index some data: `python3.6 tweep.py --elasticsearch localhost:9200 -u whatsoever`;
+5. Back to Kibana's interface, `Management`, `Index Pattern`, `Create Index Pattern`, type `tweep`, choose `datestamp` as Time filter; (do this once)
+6. Go back to `Management`, `Saved Objects`, Import `dashboard.json` and than `visualization.json`; (do this once)
+7. Have fun.
+
+If you have problems don't hesitate to write to the mainteiner [@pielco11](https://github.com/pielco11) or open an issue.
+Feel free to edit the dashboard and don't hesitate to share it if you want.
+
 ## Low-Hanging Fruit
 The `--fruit` feature will display Tweets that *might* contain sensitive info such as:
 - Profiles from leaked databases (Myspace or LastFM)
