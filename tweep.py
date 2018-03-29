@@ -127,6 +127,9 @@ async def outTweet(tweet):
     # The @ in the username annoys me.
     username = tweet.find("span", "username").text.replace("@", "")
     timezone = strftime("%Z", gmtime())
+    # Replace all emoticons with their title, to be included in the tweet text
+    for img in tweet.findAll("img", "Emoji Emoji--forText"):
+        img.replaceWith("<%s>" % img['aria-label'])
     # The context of the Tweet compressed into a single line.
     text = tweet.find("p", "tweet-text").text.replace("\n", "").replace("http", " http").replace("pic.twitter", " pic.twitter")
     # Regex for gathering hashtags
@@ -201,6 +204,12 @@ async def outTweet(tweet):
             with open(arg.o, "a", newline='', encoding="utf-8") as csv_file:
                 writer = csv.writer(csv_file, delimiter="|")
                 writer.writerow(dat)
+        elif arg.json:
+            # Write all variables scraped to JSON
+            dat = {"id":tweetid, "date":date, "time":time, "timezone":timezone, "username":username, "content":text, "replies":replies, "retweets":retweets, "likes":likes, "hashtags":hashtags}
+            with open(arg.o, "a", newline='', encoding="utf-8") as json_file:
+                json.dump(dat,json_file)
+                json_file.write('\n')
         else:
             # Writes or appends to a file.
             print(output, file=open(arg.o, "a", encoding="utf-8"))
@@ -306,6 +315,7 @@ if __name__ == "__main__":
     ap.add_argument("--verified", help="Display Tweets only from verified users (Use with -s).", action="store_true")
     ap.add_argument("--users", help="Display users only (Use with -s).", action="store_true")
     ap.add_argument("--csv", help="Write as .csv file.", action="store_true")
+    ap.add_argument("--json", help="Write as .json file.", action="store_true")
     ap.add_argument("--hashtags", help="Output hashtags in seperate column.", action="store_true")
     ap.add_argument("--userid", help="Twitter user id")
     ap.add_argument("--limit", help="Number of Tweets to pull (Increments of 20).")
