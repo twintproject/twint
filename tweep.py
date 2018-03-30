@@ -91,6 +91,8 @@ async def getUrl(init):
         url+= "%20until%3A{0.year}-1-1".format(arg)
     if arg.since != None:
         url+= "%20since%3A{0.since}".format(arg)
+    if arg.until != None:
+        url+= "%20until%3A{0.until}".format(arg)
     if arg.fruit:
         url+= "%20myspace.com%20OR%20last.fm%20OR"
         url+= "%20mail%20OR%20email%20OR%20gmail%20OR%20e-mail"
@@ -143,7 +145,7 @@ async def getFeed(init):
 
     Returns html for Tweets and position id.
     '''
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as session:
         response = await fetch(session, await getUrl(init))
     feed = []
     try:
@@ -176,6 +178,9 @@ async def outTweet(tweet):
     # The @ in the username annoys me.
     username = tweet.find("span", "username").text.replace("@", "")
     timezone = strftime("%Z", gmtime())
+    # Replace all emoticons with their title, to be included in the tweet text
+    for img in tweet.findAll("img", "Emoji Emoji--forText"):
+        img.replaceWith("<%s>" % img['aria-label'])
     # The context of the Tweet compressed into a single line.
     text = tweet.find("p", "tweet-text").text.replace("\n", "").replace("http", " http").replace("pic.twitter", " pic.twitter")
     # Regex for gathering hashtags
@@ -313,7 +318,7 @@ async def outTweet(tweet):
     elif arg.users:
         output = username
     elif arg.tweets:
-        output = tweets
+        output = text
     else:
         '''
         The standard output is how I like it, although
@@ -334,12 +339,18 @@ async def outTweet(tweet):
         if arg.csv:
             # Write all variables scraped to CSV
             dat = [tweetid, date, time, timezone, username, text, replies, retweets, likes, hashtags]
-            with open(arg.o, "a", newline='') as csv_file:
+            with open(arg.o, "a", newline='', encoding="utf-8") as csv_file:
                 writer = csv.writer(csv_file, delimiter="|")
                 writer.writerow(dat)
+        elif arg.json:
+            # Write all variables scraped to JSON
+            dat = {"id":tweetid, "date":date, "time":time, "timezone":timezone, "username":username, "content":text, "replies":replies, "retweets":retweets, "likes":likes, "hashtags":hashtags}
+            with open(arg.o, "a", newline='', encoding="utf-8") as json_file:
+                json.dump(dat,json_file)
+                json_file.write('\n')
         else:
             # Writes or appends to a file.
-            print(output, file=open(arg.o, "a"))
+            print(output, file=open(arg.o, "a", encoding="utf-8"))
 
     return output
 
@@ -373,7 +384,7 @@ async def getUsername():
     This function uses a Twitter ID search to resolve a Twitter User
     ID and return it's corresponding username.
     '''
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as session:
         r = await fetch(session, "https://twitter.com/intent/user?user_id={0.userid}".format(arg))
     soup = BeautifulSoup(r, "html.parser")
     return soup.find("a", "fn url alternate-context")["href"].replace("/", "")
@@ -412,7 +423,7 @@ async def main():
         else:
             break
         # Control when we want to stop scraping.
-        if arg.limit is not None and num <= int(arg.limit):
+        if arg.limit is not None and num >= int(arg.limit):
             break
 
     if arg.database:
@@ -453,11 +464,13 @@ if __name__ == "__main__":
     ap.add_argument("-es", "--elasticsearch", help="Index to Elasticsearch")
     ap.add_argument("--year", help="Filter Tweets before specified year.")
     ap.add_argument("--since", help="Filter Tweets sent since date (Example: 2017-12-27).")
+    ap.add_argument("--until", help="Filter Tweets sent until date (Example: 2017-12-27).")
     ap.add_argument("--fruit", help="Display 'low-hanging-fruit' Tweets.", action="store_true")
     ap.add_argument("--tweets", help="Display Tweets only.", action="store_true")
     ap.add_argument("--verified", help="Display Tweets only from verified users (Use with -s).", action="store_true")
     ap.add_argument("--users", help="Display users only (Use with -s).", action="store_true")
     ap.add_argument("--csv", help="Write as .csv file.", action="store_true")
+    ap.add_argument("--json", help="Write as .json file.", action="store_true")
     ap.add_argument("--hashtags", help="Output hashtags in seperate column.", action="store_true")
     ap.add_argument("--userid", help="Twitter user id")
     ap.add_argument("--limit", help="Number of Tweets to pull (Increments of 20).")
