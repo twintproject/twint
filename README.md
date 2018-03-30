@@ -71,7 +71,7 @@ A few simple examples to help you understand the basics:
 ## Elasticsearch Setup
 Moved to the wiki.
 
-If you have problems don't hesitate to write to open an issue.
+If you have problems don't hesitate to write or open an issue.
 Feel free to edit the dashboard and don't hesitate to share it if you want.
 
 ## Thanks
