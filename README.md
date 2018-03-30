@@ -69,13 +69,7 @@ A few simple examples to help you understand the basics:
 <img src="https://i.imgur.com/RKdBrHr.png" />
 
 ## Elasticsearch Setup
-1. Go [here](https://www.elastic.co/downloads) and download `Elasticsearch` and `Kibana`, install both; (do this once)
-2. Run `Elasticsearch` and than `Kibana`, in the Kibana output you should see "[info][status][plugin:elasticsearch@6.2.2] Status changed from yellow to green - Ready";
-3. Go to `http://localhost:5601`, `Dev Tools`, copy&paste from `index.json` and select the **green arrow**; (do this once)
-4. Index some data: `python3.6 tweep.py --elasticsearch localhost:9200 -u whatsoever`;
-5. Back to Kibana's interface, `Management`, `Index Pattern`, `Create Index Pattern`, type `tweep`, choose `datestamp` as Time filter; (do this once)
-6. Go back to `Management`, `Saved Objects`, Import `dashboard.json` and than `visualization.json`; (do this once)
-7. Have fun.
+Moved to the wiki.
 
 If you have problems don't hesitate to write to open an issue.
 Feel free to edit the dashboard and don't hesitate to share it if you want.
