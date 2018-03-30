@@ -16,36 +16,27 @@ Some of the benefits of using Tweep vs Twitter API:
 - Python 3.5/3.6
 - `pip3 install -r requirements.txt`
 
-## Usage
-- `-u` The user's Tweets you want to scrape.
-- `-s` Search for Tweets containing this word or phrase.
-- `-g` Retrieve tweets by geolocation. Format of the argument is lat,lon,range(km or mi).
-- `-o` Save output to a file.
-- `-es` Output to Elasticsearch
-- `--year` Filter Tweets before the specified year. 
-- `--fruit` Display Tweets with "low-hanging-fruit".
-- `--tweets` Display Tweets only.
-- `--verified` Display Tweets only from verified users (Use with `-s`).
-- `--users` Display users only (Use with `-s`).
-- `--csv` Write as a .csv file.
-- `--hashtags` Extract hashtags.
-- `--userid` Search from Twitter user's ID.
-- `--limit` Number of Tweets to pull (Increments of 20).
-- `--count` Display number Tweets scraped at the end of session.
-- `--stats` Show number of replies, retweets, and likes.
-
-## Elasticsearch Setup
-1. Go [here](https://www.elastic.co/downloads) and download `Elasticsearch` and `Kibana`, install both; (do this once)
-2. Run `Elasticsearch` and than `Kibana`, in the Kibana output you should see "[info][status][plugin:elasticsearch@6.2.2] Status changed from yellow to green - Ready";
-3. Go to `http://localhost:5601`, `Dev Tools`, copy&paste from `index.json` and select the **green arrow**; (do this once)
-4. Index some data: `python3.6 tweep.py --elasticsearch localhost:9200 -u whatsoever`;
-5. Back to Kibana's interface, `Management`, `Index Pattern`, `Create Index Pattern`, type `tweep`, choose `datestamp` as Time filter; (do this once)
-6. Have fun.
-
-Unfortunately, you cannot import visualizations and/or dashboards if you do not have the same index id, so under `elasticsearch` directory I wrote a how-to for a initial setup.
-
-If you have problems don't hesitate to write to the mainteiner [@pielco11](https://github.com/pielco11) or open an issue.
-Feel free to edit the dashboard and don't hesitate to share it if you want.
+## Options
+Command|Usage
+-------|-----------
+`-u`|The user's Tweets you want to scrape.
+`-s`|Search for Tweets containing this word or phrase.
+`-g`|Retrieve tweets by geolocation. Format of the argument is lat,lon,range(km or mi).
+`-o`|Save output to a file.
+`-es`|Output to Elasticsearch
+`--year`|Filter Tweets before the specified year. 
+`--fruit`|Display Tweets with "low-hanging-fruit".
+`--tweets`|Display Tweets only.
+`--verified`|Display Tweets only from verified users (Use with `-s`).
+`--users`|Display users only (Use with `-s`).
+`--csv`|Write as a .csv file.
+`--json`|Write as a .json file.
+`--hashtags`|Extract hashtags.
+`--userid`|Search from Twitter user's ID.
+`--limit`|Number of Tweets to pull (Increments of 20).
+`--count`|Display number Tweets scraped at the end of session.
+`--stats`|Show number of replies, retweets, and likes.
+`--database`|Store Tweets in a SQLite database
 
 ## Low-Hanging Fruit
 The `--fruit` feature will display Tweets that *might* contain sensitive info such as:
@@ -68,12 +59,26 @@ A few simple examples to help you understand the basics:
 - `python3 tweep.py -s "Donald Trump" --verified --users` - List verified users that Tweet about Donald Trump.
 - `python3 tweep.py -g="48.880048,2.385939,1km" -o file.csv --csv` - Scrape Tweets from a radius of 1km around a place in Paris and export them to a csv file.
 - `python3 tweep.py -u username -es localhost:9200` - Output Tweets to Elasticsearch
+- `python3 tweep.py -u username -o file.json --json` - Scrape Tweets and save as a json file.
+- `python3 tweep.py -u username --database tweets.db` - Save Tweets to a SQLite database.
 
 ## Example String
 `955511208597184512 2018-01-22 18:43:19 GMT <now> pineapples are the best fruit`
 
 ## Screenshot
 <img src="https://i.imgur.com/RKdBrHr.png" />
+
+## Elasticsearch Setup
+1. Go [here](https://www.elastic.co/downloads) and download `Elasticsearch` and `Kibana`, install both; (do this once)
+2. Run `Elasticsearch` and than `Kibana`, in the Kibana output you should see "[info][status][plugin:elasticsearch@6.2.2] Status changed from yellow to green - Ready";
+3. Go to `http://localhost:5601`, `Dev Tools`, copy&paste from `index.json` and select the **green arrow**; (do this once)
+4. Index some data: `python3.6 tweep.py --elasticsearch localhost:9200 -u whatsoever`;
+5. Back to Kibana's interface, `Management`, `Index Pattern`, `Create Index Pattern`, type `tweep`, choose `datestamp` as Time filter; (do this once)
+6. Go back to `Management`, `Saved Objects`, Import `dashboard.json` and than `visualization.json`; (do this once)
+7. Have fun.
+
+If you have problems don't hesitate to write to open an issue.
+Feel free to edit the dashboard and don't hesitate to share it if you want.
 
 ## Thanks
 Thanks to [@hpiedcoq](https://github.com/hpiedcoq) & [@pielco11](https://github.com/pielco11) for contributing several features!
