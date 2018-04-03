@@ -69,9 +69,11 @@ A few simple examples to help you understand the basics:
 <img src="https://i.imgur.com/RKdBrHr.png" />
 
 ## Elasticsearch Setup
+![dashboard](https://i.imgur.com/BEbtdo5.png)
+
 Moved to the wiki.
 
-If you have problems don't hesitate to write or open an issue.
+If you have problems don't hesitate to write us or open an issue.
 Feel free to edit the dashboard and don't hesitate to share it if you want.
 
 ## Thanks
