@@ -15,6 +15,8 @@ import re
 import sys
 import sqlite3
 
+user_list = {}
+
 ## clean some output
 class RecycleObject(object):
     def write(self, junk): pass
@@ -52,12 +54,24 @@ def initdb(db):
         table_users = """
             CREATE TABLE IF NOT EXISTS
                 users (
-                    user text primary key,
+                    user text,
                     date_update text not null,
-                    num_tweets integer
+                    num_tweets integer,
+                    PRIMARY KEY (user, date_update)
                 );
             """
         cursor.execute(table_users)
+        table_search = """
+            CREATE TABLE IF NOT EXISTS
+                searches (
+                    user text,
+                    date_update text not null,
+                    num_tweets integer,
+                    search_keyword text,
+                    PRIMARY KEY (user, date_update, search_keyword)
+                );
+            """
+        cursor.execute(table_search)
         return conn
     except Exception as e:
         return str(e)
@@ -218,6 +232,11 @@ async def outTweet(tweet):
             entry = (tweetid, date, time, timezone, username, text, replies, likes, retweets, hashtags,)
             cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?)', entry)
             conn.commit()
+            if username in list(user_list):
+                old_tot = user_list[list(user_list)[list(user_list).index(username)]]
+                user_list.update({username: old_tot + 1})
+            else:
+                user_list.update({username: 1})
         except sqlite3.IntegrityError: # this happens if the tweet is already in the db
             return ""
 
@@ -395,7 +414,7 @@ async def main():
     '''
 
     if arg.elasticsearch:
-        print("Indexing to Elasticsearch @" + str(arg.elasticsearch))
+        print("Indexing to Elasticsearch @ " + str(arg.elasticsearch))
 
     if arg.database:
         print("Inserting into Database: " + str(arg.database))
@@ -427,10 +446,18 @@ async def main():
             break
 
     if arg.database:
+        now = str(datetime.datetime.now())
         cursor = conn.cursor()
-        entry = (str(arg.u), str(datetime.datetime.now()), num,)
-        cursor.execute('INSERT OR REPLACE INTO users VALUES(?,?,?)', entry)
-        conn.commit()
+        if arg.s:
+            for user in list(user_list):
+                tot = user_list[list(user_list)[list(user_list).index(user)]]
+                entry = (user, now, tot, str(arg.s),)
+                cursor.execute('INSERT OR REPLACE INTO searches VALUES(?,?,?,?)', entry)
+                conn.commit()
+        else:
+            entry = (str(arg.u), now, num,)
+            cursor.execute('INSERT OR REPLACE INTO users VALUES(?,?,?)', entry)
+            conn.commit()
         conn.close()
 
     if arg.count:
