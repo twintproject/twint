@@ -114,6 +114,8 @@ async def getUrl(init):
         url+= "%20OR%20keybase"
     if arg.verified:
         url+= "%20filter%3Averified"
+    if arg.to:
+        url+= "%20to%3A{0.to}".format(arg)
 
     return url
 
@@ -504,6 +506,7 @@ if __name__ == "__main__":
     ap.add_argument("--count", help="Display number Tweets scraped at the end of session.", action="store_true")
     ap.add_argument("--stats", help="Show number of replies, retweets, and likes", action="store_true")
     ap.add_argument("--database", help="Store tweets in the database")
+    ap.add_argument("--to", help="Search Tweets to a user")
     arg = ap.parse_args()
 
     check()
