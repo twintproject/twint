@@ -116,6 +116,8 @@ async def getUrl(init):
         url+= "%20filter%3Averified"
     if arg.to:
         url+= "%20to%3A{0.to}".format(arg)
+    if arg.all:
+        url+= "%20to%3A{0.all}%20OR%20from%3A{0.all}%20OR%20@{0.all}".format(arg)
 
     return url
 
@@ -507,6 +509,7 @@ if __name__ == "__main__":
     ap.add_argument("--stats", help="Show number of replies, retweets, and likes", action="store_true")
     ap.add_argument("--database", help="Store tweets in the database")
     ap.add_argument("--to", help="Search Tweets to a user")
+    ap.add_argument("--all", help="Search all Tweets associated with a user") 
     arg = ap.parse_args()
 
     check()
