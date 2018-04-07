@@ -65,6 +65,72 @@ A few simple examples to help you understand the basics:
 ## Example String
 `955511208597184512 2018-01-22 18:43:19 GMT <now> pineapples are the best fruit`
 
+## Language code
+**maybe this shold get a Wikipage?**
+
+|Language|code|
+|---|:---:|
+|arabic|ar|
+|amharic|am|
+|armenian|hy|
+|bangla|bn|
+|bulgarian|bg|
+|burmese|my|
+|central kurdish|ckb|
+|chinese|zh|
+|danish|da|
+|divehi|dv|
+|dutch|nl|
+|english|en|
+|estonian|et|
+|finnish|fi|
+|french|fr|
+|georgian|ka|
+|german|de|
+|greek|el|
+|gujarati|gu|
+|haitian creol|ht|
+|hebrew|he|
+|hindi|hi|
+|hungarian|hu|
+|icelandic|is|
+|indonesian|id|
+|italian|it|
+|japanese|ja|
+|kannada|kn|
+|khmer|km|
+|korean|ko|
+|lao|lo|
+|latvian|lv|
+|lithuanian|lt|
+|malayalam|ml|
+|marathi|mr|
+|nepali|ne|
+|norwegian|no|
+|odia|or|
+|pashto|ps|
+|persian|fa|
+|polish|pl|
+|portugese|pt|
+|punjabi|pa|
+|romanian|ro|
+|russian|ru|
+|spanish|es|
+|serbian|sr|
+|sindhi|sd|
+|sinhala|si|
+|slovenian|sl|
+|swedish|sv|
+|tagalog|tl|
+|tamil|ta|
+|telugu|te|
+|thai|th|
+|tibetian|bo|
+|turkish|tr|
+|urdu|ur|
+|uyghur|ug|
+|vietnamese|vi|
+
 ## Screenshot
 <img src="https://i.imgur.com/RKdBrHr.png" />
 

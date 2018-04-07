@@ -79,6 +79,8 @@ async def getUrl(init):
         url+= "&lang=en&include_available_features=1&include_entities=1&reset_"
         url+= "error_state=false&src=typd&max_position={}&q=".format(init)
 
+    if arg.l != None:
+        url = url.replace("lang=en", "l={0.l}&lang=en".format(arg))
     if arg.u != None:
         url+= "from%3A{0.u}".format(arg)
     if arg.g != None:
@@ -460,6 +462,7 @@ if __name__ == "__main__":
     ap.add_argument("-u", help="User's Tweets you want to scrape.")
     ap.add_argument("-s", help="Search for Tweets containing this word or phrase.")
     ap.add_argument("-g", help="Search for geocoded tweets.")
+    ap.add_argument("-l", help="Serch for Tweets in a specific language")
     ap.add_argument("-o", help="Save output to a file.")
     ap.add_argument("-es", "--elasticsearch", help="Index to Elasticsearch")
     ap.add_argument("--year", help="Filter Tweets before specified year.")
