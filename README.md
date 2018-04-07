@@ -37,6 +37,7 @@ Command|Usage
 `--count`|Display number Tweets scraped at the end of session.
 `--stats`|Show number of replies, retweets, and likes.
 `--database`|Store Tweets in a SQLite database
+`-l`|Serch for Tweets in a specific language
 
 ## Low-Hanging Fruit
 The `--fruit` feature will display Tweets that *might* contain sensitive info such as:
