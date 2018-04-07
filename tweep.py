@@ -413,6 +413,16 @@ async def main():
     Putting it all together.
     '''
 
+    if arg.until:
+        _until = datetime.datetime.strptime(arg.until, "%Y-%m-%d").date()
+    else:
+        _until = datetime.date.today()
+    
+    if arg.since:
+        _since = datetime.datetime.strptime(arg.since, "%Y-%m-%d").date()
+    else:
+        _since = datetime.datetime.strptime("2006-03-21", "%Y-%m-%d").date() # the 1st tweet
+
     if arg.elasticsearch:
         print("Indexing to Elasticsearch @ " + str(arg.elasticsearch))
 
@@ -430,7 +440,9 @@ async def main():
     feed = [-1]
     init = -1
     num = 0
-    while True:
+    while _since < _until:
+        arg.since = str(_until - datetime.timedelta(days=1))
+        arg.until = str(_until)
         '''
         If our response from getFeed() has an exception,
         it signifies there are no position IDs to continue
@@ -440,7 +452,9 @@ async def main():
             feed, init, count = await getTweets(init)
             num += count
         else:
-            break
+            print("update\n")
+            _until = _until - datetime.timedelta(days=1)
+            feed = [-1]
         # Control when we want to stop scraping.
         if arg.limit is not None and num >= int(arg.limit):
             break
