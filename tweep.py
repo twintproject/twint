@@ -458,7 +458,6 @@ async def main():
             feed, init, count = await getTweets(init)
             num += count
         else:
-            print("update\n")
             _until = _until - datetime.timedelta(days=1)
             feed = [-1]
         # Control when we want to stop scraping.
