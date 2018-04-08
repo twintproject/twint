@@ -440,6 +440,9 @@ async def main():
             print(str)
             sys.exit(1)
 
+    if not arg.timedelta:
+        arg.timedelta = 30
+
     if arg.userid is not None:
         arg.u = await getUsername()
 

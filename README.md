@@ -23,7 +23,8 @@ Command|Usage
 `-s`|Search for Tweets containing this word or phrase.
 `-g`|Retrieve tweets by geolocation. Format of the argument is lat,lon,range(km or mi).
 `-o`|Save output to a file.
-`-es`|Output to Elasticsearch
+`-es`|Output to Elasticsearch.
+`-t`|Choose the time interval for every request.
 `--year`|Filter Tweets before the specified year. 
 `--fruit`|Display Tweets with "low-hanging-fruit".
 `--tweets`|Display Tweets only.
