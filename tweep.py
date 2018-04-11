@@ -1,4 +1,17 @@
 #!/usr/bin/python3
+'''
+Twint.py - Twitter Intelligence (formerly known as Tweep).
+Written by Cody Zacharias (@now)
+
+Special thanks to @hpiedcoq & @pielco11 for contributing
+several search and storing options.
+
+See wiki on Github for in-depth details.
+https://github.com/haccer/twint/wiki
+
+Licensed under MIT License
+Copyright (c) 2018 Cody Zacharias
+'''
 from bs4 import BeautifulSoup
 from elasticsearch import Elasticsearch, helpers
 from time import gmtime, strftime
@@ -6,6 +19,7 @@ import argparse
 import aiohttp
 import asyncio
 import async_timeout
+import concurrent.futures
 import contextlib
 import csv
 import datetime
@@ -30,7 +44,7 @@ def nostdout():
 
 def initdb(db):
     '''
-    Creates a new SQLite database or connects to it if exists
+    Creates a new SQLite database or connects to an existing one.
     '''
     try:
         conn = sqlite3.connect(db)
@@ -76,74 +90,102 @@ def initdb(db):
     except Exception as e:
         return str(e)
 
+def getAction():
+    if arg.following:
+        action = "following"
+    elif arg.followers:
+        action = "followers"
+    elif arg.favorites:
+        action = "favorites"
+    else:
+        action = ""
+    
+    return action
+
 async def getUrl(init):
     '''
     URL Descision:
-    Tweep utilizes positions of Tweet's from Twitter's search feature to
+    Twint utilizes positions of Tweet's from Twitter's search feature to
     iterate through a user's Twitter feed. This section decides whether
-    this is the first URL request or not and develops the URL based on the
+    this is the first URL request or not and forms the URL based on the
     args given.
+
+    Mobile Twitter URLs are used to collect a Twitter user's Followers,
+    Followings, and Favorites.
 
     Returns complete URL.
     '''
+    action = getAction()
     if init == -1:
-        url = "https://twitter.com/search?f=tweets&vertical=default&lang=en&q="
+        if action != "":
+            url = "https://mobile.twitter.com/{0.u}/{1}?".format(arg, action)
+        else:
+            url = "https://twitter.com/search?f=tweets&vertical=default&lang=en&q="
     else:
-        url = "https://twitter.com/i/search/timeline?f=tweets&vertical=default"
-        url+= "&lang=en&include_available_features=1&include_entities=1&reset_"
-        url+= "error_state=false&src=typd&max_position={}&q=".format(init)
+        if action != "":
+            if arg.favorites:
+                id = "max_id"
+            else:
+                id = "cursor"
+            url = "https://mobile.twitter.com/{0.u}/{1}?{2}={3}".format(arg, action, id, init)
+        else:
 
-    if arg.l != None:
-        url = url.replace("lang=en", "l={0.l}&lang=en".format(arg))
-    if arg.u != None:
-        url+= "from%3A{0.u}".format(arg)
-    if arg.g != None:
-        arg.g = arg.g.replace(" ", "")
-        url+= "geocode%3A{0.g}".format(arg)
-    if arg.s != None:
-        arg.s = arg.s.replace(" ", "%20").replace("#", "%23")
-        url+= "%20{0.s}".format(arg)
-    if arg.year != None:
-        url+= "%20until%3A{0.year}-1-1".format(arg)
-    if arg.since != None:
-        url+= "%20since%3A{0.since}".format(arg)
-    if arg.until != None:
-        url+= "%20until%3A{0.until}".format(arg)
-    if arg.fruit:
-        url+= "%20myspace.com%20OR%20last.fm%20OR"
-        url+= "%20mail%20OR%20email%20OR%20gmail%20OR%20e-mail"
-        url+= "%20OR%20phone%20OR%20call%20me%20OR%20text%20me"
-        url+= "%20OR%20keybase"
-    if arg.verified:
-        url+= "%20filter%3Averified"
-    if arg.to:
-        url+= "%20to%3A{0.to}".format(arg)
-    if arg.all:
-        url+= "%20to%3A{0.all}%20OR%20from%3A{0.all}%20OR%20@{0.all}".format(arg)
-
+            url = "https://twitter.com/i/search/timeline?f=tweets&vertical=default"
+            url+= "&lang=en&include_available_features=1&include_entities=1&reset_"
+            url+= "error_state=false&src=typd&max_position={}&q=".format(init)
+    
+    if action == "":
+        if arg.l != None:
+            url = url.replace("lang=en", "l={0.l}&lang=en".format(arg))
+        if arg.u != None:
+            url+= "from%3A{0.u}".format(arg)
+        if arg.g != None:
+            arg.g = arg.g.replace(" ", "")
+            url+= "geocode%3A{0.g}".format(arg)
+        if arg.s != None:
+            arg.s = arg.s.replace(" ", "%20").replace("#", "%23")
+            url+= "%20{0.s}".format(arg)
+        if arg.year != None:
+            url+= "%20until%3A{0.year}-1-1".format(arg)
+        if arg.since != None:
+            url+= "%20since%3A{0.since}".format(arg)
+        if arg.until != None:
+            url+= "%20until%3A{0.until}".format(arg)
+        if arg.fruit:
+            url+= "%20myspace.com%20OR%20last.fm%20OR"
+            url+= "%20mail%20OR%20email%20OR%20gmail%20OR%20e-mail"
+            url+= "%20OR%20phone%20OR%20call%20me%20OR%20text%20me"
+            url+= "%20OR%20keybase"
+        if arg.verified:
+            url+= "%20filter%3Averified"
+        if arg.to:
+            url+= "%20to%3A{0.to}".format(arg)
+        if arg.all:
+            url+= "%20to%3A{0.all}%20OR%20from%3A{0.all}%20OR%20@{0.all}".format(arg)
+    
     return url
 
 async def fetch(session, url):
     '''
-    Basic aiohttp request with a 30 second timeout.
+    Standard aiohttp request with a 30 second timeout.
     '''
     with async_timeout.timeout(30):
         async with session.get(url) as response:
             return await response.text()
 
-async def initial(response):
+def initial(response):
     '''
     Initial response parsing and collecting the position ID
     '''
     soup = BeautifulSoup(response, "html.parser")
     feed = soup.find_all("li", "js-stream-item")
     init = "TWEET-{}-{}".format(feed[-1]["data-item-id"], feed[0]["data-item-id"])
-
+    
     return feed, init
 
-async def cont(response):
+def cont(response):
     '''
-    Regular json response parsing and collecting Position ID
+    Regular JSON response parsing and collecting position ID
     '''
     json_response = json.loads(response)
     html = json_response["items_html"]
@@ -151,30 +193,78 @@ async def cont(response):
     feed = soup.find_all("li", "js-stream-item")
     split = json_response["min_position"].split("-")
     split[1] = feed[-1]["data-item-id"]
-    init = "-".join(split)
+    
+    return feed, "-".join(split)
 
+def follow(response):
+    '''
+    Response and parsing of a user's followers or following list.
+    '''
+    soup = BeautifulSoup(response, "html.parser")
+    followers = soup.find_all("td", "info fifty screenname")
+    cursor = soup.find_all("div", "w-button-more")
+    # Try & Except neccessary for collecting the last feed. 
+    try:
+        cursor = re.findall(r'cursor=(.*?)">', str(cursor))[0]
+    except:
+        pass
+
+    return followers, cursor
+
+def favorite(response):
+    '''
+    Response and parsing of a user's favorites/likes list.
+    '''
+    soup = BeautifulSoup(response, "html.parser")
+    tweets = soup.find_all("span", "metadata")
+    max_id = soup.find_all("div", "w-button-more")
+    # Try & Except neccessary for collecting the last feed.
+    try:
+        max_id = re.findall(r'max_id=(.*?)">', str(max_id))[0]
+    except:
+        pass
+    return tweets, max_id
+
+async def getfeed(init):
+    '''
+    The magic user-agent was Lynx (but could be any old one).
+    If we want to collect a person's favorites, we're signalling
+    that function; if not, we're signalling the follow() function.
+    '''
+    ua = {'User-Agent': 'Lynx/2.8.5rel.1 libwww-FM/2.14 SSL-MM/1.4.1 GNUTLS/0.8.12'}
+    connect = aiohttp.TCPConnector(verify_ssl=False)
+    async with aiohttp.ClientSession(headers=ua, connector=connect) as session:
+        response = await fetch(session, await getUrl(init))
+    feed = []
+    try:
+        if arg.favorites:
+            feed, init = favorite(response)
+        else:
+            feed, init = follow(response)
+    except:
+        pass
+    
     return feed, init
 
 async def getFeed(init):
     '''
     Parsing Descision:
-    Responses from requests with the position id's are JSON,
+    Responses from requests with the position ID's are JSON,
     so this section decides whether this is an initial request
-    or not to use the approriate response reading for parsing
-    with BeautifulSoup4.
-
-    Returns html for Tweets and position id.
+    or not to use the appropriate function for parsing with
+    BeautifulSoup4.
     '''
-    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as session:
+    connect = aiohttp.TCPConnector(verify_ssl=False)
+    async with aiohttp.ClientSession(connector=connect) as session:
         response = await fetch(session, await getUrl(init))
     feed = []
     try:
         if init == -1:
-            feed, init = await initial(response)
+            feed, init = initial(response)
         else:
-            feed, init = await cont(response)
+            feed, init = cont(response)
     except:
-        # Tweep will realize that it's done scraping.
+        # Realize that it's done scraping.
         pass
 
     return feed, init
@@ -182,12 +272,12 @@ async def getFeed(init):
 async def outTweet(tweet):
     '''
     Parsing Section:
-    This function will create the desired output string and
-    write it to a file or csv if specified.
+    This function will create the desired output string
+    and store it if specified.
 
-    Returns output.
+    Returns output
     '''
-    tweetid = tweet["data-item-id"]
+    tweetid = tweet.find("div")["data-item-id"]
     # Formatting the date & time stamps just how I like it.
     datestamp = tweet.find("a", "tweet-timestamp")["title"].rpartition(" - ")[-1]
     d = datetime.datetime.strptime(datestamp, "%d %b %Y")
@@ -198,9 +288,9 @@ async def outTweet(tweet):
     # The @ in the username annoys me.
     username = tweet.find("span", "username").text.replace("@", "")
     timezone = strftime("%Z", gmtime())
-    # Replace all emoticons with their title, to be included in the tweet text
+    # Replace all emoticons with their title, to be included in the Tweet text
     for img in tweet.findAll("img", "Emoji Emoji--forText"):
-        img.replaceWith("<%s>" % img['aria-label'])
+        img.replaceWith("<{}>".format(img['aria-label']))
     # The context of the Tweet compressed into a single line.
     text = tweet.find("p", "tweet-text").text.replace("\n", "").replace("http", " http").replace("pic.twitter", " pic.twitter")
     # Regex for gathering hashtags
@@ -210,7 +300,7 @@ async def outTweet(tweet):
     likes = tweet.find("span", "ProfileTweet-action--favorite u-hiddenVisually").find("span")["data-tweet-stat-count"]
     '''
     This part tries to get a list of mentions.
-    It sometimes gets slow with Tweets that contain
+    It sometimes gets slow with Tweets that contains
     40+ mentioned people.. rather than just appending
     the whole list to the Tweet, it goes through each
     one to make sure there arn't any duplicates.
@@ -223,15 +313,9 @@ async def outTweet(tweet):
                 text = "{} {}".format(mention, text)
     except:
         pass
-
-    # Preparing to output
-
-    '''
-    There were certain cases where I used Tweep
-    to gather a list of users and then fed that
-    generated list into Tweep. That's why these
-    modes exist.
-    '''
+    
+    # Preparing storage
+    
     if arg.database:
         try:
             cursor = conn.cursor()
@@ -287,7 +371,7 @@ async def outTweet(tweet):
                 "hour": time.split(":")[0]
                 }
             j_data = {
-                "_index": "tweep",
+                "_index": "twint",
                 "_type": "items",
                 "_id": tweetid + "_likes_" + str(nLikes),
                 "_source": jObject
@@ -307,7 +391,7 @@ async def outTweet(tweet):
                 "hour": time.split(":")[0]
                 }
             j_data = {
-                "_index": "tweep",
+                "_index": "twint",
                 "_type": "items",
                 "_id": tweetid + "_replies_" + str(nReplies),
                 "_source": jObject
@@ -327,7 +411,7 @@ async def outTweet(tweet):
                 "hour": time.split(":")[0]
                 }
             j_data = {
-                "_index": "tweep",
+                "_index": "twint",
                 "_type": "items",
                 "_id": tweetid + "_retweets_" + str(nRetweets),
                 "_source": jObject
@@ -347,9 +431,9 @@ async def outTweet(tweet):
     else:
         '''
         The standard output is how I like it, although
-        this can be modified to your desire. Uncomment
-        the bottom line and add in the variables in the
-        order you want them or how you want it to look.
+        This can be modified to your desire. Uncomment
+        the line bellow and add the variables in the
+        order/format you want them to look.
         '''
         # output = ""
         output = "{} {} {} {} <{}> {}".format(tweetid, date, time, timezone, username, text)
@@ -358,7 +442,7 @@ async def outTweet(tweet):
         if arg.stats:
             output+= " | {} replies {} retweets {} likes".format(replies, retweets, likes)
 
-        # Output section
+    # Output section
 
     if arg.o != None:
         if arg.csv:
@@ -381,9 +465,8 @@ async def outTweet(tweet):
 
 async def getTweets(init):
     '''
-    This function uses the html responses from getFeed()
-    and sends that info to the Tweet parser outTweet() and
-    outputs it.
+    This function uses the HTML responses from getFeed()
+    and sends that info to outTweet() to output it.
 
     Returns response feed, if it's first-run, and Tweet count.
     '''
@@ -398,18 +481,79 @@ async def getTweets(init):
         if copyright is None:
             count +=1
             if arg.elasticsearch:
-                print(await outTweet(tweet),end=".", flush=True)
+                print(await outTweet(tweet), end=".", flush=True)
             else:
                 print(await outTweet(tweet))
 
     return tweets, init, count
 
+async def getTweet(url):
+    '''
+    This function is used in a concurrent loop
+    to fetch individual Tweets and send them
+    for formatting/parsing, very similar to 
+    getTweets().
+    '''
+    try:
+        connect = aiohttp.TCPConnector(verify_ssl=False)
+        async with aiohttp.ClientSession(connector=connect) as session:
+            response = await fetch(session, url)
+        soup = BeautifulSoup(response, "html.parser")
+        tweet = soup.find("div", "permalink-inner permalink-tweet-container")
+        copyright = tweet.find("div", "StreamItemContent--withheld")
+        print(url)
+        if copyright is None:
+            if arg.elasticsearch:
+                print(await outTweet(tweet), end=".", flush=True)
+            else:
+                print(await outTweet(tweet))
+    except:
+        pass
+
+async def getFavorites(init):
+    '''
+    This will get the URL for the Tweet that was
+    liked by the user and schedules it to be
+    requested. Also similar to getTweets().
+    '''
+    tweets, init = await getfeed(init)
+    count = 0
+    try:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+            loop = asyncio.get_event_loop()
+            futures = []
+            for tweet in tweets:
+                count += 1
+                link = tweet.find("a")["href"]
+                url = "https://twitter.com{}".format(link)
+                futures.append(loop.run_in_executor(executor, await getTweet(url)))
+
+            await asyncio.gather(*futures)
+    except:
+        pass
+
+    return tweets, init, count
+
+async def getFollow(init):
+    '''
+    For now, just printing the Twitter username
+    of a follower/user followed. Will include more
+    data on the user upon request.
+    '''
+    follow, init = await getfeed(init)
+    for f in follow:
+        user = f.find("a")["name"]
+        print(user)
+
+    return follow, init
+
 async def getUsername():
     '''
-    This function uses a Twitter ID search to resolve a Twitter User
+    This function uses a Twitter ID search to resolve a Twitter user
     ID and return it's corresponding username.
     '''
-    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as session:
+    connect = aiohttp.TCPConnector(verify_ssl=False)
+    async with aiohttp.ClientSession(connector=connect) as session:
         r = await fetch(session, "https://twitter.com/intent/user?user_id={0.userid}".format(arg))
     soup = BeautifulSoup(r, "html.parser")
     return soup.find("a", "fn url alternate-context")["href"].replace("/", "")
@@ -449,20 +593,28 @@ async def main():
     feed = [-1]
     init = -1
     num = 0
+    action = getAction()
     while _since < _until:
         arg.since = str(_until - datetime.timedelta(days=int(arg.timedelta)))
         arg.until = str(_until)
         '''
         If our response from getFeed() has an exception,
         it signifies there are no position IDs to continue
-        with, telling Tweep it's finished scraping.
+        with, telling Twint it's finished scraping.
         '''
         if len(feed) > 0:
-            feed, init, count = await getTweets(init)
-            num += count
+            if action != "":
+                if arg.favorites:
+                    feed, init, count = await getFavorites(init)
+                else:
+                    feed, init = await getFollow(init)
+            else:
+                feed, init, count = await getTweets(init)
+                num += count
         else:
             _until = _until - datetime.timedelta(days=int(arg.timedelta))
             feed = [-1]
+            break
         # Control when we want to stop scraping.
         if arg.limit is not None and num >= int(arg.limit):
             break
@@ -505,7 +657,7 @@ def check():
         Error("Error", "Please specify an output file (Example: -o file.csv")
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(prog="tweep.py", usage="python3 %(prog)s [options]", description="tweep.py - An Advanced Twitter Scraping Tool")
+    ap = argparse.ArgumentParser(prog="twint.py", usage="python3 %(prog)s [options]", description="twint.py - An Advanced Twitter Scraping Tool")
     ap.add_argument("-u", help="User's Tweets you want to scrape.")
     ap.add_argument("-s", help="Search for Tweets containing this word or phrase.")
     ap.add_argument("-g", help="Search for geocoded tweets.")
@@ -529,7 +681,10 @@ if __name__ == "__main__":
     ap.add_argument("--stats", help="Show number of replies, retweets, and likes", action="store_true")
     ap.add_argument("--database", help="Store tweets in the database")
     ap.add_argument("--to", help="Search Tweets to a user")
-    ap.add_argument("--all", help="Search all Tweets associated with a user") 
+    ap.add_argument("--all", help="Search all Tweets associated with a user")
+    ap.add_argument("--followers", help="Scrape a person's followers", action="store_true")
+    ap.add_argument("--following", help="Scrape who a person follows.", action="store_true")
+    ap.add_argument("--favorites", help="Scrape Tweets a user has liked.", action="store_true")
     arg = ap.parse_args()
 
     check()
