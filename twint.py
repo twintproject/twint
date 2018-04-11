@@ -86,6 +86,26 @@ def initdb(db):
                 );
             """
         cursor.execute(table_search)
+        table_followers = """
+            CREATE TABLE IF NOT EXISTS
+                followers (
+                    user text not null,
+                    date_update text not null,
+                    follower text not null,
+                    PRIMARY KEY (user, follower)
+                );
+            """
+        cursor.execute(table_followers)
+        table_following = """
+            CREATE TABLE IF NOT EXISTS
+                following (
+                    user text not null,
+                    date_update text not null,
+                    follows text not null,
+                    PRIMARY KEY (user, follows)
+                );
+            """
+        cursor.execute(table_following)
         return conn
     except Exception as e:
         return str(e)
@@ -542,6 +562,19 @@ async def outFollow(f):
     user = f.find("a")["name"]
     
     output = user
+
+    if arg.database:
+        try:
+            date_time = str(datetime.datetime.now())
+            cursor = conn.cursor()
+            entry = (arg.u, date_time, user,)
+            if arg.followers:
+                cursor.execute('INSERT INTO followers VALUES(?,?,?)', entry)
+            else:
+                cursor.execute('INSERT INTO following VALUES(?,?,?)', entry)
+            conn.commit()
+        except sqlite3.IntegrityError: # this happens if the entry is already in the db
+            pass
 
     if arg.o != None:
         print(output, file=open(arg.o, "a", encoding="utf-8"))
