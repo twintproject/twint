@@ -1,4 +1,4 @@
-PUT tweep
+PUT twint
 {
   "mappings" : {
     "items": {
