@@ -534,16 +534,28 @@ async def getFavorites(init):
 
     return tweets, init, count
 
+async def outFollow(f):
+    '''
+    Will include more data on the user
+    upon request.
+    '''
+    user = f.find("a")["name"]
+    
+    output = user
+
+    if arg.o != None:
+        print(output, file=open(arg.o, "a", encoding="utf-8"))
+
+    return output
+
 async def getFollow(init):
     '''
     For now, just printing the Twitter username
-    of a follower/user followed. Will include more
-    data on the user upon request.
+    of a follower/user followed.
     '''
     follow, init = await getfeed(init)
     for f in follow:
-        user = f.find("a")["name"]
-        print(user)
+        print(await outFollow(f))
 
     return follow, init
 
