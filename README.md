@@ -45,7 +45,14 @@ More detail about the commands and options are located in the [wiki](https://git
 ## Example String
 `955511208597184512 2018-01-22 18:43:19 GMT <now> pineapples are the best fruit`
 
-## Elasticsearch Setup
+## Storing Options
+- Write to file.
+- CSV
+- JSON
+- SQLite
+- Elasticsearch
+
+### Elasticsearch Setup
 
 Details on setting up Elasticsearch with Twint is located in the [wiki](https://github.com/haccer/twint/wiki/Elasticsearch). 
 
