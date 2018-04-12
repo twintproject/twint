@@ -639,30 +639,38 @@ async def main():
     init = -1
     num = 0
     action = getAction()
-    while _since < _until:
-        arg.since = str(_until - datetime.timedelta(days=int(arg.timedelta)))
-        arg.until = str(_until)
-        '''
-        If our response from getFeed() has an exception,
-        it signifies there are no position IDs to continue
-        with, telling Twint it's finished scraping.
-        '''
-        if len(feed) > 0:
-            if action != "":
+    if action != "":
+        while True:
+            if len(feed) > 0:
                 if arg.favorites:
                     feed, init, count = await getFavorites(init)
+                    num += count
                 else:
                     feed, init = await getFollow(init)
             else:
+                break
+
+            if arg.limit is not None and num >= int(arg.limit):
+                break
+    else:
+        while _since < _until:
+            arg.since = str(_until - datetime.timedelta(days=int(arg.timedelta)))
+            arg.until = str(_until)
+            '''
+            If our response from getFeed() has an exception,
+            it signifies there are no position IDs to continue
+            with, telling Twint it's finished scraping.
+            '''
+            if len(feed) > 0:
                 feed, init, count = await getTweets(init)
                 num += count
-        else:
-            _until = _until - datetime.timedelta(days=int(arg.timedelta))
-            feed = [-1]
-            break
-        # Control when we want to stop scraping.
-        if arg.limit is not None and num >= int(arg.limit):
-            break
+            else:
+                _until = _until - datetime.timedelta(days=int(arg.timedelta))
+                feed = [-1]
+
+            # Control when we want to stop scraping.
+            if arg.limit is not None and num >= int(arg.limit):
+                break
 
     if arg.database:
         now = str(datetime.datetime.now())
