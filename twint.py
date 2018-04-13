@@ -521,7 +521,6 @@ async def getTweet(url):
         soup = BeautifulSoup(response, "html.parser")
         tweet = soup.find("div", "permalink-inner permalink-tweet-container")
         copyright = tweet.find("div", "StreamItemContent--withheld")
-        print(url)
         if copyright is None:
             if arg.elasticsearch:
                 print(await outTweet(tweet), end=".", flush=True)
