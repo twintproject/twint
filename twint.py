@@ -302,6 +302,9 @@ async def outTweet(tweet):
     datestamp = tweet.find("a", "tweet-timestamp")["title"].rpartition(" - ")[-1]
     d = datetime.datetime.strptime(datestamp, "%d %b %Y")
     date = d.strftime("%Y-%m-%d")
+    if (d.date() - datetime.datetime.strptime(arg.since, "%Y-%m-%d").date()).days == -1:
+        # mitigation here, maybe find something better
+        sys.exit(0)
     timestamp = str(datetime.timedelta(seconds=int(tweet.find("span", "_timestamp")["data-time"]))).rpartition(", ")[-1]
     t = datetime.datetime.strptime(timestamp, "%H:%M:%S")
     time = t.strftime("%H:%M:%S")
@@ -629,7 +632,10 @@ async def main():
             sys.exit(1)
 
     if not arg.timedelta:
-        arg.timedelta = 30
+        if (_until - _since).days > 30:
+            arg.timedelta = 30
+        else:
+            arg.timedelta = (_until - _since).days
 
     if arg.userid is not None:
         arg.u = await getUsername()
