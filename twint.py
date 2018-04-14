@@ -216,6 +216,15 @@ def cont(response):
     
     return feed, "-".join(split)
 
+def err(e, func):
+    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    msg = "[{}] {} - {}".format(now, func, e)
+    if arg.o:
+        print(msg, file=open(arg.o, "a", encoding="utf-8"))
+    
+    print(msg, file=open("twint_debug.log", "a", encoding="utf-8"))
+    print(msg)
+
 def follow(response):
     '''
     Response and parsing of a user's followers or following list.
@@ -226,8 +235,9 @@ def follow(response):
     # Try & Except neccessary for collecting the last feed. 
     try:
         cursor = re.findall(r'cursor=(.*?)">', str(cursor))[0]
-    except:
-        pass
+    except Exception as e:
+        if arg.debug:
+            err(e, "follow()")
 
     return followers, cursor
 
@@ -241,8 +251,10 @@ def favorite(response):
     # Try & Except neccessary for collecting the last feed.
     try:
         max_id = re.findall(r'max_id=(.*?)">', str(max_id))[0]
-    except:
-        pass
+    except Exception as e:
+        if arg.debug:
+            err(e, "favorite()")
+
     return tweets, max_id
 
 async def getfeed(init):
@@ -335,8 +347,9 @@ async def outTweet(tweet):
             mention = "@{}".format(mentions[i])
             if mention not in text:
                 text = "{} {}".format(mention, text)
-    except:
-        pass
+    except Exception as e:
+        if arg.debug:
+            err(e, "outTweet()")
     
     # Preparing storage
     
@@ -530,8 +543,9 @@ async def getTweet(url):
                 print(await outTweet(tweet), end=".", flush=True)
             else:
                 print(await outTweet(tweet))
-    except:
-        pass
+    except Exception as e:
+        if arg.debug:
+            err(e, "getTweet()")
 
 async def getFavorites(init):
     '''
@@ -552,8 +566,9 @@ async def getFavorites(init):
                 futures.append(loop.run_in_executor(executor, await getTweet(url)))
 
             await asyncio.gather(*futures)
-    except:
-        pass
+    except Exception as e:
+        if arg.debug:
+            err(e, "getFavorites()")
 
     return tweets, init, count
 
@@ -747,6 +762,7 @@ if __name__ == "__main__":
     ap.add_argument("--followers", help="Scrape a person's followers", action="store_true")
     ap.add_argument("--following", help="Scrape who a person follows.", action="store_true")
     ap.add_argument("--favorites", help="Scrape Tweets a user has liked.", action="store_true")
+    ap.add_argument("--debug", help="Debug mode", action="store_true")
     arg = ap.parse_args()
 
     check()
