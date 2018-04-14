@@ -302,6 +302,10 @@ async def outTweet(tweet):
     datestamp = tweet.find("a", "tweet-timestamp")["title"].rpartition(" - ")[-1]
     d = datetime.datetime.strptime(datestamp, "%d %b %Y")
     date = d.strftime("%Y-%m-%d")
+    if (d.date() - datetime.datetime.strptime(arg.since, "%Y-%m-%d").date()).days == -1:
+        if _since_def_user:
+            # mitigation here, maybe find something better
+            sys.exit(0)
     timestamp = str(datetime.timedelta(seconds=int(tweet.find("span", "_timestamp")["data-time"]))).rpartition(", ")[-1]
     t = datetime.datetime.strptime(timestamp, "%H:%M:%S")
     time = t.strftime("%H:%M:%S")
@@ -612,10 +616,13 @@ async def main():
     else:
         _until = datetime.date.today()
     
+    global _since_def_user
     if arg.since:
         _since = datetime.datetime.strptime(arg.since, "%Y-%m-%d").date()
+        _since_def_user = True
     else:
         _since = datetime.datetime.strptime("2006-03-21", "%Y-%m-%d").date() # the 1st tweet
+        _since_def_user = False
 
     if arg.elasticsearch:
         print("Indexing to Elasticsearch @ " + str(arg.elasticsearch))
