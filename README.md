@@ -36,7 +36,7 @@ A few simple examples to help you understand the basics:
 - `python3 twint.py -u username -es localhost:9200` - Output Tweets to Elasticsearch
 - `python3 twint.py -u username -o file.json --json` - Scrape Tweets and save as a json file.
 - `python3 twint.py -u username --database tweets.db` - Save Tweets to a SQLite database.
-- `python3 twint.py -u username --folowers` - Scrape a Twitter user's followers.
+- `python3 twint.py -u username --followers` - Scrape a Twitter user's followers.
 - `python3 twint.py -u username --following` - Scrape who a Twitter user follows.
 - `python3 twint.py -u username --favorites` - Collect all the Tweets a user has favorited.
 
