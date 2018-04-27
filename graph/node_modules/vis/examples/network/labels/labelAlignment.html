@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+  <title>Network | Label alignment</title>
+
+  <script type="text/javascript" src="../../../dist/vis.js"></script>
+  <link href="../../../dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+
+  <style type="text/css">
+    #mynetwork {
+      width: 600px;
+      height: 400px;
+      border: 1px solid lightgray;
+    }
+    p {
+      max-width:600px;
+    }
+  </style>
+  
+</head>
+
+<body>
+
+<p>Labels of edges can be aligned to edges in various ways.</p>
+<p>Text-alignment within node labels can be 'left' or 'center', other font alignments not implemented.</p>
+<p>Label alignment (placement of label &quot;box&quot;) for nodes (top, bottom, left, right, inside) is
+planned but not in vis yet.</p>
+<p>The click event is captured and displayed to illustrate how the clicking on labels works.
+You can drag the nodes over each other to see how this influences the click event values.
+</p>
+
+<div id="mynetwork"></div>
+<pre id="eventSpan"></pre>
+
+<script type="text/javascript">
+  // create an array with nodes
+  var nodes = [
+    {id: 1, label: 'Node 1'},
+    {id: 2, label: 'Node 2'},
+    {id: 3, label: 'Node 3:\nLeft-Aligned', font: {'face': 'Monospace', align: 'left'}},
+    {id: 4, label: 'Node 4'},
+    {id: 5, label: 'Node 5\nLeft-Aligned box', shape: 'box',
+     font: {'face': 'Monospace', align: 'left'}}
+  ];
+
+  // create an array with edges
+  var edges = [
+    {from: 1, to: 2, label: 'middle',     font: {align: 'middle'}},
+    {from: 1, to: 3, label: 'top',        font: {align: 'top'}},
+    {from: 2, to: 4, label: 'horizontal', font: {align: 'horizontal'}},
+    {from: 2, to: 5, label: 'bottom',     font: {align: 'bottom'}}
+  ];
+
+  // create a network
+  var container = document.getElementById('mynetwork');
+  var data = {
+    nodes: nodes,
+    edges: edges
+  };
+  var options = {physics:false};
+  var network = new vis.Network(container, data, options);
+
+    network.on("click", function (params) {
+        params.event = "[original event]";
+        document.getElementById('eventSpan').innerHTML = '<h2>Click event:</h2>' + JSON.stringify(params, null, 4);
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+platform:
+- x64
+environment:
+  matrix:
+  - nodejs_version: "6"
+  - nodejs_version: "4"
+cache:
+- '%APPDATA%\npm-cache'
+- '%USERPROFILE%\.electron'
+branches:
+  only:
+  - master
+
+install:
+- ps: Install-Product node $env:nodejs_version $env:platform
+- npm install
+
+test_script:
+- node --version
+- npm --version
+- npm test
+
+build: off

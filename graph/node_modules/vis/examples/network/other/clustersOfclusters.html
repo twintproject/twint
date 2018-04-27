@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cluster Test</title>
+    <script type="text/javascript" src="../../../dist/vis.js"></script>
+    <link href="../../../dist/vis.css" rel="stylesheet" type="text/css"/>
+    <style type="text/css">
+        #network_graph {
+            width: 1000px;
+            height: 800px;
+            border: 1px solid lightgray;
+        }
+    </style>
+</head>
+<body onload="draw()">
+<p>
+    Clusters can contain other clusters, but clusters of a single node is only possible by adding
+<pre>allowSingleNodeCluster: true</pre>
+to clusterNodeProperties<br/>
+In this example repeatedly clicking on the node with open the Clusters.
+</p>
+<div id="network_graph"></div>
+<div id="info"></div>
+<script type="text/javascript">
+    var network;
+
+    var node_color = ['orange', 'green', 'red', 'yellow', 'cyan'];
+    var node_shape = ['star', 'database', 'diamond', 'square', 'triangle'];
+    var nodes = new vis.DataSet([
+        {id: 'x', label: 'Node X'},
+        {id: 'y', label: 'Node Y'},
+    ]);
+    var network_options = {};
+    var edges = new vis.DataSet([
+        {from: 'x', to: 'y'}
+    ]);
+
+    var cluster_id = 1;
+
+    function draw() {
+        network = new vis.Network(
+                document.getElementById('network_graph'),
+                {
+                    nodes: nodes,
+                    edges: edges
+                },
+                network_options
+        );
+        network.on('click', function (params) {
+            if (params.nodes.length == 1) {
+                if (network.isCluster(params.nodes[0]) == true) {
+                    network.openCluster(params.nodes[0]);
+                }
+            }
+        });
+        cluster();
+        cluster();
+        cluster();
+    }
+
+    function cluster() {
+        var clusterOptions = {
+            joinCondition: function (childOptions) {
+                console.log(childOptions);
+                return true;
+            },
+            clusterNodeProperties: {id: cluster_id, label: "Cluster " + cluster_id, color: node_color[cluster_id - 1], shape: node_shape[cluster_id - 1], allowSingleNodeCluster: true}
+        };
+        cluster_id++;
+        network.cluster(clusterOptions);
+    }
+</script>
+</body>
+</html>

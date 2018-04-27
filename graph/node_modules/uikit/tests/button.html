@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en-gb" dir="ltr">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Button - UIkit tests</title>
+        <script src="js/test.js"></script>
+        <style type="text/css">
+
+            body { padding-bottom: 500px; }
+
+        </style>
+    </head>
+
+    <body>
+
+        <div class="uk-container">
+
+            <h1>Button</h1>
+
+            <div class="uk-child-width-1-4@m" uk-grid>
+                <div class="uk-width-1-2@m">
+
+                    <h2>Styles</h2>
+
+                    <p uk-margin>
+                        <a class="uk-button uk-button-default" href="#">Link</a>
+                        <button class="uk-button uk-button-default">Button</button>
+                        <button class="uk-button uk-button-default" disabled>Disabled</button>
+                    </p>
+
+                    <p uk-margin>
+                        <a class="uk-button uk-button-primary" href="#">Link</a>
+                        <button class="uk-button uk-button-primary">Button</button>
+                        <button class="uk-button uk-button-primary" disabled>Disabled</button>
+                    </p>
+
+                    <p uk-margin>
+                        <a class="uk-button uk-button-secondary" href="#">Link</a>
+                        <button class="uk-button uk-button-secondary">Button</button>
+                        <button class="uk-button uk-button-secondary" disabled>Disabled</button>
+                    </p>
+
+                    <p uk-margin>
+                        <a class="uk-button uk-button-danger" href="#">Link</a>
+                        <button class="uk-button uk-button-danger">Button</button>
+                        <button class="uk-button uk-button-danger" disabled>Disabled</button>
+                    </p>
+
+                </div>
+                <div>
+
+                    <h2>Text</h2>
+
+                    <p uk-margin>
+                        <a class="uk-button uk-button-text" href="#">Link</a>
+                        <button class="uk-button uk-button-text">Button</button>
+                        <button class="uk-button uk-button-text" disabled>Disabled</button>
+                    </p>
+
+                </div>
+                <div>
+
+                    <h2>Link</h2>
+
+                    <p uk-margin>
+                        <button class="uk-button uk-button-default">Button</button>
+                        <button class="uk-button uk-button-link">Button</button>
+                    </p>
+
+                    <p uk-margin>
+                        <button class="uk-button uk-button-default" disabled>Button</button>
+                        <button class="uk-button uk-button-link" disabled>Button</button>
+                    </p>
+
+                    <p uk-margin>
+                        <a href="#">Link</a>
+                        <button class="uk-button uk-button-link uk-text-baseline">Button</button>
+                    </p>
+
+                </div>
+            </div>
+
+            <h2>Size</h2>
+
+            <p uk-margin>
+                <a class="uk-button uk-button-default uk-button-small" href="#">Link</a>
+                <button class="uk-button uk-button-primary uk-button-small">Button</button>
+                <button class="uk-button uk-button-secondary uk-button-small">Button</button>
+                <button class="uk-button uk-button-danger uk-button-small">Button</button>
+                <button class="uk-button uk-button-default uk-button-small" disabled>Disabled</button>
+                <button class="uk-button uk-button-text uk-button-small">Button</button>
+            </p>
+
+            <p uk-margin>
+                <a class="uk-button uk-button-default uk-button-large" href="#">Link</a>
+                <button class="uk-button uk-button-primary uk-button-large">Button</button>
+                <button class="uk-button uk-button-secondary uk-button-large">Button</button>
+                <button class="uk-button uk-button-danger uk-button-large">Button</button>
+                <button class="uk-button uk-button-default uk-button-large" disabled>Disabled</button>
+                <button class="uk-button uk-button-text uk-button-large">Button</button>
+            </p>
+
+            <h2>Group</h2>
+
+            <div class="uk-margin" uk-margin>
+                <div class="uk-button-group">
+                    <a class="uk-button uk-button-default uk-button-small" href="#">Link</a>
+                    <button class="uk-button uk-button-default uk-button-small">Button</button>
+                    <button class="uk-button uk-button-default uk-button-small">Button</button>
+                </div>
+
+                <div class="uk-button-group">
+                    <a class="uk-button uk-button-primary uk-button-small" href="#">Link</a>
+                    <button class="uk-button uk-button-primary uk-button-small">Button</button>
+                    <button class="uk-button uk-button-primary uk-button-small">Button</button>
+                </div>
+
+                <div class="uk-button-group">
+                    <a class="uk-button uk-button-secondary uk-button-small" href="#">Link</a>
+                    <button class="uk-button uk-button-secondary uk-button-small">Button</button>
+                    <button class="uk-button uk-button-secondary uk-button-small">Button</button>
+                </div>
+
+                <div class="uk-button-group">
+                    <a class="uk-button uk-button-danger uk-button-small" href="#">Link</a>
+                    <button class="uk-button uk-button-danger uk-button-small">Button</button>
+                    <button class="uk-button uk-button-danger uk-button-small">Button</button>
+                </div>
+
+                <div class="uk-button-group">
+                    <button class="uk-button uk-button-default uk-button-small" disabled>Button</button>
+                    <button class="uk-button uk-button-default uk-button-small" disabled>Button</button>
+                    <button class="uk-button uk-button-default uk-button-small" disabled>Button</button>
+                </div>
+            </div>
+
+            <div class="uk-margin" uk-margin>
+                <div class="uk-button-group">
+                    <a class="uk-button uk-button-default" href="#">Link</a>
+                    <button class="uk-button uk-button-default">Button</button>
+                    <button class="uk-button uk-button-default">Button</button>
+                </div>
+
+                <div class="uk-button-group">
+                    <a class="uk-button uk-button-primary" href="#">Link</a>
+                    <button class="uk-button uk-button-primary">Button</button>
+                    <button class="uk-button uk-button-primary">Button</button>
+                </div>
+
+                <div class="uk-button-group">
+                    <a class="uk-button uk-button-secondary" href="#">Link</a>
+                    <button class="uk-button uk-button-secondary">Button</button>
+                    <button class="uk-button uk-button-secondary">Button</button>
+                </div>
+
+                <div class="uk-button-group">
+                    <a class="uk-button uk-button-danger" href="#">Link</a>
+                    <button class="uk-button uk-button-danger">Button</button>
+                    <button class="uk-button uk-button-danger">Button</button>
+                </div>
+
+                <div class="uk-button-group">
+                    <button class="uk-button uk-button-default" disabled>Button</button>
+                    <button class="uk-button uk-button-default" disabled>Button</button>
+                    <button class="uk-button uk-button-default" disabled>Button</button>
+                </div>
+            </div>
+
+            <div class="uk-margin" uk-margin>
+                <div class="uk-button-group">
+                    <a class="uk-button uk-button-default uk-button-large" href="#">Link</a>
+                    <button class="uk-button uk-button-default uk-button-large">Button</button>
+                    <button class="uk-button uk-button-default uk-button-large">Button</button>
+                </div>
+
+                <div class="uk-button-group">
+                    <a class="uk-button uk-button-primary uk-button-large" href="#">Link</a>
+                    <button class="uk-button uk-button-primary uk-button-large">Button</button>
+                    <button class="uk-button uk-button-primary uk-button-large">Button</button>
+                </div>
+
+                <div class="uk-button-group">
+                    <a class="uk-button uk-button-secondary uk-button-large" href="#">Link</a>
+                    <button class="uk-button uk-button-secondary uk-button-large">Button</button>
+                    <button class="uk-button uk-button-secondary uk-button-large">Button</button>
+                </div>
+
+                <div class="uk-button-group">
+                    <a class="uk-button uk-button-danger uk-button-large" href="#">Link</a>
+                    <button class="uk-button uk-button-danger uk-button-large">Button</button>
+                    <button class="uk-button uk-button-danger uk-button-large">Button</button>
+                </div>
+
+                <div class="uk-button-group">
+                    <button class="uk-button uk-button-default uk-button-large" disabled>Button</button>
+                    <button class="uk-button uk-button-default uk-button-large" disabled>Button</button>
+                    <button class="uk-button uk-button-default uk-button-large" disabled>Button</button>
+                </div>
+            </div>
+
+            <h2>Group with Drop</h2>
+
+            <div class="uk-margin" uk-margin>
+
+                <div class="uk-button-group">
+                    <button class="uk-button uk-button-default">Group</button>
+                    <div class="uk-inline">
+                        <button class="uk-button uk-button-default" type="button"><span uk-icon="icon: table"></span></button>
+                        <div uk-drop="mode: click">
+                            <div class="uk-card uk-card-body uk-card-default">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="uk-button-group">
+                    <button class="uk-button uk-button-primary">Group</button>
+                    <div class="uk-inline">
+                        <button class="uk-button uk-button-primary" type="button"><span uk-icon="icon: table"></span></button>
+                        <div uk-drop="mode: click">
+                            <div class="uk-card uk-card-body uk-card-default">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="uk-button-group">
+                    <button class="uk-button uk-button-secondary">Group</button>
+                    <div class="uk-inline">
+                        <button class="uk-button uk-button-secondary" type="button"><span uk-icon="icon: table"></span></button>
+                        <div uk-drop="mode: click">
+                            <div class="uk-card uk-card-body uk-card-default">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="uk-button-group">
+                    <button class="uk-button uk-button-danger">Group</button>
+                    <div class="uk-inline">
+                        <button class="uk-button uk-button-danger" type="button"><span uk-icon="icon: table"></span></button>
+                        <div uk-drop="mode: click">
+                            <div class="uk-card uk-card-body uk-card-default">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en-gb" dir="ltr">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Tab - UIkit tests</title>
+        <script src="js/test.js"></script>
+    </head>
+
+    <body>
+
+        <div class="uk-container">
+
+            <h1>Tab</h1>
+
+            <div class="uk-child-width-1-2@m" uk-grid>
+                <div>
+
+                    <h2>Top</h2>
+
+                    <ul uk-tab>
+                        <li class="uk-active"><a href="#">Left</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li class="uk-disabled"><a>Disabled</a></li>
+                    </ul>
+
+                    <ul class="uk-flex-right" uk-tab>
+                        <li class="uk-active"><a href="#">Right</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li class="uk-disabled"><a>Disabled</a></li>
+                    </ul>
+
+                    <ul class="uk-flex-center" uk-tab>
+                        <li class="uk-active"><a href="#">Center</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                    </ul>
+
+                    <ul class="uk-child-width-1-5" uk-tab>
+                        <li class="uk-active"><a href="#">Justify</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                    </ul>
+
+                </div>
+                <div>
+
+                    <h2>Bottom</h2>
+
+                    <ul class="uk-tab-bottom" uk-tab>
+                        <li class="uk-active"><a href="#">Left</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li class="uk-disabled"><a>Disabled</a></li>
+                    </ul>
+
+                    <ul class="uk-tab-bottom uk-flex-right" uk-tab>
+                        <li class="uk-active"><a href="#">Right</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li class="uk-disabled"><a>Disabled</a></li>
+                    </ul>
+
+                    <ul class="uk-tab-bottom uk-flex-center" uk-tab>
+                        <li class="uk-active"><a href="#">Center</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                    </ul>
+
+                    <ul class="uk-tab-bottom uk-child-width-1-5" uk-tab>
+                        <li class="uk-active"><a href="#">Justify</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                    </ul>
+
+                </div>
+            </div>
+
+            <h2>Left/Right</h2>
+
+            <div class="uk-child-width-auto" uk-grid>
+                <div>
+
+                    <ul class="uk-tab-left" uk-tab>
+                        <li class="uk-active"><a href="#">Active</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                    </ul>
+
+                </div>
+                <div>
+
+                    <ul class="uk-tab-right" uk-tab>
+                        <li class="uk-active"><a href="#">Active</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                    </ul>
+
+                </div>
+            </div>
+
+            <h2>Dropdown</h2>
+
+            <div class="uk-margin">
+
+                <ul class="uk-width-1-2@m" uk-tab>
+                    <li class="uk-active"><a href="#">Active</a></li>
+                    <li><a href="#">Item</a></li>
+                    <li><a href="#">Item</a></li>
+                    <li>
+                        <a href="#">More <span class="uk-margin-small-left" uk-icon="icon: trash"></span></a>
+                        <div uk-dropdown="mode: click">
+                            <ul class="uk-nav uk-dropdown-nav">
+                                <li class="uk-active"><a href="#">Active</a></li>
+                                <li class="uk-parent"><a href="#">Item</a></li>
+                                <li class="uk-nav-header">Header</li>
+                                <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: table"></span> Item</a></li>
+                                <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: thumbnails"></span> Item</a></li>
+                                <li class="uk-nav-divider"></li>
+                                <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: trash"></span> Item</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+
+            <h2>JavaScript Options</h2>
+
+            <div class="uk-overflow-auto">
+                <table class="uk-table uk-table-striped">
+                    <thead>
+                        <tr>
+                            <th>Option</th>
+                            <th>Value</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>connect</code></td>
+                            <td>CSS selector</td>
+                            <td>false</td>
+                            <td>Related items container. By default next element with class 'uk-switcher'.</td>
+                        </tr>
+                        <tr>
+                            <td><code>toggle</code></td>
+                            <td>CSS selector</td>
+                            <td>> *</td>
+                            <td>Toggle selector - triggers content switching on click.</td>
+                        </tr>
+                        <tr>
+                            <td><code>active</code></td>
+                            <td>Number</td>
+                            <td>0</td>
+                            <td>Active index on init. (Providing a negative number indicates a position starting from the end of the set)</td>
+                        </tr>
+                        <tr>
+                            <td><code>animation</code></td>
+                            <td>String</td>
+                            <td>false</td>
+                            <td>The space separated names of animations to use. (Comma separate for animation out)</td>
+                        </tr>
+                        <tr>
+                            <td><code>duration</code></td>
+                            <td>Number</td>
+                            <td>200</td>
+                            <td>The animation duration.</td>
+                        </tr>
+                        <tr>
+                            <td><code>swiping</code></td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>Use swiping.</td>
+                        </tr>
+                        <tr>
+                            <td><code>media</code></td>
+                            <td>Integer|String</td>
+                            <td>960</td>
+                            <td>When to become horizontal - a width as integer (e.g. 640) or a breakpoint (e.g. @s, @m, @l, @xl).</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </body>
+</html>

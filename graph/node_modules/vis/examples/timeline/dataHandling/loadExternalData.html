@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Timeline | External data</title>
+
+  <style type="text/css">
+    body, html {
+      font-family: sans-serif;
+    }
+  </style>
+
+  <!-- Load jquery for ajax support -->
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+  <script src="../../../dist/vis.js"></script>
+  <link href="../../../dist/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+  
+</head>
+<body>
+<p>
+  This demo shows how to load external data via an ajax call.
+</p>
+<div id="visualization"></div>
+<div id="loading">loading...</div>
+
+<script type="text/javascript">
+  // load data via an ajax request. When the data is in, load the timeline
+  $.ajax({
+    url: '../resources/data/basic.json',
+    success: function (data) {
+      // hide the "loading..." message
+      document.getElementById('loading').style.display = 'none';
+
+      // DOM element where the Timeline will be attached
+      var container = document.getElementById('visualization');
+
+      // Create a DataSet (allows two way data-binding)
+      var items = new vis.DataSet(data);
+
+      // Configuration for the Timeline
+      var options = {};
+
+      // Create a Timeline
+      var timeline = new vis.Timeline(container, items, options);
+    },
+    error: function (err) {
+      console.log('Error', err);
+      if (err.status === 0) {
+        alert('Failed to load data/basic.json.\nPlease run this example on a server.');
+      }
+      else {
+        alert('Failed to load data/basic.json.');
+      }
+    }
+  });
+</script>
+</body>
+</html>

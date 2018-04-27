@@ -1,0 +1,15 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+.gitattributes text
+.gitignore text
+.gitconfig text
+
+*.md text
+LICENSE text
+AUTHORS text
+
+*.js text
+*.json text
+*.entitlements text
+*.txt text

@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Graph2d | Scatterplot</title>
+
+  <style type="text/css">
+    body, html {
+      font-family: sans-serif;
+    }
+  </style>
+
+  <script src="../../dist/vis.js"></script>
+  <link href="../../dist/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<h2>Graph2d | Scatterplot</h2>
+<div style="width:700px; font-size:14px; text-align: justify;">
+    You can manually disable the automatic sorting of the datapoints by using the <code>sort</code> option. You can use this with the
+    <code>style: 'points'</code> option for making a scatterplot!
+</div>
+<pre class="prettyprint lang-js">
+var options = {
+    sort: false,
+    sampling:false,
+    style:'points'
+};
+</pre>
+<br />
+<div id="visualization"></div>
+
+<script type="text/javascript">
+
+  var container = document.getElementById('visualization');
+  var items = [];
+  for (var i = 0; i < 100; i++) {
+      items.push({x: new Date('2014-06-11').valueOf() + Math.floor(Math.random() * 30000), y: 500 + (Math.random() * 100)});
+  }
+
+  var dataset = new vis.DataSet(items);
+  var options = {
+      sort: false,
+      sampling:false,
+      style:'points',
+      dataAxis: {
+          left: {
+              range: {
+                  min: 300, max: 800
+              }
+          }
+      },
+      drawPoints: {
+          enabled: true,
+          size: 6,
+          style: 'circle' // square, circle
+      },
+      defaultGroup: 'Scatterplot',
+      height: '600px'
+  };
+  var graph2d = new vis.Graph2d(container, dataset, options);
+
+</script>
+</body>
+</html>

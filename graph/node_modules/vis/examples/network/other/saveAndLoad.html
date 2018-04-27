@@ -1,0 +1,185 @@
+<!doctype html>
+<html>
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <title>Network | Saving and loading networks</title>
+
+        <style type="text/css">
+            body {
+              font: 10pt sans;
+            }
+            #network {
+                float:left;
+                width: 600px;
+                height: 600px;
+                margin:5px;
+                border: 1px solid lightgray;
+            }
+            #config {
+                float:left;
+                width: 400px;
+                height: 600px;
+            }
+            #input_output {
+                height: 10%;
+                width: 15%;
+            }
+
+            p {
+                font-size:16px;
+                max-width:700px;
+            }
+        </style>
+
+        <script type="text/javascript" src="../exampleUtil.js"></script>
+        <script type="text/javascript" src="../../../dist/vis.js"></script>
+        <link href="../../../dist/vis.css" rel="stylesheet" type="text/css" />
+
+        
+    </head>
+
+    <body>
+        <p>
+            In this example, the network data can be exported to JSON and imported back into the network.
+
+            Try this out by exporting the network to JSON, clearing the network and then importing it again. The nodes will all appear in the same position as they were before the network was destroyed.
+        </p>
+
+        <div id="network"></div>
+
+        <div>
+            <textarea id=input_output></textarea>
+            <input type="button" id="import_button" onclick="importNetwork()" value="import"></input>
+            <input type="button" id="export_button" onclick="exportNetwork()" value="export"></input>
+            <input type="button" id="destroy_button" onclick="destroyNetwork()" value="destroy"></input>
+        </div>
+
+        <script type="text/javascript">
+            var network;
+            var container;
+            var exportArea;
+            var importButton;
+            var exportButton;
+
+            function init() {
+                container = document.getElementById('network');
+                exportArea = document.getElementById('input_output');
+                importButton = document.getElementById('import_button');
+                exportButton = document.getElementById('export_button');
+
+                draw();
+            }
+
+            function addConnections(elem, index) {
+                // need to replace this with a tree of the network, then get child direct children of the element
+                elem.connections = network.getConnectedNodes(index);
+            }
+
+            function destroyNetwork() {
+                network.destroy();
+            }
+
+            function clearOutputArea() {
+                exportArea.value = "";
+            }
+
+            function draw() {
+                // create a network of nodes
+                var data = getScaleFreeNetwork(5);
+
+                network = new vis.Network(container, data, {manipulation:{enabled:true}});
+
+                clearOutputArea();
+            }
+
+            function exportNetwork() {
+                clearOutputArea();
+
+                var nodes = objectToArray(network.getPositions());
+
+                nodes.forEach(addConnections);
+
+                // pretty print node data
+                var exportValue = JSON.stringify(nodes, undefined, 2);
+
+                exportArea.value = exportValue;
+
+                resizeExportArea();
+            }
+
+            function importNetwork() {
+                var inputValue = exportArea.value;
+                var inputData = JSON.parse(inputValue);
+
+                var data = {
+                    nodes: getNodeData(inputData),
+                    edges: getEdgeData(inputData)
+                }
+
+                network = new vis.Network(container, data, {});
+
+                resizeExportArea();
+            }
+
+            function getNodeData(data) {
+                var networkNodes = [];
+
+                data.forEach(function(elem, index, array) {
+                    networkNodes.push({id: elem.id, label: elem.id, x: elem.x, y: elem.y});
+                });
+
+                return new vis.DataSet(networkNodes);
+            }
+
+            function getNodeById(data, id) {
+                for (var n = 0; n < data.length; n++) {
+                    if (data[n].id == id) {  // double equals since id can be numeric or string
+                      return data[n];
+                    }
+                };
+
+                throw 'Can not find id \'' + id + '\' in data';
+            }
+
+            function getEdgeData(data) {
+                var networkEdges = [];
+
+                data.forEach(function(node) {
+                    // add the connection
+                    node.connections.forEach(function(connId, cIndex, conns) {
+                        networkEdges.push({from: node.id, to: connId});
+                        let cNode = getNodeById(data, connId);
+
+                        var elementConnections = cNode.connections;
+
+                        // remove the connection from the other node to prevent duplicate connections
+                        var duplicateIndex = elementConnections.findIndex(function(connection) {
+                          return connection == node.id; // double equals since id can be numeric or string
+                        });
+
+
+                        if (duplicateIndex != -1) {
+                          elementConnections.splice(duplicateIndex, 1);
+                        };
+                  });
+                });
+
+                return new vis.DataSet(networkEdges);
+            }
+
+            function objectToArray(obj) {
+                return Object.keys(obj).map(function (key) {
+                  obj[key].id = key;
+                  return obj[key];
+                });
+            }
+
+            function resizeExportArea() {
+                exportArea.style.height = (1 + exportArea.scrollHeight) + "px";
+            }
+
+            init();
+        </script>
+    </body>
+</html>

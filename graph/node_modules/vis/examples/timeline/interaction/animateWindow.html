@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Timeline | Animate window</title>
+
+  <style>
+    body, html {
+      font-family: arial, sans-serif;
+      font-size: 11pt;
+    }
+    input {
+      margin: 2px 0;
+    }
+  </style>
+
+  <script src="../../../dist/vis.js"></script>
+  <link href="../../../dist/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+  
+</head>
+<body>
+
+<p>This example demonstrates functions to programmatically adjust the visible window of the Timeline.</p>
+
+<p>
+  <input type="button" id="window1" value="Set window from 2014-01-01 to 2014-04-01"><br>
+  <input type="button" id="window2" value="Set window from 2014-01-01 to 2014-04-01 without animation"><br>
+  <input type="button" id="moveTo" value="Move to 2014-02-01"><br>
+  <input type="button" id="fit" value="Fit all items"><br>
+  <input type="button" id="select" value="Select & focus items 5 and 6"><br>
+  <input type="button" id="focus1" value="Focus item 2"><br>
+  <input type="button" id="focus2" value="Focus items 5 and 6 (slow and linear animation)"><br>
+  <input type="button" id="focus3" value="Focus current selection"><br>
+</p>
+
+<div id="visualization"></div>
+
+<script>
+  // create a dataset with items
+  // we specify the type of the fields `start` and `end` here to be strings
+  // containing an ISO date. The fields will be outputted as ISO dates
+  // automatically getting data from the DataSet via items.get().
+  var items = new vis.DataSet({
+    type: { start: 'ISODate', end: 'ISODate' }
+  });
+
+  // add items to the DataSet
+  items.add([
+    {id: 1, content: 'item 1<br>start', start: '2014-01-23'},
+    {id: 2, content: 'item 2', start: '2014-01-18'},
+    {id: 3, content: 'item 3', start: '2014-01-21'},
+    {id: 4, content: 'item 4', start: '2014-01-19', end: '2014-01-24'},
+    {id: 5, content: 'item 5', start: '2014-01-28', type:'point'},
+    {id: 6, content: 'item 6', start: '2014-01-26'}
+  ]);
+
+  var container = document.getElementById('visualization');
+  var options = {
+    start: '2014-01-10',
+    end: '2014-02-10',
+    editable: true,
+    showCurrentTime: true
+  };
+
+  var timeline = new vis.Timeline(container, items, options);
+
+  document.getElementById('window1').onclick = function() {
+    timeline.setWindow('2014-01-01', '2014-04-01');
+  };
+  document.getElementById('window2').onclick = function() {
+    timeline.setWindow('2014-01-01', '2014-04-01', {animation: false});
+  };
+  document.getElementById('fit').onclick = function() {
+    timeline.fit();
+  };
+  document.getElementById('select').onclick = function() {
+    timeline.setSelection([5, 6], {
+      focus: true
+    });
+  };
+  document.getElementById('focus1').onclick = function() {
+    timeline.focus(2);
+  };
+  document.getElementById('focus2').onclick = function() {
+    timeline.focus([5, 6], {animation: {duration: 3000, easingFunction: 'linear'}}); // ms
+  };
+  document.getElementById('focus3').onclick = function() {
+    var selection = timeline.getSelection();
+    timeline.focus(selection);
+  };
+  document.getElementById('moveTo').onclick = function() {
+    timeline.moveTo('2014-02-01');
+  };
+
+</script>
+</body>
+</html>

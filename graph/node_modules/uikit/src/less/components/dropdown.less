@@ -1,0 +1,150 @@
+// Name:            Dropdown
+// Description:     Component to create dropdown menus
+//
+// Component:       `uk-dropdown`
+//
+// Adopted:         `uk-dropdown-nav`
+//
+// Modifiers:       `uk-dropdown-top-*`
+//                  `uk-dropdown-bottom-*`
+//                  `uk-dropdown-left-*`
+//                  `uk-dropdown-right-*`
+//                  `uk-dropdown-stack`
+//                  `uk-dropdown-grid`
+//
+// ========================================================================
+
+
+// Variables
+// ========================================================================
+
+@dropdown-z-index:                              @global-z-index + 20;
+@dropdown-min-width:                            200px;
+@dropdown-padding:                              15px;
+@dropdown-background:                           @global-muted-background;
+@dropdown-color:                                @global-color;
+@dropdown-margin:                               @global-small-margin;
+
+@dropdown-nav-item-color:                       @global-muted-color;
+@dropdown-nav-item-hover-color:                 @global-color;
+@dropdown-nav-header-color:                     @global-emphasis-color;
+@dropdown-nav-divider-border-width:             @global-border-width;
+@dropdown-nav-divider-border:                   @global-border;
+@dropdown-nav-sublist-item-color:               @global-muted-color;
+@dropdown-nav-sublist-item-hover-color:         @global-color;
+
+
+/* ========================================================================
+   Component: Dropdown
+ ========================================================================== */
+
+/*
+ * 1. Hide by default
+ * 2. Set position
+ * 3. Set a default width
+ * 4. Style
+ */
+
+.uk-dropdown {
+    /* 1 */
+    display: none;
+    /* 2 */
+    position: absolute;
+    z-index: @dropdown-z-index;
+    /* 3 */
+    box-sizing: border-box;
+    min-width: @dropdown-min-width;
+    /* 4 */
+    padding: @dropdown-padding;
+    background: @dropdown-background;
+    color: @dropdown-color;
+    .hook-dropdown;
+}
+
+/* Show */
+.uk-dropdown.uk-open { display: block; }
+
+
+/* Nav
+ * Adopts `uk-nav`
+ ========================================================================== */
+
+.uk-dropdown-nav {
+    white-space: nowrap;
+    .hook-dropdown-nav;
+}
+
+/*
+ * Items
+ */
+
+.uk-dropdown-nav > li > a {
+    color: @dropdown-nav-item-color;
+    .hook-dropdown-nav-item;
+}
+
+/* Hover + Focus + Active */
+.uk-dropdown-nav > li > a:hover,
+.uk-dropdown-nav > li > a:focus,
+.uk-dropdown-nav > li.uk-active > a {
+    color: @dropdown-nav-item-hover-color;
+    .hook-dropdown-nav-item-hover;
+}
+
+/*
+ * Header
+ */
+
+.uk-dropdown-nav .uk-nav-header {
+    color: @dropdown-nav-header-color;
+    .hook-dropdown-nav-header;
+}
+
+/*
+ * Divider
+ */
+
+.uk-dropdown-nav .uk-nav-divider {
+    border-top: @dropdown-nav-divider-border-width solid @dropdown-nav-divider-border;
+    .hook-dropdown-nav-divider;
+}
+
+/*
+ * Sublists
+ */
+
+.uk-dropdown-nav .uk-nav-sub a { color: @dropdown-nav-sublist-item-color; }
+
+.uk-dropdown-nav .uk-nav-sub a:hover,
+.uk-dropdown-nav .uk-nav-sub a:focus { color: @dropdown-nav-sublist-item-hover-color; }
+
+
+/* Direction / Alignment modifiers
+ ========================================================================== */
+
+/* Direction */
+[class*='uk-dropdown-top'] { margin-top: -@dropdown-margin; }
+[class*='uk-dropdown-bottom'] { margin-top: @dropdown-margin; }
+[class*='uk-dropdown-left'] { margin-left: -@dropdown-margin; }
+[class*='uk-dropdown-right'] { margin-left: @dropdown-margin; }
+
+
+/* Grid modifiers
+ ========================================================================== */
+
+.uk-dropdown-stack .uk-dropdown-grid > * { width: 100% !important; }
+
+
+
+// Hooks
+// ========================================================================
+
+.hook-dropdown-misc;
+
+.hook-dropdown() {}
+.hook-dropdown-nav() {}
+.hook-dropdown-nav-item() {}
+.hook-dropdown-nav-item-hover() {}
+.hook-dropdown-nav-header() {}
+.hook-dropdown-nav-divider() {}
+.hook-dropdown-misc() {}

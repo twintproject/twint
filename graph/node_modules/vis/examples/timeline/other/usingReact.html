@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>React Components in templates</title>
+  </head>
+  <body>
+
+    <div id='root'></div>
+    
+    <!--
+    For ease of use, we are including the React, ReactDOM and Babel CDN
+    builds to make getting started as fast as possible.
+    
+    In production, you'll want to instead look at using something 
+    like Gulp, Grunt or WebPack (my personal recommendation) 
+    to compile JSX into JavaScript. Also, check out:
+    http://facebook.github.io/react/docs/tooling-integration.html
+    -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.2/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.2/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+
+    <script src="../../../dist/vis.js"></script>
+    <link href="../../../dist/vis.css" rel="stylesheet" type="text/css" />
+    
+    <!--
+    This is where you link to your React code. Can be .js or .jsx 
+    extension, doesn't really matter.
+    -->
+    <script type="text/babel">
+        var timeline;
+
+        // create groups
+        var numberOfGroups = 25; 
+        var groups = new vis.DataSet()
+        for (var i = 0; i < numberOfGroups; i++) {
+            groups.add({
+              id: i,
+              content: 'Truck ' + i
+            })
+        }
+          
+        // create items
+        var numberOfItems = 1000;
+        var items = new vis.DataSet();
+        var itemsPerGroup = Math.round(numberOfItems/numberOfGroups);
+        for (var truck = 0; truck < numberOfGroups; truck++) {
+            var date = new Date();
+            for (var order = 0; order < itemsPerGroup; order++) {
+              date.setHours(date.getHours() +  4 * (Math.random() < 0.2));
+              var start = new Date(date);
+              date.setHours(date.getHours() + 2 + Math.floor(Math.random()*4));
+              var end = new Date(date);
+              items.add({
+                id: order + itemsPerGroup * truck,
+                group: truck,
+                start: start,
+                end: end,
+                content: 'Order ' + order
+              });
+            }
+        }
+
+        var GroupTemplate = React.createClass({
+          render: function() {
+            var { group } = this.props;
+            return <div>
+                <label>{group.content}</label>
+            </div>
+          }
+        })
+
+        var ItemTemplate = React.createClass({
+          render: function() {
+            var { item } = this.props;
+            return <div>
+                <label>{item.content}</label>
+            </div>
+          }
+        })
+
+        // specify options
+        var options = {
+            orientation: 'top',
+            maxHeight: 400,
+            start: new Date(),
+            end: new Date(1000*60*60*24 + (new Date()).valueOf()),
+            editable: true,
+            template: function (item, element) {
+                if (!item) { return }
+                ReactDOM.unmountComponentAtNode(element);
+                return ReactDOM.render(<ItemTemplate item={item} />, element);
+            },
+            groupTemplate: function (group, element) {
+                if (!group) { return }
+                ReactDOM.unmountComponentAtNode(element);
+                return ReactDOM.render(<GroupTemplate group={group} />, element);
+            }
+        }
+     
+
+        var VisTimeline = React.createClass({
+            componentDidMount: function() {
+                return initTimeline();
+            },
+            render: function() {
+                return <div>
+                    <h1>Vis timline with React</h1>
+                    <h2>Using react components for items and group templates</h2>      
+
+                    <div id="mytimeline"></div>
+                </div>
+            }
+        });
+
+        function initTimeline() {
+            var container = document.getElementById('mytimeline');
+            timeline = new vis.Timeline(container, items, groups, options);
+        } 
+
+        ReactDOM.render(<VisTimeline />, document.getElementById('root'));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Timeline | RTL example</title>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+  <script src="../../../dist/vis.js"></script>
+  <link href="../../../dist/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+  
+</head>
+<body>
+
+<h1>Timeline RTL support</h1>
+
+<h2>Using <code>dir = "rtl"</code> in any parent node</h2>
+<div id="timeline1" dir="rtl"></div>
+
+<h2>Using <code>options.rtl = true</code></h2>
+<div id="timeline2"></div>
+
+<script>
+
+  var items =  new vis.DataSet();
+  // add items to the DataSet
+  items.add([
+    {id: 1, content: '2014-01-23 <br>start', start: '2014-01-23'},
+    {id: 2, content: '2014-01-18', start: '2014-01-18'},
+    {id: 3, content: '2014-01-21', start: '2014-01-21'},
+    {id: 4, content: '2014-01-19 - 2014-01-24', start: '2014-01-19', end: '2014-01-24'},
+    {id: 5, content: '2014-01-28', start: '2014-01-28', type:'point'},
+    {id: 6, content: '2014-01-26', start: '2014-01-26'}
+  ]);
+
+  var container1 = document.getElementById('timeline1');
+  var container2 = document.getElementById('timeline2');
+
+  var options = {
+    start: '2014-01-10',
+    end: '2014-02-10',
+    height: '300px',
+  };
+
+  var options1 = jQuery.extend(options, {})
+  var timeline1 = new vis.Timeline(container1, items, options1);
+
+  var options2 = jQuery.extend(options, {rtl: true})
+  var timeline2 = new vis.Timeline(container2, items, options2);
+
+</script>
+</body>
+</html>

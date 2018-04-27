@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en-gb" dir="ltr">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Progress - UIkit tests</title>
+        <script src="js/test.js"></script>
+    </head>
+
+    <body>
+
+        <div class="uk-container">
+
+            <h1>Progress</h1>
+
+            <div class="uk-width-1-2@m">
+
+                <p>Indeterminate</p>
+                <progress class="uk-progress"></progress>
+
+                <p>Determinate</p>
+                <progress class="uk-progress" value="40" max="100"></progress>
+
+                <p>With Text</p>
+                <progress class="uk-progress" value="45" max="100">45%</progress>
+
+                <p>100%</p>
+                <progress class="uk-progress" value="100" max="100"></progress>
+
+                <p>Updating</p>
+                <progress id="js-progressbar" class="uk-progress" max="100"></progress>
+
+            </div>
+
+        </div>
+
+        <script>
+
+
+            UIkit.util.ready(function () {
+
+                var bar = document.getElementById('js-progressbar'),
+                    animate = setInterval(function () {
+
+                        bar.value += 10;
+
+                        if (bar.value >= bar.max) {
+                            clearInterval(animate);
+                        }
+
+                    }, 1000);
+
+            });
+
+        </script>
+
+
+    </body>
+</html>

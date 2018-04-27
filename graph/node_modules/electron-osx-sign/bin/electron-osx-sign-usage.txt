@@ -1,0 +1,79 @@
+
+NAME
+  electron-osx-sign -- code signing for Electron apps
+
+SYNOPSIS
+  electron-osx-sign app [embedded-binary ...] [options ...]
+
+DESCRIPTION
+  app
+    Path to the application package.
+    Needs file extension ``.app''.
+
+  embedded-binary ...
+    Path to additional binaries that will be signed along with built-ins of Electron, spaced.
+
+  --entitlements=file
+    Path to entitlements file for signing the app.
+    Default to built-in entitlements file, Sandbox enabled for Mac App Store platform.
+
+  --entitlements-inherit=file
+    Path to child entitlements which inherit the security settings for signing frameworks and bundles of a distribution.
+    This option only applies when signing with entitlements.
+
+  --gatekeeper-assess, --no-gatekeeper-assess
+    Flag to enable/disable Gatekeeper assessment after signing the app. Disabling it is useful for signing with self-signed certificates.
+    Gatekeeper assessment is enabled by default on ``darwin'' platform.
+
+  --help
+    Flag to display all commands.
+
+  --identity=identity
+    Name of certificate to use when signing.
+    Default to selected with respect to --provisioning-profile and --platform from --keychain specified or keychain by system default.
+
+  --identity-validation, --no-identity-validation
+    Flag to enable/disable validation for the signing identity.
+
+  --ignore=path
+    Path to skip signing. The string will be treated as a regular expression when used to match the file paths.
+
+  --keychain=keychain
+    The keychain name.
+    Default to system default keychain.
+
+  --platform=platform
+    Build platform of Electron.
+    Allowed values: ``darwin'', ``mas''.
+    Default to auto detect from application bundle.
+
+  --pre-auto-entitlements, --no-pre-auto-entitlements
+    Flag to enable/disable automation of entitlements file and Info.plist.
+
+  --pre-embed-provisioning-profile, --no-pre-embed-provisioning-profile
+    Flag to enable/disable embedding of provisioning profile.
+
+  --provisioning-profile=file
+    Path to provisioning profile.
+
+  --requirements=requirements
+    Specify the criteria that you recommend to be used to evaluate the code signature.
+
+  --strict-verify, --strict-verify=options, --no-strict-verify
+    Flag to enable/disable ``--strict'' flag when verifying the signed application bundle.
+    Each component should be separated in ``options'' with comma (``,'').
+    Enabled by default.
+
+  --timestamp=timestamp
+    Specify the URL of the timestamp authority server, default to server provided by Apple.
+    Disable the timestamp service with ``none''.
+
+  --type=type
+    Specify whether to sign app for development or for distribution.
+    Allowed values: ``development'', ``distribution''.
+    Default to ``distribution''.
+
+  --version=version
+    Build version of Electron.
+    Values may be: ``1.2.0''.
+    Default to latest Electron version.

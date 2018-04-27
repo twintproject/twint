@@ -1,0 +1,195 @@
+
+.vis-item {
+  position: absolute;
+  color: #1A1A1A;
+  border-color: #97B0F8;
+  border-width: 1px;
+  background-color: #D5DDF6;
+  display: inline-block;
+  z-index: 1;
+  /*overflow: hidden;*/
+}
+
+.vis-item.vis-selected {
+  border-color: #FFC200;
+  background-color: #FFF785;
+
+  /* z-index must be higher than the z-index of custom time bar and current time bar */
+  z-index: 2;
+}
+
+.vis-editable.vis-selected {
+  cursor: move;
+}
+
+.vis-item.vis-point.vis-selected {
+  background-color: #FFF785;
+}
+
+.vis-item.vis-box {
+  text-align: center;
+  border-style: solid;
+  border-radius: 2px;
+}
+
+.vis-item.vis-point {
+  background: none;
+}
+
+.vis-item.vis-dot {
+  position: absolute;
+  padding: 0;
+  border-width: 4px;
+  border-style: solid;
+  border-radius: 4px;
+}
+
+.vis-item.vis-range {
+  border-style: solid;
+  border-radius: 2px;
+  box-sizing: border-box;
+}
+
+.vis-item.vis-background {
+  border: none;
+  background-color: rgba(213, 221, 246, 0.4);
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.vis-item .vis-item-overflow {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.vis-item-visible-frame {
+  white-space: nowrap;
+}
+
+.vis-item.vis-range .vis-item-content {
+  position: relative;
+  display: inline-block;
+}
+
+.vis-item.vis-background .vis-item-content {
+  position: absolute;
+  display: inline-block;
+}
+
+.vis-item.vis-line {
+  padding: 0;
+  position: absolute;
+  width: 0;
+  border-left-width: 1px;
+  border-left-style: solid;
+}
+
+.vis-item .vis-item-content {
+  white-space: nowrap;
+  box-sizing: border-box;
+  padding: 5px;
+}
+
+.vis-item .vis-onUpdateTime-tooltip {
+  position: absolute;
+  background: #4f81bd;
+  color: white;
+  width: 200px;
+  text-align: center;
+  white-space: nowrap;
+  padding: 5px;
+  border-radius: 1px;
+  transition: 0.4s;
+  -o-transition: 0.4s;
+  -moz-transition: 0.4s;
+  -webkit-transition: 0.4s;
+}
+
+.vis-item .vis-delete, .vis-item .vis-delete-rtl {
+  position: absolute;
+  top: 0px;
+  width: 24px;
+  height: 24px;
+  box-sizing: border-box;
+  padding: 0px 5px;
+  cursor: pointer;
+
+  -webkit-transition: background 0.2s linear;
+  -moz-transition: background 0.2s linear;
+  -ms-transition: background 0.2s linear;
+  -o-transition: background 0.2s linear;
+  transition: background 0.2s linear;
+}
+
+.vis-item .vis-delete {
+  right: -24px;
+}
+
+.vis-item .vis-delete-rtl {
+  left: -24px;
+}
+
+.vis-item .vis-delete:after, .vis-item .vis-delete-rtl:after {
+  content: "\00D7"; /* MULTIPLICATION SIGN */
+  color: red;
+  font-family: arial, sans-serif;
+  font-size: 22px;
+  font-weight: bold;
+
+  -webkit-transition: color 0.2s linear;
+  -moz-transition: color 0.2s linear;
+  -ms-transition: color 0.2s linear;
+  -o-transition: color 0.2s linear;
+  transition: color 0.2s linear;
+}
+
+.vis-item .vis-delete:hover, .vis-item .vis-delete-rtl:hover {
+  background: red;
+}
+
+.vis-item .vis-delete:hover:after, .vis-item .vis-delete-rtl:hover:after {
+  color: white;
+}
+
+.vis-item .vis-drag-center {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0px;
+  cursor: move;
+}
+
+.vis-item.vis-range .vis-drag-left {
+  position: absolute;
+  width: 24px;
+  max-width: 20%;
+  min-width: 2px;
+  height: 100%;
+  top: 0;
+  left: -4px;
+
+  cursor: w-resize;
+}
+
+.vis-item.vis-range .vis-drag-right {
+  position: absolute;
+  width: 24px;
+  max-width: 20%;
+  min-width: 2px;
+  height: 100%;
+  top: 0;
+  right: -4px;
+
+  cursor: e-resize;
+}
+
+.vis-range.vis-item.vis-readonly .vis-drag-left,
+.vis-range.vis-item.vis-readonly .vis-drag-right {
+  cursor: auto;
+}

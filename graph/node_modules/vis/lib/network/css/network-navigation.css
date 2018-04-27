@@ -1,0 +1,61 @@
+div.vis-network div.vis-navigation div.vis-button {
+    width:34px;
+    height:34px;
+    -moz-border-radius: 17px;
+    border-radius: 17px;
+    position:absolute;
+    display:inline-block;
+    background-position: 2px 2px;
+    background-repeat:no-repeat;
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+div.vis-network div.vis-navigation div.vis-button:hover {
+    box-shadow: 0 0 3px 3px rgba(56, 207, 21, 0.30);
+}
+
+div.vis-network div.vis-navigation div.vis-button:active {
+    box-shadow: 0 0 1px 3px rgba(56, 207, 21, 0.95);
+}
+
+div.vis-network div.vis-navigation div.vis-button.vis-up {
+    background-image: url("img/network/upArrow.png");
+    bottom:50px;
+    left:55px;
+}
+div.vis-network div.vis-navigation div.vis-button.vis-down {
+    background-image: url("img/network/downArrow.png");
+    bottom:10px;
+    left:55px;
+}
+div.vis-network div.vis-navigation div.vis-button.vis-left {
+    background-image: url("img/network/leftArrow.png");
+    bottom:10px;
+    left:15px;
+}
+div.vis-network div.vis-navigation div.vis-button.vis-right {
+    background-image: url("img/network/rightArrow.png");
+    bottom:10px;
+    left:95px;
+}
+div.vis-network div.vis-navigation div.vis-button.vis-zoomIn {
+    background-image: url("img/network/plus.png");
+    bottom:10px;
+    right:15px;
+}
+div.vis-network div.vis-navigation div.vis-button.vis-zoomOut {
+    background-image: url("img/network/minus.png");
+    bottom:10px;
+    right:55px;
+}
+div.vis-network div.vis-navigation div.vis-button.vis-zoomExtends {
+    background-image: url("img/network/zoomExtends.png");
+    bottom:50px;
+    right:15px;
+}

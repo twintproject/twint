@@ -1,0 +1,39 @@
+
+.vis-labelset {
+  position: relative;
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+}
+
+.vis-labelset .vis-label {
+  position: relative;
+  left: 0;
+  top: 0;
+  width: 100%;
+  color: #4d4d4d;
+
+  box-sizing: border-box;
+}
+
+.vis-labelset .vis-label {
+  border-bottom: 1px solid #bfbfbf;
+}
+
+.vis-labelset .vis-label.draggable {
+  cursor: pointer;
+}
+
+.vis-labelset .vis-label:last-child {
+  border-bottom: none;
+}
+
+.vis-labelset .vis-label .vis-inner {
+  display: inline-block;
+  padding: 5px;
+}
+
+.vis-labelset .vis-label .vis-inner.vis-hidden {
+  padding: 0;
+}

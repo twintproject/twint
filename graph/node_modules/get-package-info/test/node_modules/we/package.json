@@ -1,0 +1,11 @@
+{
+    "name": "we",
+    "dependencies": {
+        "some-dependency": "~1.2.3",
+        "some-other-dependency": "~3.2.1"
+    },
+    "devDependencies": {
+        "some-dev-dependency": "~1.2.3",
+        "some-other-dev-dependency": "~3.2.1"
+    }
+}

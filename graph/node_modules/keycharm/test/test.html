@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Keycharm example</title>
+    <style>
+        div.keyfield {
+            display:inline-block;
+            width:190px;
+            height:25px;
+            background-color:#eeeeee;
+            vertical-align:middle;
+        }
+
+        #container {
+            background-color:#dddddd;
+        }
+    </style>
+    <script src="../keycharm.js"></script>
+</head>
+<body>
+
+When using a DIV as a container, it NEEDS a tabindex. Select the DIV to start the listening to events.
+<h2>Press a button!</h2> <br>
+<div id="container" tabindex="1">
+<table>
+    <tr height="30px">
+        <td>Keydown event:</td><td><div id="keydown" class="keyfield">See the key here</div></td>
+    </tr>
+    <tr height="30px">
+        <td>Keyup event:</td><td><div id="keyup" class="keyfield">See the key here</div></td>
+    </tr>
+</table>
+</div>
+
+<script language="JavaScript">
+    var keys = keycharm({container:document.getElementById("container"),preventDefault: false});
+
+    keys.bindAll(function(event) {
+        document.getElementById('keydown').innerHTML = "Key:" + keys.getKey(event);
+    }, 'keydown');
+    keys.bindAll(function(event) {
+        document.getElementById('keyup').innerHTML = "Key:" + keys.getKey(event);
+    }, 'keyup');
+
+    var alertFunction = function() {alert("a!");};
+    keys.bind("a", alertFunction);
+    keys.unbind("a", alertFunction);
+</script>
+</body>
+</html>

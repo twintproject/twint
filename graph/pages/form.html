@@ -1,0 +1,215 @@
+<html>
+    <h1>Twint Graph Visualizer</h1>
+    <head>
+        <title>
+            Twint Graph Visualizer
+        </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/uikit.min.css" />
+        <script src="js/uikit.min.js"></script>
+        <script src="js/uikit-icons.min.js"></script>
+        <script>
+            const vis = require('vis');
+        </script>
+            <link href="node_modules/vis/dist/vis-network.min.css" rel="stylesheet" type="text/css"/>
+            <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+            <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">         
+        <style>
+            form {
+                margin-left: 10px;
+            }
+            h1 {
+                margin-left: 10px;
+            }
+            body {
+                color: black
+            }
+            #mynetwork {
+                width: 100%;
+                height: 100%;
+                overflow:hidden;
+                border: 1px solid #444444;
+                background-color: #444444;
+            }
+        </style>
+    </head>
+    <body>
+        <form action=ìì>      
+            <div class="uk-margin" uk-margin>
+                <div uk-form-custom="target: true">
+                    <input class="uk-input uk-form-width-medium" type="text" placeholder="Database file" id="submitDatabase">
+                </div>
+                <div uk-form-custom="target: true">
+                    <input class="uk-input uk-form-width-medium" type="text" placeholder="Graph file" id="graphFile">    
+                </div>
+
+                <div uk-form-custom="target: > * > span:first-child">
+                    <select id="submitTable">
+                        <option value="">Please select...</option>
+                        <option value="users where user = ">Users</option>
+                        <option value="followers where follower = ">Followers</option>
+                        <option value="following where follows =">Following</option>
+                    </select>
+                    <button class="uk-button uk-button-default" type="button" tabindex="-1">
+                        <span></span>
+                        <span uk-icon="icon: chevron-down"></span>
+                    </button>
+                </div>
+                <input class="uk-input uk-form-width-medium" type="text" id="submitQuery" placeholder="Condition">
+            </div>
+            
+            <div>
+                <input class="uk-input uk-form-width-medium" type="text" id="submitRawQuery" placeholder="Raw Query">
+                <button type="button" class="uk-button uk-button-default" onclick="loadQuery()">Load settings</button>
+                <button type="button" class="uk-button uk-button-default" onclick="loadGraph()">Load graph</button>
+                <button type="button" class="uk-button uk-button-default" onclick="importNetwork()">Import Graph</input>
+                <button type="button" class="uk-button uk-button-default" onclick="exportNetwork()">Export Graph</input>
+            </div>
+        </form>
+        <script>
+            //var sqlite3 = require('sqlite3').verbose();
+            var network;
+            var data;
+            var nodes  = new vis.DataSet();
+            var edges  = new vis.DataSet();
+            var query  = "select * from ";
+            var _table = "";
+            var _where = "";
+            var _raw_  = "";
+            var val    = "";
+            const sqlite3 = require('sqlite3').verbose();
+            function loadQuery(){
+                _where = document.getElementById("submitQuery").value;
+                _table = document.getElementById("submitTable").value;
+                _raw_  = document.getElementById("submitRawQuery").value;
+                if (_raw_) { query = _raw_;}
+                else if (_where == "*") { query += _table.split(" ")[0];}
+                else{query += _table + "\"" + _where + "\"";}
+                val = document.getElementById("submitDatabase").value;
+                var db = new sqlite3.Database(val);
+                console.log(query);
+                if (query.split(" ")[3] == "followers") {
+                    db.each(query, (err, result) => {
+                        try{
+                            nodes.add({
+                                id   : result.follower,
+                                label: result.follower,
+                                group: 'user'
+                            });
+                        }catch(err) {;}
+                        try{
+                            nodes.add({
+                                id   : result.user,
+                                label: result.user,
+                                group: 'user'
+                            });
+                        }catch(err) {;}
+                        try{
+                            edges.add({
+                                id    : result.user + "_" + result.follower,
+                                from  : result.follower,
+                                to    : result.user,
+                                arrows: 'to'
+                            });
+                        }catch(err) {
+                            edges.remove(result.user + "_" + result.follower);
+                            edges.add({
+                                id    : result.user + "_" + result.follower,
+                                from  : result.follower,
+                                to    : result.user,
+                                arrows: 'to, from'
+                            });
+                        }
+                    })
+                }
+                else if (query.split(" ")[3] == "users") {
+                    db.each(query, (err, result) => {
+                        try{
+                            nodes.add({
+                                id   : result.user,
+                                label: result.user,
+                                group: 'user'
+                            });
+                        }catch(err) {;}
+                    })
+                }
+                else {
+                    db.each(query, (err, result) => {
+                        try{
+                            nodes.add({
+                                id   : result.follows,
+                                label: result.follows,
+                                group: 'user'
+                            });
+                        }catch(err) {;}
+                        try{
+                            nodes.add({
+                                id   : result.user,
+                                label: result.user,
+                                group: 'user'
+                            });
+                        }catch(err) {;}
+                        try{
+                            edges.add({
+                                id    : result.user + "_" + result.follows,
+                                from  : result.user,
+                                to    : result.follows,
+                                arrows: 'to'
+                            });
+                        }catch(err) {
+                            edges.remove(result.user + "_" + result.follows);
+                            edges.add({
+                                id    : result.user + "_" + result.follows,
+                                from  : result.user,
+                                to    : result.follows,
+                                arrows: 'to, from'
+                            });
+                        }
+                    })
+                }
+                query  = "select * from ";
+                db.close();
+            };
+            function loadGraph(){
+                var container = document.getElementById('mynetwork');
+                data = {
+                    nodes: nodes,
+                    edges: edges
+                };
+                var options = {
+                    layout: {improvedLayout:false},
+                    physics : {
+                        "barnesHut":{"damping": 1, "gravitationalConstant": -18500,},
+                        stabilization: {
+                            enabled       : true,
+                            iterations    : 2000,
+                            updateInterval: 25
+                        },
+                        timestep: 1,
+                    },
+                    groups: {
+                        user: {shape: 'icon', icon: 
+                            {
+                                face : 'Ionicons',
+                                code : '\uf47e',
+                                size : 50,
+                                color: 'cyan'
+                            }
+                        }
+                    },
+                    nodes : {
+                        font: {
+                            color: '#ffffff'
+                        }
+                    }
+                };
+                network = new vis.Network(container, data, options);
+                network.on("stabilizationIterationsDone", function () {
+                    network.setOptions( { physics: false } );
+                });
+            }
+        </script>
+        <div id="mynetwork"></div>
+    </body>
+</html>

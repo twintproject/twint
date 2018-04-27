@@ -1,0 +1,55 @@
+.vis-time-axis {
+  position: relative;
+  overflow: hidden;
+}
+
+.vis-time-axis.vis-foreground {
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.vis-time-axis.vis-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.vis-time-axis .vis-text {
+  position: absolute;
+  color: #4d4d4d;
+  padding: 3px;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  white-space: nowrap;
+}
+
+.vis-time-axis .vis-text.vis-measure {
+  position: absolute;
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0;
+  visibility: hidden;
+}
+
+.vis-time-axis .vis-grid.vis-vertical {
+  position: absolute;
+  border-left: 1px solid;
+}
+
+.vis-time-axis .vis-grid.vis-vertical-rtl {
+  position: absolute;
+  border-right: 1px solid;
+}
+
+.vis-time-axis .vis-grid.vis-minor {
+  border-color: #e5e5e5;
+}
+
+.vis-time-axis .vis-grid.vis-major {
+  border-color: #bfbfbf;
+}

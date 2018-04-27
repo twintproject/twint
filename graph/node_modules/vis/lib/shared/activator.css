@@ -1,0 +1,14 @@
+.vis .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  /* Must be displayed above for example selected Timeline items */
+  z-index: 10;
+}
+
+.vis-active {
+  box-shadow: 0 0 10px #86d5f8;
+}

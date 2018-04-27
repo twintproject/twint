@@ -1,0 +1,196 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Graph 3D - Playground</title>
+
+    <script type="text/javascript" src="../../../dist/vis.js"></script>
+
+    <script type="text/javascript" src="playground.js"></script>
+    <script type="text/javascript" src="csv2array.js"></script>
+    <link rel='stylesheet' href='playground.css' type='text/css'>
+
+    <script type="text/javascript">
+        // Called when the Visualization API is loaded.
+        function drawVisualization() {
+            // TODO
+        }
+    </script>
+    
+</head>
+
+<body onload="load();">
+
+<h1>Graph 3D - Playground</h1>
+
+<table style="width:100%;">
+<col width="50%">
+<col width="50%">
+
+<tr>
+    <td>
+        <h2>Data</h2>
+        <p>
+            Graph 3D expects a data table with first three to five columns:
+            colums <code>x</code>, <code>y</code>, <code>z</code> (optional),
+            <code>style</code>, <code>filter</code> (optional).
+        </p>
+
+        <table>
+            <tr>
+                <td style="white-space: nowrap">
+                    <input type="radio" name="datatype" id="datatypeCsv" onclick="selectDataType();" checked value="csv">Csv
+                </td>
+                <td>
+                    <div id="csv">
+                        <textarea id="csvTextarea"></textarea>
+                        <p>
+                            <a href="javascript: loadCsvExample();" title="Load an example">Simple example</a>
+                            <a href="javascript: loadCsvLineExample();" title="Load an example">Line example</a>
+                            <a href="javascript: loadCsvAnimationExample();" title="Load an example">Animation example</a>
+                            <a href="javascript: loadCsvMovingDotsExample();" title="Load an example">Moving dots example</a>
+                            <a href="javascript: loadCsvColoredDotsExample();" title="Load an example">Colored dots example</a>
+                            <a href="javascript: loadCsvSizedDotsExample();" title="Load an example">Sized dots example</a>
+                        </p>
+                    </div>
+                </td>
+            </tr>
+          <!-- TODO: add JSON examples -->
+        </table>
+
+        <br>
+    </td>
+    <td rowspan=2>
+        <h2>Graph</h2>
+        <p>
+            <input type="button" value="Draw graph" onclick="draw();" id="draw">
+        </p>
+
+        <div id="graph"></div>
+    </td>
+</tr>
+<tr>
+    <td>
+        <h2>Options</h2>
+
+        <table>
+            <tr>
+                <th>Option</th>
+                <th>Value</th>
+            </tr>
+
+            <tr>
+                <td>width</td>
+                <td><input type="text" id="width" value="100%" /> <span class="info">for example "500px" or "100%"</span></td>
+            </tr>
+            <tr>
+                <td>height</td>
+                <td><input type="text" id="height" value="100%" /> <span class="info">for example "500px" or "100%"</span></td>
+            </tr>
+            <tr>
+                <td>style</td>
+                <td>
+                    <select id="style">
+                        <option value="bar" >bar
+                        <option value="bar-color" >bar-color
+                        <option value="bar-size" >bar-size
+                        <option value="dot" >dot
+                        <option value="dot-color" >dot-color
+                        <option value="dot-size" >dot-size
+                        <option value="dot-line" >dot-line
+                        <option value="line" >line
+                        <option value="grid" >grid
+                        <option value="surface" selected>surface
+                    </select>
+            </tr>
+
+            <tr>
+                <td>showAnimationControls</td>
+                <td><input type="checkbox" id="showAnimationControls" checked /></td>
+            </tr>
+            <tr>
+                <td>showGrid</td>
+                <td><input type="checkbox" id="showGrid" checked /></td>
+            </tr>
+            <tr>
+                <td>showXAxis</td>
+                <td><input type="checkbox" id="showXAxis" checked /></td>
+            </tr>
+            <tr>
+                <td>showYAxis</td>
+                <td><input type="checkbox" id="showYAxis" checked /></td>
+            </tr>
+            <tr>
+                <td>showZAxis</td>
+                <td><input type="checkbox" id="showZAxis" checked /></td>
+            </tr>
+
+            <tr>
+                <td>showPerspective</td>
+                <td><input type="checkbox" id="showPerspective" checked /></td>
+            </tr>
+            <tr>
+                <td>showLegend</td>
+                <td><input type="checkbox" id="showLegend" checked /></td>
+            </tr>
+            <tr>
+                <td>showShadow</td>
+                <td><input type="checkbox" id="showShadow" /></td>
+            </tr>
+
+            <tr>
+                <td>keepAspectRatio</td>
+                <td><input type="checkbox" id="keepAspectRatio" checked /></td>
+            </tr>
+            <tr>
+                <td>verticalRatio</td>
+                <td><input type="text" id="verticalRatio" value="0.5" /> <span class="info">a value between 0.1 and 1.0</span></td>
+            </tr>
+
+            <tr>
+                <td>animationInterval</td>
+                <td><input type="text" id="animationInterval" value="1000" /> <span class="info">in milliseconds</span></td>
+            </tr>
+            <tr>
+                <td>animationPreload</td>
+                <td><input type="checkbox" id="animationPreload" /></td>
+            </tr>
+            <tr>
+                <td>animationAutoStart</td>
+                <td><input type="checkbox" id="animationAutoStart" /></td>
+            </tr>
+
+            <tr><td>xCenter</td><td><input type="text" id="xCenter" value="55%" /></td></tr>
+            <tr><td>yCenter</td><td><input type="text" id="yCenter" value="45%" /></td></tr>
+
+            <tr><td>xMin</td><td><input type="text" id="xMin" /></td></tr>
+            <tr><td>xMax</td><td><input type="text" id="xMax" /></td></tr>
+            <tr><td>xStep</td><td><input type="text" id="xStep" /></td></tr>
+
+            <tr><td>yMin</td><td><input type="text" id="yMin" /></td></tr>
+            <tr><td>yMax</td><td><input type="text" id="yMax" /></td></tr>
+            <tr><td>yStep</td><td><input type="text" id="yStep" /></td></tr>
+
+            <tr><td>zMin</td><td><input type="text" id="zMin" /></td></tr>
+            <tr><td>zMax</td><td><input type="text" id="zMax" /></td></tr>
+            <tr><td>zStep</td><td><input type="text" id="zStep" /></td></tr>
+
+            <tr><td>valueMin</td><td><input type="text" id="valueMin" /></td></tr>
+            <tr><td>valueMax</td><td><input type="text" id="valueMax" /></td></tr>
+
+            <tr><td>xBarWidth</td><td><input type="text" id="xBarWidth" /></td></tr>
+            <tr><td>yBarWidth</td><td><input type="text" id="yBarWidth" /></td></tr>
+
+            <tr><td>xLabel</td><td><input type="text" id="xLabel" value="x"/></td></tr>
+            <tr><td>yLabel</td><td><input type="text" id="yLabel" value="y"/></td></tr>
+            <tr><td>zLabel</td><td><input type="text" id="zLabel" value="z"/></td></tr>
+            <tr><td>filterLabel</td><td><input type="text" id="filterLabel" value="time"/></td></tr>
+            <tr><td>legendLabel</td><td><input type="text" id="legendLabel" value="value"/></td></tr>
+
+        </table>
+
+    </td>
+</tr>
+</table>
+
+</body>

@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Timeline | performance</title>
+
+  <style>
+    body, html {
+      font-family: arial, sans-serif;
+      font-size: 11pt;
+    }
+  </style>
+
+  <!-- note: moment.js must be loaded before vis.js, else vis.js uses its embedded version of moment.js -->
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+
+  <script src="../../../dist/vis.js"></script>
+  <link href="../../../dist/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+  
+</head>
+<body>
+<p>
+  Test the performance with a lot of items. The Timeline can load hundreds of thousands of items, but the performance of rendering them in the browser is limited. Rendering typically runs smooth for up to a few hundreds of items at once (you can set a <code>zoomMax</code> to prevent the user from zooming out too far).
+</p>
+<p>
+    <label for="count">Number of items</label>
+    <input id="count" value="10000">
+    <input id="draw" type="button" value="draw">
+</p>
+<div id="visualization"></div>
+
+<script>
+  // create a dataset with items
+  var now = moment().minutes(0).seconds(0).milliseconds(0);
+  var items = new vis.DataSet({
+    type: {start: 'ISODate', end: 'ISODate' }
+  });
+
+  // create data
+  function createData() {
+    var count = parseInt(document.getElementById('count').value) || 100;
+    var newData = [];
+      var start = now;
+    for (var i = 0; i < count; i++) {
+      newData.push({id: i, content: 'item ' + i, start: start + 24*3600*1000 * i}); // much much faster than now.clone add days
+    }
+    items.clear();
+    items.add(newData);
+  }
+  createData();
+
+  document.getElementById('draw').onclick = createData;
+
+  var container = document.getElementById('visualization');
+  var options = {
+    editable: true,
+    start: now.clone().add(-3, 'days'),
+    end: now.clone().add(11, 'days'),
+    zoomMin: 1000 * 60 * 60 * 24,          // a day
+    zoomMax: 1000 * 60 * 60 * 24 * 30 * 3  // three months
+  };
+
+  var timeline = new vis.Timeline(container, items, options);
+</script>
+</body>
+</html>

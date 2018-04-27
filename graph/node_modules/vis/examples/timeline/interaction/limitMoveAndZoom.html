@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Timeline | Limit move and zoom</title>
+
+  <style>
+    body, html {
+      font-family: arial, sans-serif;
+      font-size: 11pt;
+    }
+  </style>
+
+  <script src="../../../dist/vis.js"></script>
+  <link href="../../../dist/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+  
+</head>
+<body>
+<p>
+  The visible range is limited in this demo:
+</p>
+<ul>
+  <li>minimum visible date is limited to 2012-01-01 using option <code>min</code></li>
+  <li>maximum visible date is limited to 2013-01-01 (excluded) using option <code>max</code></li>
+  <li>visible zoom interval is limited to a minimum of 24 hours using option <code>zoomMin</code></li>
+  <li>visible zoom interval is limited to a maximum of about 3 months using option <code>zoomMax</code></li>
+</ul>
+<div id="visualization"></div>
+
+<script>
+  // create some items
+  // note that months are zero-based in the JavaScript Date object, so month 4 is May
+  var items = new vis.DataSet([
+    {'start': new Date(2012, 4, 25), 'content': 'First'},
+    {'start': new Date(2012, 4, 26), 'content': 'Last'}
+  ]);
+
+  // create visualization
+  var container = document.getElementById('visualization');
+  var options = {
+    height: '300px',
+    min: new Date(2012, 0, 1),                // lower limit of visible range
+    max: new Date(2013, 0, 1),                // upper limit of visible range
+    zoomMin: 1000 * 60 * 60 * 24,             // one day in milliseconds
+    zoomMax: 1000 * 60 * 60 * 24 * 31 * 3     // about three months in milliseconds
+  };
+
+  // create the timeline
+  var timeline = new vis.Timeline(container);
+  timeline.setOptions(options);
+  timeline.setItems(items);
+</script>
+</body>
+</html>

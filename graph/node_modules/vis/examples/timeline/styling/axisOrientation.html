@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Timeline | Orientation</title>
+
+  <style type="text/css">
+    body, html {
+      font-family: sans-serif;
+    }
+  </style>
+
+  <script src="../../../dist/vis.js"></script>
+  <link href="../../../dist/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+
+  
+</head>
+<body>
+
+<p>
+  There are a number of orientation options for the time axis and the items.
+</p>
+
+<p>
+  <label for="axis-orientation">Axis orientation</label>
+  <select id="axis-orientation">
+    <option value="both">both</option>
+    <option value="bottom" selected>bottom</option>
+    <option value="none">none</option>
+    <option value="top">top</option>
+  </select>
+</p>
+
+<p>
+  <label for="item-orientation">Item orientation</label>
+  <select id="item-orientation">
+    <option value="bottom" selected>bottom</option>
+    <option value="top">top</option>
+  </select>
+</p>
+
+<div id="visualization"></div>
+
+<script type="text/javascript">
+  // DOM element where the Timeline will be attached
+  var container = document.getElementById('visualization');
+
+  // Create a DataSet (allows two way data-binding)
+  var items = new vis.DataSet([
+    {id: 1, content: 'item 1', start: '2014-04-20'},
+    {id: 2, content: 'item 2', start: '2014-04-14'},
+    {id: 3, content: 'item 3', start: '2014-04-18'},
+    {id: 4, content: 'item 4', start: '2014-04-16', end: '2014-04-19'},
+    {id: 5, content: 'item 5', start: '2014-04-25'},
+    {id: 6, content: 'item 6', start: '2014-04-27', type: 'point'}
+  ]);
+
+  // Configuration for the Timeline
+  var options = {
+    height: 250 // px
+  };
+
+  // Create a Timeline
+  var timeline = new vis.Timeline(container, items, options);
+
+  var axisOrientation = document.getElementById('axis-orientation');
+  axisOrientation.onchange = function () {
+    timeline.setOptions({ orientation: {axis: this.value} });
+  };
+
+  var itemOrientation = document.getElementById('item-orientation');
+  itemOrientation.onchange = function () {
+    timeline.setOptions({ orientation: {item: this.value} });
+  };
+</script>
+</body>
+</html>

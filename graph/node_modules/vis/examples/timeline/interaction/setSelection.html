@@ -1,0 +1,174 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Timeline | Select items</title>
+
+  <style>
+    body, html {
+      font-family: arial, sans-serif;
+      font-size: 11pt;
+    }
+  </style>
+
+  <script src="../../../dist/vis.js"></script>
+  <link href="../../../dist/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+  
+</head>
+<body>
+<h1>Set selection</h1>
+<p style="max-width: 600px;">
+  Enter one or multiple ids of items, then press select to select the items. This demo uses the function <code>Timeline.setSelection(ids)</code>. Optionally, the window can be moved to the selected items.
+</p>
+
+<p>
+  Select item(s): <input type="text" id="selection" value="5, 6"><input type="button" id="select" value="Select"><br>
+  <label><input type="checkbox" id="focus" checked> Focus on selection</label>
+</p>
+<div id="visualization"></div>
+
+<br/>
+<p>If the height of the timeline is limited some items may be vertically offscreen. This demo uses <code>Timeline.setSelection(ids, {focus: true})</code> and demonstrates that focusing on an item will 
+cause the timeline to scroll vertically to the item that is being focused on. You can use the buttons below select a random item either above or below the currently selected item.
+</p>
+<button id="prevFocus">Select Item Above</button>
+<button id="nextFocus">Select Item Below</button>
+<br/>
+
+<p>If focusing on multiple items only the first item will be scrolled to. Try entering several ids and hitting <em>select</em>.</p>
+<p>
+Select item(s): <input type="text" id="selectionVertical" value="g1_5, g2_3"><input type="button" id="selectVertical" value="Select"><br>
+</p>
+
+<div id="vertical-visualization"></div>
+
+<script>
+  // create a dataset with items
+  // we specify the type of the fields `start` and `end` here to be strings
+  // containing an ISO date. The fields will be outputted as ISO dates
+  // automatically getting data from the DataSet via items.get().
+  var items = new vis.DataSet({
+    type: { start: 'ISODate', end: 'ISODate' }
+  });
+
+  // add items to the DataSet
+  items.add([
+    {id: 1, content: 'item 1<br>start', start: '2014-01-23'},
+    {id: 2, content: 'item 2', start: '2014-01-18'},
+    {id: 3, content: 'item 3', start: '2014-01-21'},
+    {id: 4, content: 'item 4', start: '2014-01-19', end: '2014-01-24'},
+    {id: 5, content: 'item 5', start: '2014-01-28', type:'point'},
+    {id: 6, content: 'item 6', start: '2014-01-26'}
+  ]);
+
+  var container = document.getElementById('visualization');
+  var options = {
+    editable: true
+  };
+
+  var timeline = new vis.Timeline(container, items, options);
+
+  var selection = document.getElementById('selection');
+  var select = document.getElementById('select');
+  var focus = document.getElementById('focus');
+  select.onclick = function () {
+    var ids = selection.value.split(',').map(function (value) {
+      return value.trim();
+    });
+    timeline.setSelection(ids, {focus: focus.checked});
+  };
+
+  function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+  };
+
+  // Vertical scroll example
+  var groups = [];
+  var items = [];
+  var groupItems = {};
+
+  for (var g = 0; g < 10; g++) {
+    groups.push({
+      id: g,
+      content: "Group " + g
+    });
+
+    groupItems[g] = [];
+
+    for (var i = 0; i < 30; i++) {
+      items.push({
+        id: "g" + g + "_" + i,
+        content: "g" + g + "_" + i,
+        group: g,
+        start: "2014-" + (g + 1) + "-" + getRandomInt(1, 20)
+      });
+
+      groupItems[g].push(items[items.length - 1]);
+    }
+  }
+
+  var container2 = document.getElementById('vertical-visualization');
+  var options = {
+    editable: false,
+    stack: true,
+    height: 300,
+    verticalScroll: true,
+    groupOrder: 'id'
+  };
+
+  var timeline2 = new vis.Timeline(container2, items, groups, options);
+
+  var groupIndex = 0;
+  var itemIndex = 0;
+
+  var moveToItem = function(direction) {
+    itemIndex += direction;
+    groupIndex += direction;
+
+    if (groupIndex < 0) {
+      groupIndex = groups.length - 1;
+    } else if (groupIndex >= groups.length) {
+      groupIndex = 0;
+    }
+
+    var items = groupItems[groupIndex];
+
+    if (itemIndex < 0) {
+      itemIndex = items.length - 1;
+    } else if (itemIndex >= items.length) {
+      itemIndex = 0;
+    }
+
+    var id = items[itemIndex].id;
+
+    timeline2.setSelection(id, {focus: true});
+  }
+
+  var nextFocus = document.getElementById('nextFocus');
+  var prevFocus = document.getElementById('prevFocus');
+  var selectionVertical = document.getElementById('selectionVertical');
+  var selectVertical = document.getElementById('selectVertical');
+
+  selectVertical.onclick = function () {
+    var ids = selectionVertical.value.split(',').map(function (value) {
+      return value.trim();
+    });
+    timeline2.setSelection(ids, {focus: focus.checked});
+  };
+
+  nextFocus.onclick = function() {
+    moveToItem(1);
+  };
+
+  prevFocus.onclick = function() {
+    moveToItem(-1);
+  };
+
+  // Set the initial focus
+  setTimeout(function() {
+    moveToItem(0);
+  }, 500);
+</script>
+</body>
+</html>

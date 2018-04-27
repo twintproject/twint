@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+  <title>Network | Hierarchical layout difference</title>
+
+  <style type="text/css">
+    body {
+      font: 10pt sans;
+    }
+    #mynetwork {
+      width: 800px;
+      height: 500px;
+      border: 1px solid lightgray;
+    }
+  </style>
+
+  <script type="text/javascript" src="../../../dist/vis.js"></script>
+  <link href="../../../dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+
+  <script type="text/javascript">
+    var network = null;
+    var layoutMethod = "directed";
+
+    function destroy() {
+      if (network !== null) {
+        network.destroy();
+        network = null;
+      }
+    }
+
+    function draw() {
+      destroy();
+
+      var nodes = [];
+      var edges = [];
+      // randomly create some nodes and edges
+      for (var i = 0; i < 19; i++) {
+        nodes.push({id: i, label: String(i)});
+      }
+      edges.push({from: 0, to: 1});
+      edges.push({from: 0, to: 6});
+      edges.push({from: 0, to: 13});
+      edges.push({from: 0, to: 11});
+      edges.push({from: 1, to: 2});
+      edges.push({from: 2, to: 3});
+      edges.push({from: 2, to: 4});
+      edges.push({from: 3, to: 5});
+      edges.push({from: 1, to: 10});
+      edges.push({from: 1, to: 7});
+      edges.push({from: 2, to: 8});
+      edges.push({from: 2, to: 9});
+      edges.push({from: 3, to: 14});
+      edges.push({from: 1, to: 12});
+      edges.push({from: 16, to: 15});
+      edges.push({from: 15, to: 17});
+      edges.push({from: 18, to: 17});
+
+      // create a network
+      var container = document.getElementById('mynetwork');
+      var data = {
+        nodes: nodes,
+        edges: edges
+      };
+
+      var options = {
+        layout: {
+          hierarchical: {
+            sortMethod: layoutMethod
+          }
+        },
+        edges: {
+          smooth: true,
+          arrows: {to : true }
+        }
+      };
+      network = new vis.Network(container, data, options);
+    }
+
+  </script>
+  
+</head>
+
+<body onload="draw();">
+<h2>Hierarchical layout difference</h2>
+<div style="width:700px; font-size:14px; text-align: justify;">
+  This example shows a the effect of the different hierarchical layout methods. Hubsize is based on the amount of edges connected to a node.
+  The node with the most connections (the largest hub) is drawn at the top of the tree. The direction method is based on the direction of the edges.
+  Try switching between the methods with the dropdown box below.
+</div>
+Layout method:
+<select id="layout">
+  <option value="hubsize">hubsize</option>
+  <option value="directed">directed</option>
+</select><br/>
+<br />
+
+<div id="mynetwork"></div>
+
+<p id="selection"></p>
+<script language="JavaScript">
+  var dropdown = document.getElementById("layout");
+  dropdown.onchange = function() {
+    layoutMethod = dropdown.value;
+    draw();
+  }
+</script>
+</body>
+</html>

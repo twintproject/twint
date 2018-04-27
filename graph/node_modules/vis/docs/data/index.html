@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" HREF="favicon.ico">
+  <title>Data - vis.js - A dynamic, browser based visualization library.</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../css/bootstrap.css" rel="stylesheet">
+  <!-- Tipue vendor css -->
+  <link href="../css/tipuesearch.css" rel="stylesheet">
+
+  <link href="../css/style.css" rel="stylesheet">
+
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+
+  <link href="../css/prettify.css" type="text/css" rel="stylesheet"/>
+  <script type="text/javascript" src="../js/googleAnalytics.js"></script>
+  <script type="text/javascript" src="../js/prettify/prettify.js"></script>
+
+  <script src="../js/smooth-scroll.min.js"></script>
+  <script language="JavaScript">
+    smoothScroll.init();
+  </script>
+
+  <script type="text/javascript" src="../js/toggleTable.js"></script>
+</head>
+<body onload="prettyPrint();">
+
+<div class="navbar-wrapper">
+    <div class="container">
+        <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                            aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand hidden-sm" href="./index.html">vis.js</a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="http://www.visjs.org/index.html#modules">Modules</a></li>
+                        <li><a href="http://www.visjs.org/blog.html">Blog</a></li>
+                        <li><a href="http://www.visjs.org/index.html#download_install">Download</a></li>
+                        <li><a href="http://www.visjs.org/showcase/index.html">Showcase</a></li>
+                        <li><a href="http://www.visjs.org/index.html#contribute">Contribute</a></li>
+                        <li><a href="http://www.visjs.org/featureRequests.html">Feature requests</a></li>
+                        <li><a href="http://www.visjs.org/index.html#licenses">License</a></li>
+                    </ul>
+                    <form class="navbar-form navbar-right" role="search">
+                        <input name="q" id="tipue_search_input" autocomplete="off" type="text" class="form-control" placeholder="Enter keywords">
+                        <button type="submit" class="btn btn-default">Go!</button>
+                    </form>
+                    <div id="search-results-wrapper" class="panel panel-default">
+                      <div class="panel-body">
+                        <div id="tipue_search_content"></div>
+                      </div>
+                    </div>
+                    <div id="keyword-info" class="panel panel-success">
+                      <div class="panel-body">
+                          Found <span id="keyword-count"></span> results. Click <a id="keyword-jumper-button" href="">here</a> to jump to the first keyword occurence!
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<a href="https://github.com/almende/vis" class="hidden-xs hidden-sm hidden-md"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+<div class="container full">
+
+  <h1>Data</h1>
+
+  <p>
+    One of the starting points of the visualizations of vis.js is that they can deal with dynamic data, and allow manipulation of the data. To enable this, vis.js includes a flexible key/value based <code>DataSet</code> and <code>DataView</code> to handle unstructured JSON data.
+  </p>
+
+  <p>
+    By providing a <code>DataSet</code> with data to the visualizations, they can subscribe on changes in the <code>DataSet</code> and automatically reflect the changes in their view. Changes in the data can be caused by a server pushing updates to a client, or by other interactive components in the web application. Vice versa, data can be manipulated in one of the visualizations. For example a REST-client can listen for changes and automatically write changes to the server. Or changes can be propagated to other parts of the web application.
+  </p>
+
+  <h2>DataSet</h2>
+
+  <p>
+    A <code>DataSet</code> can be used to store JSON objects by id. Objects can be added, updated and removed from the DatSet, and one can subscribe to changes in the <code>DataSet</code>.
+    The data in the <code>DataSet</code> can be filtered and ordered, and fields (like
+    dates) can be converted to a specific type. Data can be normalized when
+    appending it to the <code>DataSet</code> as well.
+  </p>
+
+  <p>
+    <a href="dataset.html">Go to the documentation of DataSet</a>
+  </p>
+
+  <h2>DataView</h2>
+
+  <p>
+    A <code>DataView</code> offers a filtered and/or formatted view on a DataSet.
+    One can subscribe to changes in a <code>DataView</code>, and easily get filtered or
+    formatted data without having to specify filters and field types all
+    the time.
+  </p>
+
+  <p>
+    <a href="dataview.html">Go to the documentation of DataView</a>
+  </p>
+
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="../js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../js/ie10-viewport-bug-workaround.js"></script>
+<!-- jquery extensions -->
+<script src="../js/jquery.highlight.js"></script>
+<script src="../js/jquery.url.min.js"></script>
+<!-- Tipue vendor js -->
+<script src="../js/tipuesearch.config.js"></script>
+<script src="../js/tipuesearch.js"></script>
+<!-- controller -->
+<script src="../js/main.js"></script>

@@ -1,0 +1,29 @@
+.vis-current-time {
+  background-color: #FF7F6E;
+  width: 2px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.vis-rolling-mode-btn {
+  height: 40px;
+  width: 40px;
+  position: absolute;
+  top: 7px;
+  right: 20px;
+  border-radius: 50%;
+  font-size: 28px;
+  cursor: pointer;
+  opacity: 0.8;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  background: #3876c2;
+}
+.vis-rolling-mode-btn:before {
+  content: "\26F6";
+}
+
+.vis-rolling-mode-btn:hover {
+  opacity: 1;
+}

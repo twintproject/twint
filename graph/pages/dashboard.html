@@ -1,0 +1,18 @@
+<html>
+    <link rel="stylesheet" href="photon/css/photon.min.css">
+    <body>
+        <script>
+            window.$ = window.jQuery = require('jquery');
+            //const {ipcRenderer} = require('electron');
+            $(document).ready(function(){
+                ipcRenderer.send('get-dashboard-url', 'asynchronous-message');
+                console.log("sent");
+                ipcRenderer.on('asynchronous-reply', (event, arg) => {
+                    document.getElementById("dFrame").src = arg;
+                    console.log(arg);
+                });
+            })
+        </script>
+        <iframe src="" height=100% width=100% id="dFrame"></iframe>
+    </body>
+</html>

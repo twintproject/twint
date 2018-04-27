@@ -1,0 +1,717 @@
+// Name:            Base
+// Description:     Default values for HTML elements
+//
+// Component:       `uk-link`
+//                  `uk-h1`, `uk-h2`, `uk-h3`, `uk-h4`, `uk-h5`, `uk-h6`
+//                  `uk-hr`
+//
+// ========================================================================
+
+
+// Variables
+// ========================================================================
+
+@base-body-background:                          @global-background;
+@base-body-font-family:                         @global-font-family;
+@base-body-font-weight:                         normal;
+@base-body-font-size:                           @global-font-size;
+@base-body-line-height:                         @global-line-height;
+@base-body-color:                               @global-color;
+
+@base-link-color:                               @global-link-color;
+@base-link-text-decoration:                     none;
+@base-link-hover-color:                         @global-link-hover-color;
+@base-link-hover-text-decoration:               underline;
+
+@base-strong-font-weight:                       bolder;
+@base-code-font-size:                           @global-small-font-size;
+@base-code-font-family:                         Consolas, monaco, monospace;
+@base-code-color:                               @global-danger-background;
+@base-em-color:                                 @global-danger-background;
+@base-ins-background:                           #ffd;
+@base-ins-color:                                @global-color;
+@base-mark-background:                          #ffd;
+@base-mark-color:                               @global-color;
+@base-quote-font-style:                         italic;
+@base-small-font-size:                          80%;
+
+@base-margin-vertical:                          @global-margin;
+
+@base-heading-font-family:                      @global-font-family;
+@base-heading-font-weight:                      normal;
+@base-heading-color:                            @global-emphasis-color;
+@base-heading-text-transform:                   none;
+@base-heading-margin-top:                       @global-medium-margin;
+@base-h1-font-size:                             @global-xxlarge-font-size;
+@base-h1-line-height:                           1.2;
+@base-h2-font-size:                             @global-xlarge-font-size;
+@base-h2-line-height:                           1.3;
+@base-h3-font-size:                             @global-large-font-size;
+@base-h3-line-height:                           1.4;
+@base-h4-font-size:                             @global-medium-font-size;
+@base-h4-line-height:                           1.4;
+@base-h5-font-size:                             @global-font-size;
+@base-h5-line-height:                           1.4;
+@base-h6-font-size:                             @global-small-font-size;
+@base-h6-line-height:                           1.4;
+
+@base-list-padding-left:                        30px;
+
+@base-hr-margin-vertical:                       @global-margin;
+@base-hr-border-width:                          @global-border-width;
+@base-hr-border:                                @global-border;
+
+@base-blockquote-font-size:                     @global-medium-font-size;
+@base-blockquote-line-height:                   1.5;
+@base-blockquote-font-style:                    italic;
+@base-blockquote-margin-vertical:               @global-margin;
+@base-blockquote-footer-margin-top:             @global-small-margin;
+@base-blockquote-footer-font-size:              @global-small-font-size;
+@base-blockquote-footer-line-height:            1.5;
+
+@base-pre-font-size:                            @global-small-font-size;
+@base-pre-line-height:                          1.5;
+@base-pre-font-family:                          @base-code-font-family;
+@base-pre-color:                                @global-color;
+
+@base-selection-background:                     #39f;
+@base-selection-color:                          @global-inverse-color;
+
+
+/* ========================================================================
+   Component: Base
+ ========================================================================== */
+
+/*
+ * 1. Set `font-size` to support `rem` units
+ *    Not using `font` property because a leading hyphen (e.g. -apple-system) causes the font to break in IE11 and Edge
+ * 2. Prevent adjustments of font size after orientation changes in IE and iOS.
+ * 3. Style
+ */
+
+html {
+    /* 1 */
+    font-family: @base-body-font-family;
+    font-size: @base-body-font-size;
+    font-weight: @base-body-font-weight;
+    line-height: @base-body-line-height;
+    /* 2 */
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    /* 3 */
+    background: @base-body-background;
+    color: @base-body-color;
+    .hook-base-body;
+}
+
+/*
+ * Removes default margin.
+ */
+
+body { margin: 0; }
+
+
+/* Links
+ ========================================================================== */
+
+/*
+ * Remove gaps in links underline in iOS 8+ and Safari 8+.
+ */
+
+a { -webkit-text-decoration-skip: objects; }
+
+/*
+ * Remove the outline on focused links when they are also active or hovered
+ */
+
+a:active,
+a:hover { outline: none; }
+
+/*
+ * Style
+ */
+
+a,
+.uk-link {
+    color: @base-link-color;
+    text-decoration: @base-link-text-decoration;
+    cursor: pointer;
+    .hook-base-link;
+}
+
+a:hover,
+.uk-link:hover {
+    color: @base-link-hover-color;
+    text-decoration: @base-link-hover-text-decoration;
+    .hook-base-link-hover;
+}
+
+
+/* Text-level semantics
+ ========================================================================== */
+
+/*
+ * 1. Remove the bottom border in Firefox 39-.
+ * 2. Add the correct text decoration in Chrome, Edge, IE, Opera, and Safari.
+ */
+
+abbr[title] {
+  border-bottom: none; /* 1 */
+  text-decoration: underline; /* 2 */
+  text-decoration: underline dotted; /* 2 */
+}
+
+
+/*
+ * Add the correct font weight in Chrome, Edge, and Safari.
+ */
+
+b,
+strong { font-weight: @base-strong-font-weight; }
+
+/*
+ * 1. Correct the odd `em` font sizing in all browsers.
+ * 2. Consolas has a better baseline in running text compared to `Courier`
+ * 3. Style
+ */
+
+:not(pre) > code,
+:not(pre) > kbd,
+:not(pre) > samp {
+    /* 1 */
+    font-size: @base-code-font-size;
+    /* 2 */
+    font-family: @base-code-font-family;
+    /* 3 */
+    color: @base-code-color;
+    white-space: nowrap;
+    .hook-base-code;
+}
+
+/*
+ * Emphasize
+ */
+
+em { color: @base-em-color; }
+
+/*
+ * Insert
+ */
+
+ins {
+    background: @base-ins-background;
+    color: @base-ins-color;
+    text-decoration: none;
+}
+
+/*
+ * Mark
+ */
+
+mark {
+    background: @base-mark-background;
+    color: @base-mark-color;
+}
+
+/*
+ * Quote
+ */
+
+q { font-style: @base-quote-font-style; }
+
+/*
+ * Add the correct font size in all browsers.
+ */
+
+small { font-size: @base-small-font-size; }
+
+/*
+ * Prevents `sub` and `sup` affecting `line-height` in all browsers.
+ */
+
+sub,
+sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+sup { top: -0.5em; }
+sub { bottom: -0.25em; }
+
+
+/* Embedded content
+ ========================================================================== */
+
+/*
+ * Remove the gap between embedded content and the bottom of their containers.
+ */
+
+audio,
+canvas,
+iframe,
+img,
+svg,
+video { vertical-align: middle; }
+
+/*
+ * Responsiveness
+ * 1. Set a maximum width
+ * 2. Auto scale the height. Only needed if `height` attribute is present
+ * 2. Corrects `max-width` behavior if padding and border are used
+ */
+
+audio,
+canvas,
+img,
+video {
+    /* 1 */
+    max-width: 100%;
+    /* 2 */
+    height: auto;
+    /* 3 */
+    box-sizing: border-box;
+}
+
+/*
+ * Hide the overflow in IE.
+ */
+
+svg:not(:root) { overflow: hidden; }
+
+
+/* Block elements
+ ========================================================================== */
+
+/*
+ * Margins
+ */
+
+p,
+ul,
+ol,
+dl,
+pre,
+address,
+fieldset,
+figure { margin: 0 0 @base-margin-vertical 0; }
+
+/* Add margin if adjacent element */
+* + p,
+* + ul,
+* + ol,
+* + dl,
+* + pre,
+* + address,
+* + fieldset,
+* + figure { margin-top: @base-margin-vertical; }
+
+
+/* Headings
+ ========================================================================== */
+
+h1, .uk-h1,
+h2, .uk-h2,
+h3, .uk-h3,
+h4, .uk-h4,
+h5, .uk-h5,
+h6, .uk-h6 {
+    margin: 0 0 @base-margin-vertical 0;
+    font-family: @base-heading-font-family;
+    font-weight: @base-heading-font-weight;
+    color: @base-heading-color;
+    text-transform: @base-heading-text-transform;
+    .hook-base-heading;
+}
+
+/* Add margin if adjacent element */
+* + h1, * + .uk-h1,
+* + h2, * + .uk-h2,
+* + h3, * + .uk-h3,
+* + h4, * + .uk-h4,
+* + h5, * + .uk-h5,
+* + h6, * + .uk-h6 { margin-top: @base-heading-margin-top; }
+
+/*
+ * Sizes
+ */
+
+h1, .uk-h1 {
+    font-size: @base-h1-font-size;
+    line-height: @base-h1-line-height;
+    .hook-base-h1;
+}
+
+h2, .uk-h2 {
+    font-size: @base-h2-font-size;
+    line-height: @base-h2-line-height;
+    .hook-base-h2;
+}
+
+h3, .uk-h3 {
+    font-size: @base-h3-font-size;
+    line-height: @base-h3-line-height;
+    .hook-base-h3;
+}
+
+h4, .uk-h4 {
+    font-size: @base-h4-font-size;
+    line-height: @base-h4-line-height;
+    .hook-base-h4;
+}
+
+h5, .uk-h5 {
+    font-size: @base-h5-font-size;
+    line-height: @base-h5-line-height;
+    .hook-base-h5;
+}
+
+h6, .uk-h6 {
+    font-size: @base-h6-font-size;
+    line-height: @base-h6-line-height;
+    .hook-base-h6;
+}
+
+
+/* Lists
+ ========================================================================== */
+
+ul,
+ol { padding-left: @base-list-padding-left; }
+
+/*
+ * Reset margin for nested lists
+ */
+
+ul > li > ul,
+ul > li > ol,
+ol > li > ol,
+ol > li > ul { margin: 0; }
+
+
+/* Description lists
+ ========================================================================== */
+
+dt { font-weight: bold; }
+dd { margin-left: 0; }
+
+
+/* Horizontal rules
+ ========================================================================== */
+
+/*
+ * 1. Add the correct box sizing and height in Firefox.
+ * 2. Show the overflow in Edge and IE.
+ * 3. Add the correct text-align in Edge and IE.
+ * 4. Style
+ */
+
+hr, .uk-hr {
+    /* 1 */
+    box-sizing: content-box;
+    height: 0;
+    /* 2 */
+    overflow: visible;
+    /* 3 */
+    text-align: inherit;
+    /* 4 */
+    margin: 0 0 @base-hr-margin-vertical 0;
+    border: 0;
+    border-top: @base-hr-border-width solid @base-hr-border;
+    .hook-base-hr;
+}
+
+/* Add margin if adjacent element */
+* + hr,
+* + .uk-hr { margin-top: @base-hr-margin-vertical }
+
+
+/* Address
+ ========================================================================== */
+
+address { font-style: normal; }
+
+
+/* Blockquotes
+ ========================================================================== */
+
+blockquote {
+    margin: 0 0 @base-blockquote-margin-vertical 0;
+    font-size: @base-blockquote-font-size;
+    line-height: @base-blockquote-line-height;
+    font-style: @base-blockquote-font-style;
+    .hook-base-blockquote;
+}
+
+/* Add margin if adjacent element */
+* + blockquote { margin-top: @base-blockquote-margin-vertical; }
+
+/*
+ * Content
+ */
+
+blockquote p:last-of-type { margin-bottom: 0; }
+
+blockquote footer {
+    margin-top:  @base-blockquote-footer-margin-top;
+    font-size: @base-blockquote-footer-font-size;
+    line-height: @base-blockquote-footer-line-height;
+    .hook-base-blockquote-footer;
+}
+
+
+/* Preformatted text
+ ========================================================================== */
+
+/*
+ * 1. Contain overflow in all browsers.
+ * 2. Override UA
+ */
+
+pre {
+    font: @base-pre-font-size e("/") @base-pre-line-height @base-pre-font-family;
+    color: @base-pre-color;
+    -moz-tab-size: 4;
+    tab-size: 4;
+    /* 1 */
+    overflow: auto;
+    .hook-base-pre;
+}
+
+pre code { font-family: @base-pre-font-family; }
+
+
+/* Selection pseudo-element
+ ========================================================================== */
+
+::-moz-selection {
+    background: @base-selection-background;
+    color: @base-selection-color;
+    text-shadow: none;
+}
+
+::selection {
+    background: @base-selection-background;
+    color: @base-selection-color;
+    text-shadow: none;
+}
+
+
+/* HTML5 elements
+ ========================================================================== */
+
+/*
+ * 1. Add the correct display in Edge, IE, and Firefox.
+ * 2. Add the correct display in IE.
+ */
+
+details, /* 1 */
+main { /* 2 */
+    display: block;
+}
+
+/*
+ * Add the correct display in all browsers.
+ */
+
+summary { display: list-item; }
+
+/*
+ * Add the correct vertical alignment in Chrome, Firefox, and Opera.
+ */
+
+progress { vertical-align: baseline; }
+
+/*
+ * Add the correct display in IE.
+ */
+
+template { display: none; }
+
+
+/* Iframe
+ ========================================================================== */
+
+iframe { border: 0; }
+
+
+/* Prevent the 300ms delay for touchscreen interactions
+ ========================================================================== */
+
+/*
+ * Most browsers prevent the 300ms delay automatically for sites that use the `width=device-width` property.
+ * For Safari on iOS 9.3+, IE 11 and Edge on desktops and IE 11 on Windows Phone 8.1 it must be applied manually.
+ */
+
+a,
+area,
+button,
+input,
+label,
+select,
+summary,
+textarea { touch-action: manipulation; }
+
+
+/* Pass media breakpoints to JS
+ ========================================================================== */
+
+/*
+ * Breakpoints
+ */
+
+.var-media-s::before  { content: '@{breakpoint-small}'; }
+.var-media-m::before  { content: '@{breakpoint-medium}'; }
+.var-media-l::before  { content: '@{breakpoint-large}'; }
+.var-media-xl::before { content: '@{breakpoint-xlarge}'; }
+
+
+// Hooks
+// ========================================================================
+
+.hook-base-misc;
+
+.hook-base-body() {}
+.hook-base-link() {}
+.hook-base-link-hover() {}
+.hook-base-code() {}
+.hook-base-heading() {}
+.hook-base-h1() {}
+.hook-base-h2() {}
+.hook-base-h3() {}
+.hook-base-h4() {}
+.hook-base-h5() {}
+.hook-base-h6() {}
+.hook-base-hr() {}
+.hook-base-blockquote() {}
+.hook-base-blockquote-footer() {}
+.hook-base-pre() {}
+.hook-base-misc() {}
+
+
+// Inverse
+// ========================================================================
+
+@inverse-base-color:                           @inverse-global-color;
+@inverse-base-link-color:                      @inverse-global-emphasis-color;
+@inverse-base-link-hover-color:                @inverse-global-emphasis-color;
+@inverse-base-code-color:                      @inverse-global-color;
+@inverse-base-em-color:                        @inverse-global-emphasis-color;
+@inverse-base-heading-color:                   @inverse-global-emphasis-color;
+@inverse-base-hr-border:                       @inverse-global-border;
+
+.hook-inverse() {
+
+    color: @inverse-base-color;
+
+    // Base
+    // ========================================================================
+
+    //
+    // Link
+    //
+
+    a,
+    .uk-link  {
+        color: @inverse-base-link-color;
+        .hook-inverse-base-link;
+    }
+
+    a:hover,
+    .uk-link:hover {
+        color: @inverse-base-link-hover-color;
+        .hook-inverse-base-link-hover;
+    }
+
+    //
+    // Code
+    //
+
+    :not(pre) > code,
+    :not(pre) > kbd,
+    :not(pre) > samp {
+        color: @inverse-base-code-color;
+        .hook-inverse-base-code;
+    }
+
+    //
+    // Emphasize
+    //
+
+    em { color: @inverse-base-em-color; }
+
+    //
+    // Headings
+    //
+
+    h1, .uk-h1,
+    h2, .uk-h2,
+    h3, .uk-h3,
+    h4, .uk-h4,
+    h5, .uk-h5,
+    h6, .uk-h6 {
+        color: @inverse-base-heading-color;
+        .hook-inverse-base-heading;
+    }
+
+    h1, .uk-h1 {
+        .hook-inverse-base-h1;
+    }
+
+    h2, .uk-h2 {
+        .hook-inverse-base-h2;
+    }
+
+    h3, .uk-h3 {
+        .hook-inverse-base-h3;
+    }
+
+    h4, .uk-h4 {
+        .hook-inverse-base-h4;
+    }
+
+    h5, .uk-h5 {
+        .hook-inverse-base-h5;
+    }
+
+    h6, .uk-h6 {
+        .hook-inverse-base-h6;
+    }
+
+    //
+    // Blockquotes
+    //
+
+    blockquote {
+        .hook-inverse-base-blockquote;
+    }
+
+    blockquote footer {
+        .hook-inverse-base-blockquote-footer;
+    }
+
+    //
+    // Horizontal rules
+    //
+
+    hr, .uk-hr {
+        border-top-color: @inverse-base-hr-border;
+        .hook-inverse-base-hr;
+    }
+
+}
+
+.hook-inverse-base-link() {}
+.hook-inverse-base-link-hover() {}
+.hook-inverse-base-code() {}
+.hook-inverse-base-heading() {}
+.hook-inverse-base-h1() {}
+.hook-inverse-base-h2() {}
+.hook-inverse-base-h3() {}
+.hook-inverse-base-h4() {}
+.hook-inverse-base-h5() {}
+.hook-inverse-base-h6() {}
+.hook-inverse-base-blockquote() {}
+.hook-inverse-base-blockquote-footer() {}
+.hook-inverse-base-hr() {}

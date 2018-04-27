@@ -1,0 +1,269 @@
+// Name:            Icon
+// Description:     Component to create icons
+//
+// Component:       `uk-icon`
+//
+// Modifiers:       `uk-icon-image`
+//                  `uk-icon-link`
+//                  `uk-icon-button`
+//
+// States:          `uk-preserve`
+//
+// ========================================================================
+
+
+// Variables
+// ========================================================================
+
+@icon-image-size:                               20px;
+
+@icon-link-color:                               @global-muted-color;
+@icon-link-hover-color:                         @global-color;
+@icon-link-active-color:                        darken(@global-color, 5%);
+
+@icon-button-size:                              36px;
+@icon-button-border-radius:                     500px;
+@icon-button-background:                        @global-muted-background;
+@icon-button-color:                             @global-muted-color;
+
+@icon-button-hover-background:                  darken(@icon-button-background, 5%);
+@icon-button-hover-color:                       @global-color;
+
+@icon-button-active-background:                 darken(@icon-button-background, 10%);
+@icon-button-active-color:                      @global-color;
+
+
+/* ========================================================================
+   Component: Icon
+ ========================================================================== */
+
+/*
+ * Note: 1. - 7. is required for `button` elements. Needed for Close and Form Icon component.
+ * 1. Remove margins in Chrome, Safari and Opera.
+ * 2. Remove borders for `button`.
+ * 3. Remove border-radius in Chrome.
+ * 4. Address `overflow` set to `hidden` in IE.
+ * 5. Correct `font` properties and `color` not being inherited for `button`.
+ * 6. Remove the inheritance of text transform in Edge, Firefox, and IE.
+ * 7. Remove default `button` padding and background color
+ * 8. Style
+ * 9. Fill all SVG elements with the current text color if no `fill` attribute is set
+ * 10. Let the container fit the height of the icon
+ */
+
+.uk-icon {
+    /* 1 */
+    margin: 0;
+    /* 2 */
+    border: none;
+    /* 3 */
+    border-radius: 0;
+    /* 4 */
+    overflow: visible;
+    /* 5 */
+    font: inherit;
+    color: inherit;
+    /* 6 */
+    text-transform: none;
+    /* 7. */
+    padding: 0;
+    background-color: transparent;
+    /* 8 */
+    display: inline-block;
+    /* 9 */
+    fill: currentcolor;
+    /* 10 */
+    line-height: 0;
+}
+
+/* Required for `button`. */
+button.uk-icon:not(:disabled) { cursor: pointer; }
+
+/*
+ * Remove the inner border and padding in Firefox.
+ */
+
+.uk-icon::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+/*
+ * Set the fill and stroke color of all SVG elements to the current text color
+ * 1. Fix for uppercase attribute names in Edge. Will be fixed in Windows 10 builds 16251+
+ */
+
+.uk-icon [fill*='#']:not(.uk-preserve),
+.uk-icon [FILL*='#']:not(.uk-preserve) { fill: currentcolor; } // 1
+.uk-icon [stroke*='#']:not(.uk-preserve),
+.uk-icon [STROKE*='#']:not(.uk-preserve) { stroke: currentcolor; } // 1
+
+/*
+ * Fix Firefox blurry SVG rendering: https://bugzilla.mozilla.org/show_bug.cgi?id=1046835
+ */
+
+.uk-icon > * { transform: translate(0,0); }
+
+
+/* Image modifier
+ ========================================================================== */
+
+/*
+ * Display images in icon dimensions
+ */
+
+.uk-icon-image {
+    width: @icon-image-size;
+    height: @icon-image-size;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: contain;
+    vertical-align: middle;
+}
+
+
+/* Style modifiers
+ ========================================================================== */
+
+/*
+ * Link
+ */
+
+.uk-icon-link {
+    color: @icon-link-color;
+    .hook-icon-link;
+}
+
+.uk-icon-link:hover,
+.uk-icon-link:focus {
+    color: @icon-link-hover-color;
+    outline: none;
+    .hook-icon-link-hover;
+}
+
+/* OnClick + Active */
+.uk-icon-link:active,
+.uk-active > .uk-icon-link {
+    color: @icon-link-active-color;
+    .hook-icon-link-active;
+}
+
+/*
+ * Button
+ * 1. Center icon vertically and horizontally
+ */
+
+.uk-icon-button {
+    box-sizing: border-box;
+    width: @icon-button-size;
+    height: @icon-button-size;
+    border-radius: @icon-button-border-radius;
+    background: @icon-button-background;
+    color: @icon-button-color;
+    vertical-align: middle;
+    /* 1 */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    .hook-icon-button;
+}
+
+/* Hover + Focus */
+.uk-icon-button:hover,
+.uk-icon-button:focus {
+    background-color: @icon-button-hover-background;
+    color: @icon-button-hover-color;
+    outline: none;
+    .hook-icon-button-hover;
+}
+
+/* OnClick + Active */
+.uk-icon-button:active,
+.uk-active > .uk-icon-button {
+    background-color: @icon-button-active-background;
+    color: @icon-button-active-color;
+    .hook-icon-button-active;
+}
+
+
+// Hooks
+// ========================================================================
+
+.hook-icon-misc;
+
+.hook-icon-link() {}
+.hook-icon-link-hover() {}
+.hook-icon-link-active() {}
+.hook-icon-button() {}
+.hook-icon-button-hover() {}
+.hook-icon-button-active() {}
+.hook-icon-misc() {}
+
+
+// Inverse
+// ========================================================================
+
+@inverse-icon-link-color:                      @inverse-global-muted-color;
+@inverse-icon-link-hover-color:                @inverse-global-color;
+@inverse-icon-link-active-color:               @inverse-global-color;
+@inverse-icon-button-background:               @inverse-global-muted-background;
+@inverse-icon-button-color:                    @inverse-global-muted-color;
+@inverse-icon-button-hover-background:         darken(@inverse-icon-button-background, 5%);
+@inverse-icon-button-hover-color:              @inverse-global-color;
+@inverse-icon-button-active-background:        darken(@inverse-icon-button-background, 10%);
+@inverse-icon-button-active-color:             @inverse-global-color;
+
+.hook-inverse() {
+
+    //
+    // Link
+    //
+
+    .uk-icon-link {
+        color: @inverse-icon-link-color;
+        .hook-inverse-icon-link;
+    }
+
+    .uk-icon-link:hover,
+    .uk-icon-link:focus {
+        color: @inverse-icon-link-hover-color;
+        .hook-inverse-icon-link-hover;
+    }
+
+    .uk-icon-link:active,
+    .uk-active > .uk-icon-link {
+        color: @inverse-icon-link-active-color;
+        .hook-inverse-icon-link-active;
+    }
+
+    //
+    // Button
+    //
+
+    .uk-icon-button {
+        background-color: @inverse-icon-button-background;
+        color: @inverse-icon-button-color;
+        .hook-inverse-icon-button;
+    }
+
+    .uk-icon-button:hover,
+    .uk-icon-button:focus {
+        background-color: @inverse-icon-button-hover-background;
+        color: @inverse-icon-button-hover-color;
+        .hook-inverse-icon-button-hover;
+    }
+
+    .uk-icon-button:active {
+        background-color: @inverse-icon-button-active-background;
+        color: @inverse-icon-button-active-color;
+        .hook-inverse-icon-button-active;
+    }
+
+}
+
+.hook-inverse-icon-link() {}
+.hook-inverse-icon-link-hover() {}
+.hook-inverse-icon-link-active() {}
+.hook-inverse-icon-button() {}
+.hook-inverse-icon-button-hover() {}
+.hook-inverse-icon-button-active() {}

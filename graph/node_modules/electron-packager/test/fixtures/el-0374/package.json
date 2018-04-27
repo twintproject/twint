@@ -1,0 +1,12 @@
+{
+  "main": "main.js",
+  "productName": "MainJS",
+  "dependencies": {
+    "run-series": "^1.1.1"
+  },
+  "devDependencies": {
+    "ncp": "^2.0.0",
+    "run-waterfall": "^1.1.1",
+    "electron-prebuilt": "0.37.4"
+  }
+}

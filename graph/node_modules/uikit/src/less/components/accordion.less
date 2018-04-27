@@ -1,0 +1,135 @@
+// Name:            Accordion
+// Description:     Component to create accordions
+//
+// Component:       `uk-accordion`
+//
+// Sub-objects:     `uk-accordion-title`
+//                  `uk-accordion-content`
+//
+// States:          `uk-open`
+//
+// ========================================================================
+
+
+// Variables
+// ========================================================================
+
+@accordion-item-margin-top:                    @global-margin;
+
+@accordion-title-font-size:                    @global-medium-font-size;
+@accordion-title-line-height:                  1.4;
+@accordion-title-color:                        @global-emphasis-color;
+@accordion-title-hover-color:                  @global-color;
+
+@accordion-content-margin-top:                 @global-margin;
+
+
+/* ========================================================================
+   Component: Accordion
+ ========================================================================== */
+
+.uk-accordion {
+    padding: 0;
+    list-style: none;
+    .hook-accordion;
+}
+
+
+/* Item
+ ========================================================================== */
+
+.uk-accordion > :nth-child(n+2) {
+    margin-top: @accordion-item-margin-top;
+    .hook-accordion-item;
+}
+
+
+/* Title
+ ========================================================================== */
+
+.uk-accordion-title {
+    display: block;
+    font-size: @accordion-title-font-size;
+    line-height: @accordion-title-line-height;
+    color: @accordion-title-color;
+    .hook-accordion-title;
+}
+
+/* Hover + Focus */
+.uk-accordion-title:hover,
+.uk-accordion-title:focus {
+    color: @accordion-title-hover-color;
+    text-decoration: none;
+    outline: none;
+    .hook-accordion-title-hover;
+}
+
+
+/* Content
+ ========================================================================== */
+
+.uk-accordion-content {
+    margin-top: @accordion-content-margin-top;
+    .hook-accordion-content;
+}
+
+/*
+ * Micro clearfix
+ */
+
+.uk-accordion-content::before,
+.uk-accordion-content::after {
+    content: "";
+    display: table;
+}
+
+.uk-accordion-content::after { clear: both; }
+
+/*
+ * Remove margin from the last-child
+ */
+
+ .uk-accordion-content > :last-child { margin-bottom: 0; }
+
+
+// Hooks
+// ========================================================================
+
+.hook-accordion-misc;
+
+.hook-accordion() {}
+.hook-accordion-item() {}
+.hook-accordion-title() {}
+.hook-accordion-title-hover() {}
+.hook-accordion-content() {}
+.hook-accordion-misc() {}
+
+
+// Inverse
+// ========================================================================
+
+@inverse-accordion-title-color:             @inverse-global-emphasis-color;
+@inverse-accordion-title-hover-color:       @inverse-global-inverse-color;
+
+.hook-inverse() {
+
+    .uk-accordion > :nth-child(n+2) {
+        .hook-inverse-accordion-item;
+    }
+
+    .uk-accordion-title {
+        color: @inverse-accordion-title-color;
+        .hook-inverse-accordion-title;
+    }
+
+    .uk-accordion-title:hover,
+    .uk-accordion-title:focus {
+        color: @inverse-accordion-title-hover-color;
+        .hook-inverse-accordion-title-hover;
+    }
+
+}
+
+.hook-inverse-accordion-item() {}
+.hook-inverse-accordion-title() {}
+.hook-inverse-accordion-title-hover() {}

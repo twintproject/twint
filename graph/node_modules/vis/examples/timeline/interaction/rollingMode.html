@@ -1,0 +1,48 @@
+<html>
+<head>
+  <title>Timeline | rolling mode Option</title>
+  <meta charset="utf-8">
+  <script src="../../../dist/vis.js"></script>
+  <link href="../../../dist/vis.css" rel="stylesheet" type="text/css" />
+
+  
+</head>
+
+<body>
+
+<h1><i id="icon">&#9974;</i>Timeline rolling mode option</h1>
+
+<div id="mytimeline"></div>
+
+
+<script>
+  var container = document.getElementById('mytimeline');
+
+  var items = new vis.DataSet();
+
+  for (var i = 10; i >= 0; i--) { 
+    items.add({
+        id: i,
+        content: "item " + i,
+        start: new Date(new Date().getTime() + i*100000)
+    });
+  }
+
+  // Configuration for the Timeline
+  // specify options
+  var options = {
+    start: new Date(),
+    end: new Date(new Date().getTime() + 1000000),
+    rollingMode: {
+      follow: true,
+      offset: 0.5
+    }
+  };
+
+  // create a Timeline
+  timeline = new vis.Timeline(container, items, null, options);
+
+</script>
+
+</body>
+</html>

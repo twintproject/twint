@@ -1,0 +1,49 @@
+language: generic
+
+env:
+  matrix:
+    - ZUUL_TEST=1 NODE_VERSION=node
+    - NODE_VERSION=0.10
+    - NODE_VERSION=0.12
+    - NODE_VERSION=1
+    - NODE_VERSION=2
+    - NODE_VERSION=3
+    - NODE_VERSION=4
+    - NODE_VERSION=5
+    - NODE_VERSION=node
+  global:
+    - secure: NpqUZNJuWRuyqVs1v+LGtqpnEPO7gNWLShMsVUEYdoR6c/ZXOs9mB+shqMMPtuQ3loQqydLJZVb7yZJmwAz6ZGpftZWIsPFaXilmixs0yUTdwbJ53061uBx8ajOaZyeaTRFxv/cr2Jj48hX5ov1FUTQ+hoelCb/N221c0SJEtL8=
+    - secure: C7rEgVrfIFovn763aFbXwZrEvTapI1MDDSk8nmU/nseC8Zb++6wCHNbKeGPLaY1kgRNOJbIo9SoHWUoLhGjjHXiNamQfoRPgeD3MXe1qhUskwxOeqpXOFfZv6KEyi3YNjPrjVTgLqK/mfmH2HxHr2HIldP15z40cc5+SLxKS2Fk=
+
+# Include all possible file systems
+# Normal builds use AUFS
+# See http://docs.travis-ci.com/user/ci-environment/
+matrix:
+  include:
+    # HFS+
+    - os: osx
+      env: NODE_VERSION=node
+    # ext4
+    - sudo: required
+      dist: trusty
+      env: NODE_VERSION=node
+    # SIMFS
+    - sudo: required
+      env: NODE_VERSION=node
+
+before_install:
+install:
+  - rm -rf ~/.nvm
+  - git clone https://github.com/creationix/nvm.git ~/.nvm
+  - source ~/.nvm/nvm.sh
+  - nvm install $NODE_VERSION
+  - node --version
+  - npm install
+
+script: |
+  if [ -n "$ZUUL_TEST" ]
+  then
+    npm run test-browser-sauce
+  else
+    npm test
+  fi

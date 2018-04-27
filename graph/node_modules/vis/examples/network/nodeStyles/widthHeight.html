@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+<head>
+  <title>Network | Label Width and Height Settings</title>
+
+  <script type="text/javascript" src="../../../dist/vis.js"></script>
+  <link href="../../../dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+
+  <style type="text/css">
+    #mynetwork {
+      width: 600px;
+      height: 400px;
+      border: 1px solid lightgray;
+    }
+    code {
+      font-size: 14px;
+      background: #dddddd;
+    }
+    p {
+      max-width: 600px;
+    }
+    .indented {
+      margin-left: 30px;
+    }
+    .sep {
+      height: 1px;
+      width: 35%;
+      margin-left: 40px;
+      background-color: #dddddd;
+    }
+  </style>
+  
+</head>
+
+<body>
+
+<p>Nodes may be set to have fixed, minimum and maximum widths and minimum heights.
+Nodes with minimum heights may also have a vertical alignment set.</p>
+
+<p>Edges may be set to have maximum widths.</p>
+
+<div id="mynetwork"></div>
+
+<p>The <code>widthConstraint: value</code> option means a fixed width, the minimum and maximum width of the element are set to the value (respecting left and right margins). Lines exceeding the maximum width will be broken at space boundaries to fit.</p>
+<p>The <code>widthConstraint: { minimum: value }</code> option sets the minimum width of the element to the value.</p>
+<p>The <code>widthConstraint: { maximum: value }</code> option sets the maximum width of the element to the value (respecting left and right margins). Lines exceeding the maximum width will be broken at space boundaries to fit.</p>
+<p>Minimum width line sizing is applied after maximum width line breaking, so counterintuitively, the minimum being greater than the maximum has a meaningful interpretation.</p>
+
+<div class="sep"></div>
+
+<p>The <code>heightConstraint: value</code> option sets the minimum height of the element to the value (respecting top and bottom margins).</p>
+<p>The <code>heightConstraint: { minimum: value }</code> option also sets the minimum height of the element to the value (respecting top and bottom margins).</p>
+<p>The <code>heightConstraint: { valign: value }</code> option (with value <code>'top'</code>, <code>'middle'</code>, or <code>'bottom'</code>, sets the alignment of the text in the element's label to the elements top, middle or bottom (respecting top and bottom margins) when it's height is less than the minimum. The middle value is the default.</p>
+
+<div class="sep"></div>
+
+<p>Node width and height constraints may both be applied together, of course.</p>
+<p>The constraint options may be applied to elements individually, or at the whole-set level.
+Whole-set node and edge constraints are exclusive.</p>
+
+<script type="text/javascript">
+  var nodes = [
+    { id: 100, label: 'This node has no fixed, minimum or maximum width or height', x: -50, y: -300 },
+    { id: 210, widthConstraint: { minimum: 120 }, label: 'This node has a mimimum width', x: -400, y: -200 },
+    { id: 211, widthConstraint: { minimum: 120 }, label: '...so does this', x: -500, y: -50 },
+    { id: 220, widthConstraint: { maximum: 170 }, label: 'This node has a maximum width and breaks have been automatically inserted into the label', x: -150, y: -150 },
+    { id: 221, widthConstraint: { maximum: 170 }, label: '...this too', x: -100, y: 0 },
+    { id: 200, font: { multi: true }, widthConstraint: 150, label: '<b>This</b> node has a fixed width and breaks have been automatically inserted into the label', x: -300, y: 50 },
+    { id: 201, widthConstraint: 150, label: '...this as well', x: -300, y: 200 },
+    { id: 300, heightConstraint: { minimum: 70 }, label: 'This node\nhas a\nminimum\nheight', x: 100, y: -150 },
+    { id: 301, heightConstraint: { minimum: 70 }, label: '...this one here too', x: 100, y: 0 },
+    { id: 400, heightConstraint: { minimum: 100, valign: 'top' }, label: 'Minimum height\nvertical alignment\nmay be top', x: 300, y: -200 },
+    { id: 401, heightConstraint: { minimum: 100, valign: 'middle' }, label: 'Minimum height\nvertical alignment\nmay be middle\n(default)', x: 300, y: 0 },
+    { id: 402, heightConstraint: { minimum: 100, valign: 'bottom' }, label: 'Minimum height\nvertical alignment\nmay be bottom', x: 300, y: 200 }
+  ];
+
+  var edges = [
+    { from: 100, to: 210, label: "unconstrained to minimum width"},
+    { from: 210, to: 211, label: "more minimum width"},
+    { from: 100, to: 220, label: "unconstrained to maximum width"},
+    { from: 220, to: 221, label: "more maximum width"},
+    { from: 210, to: 200, label: "minimum width to fixed width"},
+    { from: 220, to: 200, label: "maximum width to fixed width"},
+    { from: 200, to: 201, label: "more fixed width"},
+    { from: 100, to: 300, label: "unconstrained to minimum height"},
+    { from: 300, to: 301, label: "more minimum height"},
+    { from: 100, to: 400, label: "unconstrained to top valign"},
+    { from: 400, to: 401, label: "top valign to middle valign"},
+    { from: 401, to: 402, widthConstraint: { maximum: 150 }, label: "middle valign to bottom valign"},
+  ];
+
+  var container = document.getElementById('mynetwork');
+  var data = {
+    nodes: nodes,
+    edges: edges
+  };
+  var options = {
+    edges: {
+      font: {
+        size: 12
+      },
+      widthConstraint: {
+        maximum: 90
+      }
+    },
+    nodes: {
+      shape: 'box',
+      margin: 10,
+      widthConstraint: {
+        maximum: 200
+      }
+    },
+    physics: {
+      enabled: false
+    }
+  };
+  var network = new vis.Network(container, data, options);
+</script>
+
+</body>
+</html>

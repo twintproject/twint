@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Timeline | Subgroups</title>
+
+    <script src="../../../dist/vis.js"></script>
+    <link href="../../../dist/vis.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        body, html {
+            font-family: arial, sans-serif;
+            font-size: 11pt;
+        }
+
+        .vis-item.vis-background.negative {
+            background-color: rgba(255, 0, 0, 0.2);
+        }
+        .vis-item.vis-background.positive {
+            background-color: rgba(105, 255, 98, 0.20);
+        }
+        .vis-item.vis-background.marker {
+            border-left: 2px solid green;
+        }
+
+        table {
+            border: 1px solid gray;
+        }
+
+        td {            
+            text-align: center
+        }
+
+        code {
+            padding: 2px 4px;
+            font-size: 90%;
+            color: #c7254e;
+            background-color: #f9f2f4;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<p>This example shows the workings of the subgroups. Subgroups can be stacked on each other, and the items within each subgroup can be stacked.</p>
+<p>When stacking is on for the whole timeline, all items in the timeline will be stacked with respect to each other <em>unless</em> the <code>stackSubgroups</code> option is set to <code>true</code>
+   and at least one subgroup has stacking enabled. In that case the subgroups will be stacked with respect to each other and the elements in each subgroup will be stacked based on the individual
+   stacking settings for each subgroup.
+</p>
+<table>
+    <thead>
+        <tr>
+            <th>Option</th>
+            <th>Status</th>
+            <th>Toggle</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr >
+            <td>Stacking</td>
+            <td id="stackingStatus">false</td>
+            <td><button onclick="toggleStacking()">Toggle</button></td>
+        </tr>
+        <tr>
+            <td>stackSubgroups</td>
+            <td id="stackSubgroupsStatus">true</td>
+            <td><button onclick="toggleStackSubgroups()">Toggle</button></td>
+        </tr>
+        <tr>
+            <td>Stack Subgroup 0</td>
+            <td id="stacksg_1">false</td>
+            <td><button onclick="toggleSubgroupStack('sg_1')">Toggle</button></td>
+        </tr>
+        <tr>
+            <td>Stack Subgroup 1</td>
+            <td id="stacksg_2">false</td>
+            <td><button onclick="toggleSubgroupStack('sg_2')">Toggle</button></td>
+        </tr>
+        <tr>
+            <td>Stack Subgroup 2</td>
+            <td id="stacksg_3">false</td>
+            <td><button onclick="toggleSubgroupStack('sg_3')">Toggle</button></td>
+        </tr>
+    </tbody>
+</table>
+<br/>
+
+<div id="visualization"></div>
+
+<script>
+    // create a dataset with items
+    // we specify the type of the fields `start` and `end` here to be strings
+    // containing an ISO date. The fields will be outputted as ISO dates
+    // automatically getting data from the DataSet via items.get().
+    var items = new vis.DataSet({
+        type: { start: 'ISODate', end: 'ISODate' }
+    });
+    var groups = new vis.DataSet([{
+        id: 'bar', content:'bar', subgroupOrder: function (a,b) {return a.subgroupOrder - b.subgroupOrder;}, subgroupStack: {'sg_1': false, 'sg_2': false, 'sg_3': false }
+    },{
+        id: 'foo', content:'foo', subgroupOrder: 'subgroupOrder' // this group has no subgroups but this would be the other method to do the sorting.
+    }]);
+    // add items to the DataSet
+    items.add([
+        {id: 'A',start: '2014-01-20', end: '2014-01-22', type: 'background', group:'foo'},
+        {id: 'B',start: '2014-01-22', end: '2014-01-23', type: 'background', group:'foo', className: 'negative'},
+        {id: 0, content: 'no subgroup', start: '2014-01-20', end: '2014-01-22',group:'foo'},
+
+        {id: 'SG_1_1',start: '2014-01-25', end: '2014-01-27', type: 'background', group:'bar', subgroup:'sg_1', subgroupOrder:0},
+        {id: 'SG_1_2', start: '2014-01-26', end: '2014-01-27', type: 'background', className: 'positive',group:'bar', subgroup:'sg_1', subgroupOrder:0},
+        {id: 1, content: 'subgroup0_1', start: '2014-01-23T12:00:00', end: '2014-01-26T12:00:00',group:'bar', subgroup:'sg_1', subgroupOrder:0},
+        {id: 2, content: 'subgroup0_2', start: '2014-01-22T12:00:01', end: '2014-01-25T12:00:00',group:'bar', subgroup:'sg_1', subgroupOrder:0},
+
+        {id: 'SG_2_1', start: '2014-02-01', end: '2014-02-02', type: 'background', group:'bar', subgroup:'sg_2', subgroupOrder:1},
+        {id: 'SG_2_2', start: '2014-02-2', end: '2014-02-03', type: 'background', className: 'negative',group:'bar', subgroup:'sg_2', subgroupOrder:1},
+        {id: 3, content: 'subgroup1_1', start: '2014-01-27T02:00:00', end: '2014-01-29',group:'bar', subgroup:'sg_2', subgroupOrder:1},
+        {id: 4, content: 'subgroup1_2', start: '2014-01-28', end: '2014-02-02',group:'bar', subgroup:'sg_2', subgroupOrder:1},
+
+        {id: 'SG_3_1',start: '2014-01-23', end: '2014-01-25', type: 'background', group:'bar', subgroup:'sg_3', subgroupOrder:2, content:"a"},
+        {id: 'SG_3_2', start: '2014-01-26', end: '2014-01-28', type: 'background', className: 'positive',group:'bar', subgroup:'sg_3', subgroupOrder:2, content:"b"},
+        {id: 5, content: 'subgroup2_1', start: '2014-01-23T12:00:00', end: '2014-01-26T12:00:00',group:'bar', subgroup:'sg_3', subgroupOrder:2},
+        {id: 6, content: 'subgroup2_2', start: '2014-01-26T12:00:01', end: '2014-01-29T12:00:00',group:'bar', subgroup:'sg_3', subgroupOrder:2},
+
+        {id: 'background', start: '2014-01-29', end: '2014-01-30', type: 'background', className: 'negative',group:'bar'},
+        {id: 'background_all', start: '2014-01-31', end: '2014-02-02', type: 'background', className: 'positive'},
+    ]);
+
+    var container = document.getElementById('visualization');
+    var stackingStatus = document.getElementById('stackingStatus');
+    var stackSubgroupsStatus = document.getElementById('stackSubgroupsStatus');
+    var options = {
+        // orientation:'top'
+        start: '2014-01-10',
+        end: '2014-02-10',
+        editable: true,
+        stack: false,
+        stackSubgroups: true
+    };
+
+    var timeline = new vis.Timeline(container, items, groups, options);
+
+    function toggleStacking() {
+        options.stack = !options.stack;
+        stackingStatus.innerHTML = options.stack.toString();
+        timeline.setOptions(options);
+    }
+
+    function toggleStackSubgroups() {
+        options.stackSubgroups = !options.stackSubgroups;
+        stackSubgroupsStatus.innerHTML = options.stackSubgroups.toString();
+        timeline.setOptions(options);
+    }
+
+    function toggleSubgroupStack(subgroup) {
+        groups.get("bar").subgroupStack[subgroup] = !groups.get("bar").subgroupStack[subgroup];
+        document.getElementById('stack' + subgroup).innerHTML = groups.get("bar").subgroupStack[subgroup].toString();
+        timeline.setGroups(groups);        
+    }
+
+</script>
+</body>
+</html>

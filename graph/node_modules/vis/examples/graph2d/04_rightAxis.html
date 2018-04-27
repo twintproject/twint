@@ -1,0 +1,126 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Graph2d | Right Axis Example</title>
+
+    <style type="text/css">
+        body, html {
+            font-family: sans-serif;
+        }
+
+        .custom-style1 {
+            fill: #0df200;
+            fill-opacity:0;
+            stroke-width:2px;
+            stroke: #0df200;
+        }
+
+        .custom-style2 {
+            fill: #f23303;
+            fill-opacity:0;
+            stroke-width:2px;
+            stroke: #ff0004;
+        }
+    </style>
+
+    <script src="../../dist/vis.js"></script>
+    <link href="../../dist/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<h2>Graph2d | Right Axis Example</h2>
+<div style="width:700px; font-size:14px; text-align: justify;">
+    This example shows the all of the graphs outlined on the right side using the <code>yAxisOrientation</code> option.
+    We also show a few custom styles for the graph and show icons on the axis, which are adhering to the custom styling.
+    Finally, the legend is manually positioned. Both the left and right axis
+    have their own legend. If one of the axis is unused, the legend is not shown. The options for the legend have been split
+    in a <code>left</code> and a <code>right</code> segment. Since this example shows the right axis, the right legend is configured.
+
+
+</div>
+<br />
+<div id="visualization"></div>
+
+<script type="text/javascript">
+    // create a dataSet with groups
+    var names = ['Custom1', 'Custom2', 'Blank', 'CircleShaded'];
+    var groups = new vis.DataSet();
+    groups.add({
+        id: 0,
+        content: names[0],
+        className: 'custom-style1',
+        options: {
+            drawPoints: {
+                style: 'square' // square, circle
+            },
+            shaded: {
+                orientation: 'bottom' // top, bottom
+            }
+        }});
+
+    groups.add({
+        id: 1,
+        content: names[1],
+        className: 'custom-style2',
+        options: {
+            style:'bar',
+            drawPoints: {style: 'circle',
+                         size: 10
+            }
+        }});
+
+    groups.add({
+        id: 2,
+        content: names[2],
+        options: {
+            drawPoints: false
+        }
+    });
+
+    groups.add({
+        id: 3,
+        content: names[3],
+        options: {
+            drawPoints: {
+                style: 'circle' // square, circle
+            },
+            shaded: {
+                orientation: 'top' // top, bottom
+            }
+        }});
+
+    var container = document.getElementById('visualization');
+    var items = [
+        {x: '2014-06-13', y: 30, group: 0},
+        {x: '2014-06-14', y: 10, group: 0},
+        {x: '2014-06-15', y: 15, group: 1},
+        {x: '2014-06-16', y: 30, group: 1},
+        {x: '2014-06-17', y: 10, group: 1},
+        {x: '2014-06-18', y: 15, group: 1},
+        {x: '2014-06-19', y: 52, group: 1},
+        {x: '2014-06-20', y: 10, group: 1},
+        {x: '2014-06-21', y: 20, group: 2},
+        {x: '2014-06-22', y: 60, group: 2},
+        {x: '2014-06-23', y: 10, group: 2},
+        {x: '2014-06-24', y: 50, group: 2},
+        {x: '2014-06-25', y: 30, group: 2},
+        {x: '2014-06-26', y: 20, group: 3},
+        {x: '2014-06-27', y: 60, group: 3},
+        {x: '2014-06-28', y: 10, group: 3},
+        {x: '2014-06-29', y: 85, group: 3},
+        {x: '2014-06-30', y: 30, group: 3}
+    ];
+
+    var dataset = new vis.DataSet(items);
+    var options = {
+        legend: {right: {position: 'top-left'}},
+        yAxisOrientation: 'right', // right, left
+        dataAxis: {icons: true},
+        start: '2014-06-10',
+        end: '2014-07-04',
+        moveable: false
+    };
+    var graph2d = new vis.Graph2d(container, dataset, groups, options);
+
+</script>
+</body>
+</html>

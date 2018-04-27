@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+  <title>Network | Multifont Labels</title>
+
+  <script type="text/javascript" src="../../../dist/vis.js"></script>
+  <link href="../../../dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+
+  <style type="text/css">
+    #mynetwork {
+      width: 600px;
+      height: 400px;
+      border: 1px solid lightgray;
+    }
+    code {
+      font-size: 15px;
+    }
+    p {
+      max-width: 600px;
+    }
+    .indented {
+      margin-left: 30px;
+    }
+    table {
+      border-collapse: collapse;
+      font-family: sans-serif;
+    }
+    table code {
+      background: #dddddd;
+    }
+    th, td {
+      border: 1px solid #aaaaaa;
+      text-align: center;
+      padding: 5px;
+      font-weight: normal;
+    }
+  </style>
+  
+</head>
+
+<body>
+
+<p>Node and edge labels may be marked up to be drawn with multiple fonts.</p>
+
+<div id="mynetwork"></div>
+
+<p>The value of the <code>font.multi</code> property may be set to <code>'html'</code>, <code>'markdown'</code> or a boolean.</p>
+<table class="indented">
+  <tr><th colspan='4'>Embedded Font Markup</th></tr>
+  <tr><th rowspan=2>font mod</th><th colspan=3><code>font.multi</code> setting</th></tr>
+  <tr><th><code>'html'</code> or <code>true</code></th><th><code>'markdown'</code> or <code>'md'</code></th><th><code>false<code></th></tr>
+  <tr><th>bold</th><td><code>&lt;b&gt;</code> ... <code>&lt;/b></code></td><td><code>&nbsp;*</code> ... <code>*&nbsp;</code></td><td>n/a</td></tr>
+  <tr><th>italic</th><td><code>&lt;i&gt;</code> ... <code>&lt;/i></code></td><td><code>&nbsp;_</code> ... <code>_&nbsp;</code></td><td>n/a</td></tr>
+  <tr><th>mono-spaced</th><td><code>&lt;code&gt;</code> ... <code>&lt;/code&gt;</code></td><td><code>&nbsp;`</code> ... <code>`&nbsp;</code></td><td>n/a</td></tr>
+</table>
+
+<p>
+The <code>html</code> and <code>markdown</code> rendering is limited: bolds may be embedded in italics, italics may be embedded in bolds, and mono-spaced may be embedded in bold or italic, but will not be altered by those font mods, nor will embedded bolds or italics be handled.
+The only entities that will be observed in html are <code>&amp;lt;</code> and <code>&amp;amp;</code> and in <code>markdown</code> a backslash will escape the following character (including a backslash) from special processing.
+Any font mod that is started in a label line will be implicitly terminated at the end of that line.
+While this interpretation may not exactly match <i>official</i> rendering standards, it is a consistent compromise for drawing multifont strings in the non-multifont html canvas element underlying vis.
+</p>
+
+<p>This implies that four additional sets of font properties will be recognized in label processing.</p>
+<p class="indented"><code>font.bold</code> designates the font used for rendering bold font mods.
+<br/><code>font.ital</code> designates the font used for rendering italic font mods.
+<br/><code>font.boldital</code> designates the font used for rendering bold-<b><i>and</i></b>-italic font mods.
+<br/><code>font.mono</code> designates the font used for rendering monospaced font mods.</p>
+<p>Any font mod without a matching font will be rendered using the normal <code>font</code> (or default) value.</p>
+
+<p>The <code>font.multi</code> and extended font settings may be set in the network's <code>nodes</code> or <code>edges</code> properties, or on individual nodes and edges.
+Node and edge label fonts are separate.</p>
+
+<script type="text/javascript">
+  var nodes = [
+    { id: 1, label: 'This is a\nsingle-font label', x: -120, y: -120 },
+    { id: 2, font: { multi: true }, label: '<b>This</b> is a\n<i>default</i> <b><i>multi-</i>font</b> <code>label</code>', x: -40, y: -40 },
+    { id: 3, font: { multi: 'html', size: 20 }, label: '<b>This</b> is an\n<i>html</i> <b><i>multi-</i>font</b> <code>label</code>', x: 40, y: 40 },
+    { id: 4, font: { multi: 'md', face: 'georgia' }, label: '*This* is a\n_markdown_ *_multi-_ font* `label`', x: 120, y: 120},
+  ];
+
+  var edges = [
+    {from: 1, to: 2, label: "single to default"},
+    {from: 2, to: 3, font: { multi: true }, label: "default to <b>html</b>" },
+    {from: 3, to: 4, font: { multi: "md" }, label: "*html* to _md_" }
+  ];
+
+  var container = document.getElementById('mynetwork');
+  var data = {
+    nodes: nodes,
+    edges: edges
+  };
+  var options = {
+    edges: {
+      font: {
+        size: 12
+      }
+    },
+    nodes: {
+      shape: 'box',
+      font: {
+        bold: {
+          color: '#0077aa'
+        }
+      }
+    },
+    physics: {
+      enabled: false
+    }
+  };
+  var network = new vis.Network(container, data, options);
+</script>
+
+</body>
+</html>

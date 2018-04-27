@@ -1,0 +1,8 @@
+language: node_js
+node_js:
+  - "7"
+  - "6"
+  - "4.1"
+  - "4.0"
+
+script: npm run-script code-standard

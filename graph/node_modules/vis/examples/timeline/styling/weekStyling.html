@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Timeline | Grid styling</title>
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment-with-locales.min.js"></script>
+    <script src="../../../dist/vis.js"></script>
+    <link href="../../../dist/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css"/>
+
+    <style type="text/css">
+        body, html {
+            font-family: sans-serif;
+        }
+
+        /* alternating column backgrounds */
+        .vis-time-axis .vis-grid.vis-odd {
+            background: #f5f5f5;
+        }
+    </style>
+
+</head>
+<body>
+
+<p>
+    Week numbers are calculated based on locales. For this to properly work, the timeline must be loaded with a version
+    of moment.js including locales.</p>
+<p>To set a locale for the timeline, specify the option
+    <code>{locale: STRING}</code>.</p>
+<p>To set the scale to use week numbers, use for example <code>{scale: 'week', step: 1}</code>.</p>
+<p>The following timeline is initialized with the 'de' locale and items are added with locally localized moment.js
+    objects. The timeline locale can be switched to another locale at runtime. If you choose the 'en' locale, the week
+    numbers will be calculated according to the US week calendar numbering scheme.</p>
+
+<p>
+    <label for="locale">Select a locale:</label>
+    <select id="locale">
+        <option value="en">en</option>
+        <option value="it">it</option>
+        <option value="nl">nl</option>
+        <option value="de" selected>de</option>
+    </select>
+</p>
+
+<div id="visualization"></div>
+
+<script type="text/javascript">
+    var itemCount = 26;
+
+    // DOM element where the Timeline will be attached
+    var container = document.getElementById('visualization');
+
+    // just a group for the effects
+    var groups = new vis.DataSet();
+    groups.add([{id: 1, content: "ISO Weeks"}, {id: 2, content: "US Weeks"}]);
+
+    // Create a DataSet (allows two way data-binding)
+    var items = new vis.DataSet();
+
+    // create a localized moment object based on the current date
+    var USdate = moment().locale('en').hours(0).minutes(0).seconds(0).milliseconds(0);
+
+    // use the locale-aware weekday function to move to the begin of the current week
+    USdate.weekday(0);
+
+    // Iterate and just add a week to use it again in the next iteration
+    for (var i = 0; i < itemCount; i++) {
+        var USweekNumber = USdate.format('w');
+        var USweekStart = USdate.format();
+        var USweekEnd = USdate.add(1, 'week').format();
+        items.add({
+            id: i,
+            group: 2,
+            content: 'US week ' + USweekNumber,
+            start: USweekStart,
+            end: USweekEnd
+        });
+    }
+
+    // create another localized moment object - the 'de' locale works according to the ISO8601 leap week calendar system
+    var DEdate = moment().locale('de').hours(0).minutes(0).seconds(0).milliseconds(0);
+    DEdate.weekday(0);
+    for (var j = 0; j < itemCount; j++) {
+        var DEweekNumber = DEdate.format('w');
+        var DEweekStart = DEdate.format();
+        var DEweekEnd = DEdate.add(1, 'week').format();
+        items.add({
+            id: itemCount + j,
+            group: 1,
+            content: 'ISO week ' + DEweekNumber,
+            start: DEweekStart,
+            end: DEweekEnd
+        });
+    }
+
+    // Configuration for the Timeline
+    var options = {timeAxis: {scale: 'week', step: 1}, locale: 'de'};
+
+    // Create a Timeline
+    var timeline = new vis.Timeline(container, items, groups, options);
+
+    // update the locale when changing the select box value
+    var select = document.getElementById('locale');
+    select.onchange = function () {
+        timeline.setOptions({
+            locale: this.value
+        });
+    };
+    select.onchange();
+</script>
+</body>
+</html>

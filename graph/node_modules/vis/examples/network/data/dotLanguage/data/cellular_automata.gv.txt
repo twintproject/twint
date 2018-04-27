@@ -1,0 +1,23 @@
+digraph G  {
+  // note: not all attributes are recognized and supported by Network
+  //       unrecognized attributes are ignored
+
+  node[width=.25,height=.375,fontsize=15]
+  node [shape=filled color=#FF00FF fillcolor=#F1AAF0]
+  0-> 0 ;
+  1-> 1 ;
+  2-> 2 ;
+  3-> 3 ;
+  4-> 4 ;
+  5-> 5 ;
+  6-> 6 ;
+  7-> 5 ;
+  8-> 8 ;
+  9-> 9 ;
+  10-> 10 ;
+  11-> 10 ;
+  12-> 12 ;
+  13-> 5 ;
+  14-> 10 ;
+  15-> 0 ;
+}

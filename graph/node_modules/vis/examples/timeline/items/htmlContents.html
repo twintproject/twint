@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Timeline | HTML data</title>
+
+  <style>
+    body, html {
+      font-family: arial, sans-serif;
+      font-size: 11pt;
+    }
+    span {
+      color: red;
+    }
+    span.large {
+      font-size: 200%;
+    }
+  </style>
+
+  <script src="../../../dist/vis.js"></script>
+  <link href="../../../dist/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+
+  
+</head>
+<body>
+<p>
+  Load HTML contents in the Timeline in various ways.
+</p>
+<div id="visualization"></div>
+
+<script>
+  // create a couple of HTML items in various ways
+
+  var item1 = document.createElement('div');
+  item1.appendChild(document.createTextNode('item 1'));
+
+  var item2 = document.createElement('div');
+  item2.innerHTML = '<span>item 2</span>';
+
+  var item3 = document.createElement('div');
+  var span3 = document.createElement('span');
+  span3.className = 'large';
+  span3.appendChild(document.createTextNode('item 3'));
+  item3.appendChild(span3);
+
+  var item4 = 'item <span class="large">4</span>';
+
+  var item5 = document.createElement('div');
+  item5.appendChild(document.createTextNode('item 5'));
+  item5.appendChild(document.createElement('br'));
+  var img5 = document.createElement('img');
+  img5.src = '../resources/img/attachment-icon.png';
+  img5.style.width = '48px';
+  img5.style.height = '48px';
+  item5.appendChild(img5);
+
+  var item6 = 'item6<br><img src="../resources/img/comments-icon.png" style="width: 48px; height: 48px;">';
+
+  var item7 = 'item7<br><a href="http://visjs.org" target="_blank">click here</a>';
+
+  // create data and a Timeline
+  var container = document.getElementById('visualization');
+  var items = new vis.DataSet([
+    {id: 1, content: item1, start: '2013-04-20'},
+    {id: 2, content: item2, start: '2013-04-14'},
+    {id: 3, content: item3, start: '2013-04-18'},
+    {id: 4, content: item4, start: '2013-04-16', end: '2013-04-19'},
+    {id: 5, content: item5, start: '2013-04-25'},
+    {id: 6, content: item6, start: '2013-04-27'},
+    {id: 7, content: item7, start: '2013-04-21'}
+  ]);
+  var options = {};
+  var timeline = new vis.Timeline(container, items, options);
+</script>
+</body>
+</html>

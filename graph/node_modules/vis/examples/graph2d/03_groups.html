@@ -1,0 +1,112 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Graph2d | Groups Example</title>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+  <style type="text/css">
+    body, html {
+      font-family: sans-serif;
+    }
+  </style>
+
+  <script src="../../dist/vis.js"></script>
+  <link href="../../dist/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<h2>Graph2d | Groups Example</h2>
+<div style="width:700px; font-size:14px; text-align: justify;">
+    This example shows the groups functionality within Graph2d. This works in the same way as it does in Timeline,
+    We have however simplified the constructor to accept groups as well to shorten the code. These groups are the
+    method used in Graph2d to define individual graphs. These groups can be given an individual class as well as all the
+    styling options you can supply to Graph2d! This example, as well as the ones that follow will showcase a few different usages
+    of these options. <br /> <br />
+
+    This example also introduces the automatically generated legend. The icons are automatically generated and the label is the
+    content as you define it in the groups. If you have datapoints that are not part of a group, a default group is created with the label: 'default'.
+    In this example, the setting <code>defaultGroup</code> is used to rename the default group to 'ungrouped'.
+</div>
+<br />
+
+<div id="visualization"></div>
+
+<script type="text/javascript">
+    // create a dataSet with groups
+    var names = ['SquareShaded', 'Bargraph', 'Blank', 'CircleShaded'];
+    var groups = new vis.DataSet();
+        groups.add({
+        id: 0,
+        content: names[0],
+        options: {
+            drawPoints: {
+                style: 'square' // square, circle
+            },
+            shaded: {
+                orientation: 'bottom' // top, bottom
+            }
+        }});
+
+    groups.add({
+        id: 1,
+        content: names[1],
+        options: {
+            style:'bar'
+        }});
+
+    groups.add({
+        id: 2,
+        content: names[2],
+        options: {drawPoints: false}
+    });
+
+    groups.add({
+        id: 3,
+        content: names[3],
+        options: {
+            drawPoints: {
+                style: 'circle' // square, circle
+            },
+            shaded: {
+                orientation: 'top' // top, bottom
+            }
+        }});
+
+  var container = document.getElementById('visualization');
+  var items = [
+    {x: '2014-06-13', y: 60},
+    {x: '2014-06-14', y: 40},
+    {x: '2014-06-15', y: 55},
+    {x: '2014-06-16', y: 40},
+    {x: '2014-06-17', y: 50},
+    {x: '2014-06-13', y: 30, group: 0},
+    {x: '2014-06-14', y: 10, group: 0},
+    {x: '2014-06-15', y: 15, group: 1},
+    {x: '2014-06-16', y: 30, group: 1},
+    {x: '2014-06-17', y: 10, group: 1},
+    {x: '2014-06-18', y: 15, group: 1},
+    {x: '2014-06-19', y: 52, group: 1},
+    {x: '2014-06-20', y: 10, group: 1},
+    {x: '2014-06-21', y: 20, group: 2},
+    {x: '2014-06-22', y: 60, group: 2},
+    {x: '2014-06-23', y: 10, group: 2},
+    {x: '2014-06-24', y: 25, group: 2},
+    {x: '2014-06-25', y: 30, group: 2},
+    {x: '2014-06-26', y: 20, group: 3},
+    {x: '2014-06-27', y: 60, group: 3},
+    {x: '2014-06-28', y: 10, group: 3},
+    {x: '2014-06-29', y: 25, group: 3},
+    {x: '2014-06-30', y: 30, group: 3}
+  ];
+
+  var dataset = new vis.DataSet(items);
+  var options = {
+      defaultGroup: 'ungrouped',
+      legend: true,
+      start: '2014-06-10',
+      end: '2014-07-04'
+  };
+  var graph2d = new vis.Graph2d(container, dataset, groups, options);
+
+</script>
+</body>
+</html>

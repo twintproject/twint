@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en-gb" dir="ltr">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Dropdown - UIkit tests</title>
+        <script src="js/test.js"></script>
+        <style type="text/css">
+
+            .test {
+                display: block;
+                position: relative;
+                width: 100%;
+            }
+
+        </style>
+    </head>
+
+    <body>
+
+        <div class="uk-container">
+
+            <h1>Dropdown</h1>
+
+            <div uk-grid>
+                <div class="uk-width-1-3@m">
+
+                    <div class="uk-dropdown test">
+
+                        <ul class="uk-nav uk-dropdown-nav">
+                            <li class="uk-active"><a href="#">Active</a></li>
+                            <li class="uk-parent">
+                                <a href="#">Parent</a>
+                                <ul class="uk-nav-sub">
+                                    <li><a href="#">Sub item</a></li>
+                                    <li><a href="#">Sub item</a>
+                                        <ul>
+                                            <li><a href="#">Sub item</a></li>
+                                            <li><a href="#">Sub item</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="uk-parent">
+                                <a href="#">Parent</a>
+                                <ul class="uk-nav-sub">
+                                    <li><a href="#">Sub item</a></li>
+                                    <li><a href="#">Sub item</a></li>
+                                </ul>
+                            </li>
+                            <li class="uk-nav-header">Header</li>
+                            <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: table"></span> Item</a></li>
+                            <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: thumbnails"></span> Item</a></li>
+                            <li class="uk-nav-divider"></li>
+                            <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: trash"></span> Item</a></li>
+                        </ul>
+
+                    </div>
+
+                </div>
+                <div class="uk-width-2-3@m">
+
+                    <div class="uk-margin" uk-margin>
+
+                        <div class="uk-inline">
+                            <button class="uk-button uk-button-default" type="button">Hover</button>
+                            <div uk-dropdown>
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-active"><a href="#">Active</a></li>
+                                    <li class="uk-parent">
+                                        <a href="#">Parent</a>
+                                        <ul class="uk-nav-sub">
+                                            <li><a href="#">Sub item</a></li>
+                                            <li><a href="#">Sub item</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="uk-nav-header">Header</li>
+                                    <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: table"></span> Item</a></li>
+                                    <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: thumbnails"></span> Item</a></li>
+                                    <li class="uk-nav-divider"></li>
+                                    <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: trash"></span> Item</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="uk-inline">
+                            <button class="uk-button uk-button-default" type="button">Click</button>
+                            <div uk-dropdown="mode: click">
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-active"><a href="#">Active</a></li>
+                                    <li class="uk-parent">
+                                        <a href="#">Parent</a>
+                                        <ul class="uk-nav-sub">
+                                            <li><a href="#">Sub item</a></li>
+                                            <li><a href="#">Sub item</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="uk-nav-header">Header</li>
+                                    <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: table"></span> Item</a></li>
+                                    <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: thumbnails"></span> Item</a></li>
+                                    <li class="uk-nav-divider"></li>
+                                    <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: trash"></span> Item</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="uk-inline">
+                            <button class="uk-button uk-button-default" type="button" disabled>Disabled</button>
+                            <div uk-dropdown="mode: click">
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-active"><a href="#">Active</a></li>
+                                    <li><a href="#">Item</a></li>
+                                    <li><a href="#">Item</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="uk-inline">
+                            <button class="uk-button uk-button-default" type="button">Scrollable</button>
+                            <div class="uk-overflow-auto uk-height-medium" uk-dropdown>
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-active"><a href="#">Active</a></li>
+                                    <li class="uk-parent">
+                                        <a href="#">Parent</a>
+                                        <ul class="uk-nav-sub">
+                                            <li><a href="#">Sub item</a></li>
+                                            <li><a href="#">Sub item</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="uk-nav-header">Header</li>
+                                    <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: table"></span> Item</a></li>
+                                    <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: thumbnails"></span> Item</a></li>
+                                    <li class="uk-nav-divider"></li>
+                                    <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: trash"></span> Item</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="uk-inline">
+                            <button class="uk-button uk-button-default" type="button">Hover only</button>
+                            <div uk-dropdown="mode: hover; delay-hide: 0">
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-active"><a href="#">Active</a></li>
+                                    <li><a href="#">Item</a></li>
+                                    <li><a href="#">Item</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="uk-inline">
+                            <button class="uk-button uk-button-default" type="button" uk-toggle="target: ~div; mode: click,hover">Same</button>
+                            <button class="uk-button uk-button-default" type="button" uk-toggle="target: ~div; mode: click,hover">Same</button>
+                            <button class="uk-button uk-button-default" type="button">Target</button>
+                            <div uk-dropdown>
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-active"><a href="#">Active</a></li>
+                                    <li><a href="#">Item</a></li>
+                                    <li><a href="#">Item</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <h2>Position</h2>
+
+                    <div class="uk-margin" uk-margin>
+
+                        <div class="uk-inline">
+                            <button class="uk-button uk-button-default" type="button">Bottom Left</button>
+                            <div uk-dropdown>
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-active"><a href="#">Active</a></li>
+                                    <li><a href="#">Item</a></li>
+                                    <li><a href="#">Item</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="uk-inline">
+                            <button class="uk-button uk-button-default" type="button">Bottom Center</button>
+                            <div uk-dropdown="pos: bottom-center">
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-active"><a href="#">Active</a></li>
+                                    <li><a href="#">Item</a></li>
+                                    <li><a href="#">Item</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="uk-inline">
+                            <button class="uk-button uk-button-default" type="button">Bottom Right</button>
+                            <div uk-dropdown="pos: bottom-right">
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-active"><a href="#">Active</a></li>
+                                    <li><a href="#">Item</a></li>
+                                    <li><a href="#">Item</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="uk-inline">
+                            <button class="uk-button uk-button-default" type="button">Bottom Justify</button>
+                            <div uk-dropdown="pos: bottom-justify">
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-active"><a href="#">Active</a></li>
+                                    <li><a href="#">Item</a></li>
+                                    <li><a href="#">Item</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="uk-margin" uk-margin>
+
+                        <div class="uk-inline">
+                            <button class="uk-button uk-button-default" type="button">Top Left</button>
+                            <div uk-dropdown="pos: top-left">
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-active"><a href="#">Active</a></li>
+                                    <li><a href="#">Item</a></li>
+                                    <li><a href="#">Item</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="uk-inline">
+                            <button class="uk-button uk-button-default" type="button">Top Center</button>
+                            <div uk-dropdown="pos: top-center">
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-active"><a href="#">Active</a></li>
+                                    <li><a href="#">Item</a></li>
+                                    <li><a href="#">Item</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="uk-inline">
+                            <button class="uk-button uk-button-default" type="button">Top Right</button>
+                            <div uk-dropdown="pos: top-right">
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-active"><a href="#">Active</a></li>
+                                    <li><a href="#">Item</a></li>
+                                    <li><a href="#">Item</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="uk-inline">
+                            <button class="uk-button uk-button-default" type="button">Top Justify</button>
+                            <div uk-dropdown="pos: top-justify">
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-active"><a href="#">Active</a></li>
+                                    <li><a href="#">Item</a></li>
+                                    <li><a href="#">Item</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="uk-margin" uk-margin>
+
+                        <div class="uk-inline">
+                            <button class="uk-button uk-button-default" type="button">Left Top</button>
+                            <div uk-dropdown="pos: left-top">
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-active"><a href="#">Active</a></li>
+                                    <li><a href="#">Item</a></li>
+                                    <li><a href="#">Item</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="uk-inline">
+                            <button class="uk-button uk-button-default" type="button">Left Center</button>
+                            <div uk-dropdown="pos: left-center">
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-active"><a href="#">Active</a></li>
+                                    <li><a href="#">Item</a></li>
+                                    <li><a href="#">Item</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="uk-inline">
+                            <button class="uk-button uk-button-default" type="button">Left Bottom</button>
+                            <div uk-dropdown="pos: left-bottom">
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-active"><a href="#">Active</a></li>
+                                    <li><a href="#">Item</a></li>
+                                    <li><a href="#">Item</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="uk-margin" uk-margin>
+
+                        <div class="uk-inline">
+                            <button class="uk-button uk-button-default" type="button">Right Top</button>
+                            <div uk-dropdown="pos: right-top">
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-active"><a href="#">Active</a></li>
+                                    <li><a href="#">Item</a></li>
+                                    <li><a href="#">Item</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="uk-inline">
+                            <button class="uk-button uk-button-default" type="button">Right Center</button>
+                            <div uk-dropdown="pos: right-center">
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-active"><a href="#">Active</a></li>
+                                    <li><a href="#">Item</a></li>
+                                    <li><a href="#">Item</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="uk-inline">
+                            <button class="uk-button uk-button-default" type="button">Right Bottom</button>
+                            <div uk-dropdown="pos: right-bottom">
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-active"><a href="#">Active</a></li>
+                                    <li><a href="#">Item</a></li>
+                                    <li><a href="#">Item</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <h2>JavaScript Options</h2>
+
+            <div class="uk-overflow-auto">
+                <table class="uk-table uk-table-striped">
+                    <thead>
+                        <tr>
+                            <th>Option</th>
+                            <th>Value</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>toggle</code></td>
+                            <td>CSS selector | Boolean</td>
+                            <td>true</td>
+                            <td>By default the previous element will be used as toggled.</td>
+                        </tr>
+                        <tr>
+                            <td><code>pos</code></td>
+                            <td>String</td>
+                            <td>'bottom-left'</td>
+                            <td>Dropdown position.</td>
+                        </tr>
+                        <tr>
+                            <td><code>mode</code></td>
+                            <td>hover | click</td>
+                            <td>click,hover</td>
+                            <td>Comma separated list of dropdown trigger behaviour modes.</td>
+                        </tr>
+                        <tr>
+                            <td><code>delay-show</code></td>
+                            <td>Number</td>
+                            <td>0</td>
+                            <td>Delay time in hover mode before a Dropdown is shown in ms.</td>
+                        </tr>
+                        <tr>
+                            <td><code>delay-hide</code></td>
+                            <td>Number</td>
+                            <td>800</td>
+                            <td>Delay time in hover mode before a Dropdown is hidden in ms.</td>
+                        </tr>
+                        <tr>
+                            <td><code>boundary</code></td>
+                            <td>CSS selector</td>
+                            <td>window</td>
+                            <td>Referenced element to keep Dropdown's visibility.</td>
+                        </tr>
+                        <tr>
+                            <td><code>boundary-align</code></td>
+                            <td>Boolean</td>
+                            <td>false</td>
+                            <td>Align Drop to boundary.</td>
+                        </tr>
+                        <tr>
+                            <td><code>flip</code></td>
+                            <td>false|true|'x'|'y'</td>
+                            <td>true</td>
+                            <td>Automatic Dropdown flip.</td>
+                        </tr>
+                        <tr>
+                            <td><code>cls</code></td>
+                            <td>String</td>
+                            <td>'uk-dropdown'</td>
+                            <td>The Dropdown container class.</td>
+                        </tr>
+                        <tr>
+                            <td><code>offset</code></td>
+                            <td>Number</td>
+                            <td>0</td>
+                            <td>The offset of the Dropdown container.</td>
+                        </tr>
+                        <tr>
+                            <td><code>animation</code></td>
+                            <td>String</td>
+                            <td>false</td>
+                            <td>The space separated names of animations to use.</td>
+                        </tr>
+                        <tr>
+                            <td><code>duration</code></td>
+                            <td>Number</td>
+                            <td>200</td>
+                            <td>The animation duration.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </body>
+</html>

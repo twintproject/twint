@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+<head>
+    <title>Network | Clustering</title>
+
+    <script type="text/javascript" src="../../../dist/vis.js"></script>
+    <link href="../../../dist/vis-network.min.css" rel="stylesheet" type="text/css"/>
+
+    <style type="text/css">
+        #mynetwork {
+            width: 600px;
+            height: 600px;
+            border: 1px solid lightgray;
+        }
+
+        p {
+            max-width: 600px;
+        }
+
+        h4 {
+            margin-bottom: 3px;
+        }
+    </style>
+    
+</head>
+
+<body>
+
+
+<p>
+    You can zoom in and out to cluster/decluster.
+</p>
+Stabilize when clustering:<input type="checkbox" id="stabilizeCheckbox">
+<div id="mynetwork"></div>
+
+<script type="text/javascript">
+    var clusterIndex = 0;
+    var clusters = [];
+    var lastClusterZoomLevel = 0;
+    var clusterFactor = 0.9;
+
+    // create an array with nodes
+    var nodes = [
+        {id: 1, label: 'Node 1'},
+        {id: 2, label: 'Node 2'},
+        {id: 3, label: 'Node 3'},
+        {id: 4, label: 'Node 4'},
+        {id: 5, label: 'Node 5'},
+        {id: 6, label: 'Node 6'},
+        {id: 7, label: 'Node 7'},
+        {id: 8, label: 'Node 8'},
+        {id: 9, label: 'Node 9'},
+        {id: 10, label: 'Node 10'}
+    ];
+
+    // create an array with edges
+    var edges = [
+        {from: 1, to: 2},
+        {from: 1, to: 3},
+        {from: 10, to: 4},
+        {from: 2, to: 5},
+        {from: 6, to: 2},
+        {from: 7, to: 5},
+        {from: 8, to: 6},
+        {from: 9, to: 7},
+        {from: 10, to: 9}
+    ];
+
+    // create a network
+    var container = document.getElementById('mynetwork');
+    var data = {
+        nodes: nodes,
+        edges: edges
+    };
+    var options = {layout: {randomSeed: 8}, physics:{adaptiveTimestep:false}};
+    var network = new vis.Network(container, data, options);
+
+    // set the first initial zoom level
+    network.once('initRedraw', function() {
+        if (lastClusterZoomLevel === 0) {
+            lastClusterZoomLevel = network.getScale();
+        }
+    });
+
+    // we use the zoom event for our clustering
+    network.on('zoom', function (params) {
+        if (params.direction == '-') {
+            if (params.scale < lastClusterZoomLevel*clusterFactor) {
+                makeClusters(params.scale);
+                lastClusterZoomLevel = params.scale;
+            }
+        }
+        else {
+            openClusters(params.scale);
+        }
+    });
+
+    // if we click on a node, we want to open it up!
+    network.on("selectNode", function (params) {
+        if (params.nodes.length == 1) {
+            if (network.isCluster(params.nodes[0]) == true) {
+                network.openCluster(params.nodes[0])
+            }
+        }
+    });
+
+
+    // make the clusters
+    function makeClusters(scale) {
+        var clusterOptionsByData = {
+            processProperties: function (clusterOptions, childNodes) {
+                clusterIndex = clusterIndex + 1;
+                var childrenCount = 0;
+                for (var i = 0; i < childNodes.length; i++) {
+                    childrenCount += childNodes[i].childrenCount || 1;
+                }
+                clusterOptions.childrenCount = childrenCount;
+                clusterOptions.label = "# " + childrenCount + "";
+                clusterOptions.font = {size: childrenCount*5+30}
+                clusterOptions.id = 'cluster:' + clusterIndex;
+                clusters.push({id:'cluster:' + clusterIndex, scale:scale});
+                return clusterOptions;
+            },
+            clusterNodeProperties: {borderWidth: 3, shape: 'database', font: {size: 30}}
+        }
+        network.clusterOutliers(clusterOptionsByData);
+        if (document.getElementById('stabilizeCheckbox').checked === true) {
+            // since we use the scale as a unique identifier, we do NOT want to fit after the stabilization
+            network.setOptions({physics:{stabilization:{fit: false}}});
+            network.stabilize();
+        }
+    }
+
+    // open them back up!
+    function openClusters(scale) {
+        var newClusters = [];
+        var declustered = false;
+        for (var i = 0; i < clusters.length; i++) {
+            if (clusters[i].scale < scale) {
+                network.openCluster(clusters[i].id);
+                lastClusterZoomLevel = scale;
+                declustered = true;
+            }
+            else {
+                newClusters.push(clusters[i])
+            }
+        }
+        clusters = newClusters;
+        if (declustered === true && document.getElementById('stabilizeCheckbox').checked === true) {
+            // since we use the scale as a unique identifier, we do NOT want to fit after the stabilization
+            network.setOptions({physics:{stabilization:{fit: false}}});
+            network.stabilize();
+        }
+    }
+
+
+</script>
+
+</body>
+</html>

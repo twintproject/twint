@@ -1,0 +1,579 @@
+// Name:            Navbar
+// Description:     Component to create horizontal navigation bars
+//
+// Component:       `uk-navbar`
+//
+// Sub-objects:     `uk-navbar-container`
+//                  `uk-navbar-left`
+//                  `uk-navbar-right`
+//                  `uk-navbar-center`
+//                  `uk-navbar-center-left`
+//                  `uk-navbar-center-right`
+//                  `uk-navbar-nav`
+//                  `uk-navbar-item`
+//                  `uk-navbar-toggle`
+//                  `uk-navbar-subtitle`
+//                  `uk-navbar-dropbar`
+//
+// Adopted:         `uk-navbar-dropdown` + Modifiers
+//                  `uk-navbar-dropdown-nav`
+//                  `uk-navbar-dropdown-grid`
+//                  `uk-navbar-toggle-icon`
+//
+// Modifiers:       `uk-navbar-transparent`
+//                  `uk-navbar-sticky`
+//                  `uk-navbar-dropdown-stack`
+//
+// States:          `uk-active`
+//                  `uk-parent`
+//                  `uk-open`
+//
+//
+// ========================================================================
+
+
+// Variables
+// ========================================================================
+
+@navbar-background:                             @global-muted-background;
+@navbar-color-mode:                             none;
+
+@navbar-nav-item-height:                        80px;
+@navbar-nav-item-padding-horizontal:            15px;
+@navbar-nav-item-color:                         @global-muted-color;
+@navbar-nav-item-font-size:                     @global-font-size;
+@navbar-nav-item-font-family:                   @global-font-family;
+@navbar-nav-item-hover-color:                   @global-color;
+@navbar-nav-item-onclick-color:                 @global-emphasis-color;
+@navbar-nav-item-active-color:                  @global-emphasis-color;
+
+@navbar-item-color:                             @global-color;
+
+@navbar-toggle-color:                           @global-muted-color;
+@navbar-toggle-hover-color:                     @global-color;
+
+@navbar-subtitle-font-size:                     @global-small-font-size;
+
+@navbar-dropdown-z-index:                       @global-z-index + 20;
+@navbar-dropdown-width:                         200px;
+@navbar-dropdown-margin:                        0;
+@navbar-dropdown-padding:                       15px;
+@navbar-dropdown-background:                    @global-muted-background;
+@navbar-dropdown-color:                         @global-color;
+@navbar-dropdown-grid-gutter-horizontal:        @global-gutter;
+@navbar-dropdown-grid-gutter-vertical:          @navbar-dropdown-grid-gutter-horizontal;
+
+@navbar-dropdown-dropbar-margin-top:            0;
+@navbar-dropdown-dropbar-margin-bottom:         @navbar-dropdown-dropbar-margin-top;
+
+@navbar-dropdown-nav-item-color:                @global-muted-color;
+@navbar-dropdown-nav-item-hover-color:          @global-color;
+@navbar-dropdown-nav-item-active-color:         @global-emphasis-color;
+@navbar-dropdown-nav-header-color:              @global-emphasis-color;
+@navbar-dropdown-nav-divider-border-width:      @global-border-width;
+@navbar-dropdown-nav-divider-border:            @global-border;
+@navbar-dropdown-nav-sublist-item-color:        @global-muted-color;
+@navbar-dropdown-nav-sublist-item-hover-color:  @global-color;
+
+@navbar-dropbar-background:                     @navbar-dropdown-background;
+@navbar-dropbar-z-index:                        @global-z-index - 20;
+
+
+/* ========================================================================
+   Component: Navbar
+ ========================================================================== */
+
+/*
+ * 1. Create position context to center navbar group
+ */
+
+.uk-navbar {
+    display: flex;
+    /* 1 */
+    position: relative;
+    .hook-navbar;
+}
+
+
+/* Container
+ ========================================================================== */
+
+.uk-navbar-container:not(.uk-navbar-transparent) {
+    background: @navbar-background;
+    .hook-navbar-container;
+}
+
+// Color Mode
+.uk-navbar-container:not(.uk-navbar-transparent):extend(.uk-light all) when (@navbar-color-mode = light) {}
+.uk-navbar-container:not(.uk-navbar-transparent):extend(.uk-dark all) when (@navbar-color-mode = dark) {}
+
+
+/*
+ * Remove pseudo elements created by micro clearfix as precaution (if Container component is used)
+ */
+
+.uk-navbar-container > ::before,
+.uk-navbar-container > ::after { display: none !important; }
+
+
+/* Groups
+ ========================================================================== */
+
+/*
+ * 1. Align navs and items vertically if they have a different height
+ * 2. Note: IE 11 requires an extra `div` which affects the center selector
+ */
+
+.uk-navbar-left,
+.uk-navbar-right,
+// 2. [class*='uk-navbar-center'],
+.uk-navbar-center,
+.uk-navbar-center-left > *,
+.uk-navbar-center-right > * {
+    display: flex;
+    /* 1 */
+    align-items: center;
+}
+
+/*
+ * Horizontal alignment
+ * 1. Create position context for centered navbar with sub groups (left/right)
+ * 2. Needed for dropdowns because a new position context is created
+ *    `z-index` must be smaller than off-canvas
+ * 3. Fix text wrapping if the centered section is larger than 50% of the navbar
+ * 4. Align sub groups for centered navbar
+ */
+
+.uk-navbar-right { margin-left: auto; }
+
+.uk-navbar-center:only-child {
+    margin-left: auto;
+    margin-right: auto;
+    /* 1 */
+    position: relative;
+}
+
+.uk-navbar-center:not(:only-child) {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    /* 2 */
+    z-index: @global-z-index - 10;
+}
+
+/* 3 */
+.uk-navbar-center:not(:only-child) .uk-navbar-nav > li > a,
+.uk-navbar-center:not(:only-child) .uk-navbar-item,
+.uk-navbar-center:not(:only-child) .uk-navbar-toggle { white-space: nowrap; }
+
+/* 4 */
+.uk-navbar-center-left,
+.uk-navbar-center-right {
+   position: absolute;
+   top: 0;
+}
+
+.uk-navbar-center-left { right: 100%; }
+.uk-navbar-center-right { left: 100%; }
+
+[class*='uk-navbar-center-'] .uk-navbar-nav > li > a,
+[class*='uk-navbar-center-'] .uk-navbar-item,
+[class*='uk-navbar-center-'] .uk-navbar-toggle { white-space: nowrap; }
+
+
+/* Nav
+ ========================================================================== */
+
+/*
+ * 1. Reset list
+ */
+
+.uk-navbar-nav {
+    display: flex;
+    /* 1 */
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/*
+ * Allow items to wrap into the next line
+ * Only not `absolute` positioned groups
+ */
+
+.uk-navbar-left,
+.uk-navbar-right,
+.uk-navbar-center:only-child { flex-wrap: wrap; }
+
+/*
+ * Items
+ * 1. Center content vertically and horizontally
+ * 2. Dimensions
+ * 3. Style
+ * 4. Required for `a`
+ */
+
+.uk-navbar-nav > li > a,    // Nav item
+.uk-navbar-item,            // Content item
+.uk-navbar-toggle {         // Clickable item
+    /* 1 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* 2 */
+    box-sizing: border-box;
+    height: @navbar-nav-item-height;
+    padding: 0 @navbar-nav-item-padding-horizontal;
+    /* 3 */
+    font-size: @navbar-nav-item-font-size;
+    font-family: @navbar-nav-item-font-family;
+    /* 4 */
+    text-decoration: none;
+}
+
+/*
+ * Nav items
+ */
+
+.uk-navbar-nav > li > a {
+    color: @navbar-nav-item-color;
+    .hook-navbar-nav-item;
+}
+
+/*
+ * Hover
+ * Apply hover style also to focus state and if dropdown is opened
+ */
+
+.uk-navbar-nav > li:hover > a,
+.uk-navbar-nav > li > a:focus,
+.uk-navbar-nav > li > a.uk-open {
+    color: @navbar-nav-item-hover-color;
+    outline: none;
+    .hook-navbar-nav-item-hover;
+}
+
+/* OnClick */
+.uk-navbar-nav > li > a:active {
+    color: @navbar-nav-item-onclick-color;
+    .hook-navbar-nav-item-onclick;
+}
+
+/* Active */
+.uk-navbar-nav > li.uk-active > a {
+    color: @navbar-nav-item-active-color;
+    .hook-navbar-nav-item-active;
+}
+
+
+/* Item
+ ========================================================================== */
+
+.uk-navbar-item {
+    color: @navbar-item-color;
+    .hook-navbar-item;
+}
+
+
+/* Toggle
+ ========================================================================== */
+
+.uk-navbar-toggle {
+    color: @navbar-toggle-color;
+    .hook-navbar-toggle;
+}
+
+.uk-navbar-toggle:hover,
+.uk-navbar-toggle:focus,
+.uk-navbar-toggle.uk-open {
+    color: @navbar-toggle-hover-color;
+    outline: none;
+    text-decoration: none;
+    .hook-navbar-toggle-hover;
+}
+
+/*
+ * Icon
+ * Adopts `uk-icon`
+ */
+
+.uk-navbar-toggle-icon {
+    .hook-navbar-toggle-icon;
+}
+
+/* Hover + Focus */
+:hover > .uk-navbar-toggle-icon,
+:focus > .uk-navbar-toggle-icon {
+    .hook-navbar-toggle-icon-hover;
+}
+
+
+/* Subtitle
+ ========================================================================== */
+
+.uk-navbar-subtitle {
+    font-size: @navbar-subtitle-font-size;
+    .hook-navbar-subtitle;
+}
+
+
+/* Style modifiers
+ ========================================================================== */
+
+.uk-navbar-transparent {
+    .hook-navbar-transparent;
+}
+
+.uk-navbar-sticky {
+    .hook-navbar-sticky;
+}
+
+
+/* Dropdown
+ ========================================================================== */
+
+/*
+ * Adopts `uk-dropdown`
+ * 1. Hide by default
+ * 2. Set position
+ * 3. Set a default width
+ * 4. Style
+ */
+
+.uk-navbar-dropdown {
+    /* 1 */
+    display: none;
+    /* 2 */
+    position: absolute;
+    z-index: @navbar-dropdown-z-index;
+    /* 3 */
+    box-sizing: border-box;
+    width: @navbar-dropdown-width;
+    /* 4 */
+    padding: @navbar-dropdown-padding;
+    background: @navbar-dropdown-background;
+    color: @navbar-dropdown-color;
+    .hook-navbar-dropdown;
+}
+
+/* Show */
+.uk-navbar-dropdown.uk-open { display: block; }
+
+/*
+ * Direction / Alignment modifiers
+ */
+
+/* Direction */
+[class*='uk-navbar-dropdown-top'] { margin-top: -@navbar-dropdown-margin; }
+[class*='uk-navbar-dropdown-bottom'] { margin-top: @navbar-dropdown-margin; }
+[class*='uk-navbar-dropdown-left'] { margin-left: -@navbar-dropdown-margin; }
+[class*='uk-navbar-dropdown-right'] { margin-left: @navbar-dropdown-margin; }
+
+/*
+ * Grid
+ * Adopts `uk-grid`
+ */
+
+/* Gutter Horizontal */
+.uk-navbar-dropdown-grid { margin-left: -@navbar-dropdown-grid-gutter-horizontal; }
+.uk-navbar-dropdown-grid > * { padding-left: @navbar-dropdown-grid-gutter-horizontal; }
+
+/* Gutter Vertical */
+.uk-navbar-dropdown-grid > .uk-grid-margin { margin-top: @navbar-dropdown-grid-gutter-vertical; }
+
+/* Stack */
+.uk-navbar-dropdown-stack .uk-navbar-dropdown-grid > * { width: 100% !important; }
+
+/*
+ * Width modifier
+ */
+
+.uk-navbar-dropdown-width-2:not(.uk-navbar-dropdown-stack) { width: (@navbar-dropdown-width * 2); }
+.uk-navbar-dropdown-width-3:not(.uk-navbar-dropdown-stack) { width: (@navbar-dropdown-width * 3); }
+.uk-navbar-dropdown-width-4:not(.uk-navbar-dropdown-stack) { width: (@navbar-dropdown-width * 4); }
+.uk-navbar-dropdown-width-5:not(.uk-navbar-dropdown-stack) { width: (@navbar-dropdown-width * 5); }
+
+/*
+ * Dropbar modifier
+ */
+
+.uk-navbar-dropdown-dropbar {
+    margin-top: @navbar-dropdown-dropbar-margin-top;
+    margin-bottom: @navbar-dropdown-dropbar-margin-bottom;
+    .hook-navbar-dropdown-dropbar;
+}
+
+
+/* Dropdown Nav
+ * Adopts `uk-nav`
+ ========================================================================== */
+
+.uk-navbar-dropdown-nav {
+    .hook-navbar-dropdown-nav;
+}
+
+/*
+ * Items
+ */
+
+.uk-navbar-dropdown-nav > li > a {
+    color: @navbar-dropdown-nav-item-color;
+    .hook-navbar-dropdown-nav-item;
+}
+
+/* Hover + Focus */
+.uk-navbar-dropdown-nav > li > a:hover,
+.uk-navbar-dropdown-nav > li > a:focus {
+    color: @navbar-dropdown-nav-item-hover-color;
+    .hook-navbar-dropdown-nav-item-hover;
+}
+
+/* Active */
+.uk-navbar-dropdown-nav > li.uk-active > a {
+    color: @navbar-dropdown-nav-item-active-color;
+    .hook-navbar-dropdown-nav-item-active;
+}
+
+/*
+ * Header
+ */
+
+.uk-navbar-dropdown-nav .uk-nav-header {
+    color: @navbar-dropdown-nav-header-color;
+    .hook-navbar-dropdown-nav-header;
+}
+
+/*
+ * Divider
+ */
+
+.uk-navbar-dropdown-nav .uk-nav-divider {
+    border-top: @navbar-dropdown-nav-divider-border-width solid @navbar-dropdown-nav-divider-border;
+    .hook-navbar-dropdown-nav-divider;
+}
+
+/*
+ * Sublists
+ */
+
+.uk-navbar-dropdown-nav .uk-nav-sub a { color: @navbar-dropdown-nav-sublist-item-color; }
+
+.uk-navbar-dropdown-nav .uk-nav-sub a:hover,
+.uk-navbar-dropdown-nav .uk-nav-sub a:focus { color: @navbar-dropdown-nav-sublist-item-hover-color; }
+
+
+/* Dropbar
+ ========================================================================== */
+
+.uk-navbar-dropbar {
+    background: @navbar-dropbar-background;
+    .hook-navbar-dropbar;
+}
+
+/*
+ * Slide modifier
+ */
+
+.uk-navbar-dropbar-slide {
+    position: absolute;
+    z-index: @navbar-dropbar-z-index;
+    left: 0;
+    right: 0;
+    .hook-navbar-dropbar-slide;
+}
+
+
+// Hooks
+// ========================================================================
+
+.hook-navbar-misc;
+
+.hook-navbar() {}
+.hook-navbar-container() {}
+.hook-navbar-nav-item() {}
+.hook-navbar-nav-item-hover() {}
+.hook-navbar-nav-item-onclick() {}
+.hook-navbar-nav-item-active() {}
+.hook-navbar-item() {}
+.hook-navbar-toggle(){}
+.hook-navbar-toggle-hover(){}
+.hook-navbar-toggle-icon(){}
+.hook-navbar-toggle-icon-hover(){}
+.hook-navbar-subtitle() {}
+.hook-navbar-transparent(){}
+.hook-navbar-sticky(){}
+.hook-navbar-dropdown(){}
+.hook-navbar-dropdown-dropbar(){}
+.hook-navbar-dropdown-nav(){}
+.hook-navbar-dropdown-nav-item() {}
+.hook-navbar-dropdown-nav-item-hover() {}
+.hook-navbar-dropdown-nav-item-active() {}
+.hook-navbar-dropdown-nav-header() {}
+.hook-navbar-dropdown-nav-divider() {}
+.hook-navbar-dropbar(){}
+.hook-navbar-dropbar-slide(){}
+.hook-navbar-misc() {}
+
+
+// Inverse
+// ========================================================================
+
+@inverse-navbar-nav-item-color:                @inverse-global-muted-color;
+@inverse-navbar-nav-item-hover-color:          @inverse-global-color;
+@inverse-navbar-nav-item-onclick-color:        @inverse-global-emphasis-color;
+@inverse-navbar-nav-item-active-color:         @inverse-global-emphasis-color;
+@inverse-navbar-item-color:                    @inverse-global-color;
+@inverse-navbar-toggle-color:                  @inverse-global-muted-color;
+@inverse-navbar-toggle-hover-color:            @inverse-global-color;
+
+.hook-inverse() {
+
+    .uk-navbar-nav > li > a {
+        color: @inverse-navbar-nav-item-color;
+        .hook-inverse-navbar-nav-item;
+    }
+
+    .uk-navbar-nav > li:hover > a,
+    .uk-navbar-nav > li > a:focus,
+    .uk-navbar-nav > li > a.uk-open {
+        color: @inverse-navbar-nav-item-hover-color;
+        .hook-inverse-navbar-nav-item-hover;
+    }
+
+    .uk-navbar-nav > li > a:active {
+        color: @inverse-navbar-nav-item-onclick-color;
+        .hook-inverse-navbar-nav-item-onclick;
+    }
+
+    .uk-navbar-nav > li.uk-active > a {
+        color: @inverse-navbar-nav-item-active-color;
+        .hook-inverse-navbar-nav-item-active;
+    }
+
+    .uk-navbar-item {
+        color: @inverse-navbar-item-color;
+        .hook-inverse-navbar-item;
+    }
+
+    .uk-navbar-toggle {
+        color: @inverse-navbar-toggle-color;
+        .hook-inverse-navbar-toggle;
+    }
+
+    .uk-navbar-toggle:hover,
+    .uk-navbar-toggle:focus,
+    .uk-navbar-toggle.uk-open {
+        color: @inverse-navbar-toggle-hover-color;
+        .hook-inverse-navbar-toggle-hover;
+    }
+
+}
+
+.hook-inverse-navbar-nav-item() {}
+.hook-inverse-navbar-nav-item-hover() {}
+.hook-inverse-navbar-nav-item-onclick() {}
+.hook-inverse-navbar-nav-item-active() {}
+.hook-inverse-navbar-item() {}
+.hook-inverse-navbar-toggle() {}
+.hook-inverse-navbar-toggle-hover() {}

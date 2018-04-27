@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en-gb" dir="ltr">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Badge - UIkit tests</title>
+        <script src="js/test.js"></script>
+    </head>
+
+    <body>
+
+        <div class="uk-container">
+
+            <h1>Badge</h1>
+
+            <p>
+                <a class="uk-badge" href="#">1</a>
+                <span class="uk-badge">2</span>
+                <span class="uk-badge">10</span>
+                <span class="uk-badge">100</span>
+                <span class="uk-badge"><span uk-icon="icon: trash"></span></span>
+                <span class="uk-badge">text</span>
+            </p>
+
+            <div class="uk-child-width-expand@m" uk-grid>
+                <div>
+
+                    <h2>Navbar</h2>
+
+                    <nav class="uk-navbar-container uk-margin" uk-navbar>
+                        <div class="uk-navbar-left">
+
+                            <ul class="uk-navbar-nav">
+                                <li class="uk-active"><a href="#">Active <span class="uk-badge uk-margin-small-left">2</span></a></li>
+                                <li><a href="#">Item</a></li>
+                                <li><a href="#">Item <span class="uk-badge uk-margin-small-left">2</span></a></li>
+                            </ul>
+
+                        </div>
+                    </nav>
+
+                </div>
+                <div>
+
+                    <h2>Nav</h2>
+
+                    <ul class="uk-nav uk-nav-default">
+                        <li class="uk-active"><a href="#">Active <span class="uk-badge uk-text-top">2</span></a></li>
+                        <li><a href="#">Item <span class="uk-badge uk-text-top">2</span></a></li>
+                        <li><a href="#">Item</a></li>
+                    </ul>
+
+                </div>
+                <div>
+
+                    <h2>Subnav</h2>
+
+                    <ul class="uk-subnav" uk-margin>
+                        <li class="uk-active"><a href="#">Active</a></li>
+                        <li><a href="#">Item <span class="uk-badge uk-text-top">2</span></a></li>
+                        <li><a href="#">Item</a></li>
+                    </ul>
+
+                    <ul class="uk-subnav" uk-margin>
+                        <li class="uk-active"><a href="#">Active <span class="uk-badge uk-text-top">2</span></a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                    </ul>
+
+                </div>
+                <div>
+
+                    <h2>Tab</h2>
+
+                    <ul uk-tab>
+                        <li class="uk-active"><a href="#">Active</a></li>
+                        <li><a href="#">Item <span class="uk-badge uk-text-top">2</span></a></li>
+                        <li><a href="#">Item</a></li>
+                    </ul>
+
+                    <ul uk-tab>
+                        <li class="uk-active"><a href="#">Active <span class="uk-badge uk-text-top">2</span></a></li>
+                        <li><a href="#">Item</a></li>
+                        <li><a href="#">Item</a></li>
+                    </ul>
+
+                </div>
+            </div>
+
+        </div>
+
+    </body>
+</html>

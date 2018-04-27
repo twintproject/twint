@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Timeline | Dynamic Content</title>
+
+  <script src="../../../dist/vis.js"></script>
+  <link href="../../../dist/vis.min.css" rel="stylesheet" type="text/css" />
+
+  <style type="text/css">
+    .progress-wrapper {
+      background: white;
+      width: 100%;
+      height: 18px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress {
+      height: 100%;
+      width: 60%;
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      background: #63ed63;
+    }
+
+    .progress-label {
+      position: absolute;
+      z-index: 1;
+    }
+
+  </style>
+</head>
+<body>
+
+<div id="myTimeline"></div>
+
+<script type="text/javascript">
+  // DOM element where the Timeline will be attached
+  var container = document.getElementById('myTimeline');
+
+  // Create a DataSet (allows two way data-binding)
+  var items = new vis.DataSet([
+    {id: 1, value: 0.2, content: 'item 1', start: '2014-04-20', end: '2014-04-26'},
+    {id: 2, value: 0.6, content: 'item 2', start: '2014-05-14', end: '2014-05-18'},
+    {id: 3, type: 'point', content: 'item 3', start: '2014-04-15', end: '2014-05-18'},
+    {id: 4, content: 'item 4 with visibleFrameTemplate in item', start: '2014-04-16', end: '2014-04-26', visibleFrameTemplate: '<div class="progress-wrapper"><div class="progress" style="width:80%"></div><label class="progress-label">80 per cent<label></div>'
+    }
+  ]);
+
+  // Configuration for the Timeline
+  var options = {
+    visibleFrameTemplate: function(item) {
+      if (item.visibleFrameTemplate) {
+        return item.visibleFrameTemplate;
+      }
+      var percentage = item.value * 100 + '%';
+      return '<div class="progress-wrapper"><div class="progress" style="width:' + percentage + '"></div><label class="progress-label">' + percentage + '<label></div>';
+    } 
+  };
+
+  // Create a Timeline
+  var timeline = new vis.Timeline(container, items, options);
+</script>
+</body>
+</html>

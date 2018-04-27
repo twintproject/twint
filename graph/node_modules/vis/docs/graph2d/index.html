@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>vis.js - A dynamic, browser based visualization library.</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <!-- Tipue vendor css -->
+    <link href="../css/tipuesearch.css" rel="stylesheet">
+
+    <link href="../css/style.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+    <link href="../css/prettify.css" type="text/css" rel="stylesheet"/>
+    <script type="text/javascript" src="../js/googleAnalytics.js"></script>
+    <script type="text/javascript" src="../js/prettify/prettify.js"></script>
+
+    <script src="../js/smooth-scroll.min.js"></script>
+    <script language="JavaScript">
+        smoothScroll.init();
+    </script>
+
+    <style>
+        tr.subHeader {
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        tr.subHeader td {
+            padding-top: 30px;
+        }
+
+        td.midMethods {
+            width: 150px;
+            background-color: #ffffff;
+            border: 1px solid #dddddd;
+        }
+
+        tr.visible td {
+            padding: 10px;
+        }
+
+        h2 {
+            margin-top:50px;
+        }
+
+        td.greenField {
+            background-color: #b8e030;
+        }
+    </style>
+
+    <script>
+        function toggleGettingStarted(aThis) {
+            var gettingStartedDiv = document.getElementById('gettingStarted');
+            if (aThis.innerHTML.indexOf("Show") !== -1) {
+                gettingStartedDiv.className = '';
+                aThis.innerHTML = 'Hide the getting started again.';
+            }
+            else {
+                gettingStartedDiv.className = 'hidden';
+                aThis.innerHTML = 'Show the getting started!';
+            }
+        }
+    </script>
+
+    <script type="text/javascript" src="../js/toggleTable.js"></script>
+</head>
+<body onload="prettyPrint();">
+
+<div class="navbar-wrapper">
+    <div class="container">
+        <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                            aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand hidden-sm" href="./index.html">vis.js</a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="http://www.visjs.org/index.html#modules">Modules</a></li>
+                        <li><a href="http://www.visjs.org/blog.html">Blog</a></li>
+                        <li><a href="http://www.visjs.org/index.html#download_install">Download</a></li>
+                        <li><a href="http://www.visjs.org/showcase/index.html">Showcase</a></li>
+                        <li><a href="http://www.visjs.org/index.html#contribute">Contribute</a></li>
+                        <li><a href="http://www.visjs.org/featureRequests.html">Feature requests</a></li>
+                        <li><a href="http://www.visjs.org/index.html#licenses">License</a></li>
+                    </ul>
+                    <form class="navbar-form navbar-right" role="search">
+                        <input name="q" id="tipue_search_input" autocomplete="off" type="text" class="form-control" placeholder="Enter keywords">
+                        <button type="submit" class="btn btn-default">Go!</button>
+                    </form>
+                    <div id="search-results-wrapper" class="panel panel-default">
+                      <div class="panel-body">
+                        <div id="tipue_search_content"></div>
+                      </div>
+                    </div>
+                    <div id="keyword-info" class="panel panel-success">
+                      <div class="panel-body">
+                          Found <span id="keyword-count"></span> results. Click <a id="keyword-jumper-button" href="">here</a> to jump to the first keyword occurence!
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<a href="https://github.com/almende/vis" class="hidden-xs hidden-sm hidden-md"><img
+        style="position: absolute; top: 0; right: 0; border: 0;"
+        src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+        alt="Fork me on GitHub"
+        data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+
+<div class="container full">
+    <h1>Graph2d</h1>
+
+    <p>
+        Graph2d is an interactive visualization chart to draw data in a 2D graph.
+        You can freely move and zoom in the graph by dragging and scrolling in the
+        window.
+    </p>
+    <p>
+        Graph2d uses HTML DOM and SVG for rendering. This allows for flexible
+        customization using css styling.
+    </p>
+
+
+    <h2 id="Contents">Contents</h2>
+    <ul>
+        <li><a href="#Data_Format">Data Format</a>
+            <ul>
+                <li><a href="#items">Items</a></li>
+                <li><a href="#groups">Groups</a></li>
+            </ul>
+        </li>
+        <li><a href="#Configuration_Options">Configuration Options</a>
+            <ul>
+                <li><a href="#graph2dOptions">Graph2d options</a></li>
+                <li><a href="#timelineOptions">Timeline options</a></li>
+            </ul>
+        </li>
+        <li><a href="#Methods">Methods</a></li>
+        <li><a href="#Events">Events</a></li>
+        <li><a href="#Localization">Localization</a></li>
+        <li><a href="#Time_zone">Time zone</a></li>
+        <li><a href="#Styles">Styles</a></li>
+    </ul>
+
+
+    <a class="btn btn-primary" role="button" onclick="toggleGettingStarted(this)">Show the getting started!</a>
+    <div id="gettingStarted" class="hidden">
+    <h3>Creating a Graph2d</h3>
+
+    <p>
+        The following code shows how to create a Graph2d and provide it with data.
+        More examples can be found in the <a href="../../examples">examples</a> directory.</p>
+
+        <pre class="prettyprint lang-html options">
+&lt;!DOCTYPE HTML&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Graph2d or Basic Example&lt;/title&gt;
+
+  &lt;style type="text/css"&gt;
+    body, html {
+      font-family: sans-serif;
+    }
+  &lt;/style&gt;
+
+  &lt;script src="../../dist/vis.js"&gt;&lt;/script&gt;
+  &lt;link href="../../dist/vis.css" rel="stylesheet" type="text/css" /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id="visualization"&gt;&lt;/div&gt;
+
+&lt;script type="text/javascript"&gt;
+  var container = document.getElementById('visualization');
+  var items = [
+      {x: '2014-06-11', y: 10},
+      {x: '2014-06-12', y: 25},
+      {x: '2014-06-13', y: 30},
+      {x: '2014-06-14', y: 10},
+      {x: '2014-06-15', y: 15},
+      {x: '2014-06-16', y: 30}
+  ];
+
+  var dataset = new vis.DataSet(items);
+  var options = {
+      start: '2014-06-10',
+      end: '2014-06-18'
+  };
+  var Graph2d = new vis.Graph2d(container, dataset, options);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    <p><a href="http://visjs.org/examples/graph2d/01_basic.html" target="_blank">The result of the code above will be the basic example which is shown here.</a></p>
+
+
+        <h2 id="Loading">Loading</h2>
+
+        <p>
+            The class name of the Graph2d is <code>vis.Graph2d</code>.
+            When constructing a Graph2d, an HTML DOM container must be provided to attach
+            the graph to. Optionally, data an options can be provided.
+            Data is a vis <code>DataSet</code> or an <code>Array</code>, described in
+            section <a href="#Data_Format">Data Format</a>.
+            Options is a name-value map in the JSON format. The available options
+            are described in section <a href="#Configuration_Options">Configuration Options</a>.
+            Groups is a vis <code>DataSet</code> containing groups. The available options and the method of construction
+            are described in section <a href="#Data_Format">Data Format</a>.
+        </p>
+        <pre class="prettyprint lang-js options">var graph = new vis.Graph2d(container [, data] [, groups] [, options]);</pre>
+        For backwards compatibility, groups and options can be interchanged.
+
+        <p>
+            Data, options and groups can be set or changed later on using the functions
+            <code>Graph2d.setItems(data)</code>, <code>Graph2d.setOptions(options)</code> and <code>Graph2d.setGroups(groups)</code>.
+        </p>
+
+        <br>
+    </div>
+    <br>
+    <br>
+
+
+    <h2 id="Data_Format">Data Format</h2>
+    <p>
+        Graph2d can load data from an <code>Array</code>, a <code>DataSet</code> (offering 2 way data binding), or a <code>DataView</code> (offering one way data binding).
+        Objects are added to this DataSet by using the <code>add()</code> function.
+    <p>
+        Graph2d can be provided with two types of data:
+    </p>
+    <ul>
+        <li><a href="#items">Items</a> containing a set of points to be displayed.</li>
+        <li><a href="#groups">Groups</a> containing a set of groups used to group items
+            together. All items belonging to a group will be drawn as a single graph.</li>
+    </ul>
+
+    <h3 id="items">Items</h3>
+
+<pre class="prettyprint lang-js options">
+var items = [
+    {x: '2014-06-13', y: 30, group: 0},
+    {x: '2014-06-14', y: 10, group: 0},
+    {x: '2014-06-15', y: 15, group: 1},
+    {x: '2014-06-16', y: 30, group: 1},
+    {x: '2014-06-17', y: 10, group: 1},
+    {x: '2014-06-18', y: 15, group: 1}
+];
+</pre>
+
+    <table class="properties">
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Required</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>x</td>
+            <td>Date</td>
+            <td>yes</td>
+            <td>Location on the x-axis.</td>
+        </tr>
+        <tr>
+            <td>y</td>
+            <td>Number</td>
+            <td>yes</td>
+            <td>Location on the y-axis.</td>
+        </tr>
+        <tr>
+            <td>group</td>
+            <td>Number or string</td>
+            <td>no</td>
+            <td>The ID of the group this point belongs to.</td>
+        </tr>
+        <tr>
+            <td>label</td>
+            <td>Object</td>
+            <td>no</td>
+            <td>A label object which will be displayed near to the item. A label object has one requirement - a <b> content </b> property. In addition you can set the <b> xOffset, yOffset and className </b> for further appearance customisations.</td>
+        </tr>
+         <tr>
+            <td>end</td>
+            <td>Date</td>
+            <td>no</td>
+            <td>A location on the x-axis that when supplied will have the bar stretch to the end point and ignore the barChart.width property.</td>
+        </tr>
+    </table>
+
+    <h3 id="groups">Groups</h3>
+
+    <p>
+        Like the items, groups are regular JavaScript Arrays and Objects.
+        Using groups, items can be grouped together.
+        Items are filtered per group, and displayed as individual graphs. Groups can contain the properties <code>id</code>,
+        <code>content</code>, <code>className</code> (optional) and  <code>options</code> (optional).
+    </p>
+    <p>
+        Groups can be applied to a timeline using the method <code>setGroups</code>.
+        A table with groups can be created like:
+    </p>
+
+<pre class="prettyprint lang-js options">
+var groups = new vis.DataSet();
+groups.add({
+    id: 1,
+    content: 'Group 1',
+    // Optional: a field 'visible'
+    // Optional: a field 'className'
+    // Optional: options
+  })
+groups.add({
+  // more groups...
+});
+</pre>
+
+
+    <p>
+        Groups can have the following properties:
+    </p>
+
+    <table class="properties">
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Required</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>id</td>
+            <td>String or Number</td>
+            <td>yes</td>
+            <td>An id for the group. The group will display all items having a
+                property <code>group</code> which matches the <code>id</code>
+                of the group.</td>
+        </tr>
+        <tr>
+            <td>content</td>
+            <td>String</td>
+            <td>yes</td>
+            <td>The contents of the group. This can be plain text or html code.</td>
+        </tr>
+        <tr>
+            <td>className</td>
+            <td>String</td>
+            <td>no</td>
+            <td>This field is optional. A className can be used to give groups
+                an individual css style.
+            </td>
+        </tr>
+        <tr>
+            <td>style</td>
+            <td>String</td>
+            <td>no</td>
+            <td>This field is optional. A style can be used to give groups
+                an individual css style, and any style tags specified in style will
+                override the definition in the className style defined in css.
+            </td>
+        </tr>
+        <tr>
+            <td>options</td>
+            <td>Object</td>
+            <td>no</td>
+            <td>This field is optional. The options can be used to give a group a specific draw style.
+                Any options that are colored green in the Configuration Options can be used as options here.
+        </tr>
+        <tr>
+            <td>visible</td>
+            <td>Boolean</td>
+            <td>no</td>
+            <td>This field is optional. If false, this group will not be drawn. By default it is true.
+        </tr>
+    </table>
+
+    <h2 id="Configuration_Options">Configuration Options</h2>
+
+    <h3 id="graph2dOptions">Graph2d Options</h3>
+
+    Options can be used to customize the Graph2d to your purposes. These options can be passed to the Graph2d object either in
+    the constructor, or by the <code>setOptions</code> function.
+
+<pre class="prettyprint lang-js options">
+var options = {
+    width:  '100%',
+    height: '400px',
+    style: 'surface'
+};
+</pre>
+
+    The options colored in green can also be used as options for the groups. All options are optional.
+
+    <table class="options" id="g2dOptions">
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+
+        <tr>
+            <td>defaultGroup</td>
+            <td>String</td>
+            <td>'default'</td>
+            <td>This is the label for the default, ungrouped items when shown in a legend.</td>
+        </tr>
+        <tr class='toggle collapsible' onclick="toggleTable('g2dOptions','barChart', this);">
+            <td class="greenField"><span parent="barChart" class="right-caret"></span> barChart</td>
+            <td>Object</td>
+            <td></td>
+            <td>Define the properties of the barchart style.</td>
+        </tr>
+
+        <tr parent="barChart" class="hidden">
+            <td class="greenField indent">barChart.align</td>
+            <td>String</td>
+            <td>'center'</td>
+            <td>The alignment of the bars with regards to the coordinate. The options are 'left', 'right' or 'center'.</td>
+        </tr>
+        <tr parent="barChart" class="hidden">
+            <td class="greenField indent">barChart.sideBySide</td>
+            <td>Boolean</td>
+            <td>false</td>
+            <td>If two datapoints of a barchart overlap, they are drawn over eachother by default. If sideBySide is set to true, they will be drawn side by side, within the same width as a single bar..
+                See <a href="../../examples/graph2d/10_barsSideBySide.html">example 10</a> for more information.
+                When using groups, see <a href="../../examples/graph2d/11_barsSideBySideGroups.html">example 11</a>.
+            </td>
+        </tr>
+        <tr parent="barChart" class="hidden">
+            <td class="greenField indent">barChart.width</td>
+            <td>Number</td>
+            <td>50</td>
+            <td>The width of the bars.</td>
+        </tr>
+        <tr parent="barChart" class="hidden">
+            <td class="greenField indent">barChart.minWidth</td>
+            <td>Number</td>
+            <td></td>
+            <td>The minimum width of the bars in pixels: by default the bars get smaller while zooming out to prevent overlap, this value is the minimum width of the bar. Default behavior (when minWidth is not set) is 10% of the bar width.</td>
+        </tr>
+        <tr class='toggle collapsible' onclick="toggleTable('g2dOptions','dataAxis', this);">
+            <td><span parent="dataAxis" class="right-caret"></span> dataAxis</td>
+            <td>Object</td>
+            <td></td>
+            <td>Define the properties of the left and right dataAxis.</td>
+        </tr>
+        <tr parent="dataAxis" class="hidden">
+            <td class="indent">dataAxis.alignZeros</td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td>When using multiple axis, the right one is slaved to the left one. If you need to ensure that the zero-lines are on the same
+                height, you can turn this option on.</td>
+        </tr>
+        <tr parent="dataAxis" class="hidden">
+            <td class="indent">dataAxis.icons</td>
+            <td>Boolean</td>
+            <td>false</td>
+            <td>Toggle the drawing of automatically generated icons the Y axis.</td>
+        </tr>
+        <tr parent="dataAxis" class="hidden">
+            <td class="indent2">dataAxis.left.format</td>
+            <td>Function</td>
+            <td></td>
+            <td>Insert a custom function on how to format the label. The function will receive a numeric value and has to return a string. Default function is:
+            <pre class="prettyprint lang-js">
+function (value) {
+  return ''+value.toPrecision(3);
+}</pre>
+            </td>
+        </tr>
+        <tr parent="dataAxis" class="hidden">
+            <td class="indent2">dataAxis.left.range.min</td>
+            <td>Number</td>
+            <td>undefined</td>
+            <td>Set the minimum value of the left y-Axis.</td>
+        </tr>
+        <tr parent="dataAxis" class="hidden">
+            <td class="indent2">dataAxis.left.range.max</td>
+            <td>Number</td>
+            <td>undefined</td>
+            <td>Set the maximum value of the left y-Axis.</td>
+        </tr>
+        <tr parent="dataAxis" class="hidden">
+            <td class="indent2">dataAxis.left.title.style</td>
+            <td>String</td>
+            <td>undefined</td>
+            <td>Set the title style for the left axis. This is a css string and it will override the attributes set in the class.</td>
+        </tr>
+        <tr parent="dataAxis" class="hidden">
+            <td class="indent2">dataAxis.left.title.text</td>
+            <td>String</td>
+            <td>undefined</td>
+            <td>Set the title for the left axis.</td>
+        </tr>
+        <tr parent="dataAxis" class="hidden">
+            <td class="indent2">dataAxis.right.format</td>
+            <td>Function</td>
+            <td></td>
+            <td>Same explaination as the left side.</td>
+        </tr>
+        <tr parent="dataAxis" class="hidden">
+            <td class="indent2">dataAxis.right.range.min</td>
+            <td>Number</td>
+            <td>undefined</td>
+            <td>Set the minimum value of the right y-Axis.</td>
+        </tr>
+        <tr parent="dataAxis" class="hidden">
+            <td class="indent2">dataAxis.right.range.max</td>
+            <td>Number</td>
+            <td>undefined</td>
+            <td>Set the maximum value of the right y-Axis.</td>
+        </tr>
+        <tr parent="dataAxis" class="hidden">
+            <td class="indent2">dataAxis.right.title.style</td>
+            <td>String</td>
+            <td>undefined</td>
+            <td>Set the title style for the right axis. This is a css string and it will override the attributes set in the class.</td>
+        </tr>
+        <tr parent="dataAxis" class="hidden">
+            <td class="indent2">dataAxis.right.title.text</td>
+            <td>String</td>
+            <td>undefined</td>
+            <td>Set the title for the right axis.</td>
+        </tr>
+        <tr parent="dataAxis" class="hidden">
+            <td class="indent">dataAxis.showMinorLabels</td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td>Toggle the drawing of the minor labels on the Y axis.</td>
+        </tr>
+        <tr parent="dataAxis" class="hidden">
+            <td class="indent">dataAxis.showMajorLabels</td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td>Toggle the drawing of the major labels on the Y axis.</td>
+        </tr>
+        <tr parent="dataAxis" class="hidden">
+            <td class="indent">dataAxis.visible</td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td>Show or hide the data axis.</td>
+        </tr>
+        <tr parent="dataAxis" class="hidden">
+            <td class="indent">dataAxis.width</td>
+            <td>Number or String</td>
+            <td>'40px'</td>
+            <td>Set the (minimal) width of the yAxis. The axis will resize to accomodate the labels of the Y values.</td>
+        </tr>
+        <tr class='toggle collapsible' onclick="toggleTable('g2dOptions','drawPoints', this);">
+            <td class="greenField"><span parent="drawPoints" class="right-caret"></span> drawPoints</td>
+            <td>Boolean, Object or Function</td>
+            <td>true</td>
+            <td>Defines rendering options for the datapoints.
+            Three different types of objects can be assigned to this property. See <a href="../../examples/graph2d/19_labels.html">Example 19</a> for an illustration.<br />
+            1. <code>Boolean</code>: When true is provided every datapoint will be drawn, false otherwise.<br />
+            <pre class="prettyprint lang-js">
+drawPoints: true // or false
+            </pre>
+            
+            2. <code>Object</code> (the 'rendering' options): If an object is provided it may contain following properties which all can be optional: <code>onRender</code>, <code>className</code><code>size</code> and/or <code>style</code>. For more information check the property's documentation.<br />
+            <pre class="prettyprint lang-js">
+drawPoints: {
+  size: 3,
+  style: 'square'
+}
+            </pre>
+            
+            3. <code>Function</code>: If a function is provided it will be used as a callback. The function may return values from listing 1 or 2.<br />
+            <pre class="prettyprint lang-js">
+drawPoints: function(item, group) {
+  ...
+}
+            </pre>
+            If a rendering property from the rendering option object is missing, the missing property will be fetched from the group's option.
+            <br />
+            All of these three options can be defined within the drawPoints properties separately as well.
+            </td>
+        </tr>
+        <tr parent="drawPoints" class="hidden">
+            <td class="greenField indent">drawPoints.enabled</td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td>Toggles the drawing of the datapoints.</td>
+        </tr>
+        <tr parent="drawPoints" class="hidden">
+            <td class="greenField indent">drawPoints.onRender</td>
+            <td>function</td>
+            <td>none</td>
+            <td>Defines a render function for every datapoint.
+            If a group has no <code>drawPoints.onRender</code> callback, the graph2d <code>drawPoints.onRender</code> callback will be used.
+            If neither is defined, the datapoint will be rendered according to the group setting of <code>drawPoints.enabled</code>.
+            This callback must return <code>true</code> if the datapoint should be rendered, otherwise <code>false</code>.
+              <pre class="prettyprint lang-js">
+drawPoints: {
+  enabled: true,
+  onRender: function(item, group, graph2d) {
+    // only renders items with labels
+    return item.label != null;
+  }
+}
+              </pre>
+              This callback may also return an object containing a <code>size</code> and <code>style</code> property, both are optional, e.g.:
+              <pre class="prettyprint lang-js">
+onRender: function(item, group, graph2d) {
+  if (item.label == null) {
+    return false;
+  }
+
+  return {
+    style: 'circle',
+    size: 30
+  };
+}
+              </pre>
+          The properties <code>className</code>, <code>style</code> and <code>size</code> returned from the callback will be used for rendering the datapoint.
+          If a property is missing in the rendering option object, the missing property will be fetched from the group's option.
+          </td>
+        </tr>
+        <tr parent="drawPoints" class="hidden">
+            <td class="greenField indent">drawPoints.size</td>
+            <td>Number</td>
+            <td>6</td>
+            <td>Determine the size at which the data points are drawn.</td>
+        </tr>
+        <tr parent="drawPoints" class="hidden">
+            <td class="greenField indent">drawPoints.style</td>
+            <td>String</td>
+            <td>'square'</td>
+            <td>Determine the shape of the data points. The options are 'square' or 'circle'.</td>
+        </tr>
+        <tr>
+            <td>graphHeight</td>
+            <td>Number or String</td>
+            <td>'400px'</td>
+            <td>This is the height of the graph SVG canvas.
+                If it is larger than the height of the outer frame, you can drag up and down
+                the vertical direction as well as the usual horizontal direction.</td>
+        </tr>
+        <tr>
+            <td>groups.visibility</td>
+            <td>Object</td>
+            <td></td>
+            <td>You can use this to toggle the visibility of groups per graph2D instance. This is different from setting the visibility flag of the groups since
+                this is not communicated across instances of graph2d. Take a look at <a href="../../examples/graph2d/14_toggleGroups.html">Example 14</a>
+                for more explanation.
+            </td>
+        </tr>
+        <tr class='toggle collapsible' onclick="toggleTable('g2dOptions','interpolation', this);">
+            <td class="greenField"><span parent="interpolation" class="right-caret"></span> interpolation</td>
+            <td>Boolean or Object</td>
+            <td>true</td>
+            <td>Toggle the interpolation with the default settings. For more customization use the JSON format.</td>
+        </tr>
+        <tr parent="interpolation" class="hidden">
+            <td class="greenField indent">interpolation.enabled</td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td>Toggle the interpolation.</td>
+        </tr>
+        <tr parent="interpolation" class="hidden">
+            <td class="greenField indent">interpolation.parametrization</td>
+            <td>String</td>
+            <td>'centripetal'</td>
+            <td>Define the type of parametrizaion for the catmullRom interpolation. <a href="../../examples/graph2d/07_scrollingAndSorting.html">Example 7</a> shows the different parametrizations. The options are 'centripetal' (best results), 'chordal' and 'uniform'. Uniform is the computationally cheapest variant.
+                If interpolation is disabled, linear interpolation is used.</td>
+        </tr>
+        <tr class='toggle collapsible' onclick="toggleTable('g2dOptions','legend', this);">
+            <td><span parent="legend" class="right-caret"></span> legend</td>
+            <td>Boolean or Object</td>
+            <td>false</td>
+            <td>Toggle the legend with the default settings.</td>
+        </tr>
+        <tr parent="legend" class="hidden">
+            <td class="indent">legend.enabled</td>
+            <td>Boolean</td>
+            <td>false</td>
+            <td>Toggle the legend.</td>
+        </tr>
+        <tr parent="legend" class="hidden">
+            <td class="indent">legend.icons</td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td>Show automatically generated icons on the legend.</td>
+        </tr>
+        <tr parent="legend" class="hidden">
+            <td class="indent2">legend.left.visible</td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td>Both axis, left and right, have a corresponding legend. This toggles the visibility of the legend that is coupled with the left axis.</td>
+        </tr>
+        <tr parent="legend" class="hidden">
+            <td class="indent2">legend.left.position</td>
+            <td>String</td>
+            <td>'top-left'</td>
+            <td>Determine the position of the legend coupled to the left axis. Options are 'top-left', 'top-right', 'bottom-left' or 'bottom-right'.</td>
+        </tr>
+        <tr parent="legend" class="hidden">
+            <td class="indent2">legend.right.visible</td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td>This toggles the visibility of the legend that is coupled with the right axis.</td>
+        </tr>
+        <tr parent="legend" class="hidden">
+            <td class="indent2">legend.right.position</td>
+            <td>String</td>
+            <td>'top-right'</td>
+            <td>Determine the position of the legend coupled to the right axis. Options are 'top-left', 'top-right', 'bottom-left' or 'bottom-right'.</td>
+        </tr>
+
+        <tr>
+            <td>moment</td>
+            <td>function</td>
+            <td>vis.moment</td>
+            <td>A constructor for creating a moment.js Date. Allows for applying a custom time zone. See section <a href="#Time_zone">Time zone</a> for more information.</td>
+        </tr>
+
+        <tr>
+            <td class="greenField">sampling</td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td>If sampling is enabled, Graph2d will automatically determine the amount of points per pixel.
+                If there are more than 1 point per pixel, not all points will be drawn. Disabling sampling will cause a decrease in performance.</td>
+        </tr>
+        <tr>
+            <td class="greenField">sort</td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td>This determines if the items are sorted automatically.
+                They are sorted by the x value. If sort is enabled, more optimizations are possible, increasing the performance.</td>
+        </tr>
+        <tr>
+            <td>stack</td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td>If stack is enabled, the graphs will be stacked upon each-other when applicable. A group can opt-out of stacking through the "excludeFromStacking" option.</td>
+        </tr>
+        <tr class='toggle collapsible' onclick="toggleTable('g2dOptions','shaded', this);">
+            <td class="greenField"><span parent="shaded" class="right-caret"></span> shaded</td>
+            <td>Boolean or Object</td>
+            <td>false</td>
+            <td>Toggle a shaded area with the default settings.</td>
+        </tr>
+        <tr parent="shaded" class="hidden">
+            <td class="greenField indent">shaded.enabled</td>
+            <td>Boolean</td>
+            <td>false</td>
+            <td>This toggles the shading.</td>
+        </tr>
+        <tr parent="shaded" class="hidden">
+            <td class="greenField indent">shaded.orientation</td>
+            <td>String</td>
+            <td>'bottom'</td>
+            <td>This determines if the shaded area is at the bottom or at the top of the curve, or always towards the zero-axis of the graph.
+                The options are 'zero', 'bottom', 'top', or the special case of 'group'. If group is chosen, the option groupId is required.
+                See <a href="../../examples/graph2d/20_shading.html">Example 20</a> what these options look like.
+            </td>
+        </tr>
+        <tr parent="shaded" class="hidden">
+            <td class="greenField indent">shaded.groupId</td>
+            <td>String</td>
+            <td>undefined</td>
+            <td>The id of the group which should be used as the other shading limit.
+            </td>
+        </tr>
+        <tr parent="shaded" class="hidden">
+            <td class="greenField indent">shaded.style</td>
+            <td>String</td>
+            <td>undefined</td>
+            <td>Set the style for the shading. This is a css string and it will override the attributes set in the class.</td>
+        </tr>
+        <tr parent="shaded" class="hidden">
+            <td class="greenField indent">style</td>
+            <td>String</td>
+            <td>'line'</td>
+            <td>This allows the user to define if this should be a linegraph, barchart or pointcloud. The options are: 'line', 'bar', 'points'.</td>
+        </tr>
+        <tr>
+            <td class="greenField">yAxisOrientation</td>
+            <td>String</td>
+            <td>'left'</td>
+            <td>This defines with which axis, left or right, the graph is coupled. <a href="../../examples/graph2d/05_bothAxis.html">Example 5</a> shows groups with different Y axis. If no groups are coupled
+                with an axis, it will not be shown.</td>
+        </tr>
+        <tr>
+            <td class="greenField">excludeFromLegend</td>
+            <td>Boolean</td>
+            <td>false</td>
+            <td>Group option only. Excludes the group from being listed in the legend.</td>
+        </tr>
+        <tr>
+            <td class="greenField">excludeFromStacking</td>
+            <td>Boolean</td>
+            <td>false</td>
+            <td>Group option only. Excludes the group from being included in the stacking.</td>
+        </tr>
+    </table>
+
+    <h3 id="timelineOptions">Timeline Options</h3>
+
+    <p>
+        Graph2d is built upon the framework of the timeline. These options from the timeline can be used with graph2D.
+        All options are optional.
+    </p>
+
+    <table class="options" id="optionTable">
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+
+        <tr>
+            <td>autoResize</td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td>If true, the Timeline will automatically detect when its container is resized, and redraw itself accordingly. If false, the Timeline can be forced to repaint after its container has been resized using the function <code>redraw()</code>.</td>
+        </tr>
+
+        <tr>
+            <td>configure</td>
+            <td>boolean or function</td>
+            <td><code>false</code></td>
+            <td>When true, a configurator is loaded where all configuration options of the Graph2d can be changed live.
+
+                The displayed options can be filtered by providing a filter function. This function is invoked with two arguments: the current <code>option</code> and the <code>path</code> (an Array) of the option within the options object. The option will be displayed when the filter function returns true. For example to only display format options:
+        <pre class="prettyprint lang-js">
+function (option, path) {
+  return option === 'format' || path.indexOf('format') !== -1;
+}</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>clickToUse</td>
+            <td>Boolean</td>
+            <td>false</td>
+            <td>When a Graph2d is configured to be <code>clickToUse</code>, it will react to mouse and touch events only when active.
+                When active, a blue shadow border is displayed around the Graph2d. The Graph2d is set active by clicking on it, and is changed to inactive again by clicking outside the Graph2d or by pressing the ESC key.</td>
+        </tr>
+
+        <tr>
+            <td>end</td>
+            <td>Date or Number or String</td>
+            <td>none</td>
+            <td>The initial end date for the axis of the timeline.
+                If not provided, the latest date present in the items set is taken as
+                end date.</td>
+        </tr>
+        <tr>
+            <td>format</td>
+            <td>Object</td>
+            <td>none</td>
+            <td>
+                Apply custom date formatting of the labels on the time axis. The default value of <code>format</code> is:
+      <pre class="prettyprint lang-js">{
+  minorLabels: {
+    millisecond:'SSS',
+    second:     's',
+    minute:     'HH:mm',
+    hour:       'HH:mm',
+    weekday:    'ddd D',
+    day:        'D',
+    month:      'MMM',
+    year:       'YYYY'
+  },
+  majorLabels: {
+    millisecond:'HH:mm:ss',
+    second:     'D MMMM HH:mm',
+    minute:     'ddd D MMMM',
+    hour:       'ddd D MMMM',
+    weekday:    'MMMM YYYY',
+    day:        'MMMM YYYY',
+    month:      'YYYY',
+    year:       ''
+  }
+}</pre>
+                For values which not provided in the customized <code>options.format</code>, the default values will be used.
+                All available formatting syntax is described in the <a href="http://momentjs.com/docs/#/displaying/format/">docs of moment.js</a>.
+            </td>
+        </tr>
+        <tr>
+            <td>height</td>
+            <td>Number or String</td>
+            <td>none</td>
+            <td>The height of the timeline in pixels or as a percentage.
+                When height is undefined or null, the height of the timeline is automatically
+                adjusted to fit the contents.
+                It is possible to set a maximum height using option <code>maxHeight</code>
+                to prevent the timeline from getting too high in case of automatically
+                calculated height.
+            </td>
+        </tr>
+        <tr>
+            <td>hiddenDates</td>
+            <td>Object</td>
+            <td>none</td>
+            <td>This option allows you to hide specific timespans from the time axis. The dates can be supplied as an object:
+                <code>{start: '2014-03-21 00:00:00', end: '2014-03-28 00:00:00', [repeat:'daily']}</code> or as an Array of these objects. The repeat argument is optional.
+                The possible values are (case-sensitive): <code>daily, weekly, monthly, yearly</code>. To hide a weekend, pick any Saturday as start and the following Monday as end
+                and set repeat to weekly.
+            </td>
+        </tr>
+
+        <tr>
+            <td>locale</td>
+            <td>String</td>
+            <td>none</td>
+            <td>Select a locale for the Graph2d. See section <a href="#Localization">Localization</a> for more information.</td>
+        </tr>
+
+        <tr>
+            <td>locales</td>
+            <td>Object</td>
+            <td>none</td>
+            <td>A map with i18n locales. See section <a href="#Localization">Localization</a> for more information.</td>
+        </tr>
+
+        <tr>
+            <td>max</td>
+            <td>Date or Number or String</td>
+            <td>none</td>
+            <td>Set a maximum Date for the visible range.
+                It will not be possible to move beyond this maximum.
+            </td>
+        </tr>
+
+        <tr>
+            <td>maxHeight</td>
+            <td>Number or String</td>
+            <td>none</td>
+            <td>Specifies the maximum height for the Timeline. Can be a number in pixels or a string like "300px".</td>
+        </tr>
+
+        <tr>
+            <td>maxMinorChars</td>
+            <td>number</td>
+            <td>7</td>
+            <td>
+                Specifies the maximum number of characters that should fit in minor grid labels.
+                If larger, less and wider grids will be drawn.
+            </td>
+        </tr>
+
+        <tr>
+            <td>min</td>
+            <td>Date or Number or String</td>
+            <td>none</td>
+            <td>Set a minimum Date for the visible range.
+                It will not be possible to move beyond this minimum.
+            </td>
+        </tr>
+
+        <tr>
+            <td>minHeight</td>
+            <td>Number or String</td>
+            <td>none</td>
+            <td>Specifies the minimum height for the Timeline. Can be a number in pixels or a string like "300px".</td>
+        </tr>
+        <tr>
+            <td>moveable</td>
+            <td>boolean</td>
+            <td><code>true</code></td>
+            <td>
+                Specifies whether the Timeline can be moved and zoomed by dragging the window.
+                See also option <code>zoomable</code>.
+            </td>
+        </tr>
+
+        <tr>
+            <td>orientation</td>
+            <td>String</td>
+            <td>'bottom'</td>
+            <td>Orientation of the timeline: 'top', 'bottom' (default), or 'both'. If orientation is 'bottom', the time axis is drawn at the bottom. When 'top', the axis is drawn on top. When 'both', two axes are drawn, both on top and at the bottom.</td>
+        </tr>
+
+        <tr>
+            <td>showCurrentTime</td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td>Show a vertical bar at the current time.</td>
+        </tr>
+
+        <tr>
+            <td>showCustomTime</td>
+            <td>Boolean</td>
+            <td>false</td>
+            <td>Show a vertical bar displaying a custom time. This line can be dragged by the user. The custom time can be utilized to show a state in the past or in the future. When the custom time bar is dragged by the user, the event <code>timechange</code> is fired repeatedly. After the bar is dragged, the event <code>timechanged</code> is fired once.</td>
+        </tr>
+
+        <tr>
+            <td>showMajorLabels</td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td>By default, the timeline shows both minor and major date labels on the
+                time axis.
+                For example the minor labels show minutes and the major labels show hours.
+                When <code>showMajorLabels</code> is <code>false</code>, no major labels
+                are shown.</td>
+        </tr>
+
+        <tr>
+            <td>showMinorLabels</td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td>By default, the timeline shows both minor and major date labels on the
+                time axis.
+                For example the minor labels show minutes and the major labels show hours.
+                When <code>showMinorLabels</code> is <code>false</code>, no minor labels
+                are shown. When both <code>showMajorLabels</code> and
+                <code>showMinorLabels</code> are false, no horizontal axis will be
+                visible.</td>
+        </tr>
+
+        <tr>
+            <td>start</td>
+            <td>Date or Number or String</td>
+            <td>none</td>
+            <td>The initial start date for the axis of the timeline.
+                If not provided, the earliest date present in the events is taken as start date.</td>
+        </tr>
+
+        <tr class='toggle collapsible' onclick="toggleTable('optionTable','timeAxis', this);">
+            <td><span parent="timeAxis" class="right-caret"></span> timeAxis</td>
+            <td>Object</td>
+            <td><code>Object</code></td>
+            <td>Specify a fixed scale and step size for the time axis.</td>
+        </tr>
+        <tr parent="timeAxis" class="hidden">
+            <td class="indent">timeAxis.scale</td>
+            <td>String</td>
+            <td>none</td>
+            <td>Set a fixed scale for the time axis of the Timeline. Choose from <code>'millisecond'</code>, <code>'second'</code>, <code>'minute'</code>, <code>'hour'</code>, <code>'weekday'</code>, <code>'day'</code>, <code>'month'</code>, <code>'year'</code>. Example usage:
+  <pre class="prettyprint lang-js options">var options = {
+  timeAxis: {scale: 'minute', step: 5}
+}</pre>
+            </td>
+        </tr>
+        <tr parent="timeAxis" class="hidden">
+            <td class="indent">timeAxis.step</td>
+            <td>number</td>
+            <td><code>1</code></td>
+            <td>
+                Set a fixed step size for the time axis. Only applicable when used together with <code>timeAxis.scale</code>.
+                Choose for example 1, 2, 5, or 10.</td>
+        </tr>
+
+        <tr>
+            <td>width</td>
+            <td>String</td>
+            <td>'100%'</td>
+            <td>The width of the timeline in pixels or as a percentage.</td>
+        </tr>
+
+		<tr>
+      		<td>zoomable</td>
+      		<td>boolean</td>
+      		<td><code>true</code></td>
+      		<td>
+        		Specifies whether the Timeline can be zoomed by pinching or scrolling in the window.
+        		Only applicable when option <code>moveable</code> is set <code><code>true</code></code>.
+      		</td>
+    	</tr>
+
+		<tr>
+		    <td>zoomKey</td>
+		    <td>String</td>
+		    <td><code>''</code></td>
+		    <td>Specifies whether the Timeline is only zoomed when an additional key is down.
+		      	Available values are '' (does not apply), 'altKey', 'ctrlKey', or 'metaKey'.
+		        Only applicable when option <code>moveable</code> is set <code><code>true</code></code>.
+		    </td>
+		</tr>
+
+        <tr>
+            <td>zoomMax</td>
+            <td>Number</td>
+            <td>315360000000000</td>
+            <td>Set a maximum zoom interval for the visible range in milliseconds.
+                It will not be possible to zoom out further than this maximum.
+                Default value equals about 10000 years.
+            </td>
+        </tr>
+
+        <tr>
+            <td>zoomMin</td>
+            <td>Number</td>
+            <td>10</td>
+            <td>Set a minimum zoom interval for the visible range in milliseconds.
+                It will not be possible to zoom in further than this minimum.
+            </td>
+        </tr>
+
+    </table>
+
+
+    <h2 id="Methods">Methods</h2>
+    <p>
+        The Graph2d supports the following methods.
+    </p>
+
+    <table class="methods">
+        <tr>
+            <th>Method</th>
+            <th>Return Type</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>destroy()</td>
+            <td>none</td>
+            <td>Destroy the Graph2d. The Graph2d is removed from memory. all DOM elements and event listeners are cleaned up.
+            </td>
+        </tr>
+        <tr>
+            <td>fit()</td>
+            <td>none</td>
+            <td>Adjust the visible window such that it fits all items.
+            </td>
+        </tr>
+
+        <tr>
+            <td>getCurrentTime()</td>
+            <td>Date</td>
+            <td>Get the current time. Only applicable when option <code>showCurrentTime</code> is true.
+            </td>
+        </tr>
+
+        <tr>
+            <td>getCustomTime()</td>
+            <td>Date</td>
+            <td>Retrieve the custom time. Only applicable when the option <code>showCustomTime</code> is true.
+            </td>
+        </tr>
+
+        <tr>
+            <td>getDataRange()</td>
+            <td>Object</td>
+            <td>Get the range of all the items as an object containing <code>min: Date</code> and <code>max: Date</code>.</td>
+        </tr>
+
+        <tr id="getEventProperties">
+            <td>getEventProperties(event)</td>
+            <td>Object</td>
+            <td>
+                Returns an Object with relevant properties from an event:
+                <ul>
+                    <li><code>pageX</code> (Number): absolute horizontal position of the click event.</li>
+                    <li><code>pageY</code> (Number): absolute vertical position of the click event.</li>
+                    <li><code>x</code> (Number): relative horizontal position of the click event.</li>
+                    <li><code>y</code> (Number): relative vertical position of the click event.</li>
+                    <li><code>time</code> (Date): Date of the clicked event.</li>
+                    <li><code>value</code> (Number[]): The data value of the click event. The array contains one value when there is one data axis visible, and two values when there are two visible data axes. It is empty when no data is provided.</li>
+                    <li><code>what</code> (String or null): name of the clicked thing: <code>background</code>, <code>axis</code>, <code>dat-axis</code>, <code>custom-time</code>, or <code>current-time</code>, <code>legend</code>.</li>
+                    <li><code>event</code> (Object): the original click event.</li>
+                </ul>
+            </td>
+        </tr>
+
+        <tr>
+            <td>getLegend(groupId, iconWidth, iconHeight)</td>
+            <td>SVGelement, String, String</td>
+            <td>Returns an object containing an SVG element with the icon of the group (size determined by iconWidth and iconHeight), the label of the group (content) and the yAxisOrientation of the group (left or right).
+            </td>
+        </tr>
+
+        <tr>
+            <td>getWindow()</td>
+            <td>Object</td>
+            <td>Get the current visible window. Returns an object with properties <code>start: Date</code> and <code>end: Date</code>.</td>
+        </tr>
+
+        <tr>
+            <td>isGroupVisible(groupId)</td>
+            <td>Boolean</td>
+            <td>This checks if the visible option of the supplied group (by ID) is true or false.
+            </td>
+        </tr>
+
+        <tr>
+            <td>moveTo(time [, options])</td>
+            <td>none</td>
+            <td>Move the window such that given time is centered on screen. Parameter <code>time</code> can be a <code>Date</code>, <code>Number</code>, or <code>String</code>. Available options:
+                <ul>
+                    <li><code>animation: boolean | {duration: number, easingFunction: string}</code><br>If true (default), the range is animated smoothly to the new window. An object can be provided to specify duration and easing function. Default duration is 500 ms, and default easing function is 'easeInOutQuad'.</li>
+                </ul>
+            </td>
+        </tr>
+
+        <tr>
+            <td>on(event, callback)</td>
+            <td>none</td>
+            <td>Create an event listener. The callback function is invoked every time the event is triggered. Available events: <code>rangechange</code>, <code>rangechanged</code>, <code>select</code>. The callback function is invoked as <code>callback(properties)</code>, where <code>properties</code> is an object containing event specific properties. See section <a href="#Events">Events for more information</a>.</td>
+        </tr>
+
+        <tr>
+            <td>off(event, callback)</td>
+            <td>none</td>
+            <td>Remove an event listener created before via function <code>on(event, callback)</code>. See section <a href="#Events">Events for more information</a>.</td>
+        </tr>
+
+        <tr>
+            <td>redraw()</td>
+            <td>none</td>
+            <td>Force a redraw of the Graph2d. Can be useful to manually redraw when option autoResize=false.
+            </td>
+        </tr>
+
+        <tr>
+            <td>setCurrentTime(time)</td>
+            <td>none</td>
+            <td>Set a current time. This can be used for example to ensure that a client's time is synchronized with a shared server time.
+                <code>time</code> can be a Date object, numeric timestamp, or ISO date string.
+                Only applicable when option <code>showCurrentTime</code> is true.</td>
+        </tr>
+
+        <tr>
+            <td>setCustomTime(time)</td>
+            <td>none</td>
+            <td>Adjust the custom time bar. Only applicable when the option <code>showCustomTime</code> is true. <code>time</code> can be a Date object, numeric timestamp, or ISO date string.
+            </td>
+        </tr>
+
+        <tr>
+            <td>setGroups(groups)</td>
+            <td>none</td>
+            <td>Set a data set with groups for the Graph2d.
+                <code>groups</code> can be an Array with Objects,
+                a DataSet, or a DataView. For each of the groups, the items of the
+                Graph2d are filtered on the property <code>group</code>, which
+                must correspond with the id of the group.
+            </td>
+        </tr>
+
+        <tr>
+            <td>setItems(items)</td>
+            <td>none</td>
+            <td>Set a data set with items for the Graph2d.
+                <code>items</code> can be an Array with Objects,
+                a DataSet, or a DataView.
+            </td>
+        </tr>
+
+        <tr>
+            <td>setOptions(options)</td>
+            <td>none</td>
+            <td>Set or update options. It is possible to change any option of the Graph2d at any time. You can for example switch orientation on the fly.
+            </td>
+        </tr>
+
+        <tr>
+            <td>setWindow(start, end)</td>
+            <td>none</td>
+            <td>Set the current visible window. The parameters <code>start</code> and <code>end</code> can be a <code>Date</code>, <code>Number</code>, or <code>String</code>. If the parameter value of <code>start</code> or <code>end</code> is null, the parameter will be left unchanged.</td>
+        </tr>
+
+    </table>
+
+
+    <h2 id="Events">Events</h2>
+    <p>
+        Graph2d fires events when changing the visible window by dragging, when
+        selecting items, and when dragging the custom time bar.
+    </p>
+
+    <p>
+        Here an example on how to listen for a <code>rangeChanged</code> event.  A listener can be removed via the function <code>off</code>:
+    </p>
+
+<pre class="prettyprint lang-js">
+function onChange (properties) {
+  alert('changed!');
+}
+
+// add event listener
+Graph2d.on('rangechanged', onChange);
+
+// do stuff...
+
+// remove event listener
+Graph2d.off('rangechanged', onChange);
+</pre>
+
+
+    <p>
+        The following events are available.
+    </p>
+
+    <table class="events">
+        <tr>
+            <th>Name</th>
+            <th>Properties</th>
+            <th>Description</th>
+        </tr>
+
+        <tr>
+            <td>currentTimeTick</td>
+            <td>Fired when the current time bar redraws. The rate depends on the zoom level.</td>
+        </tr>
+
+        <tr>
+            <td>click</td>
+            <td>
+                Passes a properties object as returned by the method <a href="#getEventProperties"><code>Graph2d.getEventProperties(event)</code></a>.
+            </td>
+            <td>Fired when clicked inside the Graph2d.
+            </td>
+        </tr>
+
+        <tr>
+            <td>contextmenu</td>
+            <td>
+                Passes a properties object as returned by the method <a href="#getEventProperties"><code>Graph2d.getEventProperties(event)</code></a>.
+            </td>
+            <td>Fired when right-clicked inside the Graph2d. Note that in order to prevent the context menu from showing up, default behavior of the event must be stopped:
+<pre class="prettyprint lang-js options">graph2d.on('contextmenu', function (props) {
+  alert('Right click!');
+  props.event.preventDefault();
+});
+</pre>
+            </td>
+        </tr>
+        <tr>
+            <td>doubleClick</td>
+            <td>
+                Passes a properties object as returned by the method <a href="#getEventProperties"><code>Graph2d.getEventProperties(event)</code></a>.
+            </td>
+            <td>Fired when double clicked inside the Graph2d.
+            </td>
+        </tr>
+        <tr>
+            <td>changed</td>
+            <td>
+                Has no properties.
+            </td>
+            <td>Fired once after each graph redraw.
+            </td>
+        </tr>
+        <tr>
+            <td>rangechange</td>
+            <td>
+                <ul>
+                    <li><code>start</code> (Number): timestamp of the current start of the window.</li>
+                    <li><code>end</code> (Number): timestamp of the current end of the window.</li>
+                </ul>
+            </td>
+            <td>Fired repeatedly when the user is dragging the Graph2d window.
+            </td>
+        </tr>
+
+        <tr>
+            <td>rangechanged</td>
+            <td>
+                <ul>
+                    <li><code>start</code> (Number): timestamp of the current start of the window.</li>
+                    <li><code>end</code> (Number): timestamp of the current end of the window.</li>
+                </ul>
+            </td>
+            <td>Fired once after the user has dragged the Graph2d window.
+            </td>
+        </tr>
+
+        <tr>
+            <td>timechange</td>
+            <td>
+                <ul>
+                    <li><code>time</code> (Date): the current time.</li>
+                </ul>
+            </td>
+            <td>Fired repeatedly when the user is dragging the custom time bar.
+                Only available when the custom time bar is enabled.
+            </td>
+        </tr>
+
+        <tr>
+            <td>timechanged</td>
+            <td>
+                <ul>
+                    <li><code>time</code> (Date): the current time.</li>
+                </ul>
+            </td>
+            <td>Fired once after the user has dragged the custom time bar.
+                Only available when the custom time bar is enabled.
+            </td>
+        </tr>
+
+    </table>
+
+    <h2 id="Localization">Localization</h2>
+    <p>
+        Graph2d can be localized. For localization, Graph2d depends largely on the localization of <a href="http://momentjs.com">moment.js</a>. Locales are not included in vis.js by default. To enable localization, moment.js must be loaded with locales. Moment.js offers a bundle named "moment-with-locales.min.js" for this and there are various alternative ways to load locales.
+    </p>
+
+    <p>
+        To set a locale for the Graph2d, specify the option <code>locale</code>:
+    </p>
+
+<pre class="prettyprint lang-js">var options = {
+  locale: 'nl'
+};
+</pre>
+
+    <h3>Create a new locale</h3>
+
+    To load a locale into the Graph2d not supported by default, one can add a new locale to the option <code>locales</code>:
+
+<pre class="prettyprint lang-js">var options = {
+  locales: {
+    // create a new locale
+    mylocale: {
+      current: 'current',
+      time: 'time',
+    }
+  },
+
+  // use the new locale
+  locale: 'mylocale'
+};
+</pre>
+
+    <h3 id="available-locales">Available locales</h3>
+
+    Graph2d comes with support for the following locales:
+
+    <table>
+        <tr><td>Language</td><td>Code</td></tr>
+        <tr>
+            <td>English</td>
+            <td>
+                <code>en</code><br>
+                <code>en_EN</code><br>
+                <code>en_US</code>
+            </td>
+        </tr>
+        <tr>
+            <td>Dutch</td>
+            <td>
+                <code>nl</code><br>
+                <code>nl_NL</code><br>
+                <code>nl_BE</code>
+            </td>
+        </tr>
+    </table>
+
+    <h2 id="Time_zone">Time zone</h2>
+    <p>
+        By default, the Timeline displays time in local time. To display a Timeline in an other time zone or in UTC, the date constructor can be overloaded via the configuration option <code>moment</code>, which by default is the constructor function of moment.js. More information about UTC with moment.js can be found in the docs: <a href="http://momentjs.com/docs/#/parsing/utc/">http://momentjs.com/docs/#/parsing/utc/</a>.
+    </p>
+
+    <p>
+        Examples:
+    </p>
+
+<pre class="prettyprint lang-js">// display in UTC
+var options = {
+  moment: function(date) {
+    return vis.moment(date).utc();
+  }
+};
+
+// display in UTC +08:00
+var options = {
+  moment: function(date) {
+    return vis.moment(date).utcOffset('+08:00');
+  }
+};
+</pre>
+
+
+
+    <h2 id="Styles">Styles</h2>
+    <p>
+        All parts of the Graph2d have a class name and a default css style just like the Graph2d.
+        The styles can be overwritten, which enables full customization of the layout
+        of the Graph2d.
+    </p>
+    <p>
+        Additionally, Graph2d has 10 preset styles for graphs, which are cycled through when loading groups. These styles can be overwritten
+        as well, along with defining your own classes to style the graphs! <a href="../../examples/graph2d/04_rightAxis.html">Example 4</a> and
+        <a href="../../examples/graph2d/05_bothAxis.html">example 5</a> show the usage of custom styles.
+    </p>
+
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="../js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../js/ie10-viewport-bug-workaround.js"></script>
+<!-- jquery extensions -->
+<script src="../js/jquery.highlight.js"></script>
+<script src="../js/jquery.url.min.js"></script>
+<!-- Tipue vendor js -->
+<script src="../js/tipuesearch.config.js"></script>
+<script src="../js/tipuesearch.js"></script>
+<!-- controller -->
+<script src="../js/main.js"></script>

@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+    <title>Network | Hierarchical layout</title>
+
+    <style type="text/css">
+        body {
+            font: 10pt sans;
+        }
+
+        #mynetwork {
+            width: 600px;
+            height: 600px;
+            border: 1px solid lightgray;
+        }
+    </style>
+
+    <script type="text/javascript" src="../../../dist/vis.js"></script>
+    <link href="../../../dist/vis-network.min.css" rel="stylesheet" type="text/css"/>
+
+    <script type="text/javascript">
+        var network = null;
+
+        function p(data) {
+            var container = document.getElementById('mynetwork');
+            var options = {
+                layout: {
+                    hierarchical: {},
+                },
+            };
+            console.log("starting layout");
+            network = new vis.Network(container, data, options);
+            console.log("layout complete");
+        }
+    </script>
+</head>
+
+<body>
+<h2>Hierarchical Layout</h2>
+
+<div id="mynetwork"></div>
+
+<script type="text/javascript" src="./demo.jsonp"></script>
+
+</body>
+</html>

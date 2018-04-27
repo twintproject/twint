@@ -1,0 +1,7 @@
+// Markdown Lint Rules
+// https://github.com/mivok/markdownlint/blob/master/docs/RULES.md
+
+rules
+  "~MD012", // alert on multiple consecutive blank lines
+  "~MD013", // line length should be no more than 80 characters
+  "~MD014", // Dollar signs used before commands without showing output

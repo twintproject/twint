@@ -1,0 +1,11 @@
+
+.vis-timeline {
+  position: relative;
+  border: 1px solid #bfbfbf;
+
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+
+  box-sizing: border-box;
+}

@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding">
+  <title>Graph2d | Localization</title>
+
+  <style type="text/css">
+    body, html, select {
+      font-family: sans-serif;
+      font-size: 11pt;
+    }
+  </style>
+
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.1/moment-with-locales.min.js"></script>
+  <script src="../../dist/vis.js"></script>
+  <link href="../../dist/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<h2>Graph2d | Localization</h2>
+<p>
+  To localize Graph2d, one has to load a version of moment.js including locales. To set a locale, specify option <code>{locale: STRING}</code>.
+</p>
+
+<p>
+  <label for="locale">Select a locale:</label>
+  <select id="locale">
+    <option value="en" selected>en</option>
+    <option value="nl">nl</option>
+  </select>
+</p>
+
+<div id="visualization"></div>
+
+<script type="text/javascript">
+
+  var container = document.getElementById('visualization');
+  var items = [
+    {x: '2014-06-11', y: 10},
+    {x: '2014-06-12', y: 25},
+    {x: '2014-06-13', y: 30},
+    {x: '2014-06-14', y: 10},
+    {x: '2014-06-15', y: 15},
+    {x: '2014-06-16', y: 30}
+  ];
+
+  var dataset = new vis.DataSet(items);
+  var options = {
+    start: '2014-06-10',
+    end: '2014-06-18'
+  };
+  var graph2d = new vis.Graph2d(container, dataset, options);
+
+  // update the locale when changing the select box value
+  var select = document.getElementById('locale');
+  select.onchange = function () {
+    graph2d.setOptions({
+      locale: this.value
+    });
+  };
+  select.onchange();
+</script>
+</body>
+</html>

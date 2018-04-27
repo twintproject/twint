@@ -1,0 +1,279 @@
+<!doctype html>
+<html>
+<head>
+  <title>Network | Animation</title>
+
+  <style type="text/css">
+    body {
+      font: 10pt sans;
+    }
+    #mynetwork {
+      width: 600px;
+      height: 600px;
+      border: 1px solid lightgray;
+    }
+
+    div.left {
+      position:relative;
+      float:left;
+      width:300px;
+      border: 1px #c7c7c7 solid;
+      height:590px;
+      padding:5px;
+    }
+
+    div.right {
+      padding-left:10px;
+      float:left;
+      width:600px;
+    }
+
+    div.bottom {
+      position:absolute;
+      bottom:5px;
+    }
+  </style>
+
+  <script type="text/javascript" src="../exampleUtil.js"></script>
+  <script type="text/javascript" src="../../../dist/vis.js"></script>
+  <link href="../../../dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+
+  <script type="text/javascript">
+    var nodes = null;
+    var edges = null;
+    var network = null;
+    var offsetx, offsety, scale, positionx, positiony, duration, easingFunction, doButton, focusButton, showButton;
+    var statusUpdateSpan;
+    var finishMessage = '';
+    var showInterval = false;
+    var showPhase = 1;
+    var amountOfNodes = 25;
+
+    function destroy() {
+      if (network !== null) {
+        network.destroy();
+        network = null;
+      }
+    }
+
+    function updateValues() {
+      offsetx = parseInt(document.getElementById('offsetx').value);
+      offsety = parseInt(document.getElementById('offsety').value);
+      duration = parseInt(document.getElementById('duration').value);
+      scale = parseFloat(document.getElementById('scale').value);
+      positionx = parseInt(document.getElementById('positionx').value);
+      positiony = parseInt(document.getElementById('positiony').value);
+      easingFunction = document.getElementById('easingFunction').value;
+    }
+
+    function draw() {
+      destroy();
+      statusUpdateSpan = document.getElementById('statusUpdate');
+      doButton = document.getElementById('btnDo');
+      focusButton = document.getElementById('btnFocus');
+      showButton = document.getElementById('btnShow');
+
+      // randomly create some nodes and edges
+      var data = getScaleFreeNetwork(amountOfNodes);
+
+      // create a network
+      var container = document.getElementById('mynetwork');
+      var options = {
+        physics: {
+          stabilization: {
+            iterations: 1200
+          }
+        }
+      };
+      network = new vis.Network(container, data, options);
+
+      // add event listeners
+      network.on('select', function(params) {
+        document.getElementById('selection').innerHTML = 'Selection: ' + params.nodes;
+      });
+      network.on('stabilized', function (params) {
+        document.getElementById('stabilization').innerHTML = 'Stabilization took ' + params.iterations + ' iterations.';
+      });
+      network.on('animationFinished', function() {
+        statusUpdateSpan.innerHTML = finishMessage;
+      })
+    }
+
+    function fitAnimated() {
+      updateValues();
+
+      var options = {offset: {x:offsetx,y:offsety},
+        duration: duration,
+        easingFunction: easingFunction
+      };
+      statusUpdateSpan.innerHTML = 'Doing fit() Animation.';
+      finishMessage = 'Animation finished.';
+      network.fit({animation:options});
+    }
+
+    function doDefaultAnimation() {
+      updateValues();
+
+      var options = {
+        position: {x:positionx,y:positiony},
+        scale: scale,
+        offset: {x:offsetx,y:offsety},
+        animation: true // default duration is 1000ms and default easingFunction is easeInOutQuad.
+      };
+      statusUpdateSpan.innerHTML = 'Doing Animation.';
+      finishMessage = 'Animation finished.';
+      network.moveTo(options);
+    }
+
+    function doAnimation() {
+      updateValues();
+
+      var options = {
+        position: {x:positionx,y:positiony},
+        scale: scale,
+        offset: {x:offsetx,y:offsety},
+        animation: {
+          duration: duration,
+          easingFunction: easingFunction
+        }
+      };
+      statusUpdateSpan.innerHTML = 'Doing Animation.';
+      finishMessage = 'Animation finished.';
+      network.moveTo(options);
+    }
+
+    function focusRandom() {
+      updateValues();
+
+      var nodeId = Math.floor(Math.random() * amountOfNodes);
+      var options = {
+        // position: {x:positionx,y:positiony}, // this is not relevant when focusing on nodes
+        scale: scale,
+        offset: {x:offsetx,y:offsety},
+        animation: {
+          duration: duration,
+          easingFunction: easingFunction
+        }
+      };
+      statusUpdateSpan.innerHTML = 'Focusing on node: ' + nodeId;
+      finishMessage = 'Node: ' + nodeId + ' in focus.';
+      network.focus(nodeId, options);
+    }
+
+
+
+    function startShow() {
+      updateValues();
+      if (showInterval !== false) {
+        showInterval = false;
+        showButton.value = 'Start a show!';
+        network.fit();
+      }
+      else {
+        showButton.value = 'Stop the show!';
+        focusRandom();
+        setTimeout(doTheShow, duration);
+        showInterval = true;
+      }
+    }
+
+    function doTheShow() {
+      updateValues();
+      if (showInterval == true) {
+        if (showPhase == 0) {
+          focusRandom();
+          showPhase = 1;
+        }
+        else {
+          fitAnimated();
+          showPhase = 0;
+        }
+        setTimeout(doTheShow, duration);
+      }
+    }
+  </script>
+  
+</head>
+
+<body onload="draw();">
+<h2>Camera animations</h2>
+<div style="width:700px; font-size:14px;">
+  You can move the view around programmatically using the .moveTo(options) function. The options supplied to this function can
+  also be (partially) supplied to the .fit() and .focusOnNode() methods. These are explained in the docs.
+  <br /><br/>
+  The buttons below take the fields from the table when they can. For instance, the "Animate with default settings." takes the position, scale and offset while using
+  the default animation values for duration and easing function. The focusOnNode takes everything except the position and the fit takes only the duration and easing function.
+  <br/><br/>
+  Here you can see a full description of the options you can supply to moveTo:
+</div>
+<pre>
+var moveToOptions = {
+    position: {x:x, y:x},    // position to animate to (Numbers)
+    scale: 1.0,              // scale to animate to  (Number)
+    offset: {x:x, y:y},      // offset from the center in DOM pixels (Numbers)
+    animation: {             // animation object, can also be Boolean
+      duration: 1000,                 // animation duration in milliseconds (Number)
+      easingFunction: "easeInOutQuad" // Animation easing function, available are:
+    }                                   // linear, easeInQuad, easeOutQuad, easeInOutQuad,
+}                                       // easeInCubic, easeOutCubic, easeInOutCubic,
+                                        // easeInQuart, easeOutQuart, easeInOutQuart,
+                                        // easeInQuint, easeOutQuint, easeInOutQuint
+</pre>
+<div class="left">
+  <table>
+    <tr>
+      <td>position x</td><td><input type="text" value="300" id="positionx" style="width:170px;"></td>
+    </tr>
+    <tr>
+      <td>position y</td><td><input type="text" value="300" id="positiony" style="width:170px;"></td>
+    </tr>
+    <tr>
+      <td>scale</td><td><input type="text" value="1.0" id="scale" style="width:170px;"></td>
+    </tr>
+    <tr>
+      <td>offset x</td><td><input type="text" value="0" id="offsetx" style="width:170px;"> px</td>
+    </tr>
+    <tr>
+      <td>offset y</td><td><input type="text" value="0" id="offsety" style="width:170px;"> px</td>
+    </tr>
+    <tr>
+      <td>duration</td><td><input type="text" value="1000" id="duration" style="width:170px;"> ms</td>
+    </tr>
+    <tr>
+      <td>easingFunction</td><td>
+      <select id="easingFunction" style="width:174px;">
+        <option value="linear">linear</option>
+        <option value="easeInQuad">easeInQuad</option>
+        <option value="easeOutQuad">easeOutQuad</option>
+        <option value="easeInOutQuad" selected="selected">easeInOutQuad</option>
+        <option value="easeInCubic">easeInCubic</option>
+        <option value="easeOutCubic">easeOutCubic</option>
+        <option value="easeInOutCubic">easeInOutCubic</option>
+        <option value="easeInQuart">easeInQuart</option>
+        <option value="easeOutQuart">easeOutQuart</option>
+        <option value="easeInOutQuart">easeInOutQuart</option>
+        <option value="easeInQuint">easeInQuint</option>
+        <option value="easeOutQuint">easeOutQuint</option>
+        <option value="easeInOutQuint">easeInOutQuint</option>
+      </select>
+    </td>
+    </tr>
+  </table>
+  <div class="bottom">
+    <span id="statusUpdate"></span><br />
+    Examples:
+    <input type="button" onclick="doAnimation();" value="Animate with above settings." style="width:300px;" id="btnDo"> <br/>
+    <input type="button" onclick="doDefaultAnimation();" value="Animate with default settings." style="width:300px;" id="btnDoDefault"> <br/>
+    <input type="button" onclick="fitAnimated();" value="Animated fit()." style="width:300px;" id="btnZoom"> <br/>
+    <input type="button" onclick="focusRandom();" value="Focus on random node." style="width:300px;" id="btnFocus"><br/>
+    <input type="button" onclick="startShow();" value="Start a show!" style="width:300px;" id="btnShow"><br/>
+  </div>
+</div>
+<div class="right">
+  <div id="mynetwork"></div>
+
+  <p id="selection"></p>
+  <p id="stabilization"></p>
+</div>
+</body>
+</html>

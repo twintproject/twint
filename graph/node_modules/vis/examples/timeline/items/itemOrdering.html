@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Timeline | Item ordering</title>
+
+  <style type="text/css">
+    body, html {
+      font-family: sans-serif;
+    }
+    p {
+      max-width: 800px;
+    }
+  </style>
+
+  <script src="../../../dist/vis.js"></script>
+  <link href="../../../dist/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+
+  
+</head>
+<body>
+<h1>Item ordering</h1>
+<p>
+  By default, the items displayed on the Timeline are unordered. They are
+  stacked in the order that they where loaded. This means that way items are
+  stacked can change while moving and zooming the Timeline.
+</p>
+<p>
+  To display and stack the items in a controlled order, you can provide a
+  custom sorting function via the configuration option <code>order</code>.
+</p>
+<p>
+  WARNING: Custom ordering is only suitable for small amounts of items (up to a few
+  hundred), as the Timeline has to render <i>all</i> items once on load to
+  determine their width and height.
+</p>
+<p>
+  <label for="ordering"><input type="checkbox" id="ordering" checked/> Apply custom ordering. Order items by their id.</label>
+</p>
+
+<div id="visualization"></div>
+
+<script type="text/javascript">
+  // DOM element where the Timeline will be attached
+  var container = document.getElementById('visualization');
+
+  // Create a DataSet (allows two way data-binding)
+  var items = new vis.DataSet();
+  var date = vis.moment('2015-03-02');
+  for (var i = 0; i < 100; i++) {
+    date.add(Math.round(Math.random() * 2), 'hour');
+    items.add({
+      id:      i,
+      content: 'Item ' + i,
+      start:   date.clone(),
+      end:     date.clone().add(4, 'hour')
+    });
+  }
+
+  function customOrder (a, b) {
+    // order by id
+    return a.id - b.id;
+  }
+
+  // Configuration for the Timeline
+  var options = {
+    order: customOrder,
+    editable: true,
+    margin: {item: 0}
+  };
+
+  // Create a Timeline
+  var timeline = new vis.Timeline(container, items, options);
+
+  var ordering = document.getElementById('ordering');
+  ordering.onchange = function () {
+    timeline.setOptions({
+      order: ordering.checked ? customOrder: null
+    });
+  };
+</script>
+</body>
+</html>
