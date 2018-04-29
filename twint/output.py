@@ -145,9 +145,9 @@ async def Tweets(tw, config, conn):
 				output+= " | {} replies {} retweets {} likes".format(Tweet.replies, Tweet.retweets, Tweet.likes)
 
 		if config.Output != None:
-			if config.Csv:
+			if config.Store_csv:
 				writeCSV(Tweet)
-			elif config.Json:
+			elif config.Store_json:
 				writeJSON(Tweet)
 			else:
 				write(output, config.Output)
