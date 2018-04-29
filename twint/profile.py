@@ -1,2 +1,2 @@
-class User(object):
+class User:
 	name = ""
