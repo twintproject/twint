@@ -24,3 +24,4 @@ class Config:
 	To = None
 	All = None
 	Debug = False
+	Format = None
