@@ -20,6 +20,7 @@ def writeCSV(Tweet, file):
 			Tweet.datestamp,
 			Tweet.timestamp,
 			Tweet.timezone,
+			Tweet.user_id,
 			Tweet.username,
 			Tweet.tweet,
 			Tweet.replies,
@@ -36,6 +37,7 @@ def writeJSON(Tweet, file):
 			"date": Tweet.datestamp,
 			"time": Tweet.timestamp,
 			"timezone": Tweet.timezone,
+			"user_id": Tweet.user_id,
 			"username": Tweet.username,
 			"tweet": Tweet.tweet,
 			"replies": Tweet.replies,
@@ -96,6 +98,7 @@ def getTweet(tw, config):
 	t.datestamp = t.date.strftime("%Y-%m-%d")
 	t.time = getTime(tw)
 	t.timestamp = t.time.strftime("%H:%M:%S")
+	t.user_id = tw.find("a", "account-group js-account-group js-action-profile js-user-profile-link js-nav")["data-user-id"]
 	t.username = tw.find("span", "username").text.replace("@", "")
 	t.timezone = strftime("%Z", gmtime())
 	for img in tw.findAll("img", "Emoji Emoji--forText"):
@@ -130,6 +133,7 @@ async def Tweets(tw, config, conn):
 			output = config.Format.replace("{id}", Tweet.id)
 			output = output.replace("{date}", Tweet.datestamp)
 			output = output.replace("{time}", Tweet.timestamp)
+			output = output.replace("{user_id}", Tweet.user_id)
 			output = output.replace("{username}", Tweet.username)
 			output = output.replace("{timezone}", Tweet.timezone)
 			output = output.replace("{tweet}", Tweet.tweet)
