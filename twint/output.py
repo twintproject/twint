@@ -1,0 +1,147 @@
+from .tweet import Tweet
+from .profile import User
+from . import db, elasticsearch
+from time import gmtime, strftime
+from bs4 import BeautifulSoup
+import asyncio
+import csv
+import datetime
+import json
+import re
+import sys
+import time
+
+def write(entry, f):
+	print(entry, file=open(f, "a", encoding="utf-8"))
+
+def writeCSV(Tweet, file):
+	data = [
+			Tweet.id,
+			Tweet.datestamp,
+			Tweet.timestamp,
+			Tweet.timezone,
+			Tweet.username,
+			Tweet.tweet,
+			Tweet.replies,
+			Tweet.retweets,
+			Tweet.likes,
+			",".join(Tweet.hashtags)]
+	with open(file, "a", newline='', encoding="utf-8") as csv_file:
+		writer = csv.writer(csv_file, delimiter="|")
+		writer.writerow(data)
+
+def writeJSON(Tweet, file):
+	data = {
+			"id": Tweet.id,
+			"date": Tweet.datestamp,
+			"time": Tweet.timestamp,
+			"timezone": Tweet.timezone,
+			"username": Tweet.username,
+			"tweet": Tweet.tweet,
+			"replies": Tweet.replies,
+			"retweets": Tweet.retweets,
+			"likes": Tweet.likes,
+			"hashtags": ",".join(Tweet.hashtags)}
+	with open(file, "a", newline='', encoding="utf-8") as json_file:
+		json.dump(data, json_file)
+		json_file.write("\n")
+
+def getDate(tweet, config):
+	datestamp = tweet.find("a", "tweet-timestamp")["title"]
+	if config.Since and config.Until:
+		if (datestamp.date() - datetime.datetime.strptime(date.Since, "%Y-%m-%d").date()).days == -1:
+			# mitigation here, maybe find something better
+			sys.exit(0)
+	datestamp = datestamp.rpartition(" - ")[-1]
+	return datetime.datetime.strptime(datestamp, "%d %b %Y")
+
+def getTime(tweet):
+	tm = int(tweet.find("span", "_timestamp")["data-time"])
+	timestamp = str(datetime.timedelta(seconds=tm))
+	timestamp = timestamp.rpartition(", ")[-1]
+	return datetime.datetime.strptime(timestamp, "%H:%M:%S")
+
+def getText(tweet):
+	text = tweet.find("p", "tweet-text").text
+	text = text.replace("\n", "")
+	text = text.replace("http", " http")
+	text = text.replace("pic.twitter", " pic.twitter")
+	return text
+
+def getHashtags(text):
+	hashtag = re.findall(r'(?i)\#\w+', text, flags=re.UNICODE)
+	return hashtag
+	#return ",".join(hashtag)
+
+def getStat(tweet, stat):
+	st = "ProfileTweet-action--{} u-hiddenVisually".format(stat)
+	return tweet.find("span", st).find("span")["data-tweet-stat-count"]
+
+def getMentions(tweet, text):
+	try:
+		mentions = tweet.find("div", "js-original-tweet")["data-mentions"].split(" ")
+		for i in range(len(mentions)):
+			mention = "@{}".format(mentions[i])
+			if mention not in text:
+				text = "{} {}".format(mention, text)
+	except:
+		pass
+	return text
+
+# Sort HTML
+def getTweet(tw, config):
+	t = Tweet()
+	t.id = tw.find("div")["data-item-id"]
+	t.date = getDate(tw, config)
+	t.datestamp = t.date.strftime("%Y-%m-%d")
+	t.time = getTime(tw)
+	t.timestamp = t.time.strftime("%H:%M:%S")
+	t.username = tw.find("span", "username").text.replace("@", "")
+	t.timezone = strftime("%Z", gmtime())
+	for img in tw.findAll("img", "Emoji Emoji--forText"):
+		img.replaceWith("<{}>".format(img['aria-label']))
+	t.tweet = getMentions(tw, getText(tw))
+	t.hashtags = getHashtags(t.tweet)
+	t.replies = getStat(tw, "reply")
+	t.retweets = getStat(tw, "retweet")
+	t.likes = getStat(tw, "favorite")
+	return t
+
+async def getUser(user):
+	u = User()
+	u.name = user.find("a")["name"]
+	return u
+
+async def Tweets(tw, config, conn):
+	copyright = tw.find("div", "StreamItemContent--withheld")
+	if copyright is None:
+		Tweet = getTweet(tw, config)
+
+		if config.Database:
+			db.tweets(conn, Tweet)
+		elif config.Elasticsearch:
+			elasticsearch.Elastic(Tweet, config)
+		elif config.Users_only:
+			output = Tweet.username
+		elif config.Tweets_only:
+			output = Tweet.tweet
+		else:
+			output = "{} {} {} {} <{}> {}".format(Tweet.id, Tweet.datestamp, Tweet.timestamp, Tweet.timezone, Tweet.username, Tweet.tweet)
+			if config.Show_hashtags:
+				output+= " {}".format(",".join(Tweet.hashtags))
+			if config.Stats:
+				output+= " | {} replies {} retweets {} likes".format(Tweet.replies, Tweet.retweets, Tweet.likes)
+
+		if config.Output != None:
+			if config.Csv:
+				writeCSV(Tweet)
+			elif config.Json:
+				writeJSON(Tweet)
+			else:
+				write(output, config.Output)
+		
+		# Print output
+		if config.Elasticsearch:
+			print(output, end=".", flush=True)
+		else:
+			print(output)
