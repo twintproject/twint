@@ -1,0 +1,140 @@
+{
+  "_from": "sqlite3",
+  "_id": "sqlite3@4.0.0",
+  "_inBundle": false,
+  "_integrity": "sha512-6OlcAQNGaRSBLK1CuaRbKwlMFBb9DEhzmZyQP+fltNRF6XcIMpVIfXCBEcXPe1d4v9LnhkQUYkknDbA5JReqJg==",
+  "_location": "/sqlite3",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "sqlite3",
+    "name": "sqlite3",
+    "escapedName": "sqlite3",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/sqlite3/-/sqlite3-4.0.0.tgz",
+  "_shasum": "cc0e093ab51873f50d9dfc4126fcbef15d486570",
+  "_spec": "sqlite3",
+  "_where": "/home/user/ELECTRON/kit",
+  "author": {
+    "name": "MapBox",
+    "url": "https://mapbox.com/"
+  },
+  "binary": {
+    "module_name": "node_sqlite3",
+    "module_path": "./lib/binding/{node_abi}-{platform}-{arch}",
+    "host": "https://mapbox-node-binary.s3.amazonaws.com",
+    "remote_path": "./{name}/v{version}/{toolset}/",
+    "package_name": "{node_abi}-{platform}-{arch}.tar.gz"
+  },
+  "bugs": {
+    "url": "https://github.com/mapbox/node-sqlite3/issues"
+  },
+  "bundleDependencies": [
+    "node-pre-gyp"
+  ],
+  "contributors": [
+    {
+      "name": "Konstantin Käfer",
+      "email": "mail@kkaefer.com"
+    },
+    {
+      "name": "Dane Springmeyer",
+      "email": "dane@mapbox.com"
+    },
+    {
+      "name": "Will White",
+      "email": "will@mapbox.com"
+    },
+    {
+      "name": "Orlando Vazquez",
+      "email": "ovazquez@gmail.com"
+    },
+    {
+      "name": "Artem Kustikov",
+      "email": "kustikoff@gmail.com"
+    },
+    {
+      "name": "Eric Fredricksen",
+      "email": "efredricksen@gmail.com"
+    },
+    {
+      "name": "John Wright",
+      "email": "mrjjwright@gmail.com"
+    },
+    {
+      "name": "Ryan Dahl",
+      "email": "ry@tinyclouds.org"
+    },
+    {
+      "name": "Tom MacWright",
+      "email": "tom@mapbox.com"
+    },
+    {
+      "name": "Carter Thaxton",
+      "email": "carter.thaxton@gmail.com"
+    },
+    {
+      "name": "Audrius Kažukauskas",
+      "email": "audrius@neutrino.lt"
+    },
+    {
+      "name": "Johannes Schauer",
+      "email": "josch@pyneo.org"
+    },
+    {
+      "name": "Nathan Rajlich",
+      "email": "nathan@tootallnate.net"
+    },
+    {
+      "name": "AJ ONeal",
+      "email": "coolaj86@gmail.com"
+    },
+    {
+      "name": "Mithgol"
+    },
+    {
+      "name": "Ben Noordhuis",
+      "email": "ben@strongloop.com"
+    }
+  ],
+  "dependencies": {
+    "nan": "~2.9.2",
+    "node-pre-gyp": "~0.9.0"
+  },
+  "deprecated": false,
+  "description": "Asynchronous, non-blocking SQLite3 bindings",
+  "devDependencies": {
+    "aws-sdk": "2.x",
+    "eslint": "3.5.0",
+    "mocha": "3.x"
+  },
+  "homepage": "http://github.com/mapbox/node-sqlite3",
+  "keywords": [
+    "sql",
+    "sqlite",
+    "sqlite3",
+    "database"
+  ],
+  "license": "BSD-3-Clause",
+  "main": "./lib/sqlite3",
+  "name": "sqlite3",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mapbox/node-sqlite3.git"
+  },
+  "scripts": {
+    "install": "node-pre-gyp install --fallback-to-build",
+    "prepublishOnly": "npm ls",
+    "pretest": "node test/support/createdb.js",
+    "test": "mocha -R spec --timeout 480000"
+  },
+  "version": "4.0.0"
+}
