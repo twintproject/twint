@@ -2,10 +2,13 @@
 '''
 Twint.py - Twitter Intelligence (formerly known as Tweep).
 Written by Cody Zacharias (@now)
+
 Special thanks to @hpiedcoq & @pielco11 for contributing
 several search and storing options.
+
 See wiki on Github for in-depth details.
 https://github.com/haccer/twint/wiki
+
 Licensed under MIT License
 Copyright (c) 2018 Cody Zacharias
 '''
