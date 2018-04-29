@@ -1,10 +1,11 @@
-class Tweet(object):
+class Tweet:
 	id = ""
 	date = ""
 	datestamp = ""
 	time = ""
 	timestamp = ""
 	timezone = ""
+	user_id = ""
 	username = ""
 	tweet = "" # Text
 	replies = "0"
