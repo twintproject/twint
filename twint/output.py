@@ -119,12 +119,23 @@ async def Tweets(tw, config, conn):
 
 		if config.Database:
 			db.tweets(conn, Tweet)
-		elif config.Elasticsearch:
+		if config.Elasticsearch:
 			elasticsearch.Elastic(Tweet, config)
-		elif config.Users_only:
+		
+		if config.Users_only:
 			output = Tweet.username
 		elif config.Tweets_only:
 			output = Tweet.tweet
+		elif config.Format:
+			output = config.Format.replace("{Tweet.id}", Tweet.id)
+			output = output.replace("{Tweet.datestamp}", Tweet.datestamp)
+			output = output.replace("{Tweet.timestamp}", Tweet.timestamp)
+			output = output.replace("{Tweet.username}", Tweet.username)
+			output = output.replace("{Tweet.timezone}", Tweet.timezone)
+			output = output.replace("{Tweet.hashtags}", str(Tweet.hashtags))
+			output = output.replace("{Tweet.replies}", Tweet.replies)
+			output = output.replace("{Tweet.retweets}", Tweet.retweets)
+			output = output.replace("{Tweet.likes}", Tweet.likes)
 		else:
 			output = "{} {} {} {} <{}> {}".format(Tweet.id, Tweet.datestamp, Tweet.timestamp, Tweet.timezone, Tweet.username, Tweet.tweet)
 			if config.Show_hashtags:
