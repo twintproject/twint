@@ -127,15 +127,16 @@ async def Tweets(tw, config, conn):
 		elif config.Tweets_only:
 			output = Tweet.tweet
 		elif config.Format:
-			output = config.Format.replace("{Tweet.id}", Tweet.id)
-			output = output.replace("{Tweet.datestamp}", Tweet.datestamp)
-			output = output.replace("{Tweet.timestamp}", Tweet.timestamp)
-			output = output.replace("{Tweet.username}", Tweet.username)
-			output = output.replace("{Tweet.timezone}", Tweet.timezone)
-			output = output.replace("{Tweet.hashtags}", str(Tweet.hashtags))
-			output = output.replace("{Tweet.replies}", Tweet.replies)
-			output = output.replace("{Tweet.retweets}", Tweet.retweets)
-			output = output.replace("{Tweet.likes}", Tweet.likes)
+			output = config.Format.replace("{id}", Tweet.id)
+			output = output.replace("{date}", Tweet.datestamp)
+			output = output.replace("{time}", Tweet.timestamp)
+			output = output.replace("{username}", Tweet.username)
+			output = output.replace("{timezone}", Tweet.timezone)
+			output = output.replace("{tweet}", Tweet.tweet)
+			output = output.replace("{hashtags}", str(Tweet.hashtags))
+			output = output.replace("{replies}", Tweet.replies)
+			output = output.replace("{retweets}", Tweet.retweets)
+			output = output.replace("{likes}", Tweet.likes)
 		else:
 			output = "{} {} {} {} <{}> {}".format(Tweet.id, Tweet.datestamp, Tweet.timestamp, Tweet.timezone, Tweet.username, Tweet.tweet)
 			if config.Show_hashtags:
