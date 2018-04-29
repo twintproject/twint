@@ -1,8 +1,0 @@
-Usage: nugget <urls> [options]
-  -o         output filename
-  -d         output parent directory
-  -c         resume aborted download
-  -f         ignore response codes > 299
-  -s         concurrent socket limit (default infinity)
-  -q         disable logging
-  --stdin    download all urls written to stdin (newline delimited)

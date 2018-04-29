@@ -1,1 +1,0 @@
-This file is used for testing asar unpack option

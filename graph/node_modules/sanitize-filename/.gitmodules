@@ -1,3 +1,0 @@
-[submodule "big-list-of-naughty-strings"]
-	path = vendor/big-list-of-naughty-strings
-	url = https://github.com/minimaxir/big-list-of-naughty-strings.git

@@ -1,9 +1,0 @@
-{
-  "main": "main.js",
-  "productName": "MainJS",
-  "author": "Foo Bar <foo.bar@example.com>",
-  "description": "Some description",
-  "devDependencies": {
-    "electron-prebuilt-compile": "1.4.15"
-  }
-}

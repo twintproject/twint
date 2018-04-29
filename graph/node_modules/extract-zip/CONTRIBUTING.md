@@ -1,1 +1,0 @@
-Before potentially wasting your time by making major, opinionated changes to this codebase please feel free to open a discussion repos in the Issues section of the repository. Outline your proposed idea and seek feedback from the maintainer first before implementing major features.
