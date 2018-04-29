@@ -9,6 +9,7 @@ import sys
 class Search:
 	def __init__(self, config):
 		self.init = -1
+		self.initial = -1
 		self.feed = [-1]
 		self.count = 0
 		self.config = config
@@ -50,9 +51,12 @@ class Search:
 
 	async def tweets(self):
 		await self.Feed()
-		for tweet in self.feed:
-			self.count += 1
-			await output.Tweets(tweet, self.config, self.conn)
+		if self.initial != -1: # Temporary fix
+			for tweet in self.feed:
+				self.count += 1
+				await output.Tweets(tweet, self.config, self.conn)
+		else:
+			self.initial = 0
 
 	async def main(self):
 		if self.config.User_id is not None:
