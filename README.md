@@ -1,5 +1,5 @@
 # TWINT - Twitter Intelligence Tool
-![Version](https://img.shields.io/badge/Version-1.0-blue.svg) [![Build Status](https://travis-ci.org/haccer/twint.svg?branch=master)](https://travis-ci.org/haccer/twint/) [![Python 3.5|3.6](https://img.shields.io/badge/Python-3.5%2F3.6-blue.svg)](https://www.python.org/download/releases/3.0/) [![GitHub license](https://img.shields.io/github/license/haccer/tweep.svg)](https://github.com/haccer/tweep/blob/master/LICENSE)
+[![Build Status](https://travis-ci.org/haccer/twint.svg?branch=master)](https://travis-ci.org/haccer/twint/) [![Python 3.5|3.6](https://img.shields.io/badge/Python-3.5%2F3.6-blue.svg)](https://www.python.org/download/releases/3.0/) [![GitHub license](https://img.shields.io/github/license/haccer/tweep.svg)](https://github.com/haccer/tweep/blob/master/LICENSE)
 
 >No authentication. No API. No limits.
 
@@ -42,6 +42,22 @@ A few simple examples to help you understand the basics:
 
 More detail about the commands and options are located in the [wiki](https://github.com/haccer/twint/wiki/Commands)
 
+## Using Twint as a module
+Twint can now be used as a module and supports custom formatting. More details are located in the [wiki](https://github.com/haccer/twint/wiki/Commands)
+
+#### Example
+```python
+import twint
+
+# Configure
+c = twint.Config()
+c.Username = "now"
+c.Search = "pineapple"
+c.Format = "Tweet id: {id} | Tweet: {tweet}"
+
+# Run
+twint.Search(c)
+```
 ## Example String
 `955511208597184512 2018-01-22 18:43:19 GMT <now> pineapples are the best fruit`
 
