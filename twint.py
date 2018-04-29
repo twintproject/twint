@@ -63,7 +63,7 @@ def initialize(args):
 	return c
 
 def options():
-	ap = argparse.ArgumentParser(prog="tw.py", usage="python3 %(prog)s [options]", description="tw.py - An Advanced Twitter Scraping Tool")
+	ap = argparse.ArgumentParser(prog="twint.py", usage="python3 %(prog)s [options]", description="TWINT - An Advanced Twitter Scraping Tool")
 	ap.add_argument("-u", "--username", help="User's Tweets you want to scrape.")
 	ap.add_argument("-s", "--search", help="Search for Tweets containing this word or phrase.")
 	ap.add_argument("-g", "--geo", help="Search for geocoded tweets.")
