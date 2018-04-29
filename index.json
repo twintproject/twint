@@ -3,10 +3,12 @@ PUT twint
   "mappings" : {
     "items": {
       "properties": {
-        "tweetid": {"type": "long"},
-        "datestamp": {"type": "date", "format": "yyyy-MM-dd HH:mm:ss"},
+        "id": {"type": "long"},
+        "date": {"type": "date", "format": "yyyy-MM-dd HH:mm:ss"},
+        "time": {"type": "text"},
         "timezone": {"type": "text"},
         "hashtags": {"type": "text"},
+        "tweet": {"type": "text"},
         "replies": {"type": "boolean"},
         "retweets": {"type": "boolean"},
         "likes": {"type": "boolean"},
