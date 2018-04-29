@@ -61,7 +61,7 @@ def main():
 			error("Contradicting Args", "--userid and -u cannot be used together.")
 	if args.tweets and args.users:
 		error("Contradicting Args", "--users and --tweets cannot be used together.")
-	if args.csv and args.o is None:
+	if args.csv and args.output is None:
 		error("Error", "Please specify an output file (Example: -o file.csv).")
 
 	c = twint.Config()
