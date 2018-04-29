@@ -1,0 +1,2 @@
+class User(object):
+		name = ""
