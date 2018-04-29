@@ -395,6 +395,24 @@ async def outTweet(tweet):
         nReplies = 0
         nRetweets = 0
 
+        jObject = {
+            "tweetid": tweetid,
+            "datestamp": date + " " + time,
+            "timezone": timezone,
+            "text": text,
+            "hashtags": hashtags,
+            "username": username,
+            "day": _day,
+            "hour": time.split(":")[0]
+            }
+        j_data = {
+            "_index": "twint",
+            "_type": "items",
+            "_id": tweetid + "_raw",
+            "_source": jObject
+        }
+        actions.append(j_data)
+
         for l in range(int(likes)):
             jObject = {
                 "tweetid": tweetid,
