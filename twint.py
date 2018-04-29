@@ -314,10 +314,11 @@ async def outTweet(tweet):
     datestamp = tweet.find("a", "tweet-timestamp")["title"].rpartition(" - ")[-1]
     d = datetime.datetime.strptime(datestamp, "%d %b %Y")
     date = d.strftime("%Y-%m-%d")
-    if (d.date() - datetime.datetime.strptime(arg.since, "%Y-%m-%d").date()).days == -1:
-        if _since_def_user:
-            # mitigation here, maybe find something better
-            sys.exit(0)
+    if arg.since and arg.until:
+        if (d.date() - datetime.datetime.strptime(arg.since, "%Y-%m-%d").date()).days == -1:
+            if _since_def_user:
+                # mitigation here, maybe find something better
+                sys.exit(0)
     timestamp = str(datetime.timedelta(seconds=int(tweet.find("span", "_timestamp")["data-time"]))).rpartition(", ")[-1]
     t = datetime.datetime.strptime(timestamp, "%H:%M:%S")
     time = t.strftime("%H:%M:%S")
@@ -676,7 +677,7 @@ async def main():
 
             if arg.limit is not None and num >= int(arg.limit):
                 break
-    else:
+    elif arg.since and arg.until:
         while _since < _until:
             arg.since = str(_until - datetime.timedelta(days=int(arg.timedelta)))
             arg.until = str(_until)
@@ -693,6 +694,16 @@ async def main():
                 feed = [-1]
 
             # Control when we want to stop scraping.
+            if arg.limit is not None and num >= int(arg.limit):
+                break
+    else:
+        while True:
+            if len(feed) > 0:
+                feed, init, count = await getTweets(init)
+                num += count
+            else:
+                break
+            
             if arg.limit is not None and num >= int(arg.limit):
                 break
 
