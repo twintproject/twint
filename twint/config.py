@@ -1,4 +1,4 @@
-class Config(object):
+class Config:
 	Username = None
 	User_id = None
 	Search = None
