@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+# Node Dependency directories
+node_modules/
+jspm_packages/
+
 # Distribution / packaging
 .Python
 env/
