@@ -146,9 +146,9 @@ async def Tweets(tw, config, conn):
 
 		if config.Output != None:
 			if config.Store_csv:
-				writeCSV(Tweet)
+				writeCSV(Tweet, config.Output)
 			elif config.Store_json:
-				writeJSON(Tweet)
+				writeJSON(Tweet, config.Output)
 			else:
 				write(output, config.Output)
 		
