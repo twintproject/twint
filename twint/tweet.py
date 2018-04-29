@@ -1,4 +1,4 @@
-class Tweet(object):
+class Tweet:
 	id = ""
 	date = ""
 	datestamp = ""
