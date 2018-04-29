@@ -20,7 +20,49 @@ def error():
 	print("[-] {}: {}".format(error, message))
 	sys.exit(0)
 
-def main():
+def check(args):
+	if args.username is not None:
+		if args.users:
+			error("Contradicting Args", "Please use --users in combination with -s.")
+		if args.verified:
+			error("Contradicting Args", "Please use --verified in combination with -s.")
+		if args.userid:
+			error("Contradicting Args", "--userid and -u cannot be used together.")
+	if args.tweets and args.users:
+		error("Contradicting Args", "--users and --tweets cannot be used together.")
+	if args.csv and args.output is None:
+		error("Error", "Please specify an output file (Example: -o file.csv).")
+
+def initialize(args):
+	c = twint.Config()
+	c.Username = args.username
+	c.User_id = args.userid
+	c.Search = args.search
+	c.Geo = args.geo
+	c.Lang = args.lang
+	c.Output = args.output
+	c.Elasticsearch = args.elasticsearch
+	c.Timedelta = args.timedelta
+	c.Year = args.year
+	c.Since = args.since
+	c.Until = args.until
+	c.Fruit = args.fruit
+	c.Verified = args.verified
+	c.Store_csv = args.csv
+	c.Store_json = args.json
+	c.Show_hashtags = args.hashtags
+	c.Tweets_only = args.tweets
+	c.Users_only = args.users
+	c.Limit = args.limit
+	c.Count = args.count
+	c.Stats = args.stats
+	c.Database = args.database
+	c.To = args.to
+	c.All = args.all
+	c.Debug = args.debug
+	return c
+
+def options():
 	ap = argparse.ArgumentParser(prog="tw.py", usage="python3 %(prog)s [options]", description="tw.py - An Advanced Twitter Scraping Tool")
 	ap.add_argument("-u", "--username", help="User's Tweets you want to scrape.")
 	ap.add_argument("-s", "--search", help="Search for Tweets containing this word or phrase.")
@@ -51,45 +93,12 @@ def main():
 	ap.add_argument("--favorites", help="Scrape Tweets a user has liked.", action="store_true")
 	ap.add_argument("--debug", help="Debug mode", action="store_true")
 	args = ap.parse_args()
-	
-	if args.username is not None:
-		if args.users:
-			error("Contradicting Args", "Please use --users in combination with -s.")
-		if args.verified:
-			error("Contradicting Args", "Please use --verified in combination with -s.")
-		if args.userid:
-			error("Contradicting Args", "--userid and -u cannot be used together.")
-	if args.tweets and args.users:
-		error("Contradicting Args", "--users and --tweets cannot be used together.")
-	if args.csv and args.output is None:
-		error("Error", "Please specify an output file (Example: -o file.csv).")
+	return args
 
-	c = twint.Config()
-	c.Username = args.username
-	c.User_id = args.userid
-	c.Search = args.search
-	c.Geo = args.geo
-	c.Lang = args.lang
-	c.Output = args.output
-	c.Elasticsearch = args.elasticsearch
-	c.Timedelta = args.timedelta
-	c.Year = args.year
-	c.Since = args.since
-	c.Until = args.until
-	c.Fruit = args.fruit
-	c.Verified = args.verified
-	c.Store_csv = args.csv
-	c.Store_json = args.json
-	c.Show_hashtags = args.hashtags
-	c.Tweets_only = args.tweets
-	c.Users_only = args.users
-	c.Limit = args.limit
-	c.Count = args.count
-	c.Stats = args.stats
-	c.Database = args.database
-	c.To = args.to
-	c.All = args.all
-	c.Debug = args.debug
+def main():
+	args = options()
+	check(args)
+	c = initialize(args)
 
 	if args.favorites:
 		twint.Favorites(c)
