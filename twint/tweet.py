@@ -13,3 +13,4 @@ class Tweet:
 	retweets = "0"
 	hashtags = ""
 	location = ""
+	link = ""
