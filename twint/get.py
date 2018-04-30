@@ -66,6 +66,10 @@ class Url:
 			url+= "%20to%3A{0.To}".format(self.config)
 		if self.config.All:
 			url+= "%20to%3A{0.All}%20OR%20from%3A{0.All}%20OR%20@{0.All}".format(self.config)
+		if self.config.Near:
+			self.config.Near = self.config.Near.replace(" ", "%20")
+			self.config.Near = self.config.Near.replace(",", "%2C")
+			url+= "%20near%3A{0.Near}".format(self.config)
 		return url
 
 async def Response(session, url):
@@ -87,6 +91,8 @@ async def Tweet(url, config, conn):
 			response = await Response(session, url)
 		soup = BeautifulSoup(response, "html.parser")
 		tweet = soup.find("div", "permalink-inner permalink-tweet-container")
-		await output.Tweets(tweet, config, conn)
+		# Experimental
+		location = soup.find("span", "ProfileHeaderCard-locationText u-dir").text.replace("\n", "").replace(" ", "").replace(",", ", ")
+		await output.Tweets(tweet, location, config, conn)
 	except:
 		pass
