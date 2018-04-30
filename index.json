@@ -17,6 +17,7 @@ PUT twint
         "username": {"type": "keyword"},
         "day": {"type": "keyword"},
         "hour": {"type": "keyword"}
+        "link": {"type": "text"}
       }
     }
   }
