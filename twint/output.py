@@ -29,7 +29,7 @@ def writeCSV(Tweet, file):
 			Tweet.location,
 			",".join(Tweet.hashtags)]
 	with open(file, "a", newline='', encoding="utf-8") as csv_file:
-		writer = csv.writer(csv_file, delimiter="|")
+		writer = csv.writer(csv_file, quoting=csv.QUOTE_ALL, delimiter=",")
 		writer.writerow(data)
 
 def writeJSON(Tweet, file):
