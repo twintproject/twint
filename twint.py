@@ -39,6 +39,8 @@ def initialize(args):
 	c.User_id = args.userid
 	c.Search = args.search
 	c.Geo = args.geo
+	c.Location = args.location
+	c.Near = args.near
 	c.Lang = args.lang
 	c.Output = args.output
 	c.Elasticsearch = args.elasticsearch
@@ -67,6 +69,8 @@ def options():
 	ap.add_argument("-u", "--username", help="User's Tweets you want to scrape.")
 	ap.add_argument("-s", "--search", help="Search for Tweets containing this word or phrase.")
 	ap.add_argument("-g", "--geo", help="Search for geocoded tweets.")
+	ap.add_argument("--near", help="Near a specified city.")
+	ap.add_argument("--location", help="Show user's location (Experimental).")
 	ap.add_argument("-l", "--lang", help="Serch for Tweets in a specific language")
 	ap.add_argument("-o", "--output", help="Save output to a file.")
 	ap.add_argument("-es", "--elasticsearch", help="Index to Elasticsearch")
