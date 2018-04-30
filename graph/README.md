@@ -6,6 +6,7 @@ Under `Graph` directory there is the source code of the `Twint OSINT Explorer`, 
 
 ## Install
 #### Dependencies
+- NodeJS
 `libsqlite3-dev libxss1 libx11-xcb-dev libxtst-dev libgconf-2-4 libnss3 libasound-dev`
 
 ### Debian/Ubuntu Based Systems
