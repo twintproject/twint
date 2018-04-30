@@ -70,7 +70,7 @@ def options():
 	ap.add_argument("-s", "--search", help="Search for Tweets containing this word or phrase.")
 	ap.add_argument("-g", "--geo", help="Search for geocoded tweets.")
 	ap.add_argument("--near", help="Near a specified city.")
-	ap.add_argument("--location", help="Show user's location (Experimental).")
+	ap.add_argument("--location", help="Show user's location (Experimental).", action="store_true")
 	ap.add_argument("-l", "--lang", help="Serch for Tweets in a specific language")
 	ap.add_argument("-o", "--output", help="Save output to a file.")
 	ap.add_argument("-es", "--elasticsearch", help="Index to Elasticsearch")
