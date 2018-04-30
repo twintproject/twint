@@ -4,10 +4,37 @@
 
 Under `Graph` directory there is the source code of the `Twint OSINT Explorer`, the compiled version will be provided.
 
-## Initial Setup
-First of all you have to run a couple of commands:
-1. `npm install`;
-2. Now you should install `sqlite3` package, running `npm install sqlite3` might not work all the times so I compiled it and uploaded in `graph/sqlite3` so you don't have to get into troubles, everything you need to do is just to copy `sqlite3` in `node_modules` dir;
+## Install
+#### Dependencies
+`libsqlite3-dev libxss1 libx11-xcb-dev libxtst-dev libgconf-2-4 libnss3 libasound-dev`
+
+### Debian/Ubuntu Based Systems
+```
+chmod +x install.sh
+./install.sh
+```
+
+### Docker
+In this directory run:
+```
+docker build .
+xhost local:root
+docker run --name twint -v /tmp/.X11-unix:/tmp/.X11-unix -v $(PWD)/data:/data/data -e DISPLAY=unix$DISPLAY --rm <image>
+```
+
+### Other
+Steps:
+1. `Install node-sqlite3` - I recommend building this from source by doing the following:
+```
+git clone git clone https://github.com/mapbox/node-sqlite3.git
+cd node-sqlite3
+npm install --build-from-source
+```
+or you can run
+```
+npm install sqlite3
+```
+2. `npm install` - In this directory
 3. To start `Twint OSINT Explorer` just run `npm start .` 
 
 ## Descrption
