@@ -2,6 +2,7 @@ from . import datelock, db, get, feed, output
 from bs4 import BeautifulSoup
 import aiohttp
 import asyncio
+import concurrent.futures
 import datetime
 import re
 import sys
@@ -60,16 +61,16 @@ class Search:
 						for tweet in self.feed:
 							self.count += 1
 							link = tweet.find("a", "tweet-timestamp js-permalink js-nav js-tooltip")["href"]
-							url = "https://twitter.com{}".format(link)
-							futures.append(loop.run_in_executor(executor, await get.Tweet(url, self.config, self.conn))
+							url = "https:/twitter.com{}".format(link)
+							futures.append(loop.run_in_executor(executor, await get.Tweet(url, self.config, self.conn)))
 						
 						await asyncio.gather(*futures)
 				except:
 					pass
-			else:	
+			else:   
 				for tweet in self.feed:
 					self.count += 1
-					await output.Tweets(tweet, self.config, self.conn)
+					await output.Tweets(tweet, "", self.config, self.conn)
 		else:
 			self.initial = 0
 
