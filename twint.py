@@ -74,7 +74,7 @@ def options():
 	ap.add_argument("-l", "--lang", help="Serch for Tweets in a specific language")
 	ap.add_argument("-o", "--output", help="Save output to a file.")
 	ap.add_argument("-es", "--elasticsearch", help="Index to Elasticsearch")
-	ap.add_argument("-t", "--timedelta", help="Time intervall for every request")
+	ap.add_argument("-t", "--timedelta", help="Time interval for every request")
 	ap.add_argument("--year", help="Filter Tweets before specified year.")
 	ap.add_argument("--since", help="Filter Tweets sent since date (Example: 2017-12-27).")
 	ap.add_argument("--until", help="Filter Tweets sent until date (Example: 2017-12-27).")
