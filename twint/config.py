@@ -3,6 +3,8 @@ class Config:
 	User_id = None
 	Search = None
 	Geo = None
+	Location = False
+	Near = None
 	Lang = None
 	Output = None
 	Elasticsearch = None
