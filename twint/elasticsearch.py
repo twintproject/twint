@@ -50,7 +50,8 @@ def Elastic(Tweet, config):
 				"user_id": Tweet.user_id,
 				"username": Tweet.username,
 				"day": day,
-				"hour": Tweet.time.strftime("%H")
+				"hour": Tweet.time.strftime("%H"),
+				"link": Tweet.link
 				}
 			}
 
@@ -73,7 +74,8 @@ def Elastic(Tweet, config):
 					"user_id": Tweet.user_id,
 					"username": Tweet.username,
 					"day": day,
-					"hour": Tweet.time.strftime("%H")
+					"hour": Tweet.time.strftime("%H"),
+					"link": Tweet.link
 					}
 				}
 
@@ -97,7 +99,8 @@ def Elastic(Tweet, config):
 						"user_id": Tweet.user_id,
 						"username": Tweet.username,
 						"day": day,
-						"hour": Tweet.time.strftime("%H")
+						"hour": Tweet.time.strftime("%H"),
+						"link": Tweet.link
 					}
 				}
 
@@ -121,7 +124,8 @@ def Elastic(Tweet, config):
 					"user_id": Tweet.user_id,
 					"username": Tweet.username,
 					"day": day,
-					"hour": Tweet.time.strftime("%H")
+					"hour": Tweet.time.strftime("%H"),
+					"link": Tweet.link
 					}
 				}
 
