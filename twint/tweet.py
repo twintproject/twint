@@ -12,3 +12,4 @@ class Tweet:
 	likes = "0"
 	retweets = "0"
 	hashtags = ""
+	location = ""
