@@ -46,6 +46,7 @@ def Elastic(Tweet, config):
 				"timezone": Tweet.timezone,
 				"tweet": Tweet.tweet,
 				"hashtags": Tweet.hashtags,
+				"user_id": Tweet.user_id,
 				"username": Tweet.username,
 				"day": day,
 				"hour": Tweet.time.strftime("%H")
@@ -67,6 +68,7 @@ def Elastic(Tweet, config):
 					"tweet": Tweet.tweet,
 					"hashtags": Tweet.hashtags,
 					"likes": True,
+					"user_id": Tweet.user_id,
 					"username": Tweet.username,
 					"day": day,
 					"hour": Tweet.time.strftime("%H")
@@ -89,6 +91,7 @@ def Elastic(Tweet, config):
 						"tweet": Tweet.tweet,
 						"hashtags": Tweet.hashtags,
 						"replies": True,
+						"user_id": Tweet.user_id,
 						"username": Tweet.username,
 						"day": day,
 						"hour": Tweet.time.strftime("%H")
@@ -111,6 +114,7 @@ def Elastic(Tweet, config):
 					"tweet": Tweet.tweet,
 					"hashtags": Tweet.hashtags,
 					"retweets": True,
+					"user_id": Tweet.user_id,
 					"username": Tweet.username,
 					"day": day,
 					"hour": Tweet.time.strftime("%H")
