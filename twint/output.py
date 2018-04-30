@@ -27,7 +27,8 @@ def writeCSV(Tweet, file):
 			Tweet.retweets,
 			Tweet.likes,
 			Tweet.location,
-			",".join(Tweet.hashtags)]
+			",".join(Tweet.hashtags),
+			Tweet.link]
 	with open(file, "a", newline='', encoding="utf-8") as csv_file:
 		writer = csv.writer(csv_file, quoting=csv.QUOTE_ALL, delimiter=",")
 		writer.writerow(data)
@@ -45,7 +46,8 @@ def writeJSON(Tweet, file):
 			"retweets": Tweet.retweets,
 			"likes": Tweet.likes,
 			"location": Tweet.location,
-			"hashtags": ",".join(Tweet.hashtags)}
+			"hashtags": ",".join(Tweet.hashtags),
+			"link": Tweet.link}
 	with open(file, "a", newline='', encoding="utf-8") as json_file:
 		json.dump(data, json_file)
 		json_file.write("\n")
@@ -111,6 +113,7 @@ def getTweet(tw, location, config):
 	t.replies = getStat(tw, "reply")
 	t.retweets = getStat(tw, "retweet")
 	t.likes = getStat(tw, "favorite")
+	t.link = "https://twitter.com/{0.username}/status/{0.id}/".format(t)
 	return t
 
 async def getUser(user):
@@ -145,6 +148,7 @@ async def Tweets(tw, location, config, conn):
 			output = output.replace("{replies}", Tweet.replies)
 			output = output.replace("{retweets}", Tweet.retweets)
 			output = output.replace("{likes}", Tweet.likes)
+			output = output.replace("{link}", Tweet.link)
 		else:
 			output = "{} {} {} {} <{}> {}".format(Tweet.id, Tweet.datestamp, Tweet.timestamp, Tweet.timezone, Tweet.username, Tweet.tweet)
 			if config.Show_hashtags:
