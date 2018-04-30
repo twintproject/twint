@@ -26,6 +26,7 @@ def writeCSV(Tweet, file):
 			Tweet.replies,
 			Tweet.retweets,
 			Tweet.likes,
+			Tweet.location,
 			",".join(Tweet.hashtags)]
 	with open(file, "a", newline='', encoding="utf-8") as csv_file:
 		writer = csv.writer(csv_file, delimiter="|")
@@ -43,6 +44,7 @@ def writeJSON(Tweet, file):
 			"replies": Tweet.replies,
 			"retweets": Tweet.retweets,
 			"likes": Tweet.likes,
+			"location": Tweet.location,
 			"hashtags": ",".join(Tweet.hashtags)}
 	with open(file, "a", newline='', encoding="utf-8") as json_file:
 		json.dump(data, json_file)
@@ -87,7 +89,7 @@ def getMentions(tweet, text):
 	return text
 
 # Sort HTML
-def getTweet(tw, config):
+def getTweet(tw, location, config):
 	t = Tweet()
 	t.id = tw.find("div")["data-item-id"]
 	t.date = getDate(tw)
@@ -104,6 +106,7 @@ def getTweet(tw, config):
 	for img in tw.findAll("img", "Emoji Emoji--forText"):
 		img.replaceWith("<{}>".format(img['aria-label']))
 	t.tweet = getMentions(tw, getText(tw))
+	t.location = location
 	t.hashtags = getHashtags(t.tweet)
 	t.replies = getStat(tw, "reply")
 	t.retweets = getStat(tw, "retweet")
@@ -115,10 +118,10 @@ async def getUser(user):
 	u.name = user.find("a")["name"]
 	return u
 
-async def Tweets(tw, config, conn):
+async def Tweets(tw, location, config, conn):
 	copyright = tw.find("div", "StreamItemContent--withheld")
 	if copyright is None:
-		Tweet = getTweet(tw, config)
+		Tweet = getTweet(tw, location, config)
 
 		if config.Database:
 			db.tweets(conn, Tweet)
@@ -137,6 +140,7 @@ async def Tweets(tw, config, conn):
 			output = output.replace("{username}", Tweet.username)
 			output = output.replace("{timezone}", Tweet.timezone)
 			output = output.replace("{tweet}", Tweet.tweet)
+			output = output.replace("{location}", Tweet.location)
 			output = output.replace("{hashtags}", str(Tweet.hashtags))
 			output = output.replace("{replies}", Tweet.replies)
 			output = output.replace("{retweets}", Tweet.retweets)
@@ -147,6 +151,8 @@ async def Tweets(tw, config, conn):
 				output+= " {}".format(",".join(Tweet.hashtags))
 			if config.Stats:
 				output+= " | {} replies {} retweets {} likes".format(Tweet.replies, Tweet.retweets, Tweet.likes)
+			if config.Location:
+				output+= " | Location {}".format(Tweet.location)
 
 		if config.Output != None:
 			if config.Store_csv:
