@@ -9,9 +9,11 @@ def init(db):
 			CREATE TABLE IF NOT EXISTS
 				tweets (
 					id integer primary key,
+					user_id integer,
 					date text not null,
 					time text not null,
 					timezone text not null,
+					location text not null,
 					user text not null,
 					tweet text not null,
 					replies integer,
@@ -89,10 +91,12 @@ def followers(conn, user, follow):
 def tweets(conn, Tweet):
 	try:
 		cursor = conn.cursor()
-		entry = (Tweet.id, 
+		entry = (Tweet.id,
+			 	Tweet.user_id,
 				Tweet.datestamp,
 				Tweet.timestamp,
 				Tweet.timezone,
+			 	Tweet.location,
 				Tweet.username,
 				Tweet.tweet,
 				Tweet.replies,
