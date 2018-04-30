@@ -52,9 +52,24 @@ class Search:
 	async def tweets(self):
 		await self.Feed()
 		if self.initial != -1: # Temporary fix
-			for tweet in self.feed:
-				self.count += 1
-				await output.Tweets(tweet, self.config, self.conn)
+			if self.config.Location:
+				try:
+					with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+						loop = asyncio.get_event_loop()
+						futures = []
+						for tweet in self.feed:
+							self.count += 1
+							link = tweet.find("a", "tweet-timestamp js-permalink js-nav js-tooltip")["href"]
+							url = "https://twitter.com{}".format(link)
+							futures.append(loop.run_in_executor(executor, await get.Tweet(url, self.config, self.conn))
+						
+						await asyncio.gather(*futures)
+				except:
+					pass
+			else:	
+				for tweet in self.feed:
+					self.count += 1
+					await output.Tweets(tweet, self.config, self.conn)
 		else:
 			self.initial = 0
 
