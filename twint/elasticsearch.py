@@ -24,7 +24,7 @@ def weekday(day):
 			"Sunday": 7,
 			}
 
-	return weekday[day]
+	return weekdays[day]
 
 def Elastic(Tweet, config):
 	# Todo play around with this some more
