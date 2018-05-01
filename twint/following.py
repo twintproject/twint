@@ -40,10 +40,10 @@ class Following:
 		for f in self.feed:
 			User = await output.getUser(f)
 			if self.config.Database:
-				db.following(self.conn, self.config.Username, output)
+				db.following(self.conn, self.config.Username, User.name)
 
 			if self.config.Output != None:
-				output.Write(User.name, self.config.Output)
+				output.write(User.name, self.config.Output)
 			
 			self.count += 1
 			print(User.name)
