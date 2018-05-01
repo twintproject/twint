@@ -40,7 +40,7 @@ class Followers:
 		for f in self.feed:
 			User = await output.getUser(f)
 			if self.config.Database:
-				db.followers(self.conn, self.config.Username, output)
+				db.followers(self.conn, self.config.Username, User.name)
 			
 			if self.config.Output != None:
 				output.write(User.name, self.config.Output)
