@@ -74,7 +74,7 @@ def following(conn, user, follow):
 		date_time = str(datetime.datetime.now())
 		cursor = conn.cursor()
 		entry = (user, date_time, follow,)
-		cursor.execute('INSERT INTO following VALUE(?,?,?)', entry)
+		cursor.execute('INSERT INTO following VALUES(?,?,?)', entry)
 		conn.commit()
 	except sqlite3.IntegrityError:
 		pass
