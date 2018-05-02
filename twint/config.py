@@ -15,6 +15,7 @@ class Config:
 	Fruit = False
 	Verified = False
 	Store_csv = False
+	Custom_csv = None
 	Store_json = False
 	Show_hashtags = False
 	Tweets_only = False
