@@ -15,22 +15,9 @@ import time
 def write(entry, f):
 	print(entry, file=open(f, "a", encoding="utf-8"))
 
-def writeCSV(Tweet, file):
-	fieldnames = [
-				"id",
-				"date",
-				"time",
-				"timezone",
-				"user_id",
-				"username",
-				"tweet",
-				"replies",
-				"retweets",
-				"likes",
-				"location",
-				"hashtags",
-				"link"]
-	row = {
+def writeCSV(Tweet, config):
+
+	data = {
 			"id": Tweet.id,
 			"date": Tweet.datestamp,
 			"time": Tweet.timestamp,
@@ -45,11 +32,36 @@ def writeCSV(Tweet, file):
 			"hashtags": Tweet.hashtags,
 			"link": Tweet.link
 			}
-	if not (os.path.exists(file)):
-		with open(file, "w", newline='', encoding="utf-8") as csv_file:
+
+	if config.Custom_csv:
+		fieldnames = config.Custom_csv
+		row = {}
+		for f in fieldnames:
+			row[f] = data[f]
+	else:
+		fieldnames = [
+			"id",
+			"date",
+			"time",
+			"timezone",
+			"user_id",
+			"username",
+			"tweet",
+			"replies",
+			"retweets",
+			"likes",
+			"location",
+			"hashtags",
+			"link"
+		]
+
+		row = data
+
+	if not (os.path.exists(config.Output)):
+		with open(config.Output, "w", newline='', encoding="utf-8") as csv_file:
 			writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 			writer.writeheader()
-	with open(file, "a", newline='', encoding="utf-8") as csv_file:
+	with open(config.Output, "a", newline='', encoding="utf-8") as csv_file:
 			writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 			writer.writerow(row)
 
@@ -180,7 +192,7 @@ async def Tweets(tw, location, config, conn):
 
 		if config.Output != None:
 			if config.Store_csv:
-				writeCSV(Tweet, config.Output)
+				writeCSV(Tweet, config)
 			elif config.Store_json:
 				writeJSON(Tweet, config.Output)
 			else:
