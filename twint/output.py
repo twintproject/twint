@@ -127,10 +127,12 @@ def getTweet(tw, location, config):
 	t = Tweet()
 	t.id = tw.find("div")["data-item-id"]
 	t.date = getDate(tw)
+	'''
 	if config.Since and config.Until:
 		if (t.date.date() - datetime.datetime.strptime(config.Since, "%Y-%m-%d").date()).days == -1:
 		# mitigation here, maybe find something better
 			sys.exit(0)
+	'''
 	t.datestamp = t.date.strftime("%Y-%m-%d")
 	t.time = getTime(tw)
 	t.timestamp = t.time.strftime("%H:%M:%S")
