@@ -134,7 +134,8 @@ def getTweet(tw, location, config):
 	t.id = tw.find("div")["data-item-id"]
 	t.date = getDate(tw)
 	t.datestamp = t.date.strftime("%Y-%m-%d")
-	datecheck(t.datestamp, config)
+	if config.Since and config.Until:
+		datecheck(t.datestamp, config)
 	t.time = getTime(tw)
 	t.timestamp = t.time.strftime("%H:%M:%S")
 	t.user_id = tw.find("a", "account-group js-account-group js-action-profile js-user-profile-link js-nav")["data-user-id"]
