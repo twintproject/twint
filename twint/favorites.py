@@ -49,7 +49,7 @@ class Favorites:
 				for tweet in self.feed:
 					self.count += 1
 					link = tweet.find("a")["href"]
-					url = "https://twitter.com{}".format(link)
+					url = "https://twitter.com{}&lang=en".format(link)
 					futures.append(loop.run_in_executor(executor, await get.Tweet(url, self.config, self.conn)))
 				
 				await asyncio.gather(*futures)
