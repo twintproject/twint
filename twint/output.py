@@ -122,18 +122,19 @@ def getMentions(tweet, text):
 		pass
 	return text
 
+def datecheck(datestamp, config):
+	d = int(datestamp.replace("-", ""))
+	s = int(config.Since.replace("-", ""))
+	if d < s:
+		sys.exit(1)
+
 # Sort HTML
 def getTweet(tw, location, config):
 	t = Tweet()
 	t.id = tw.find("div")["data-item-id"]
 	t.date = getDate(tw)
-	'''
-	if config.Since and config.Until:
-		if (t.date.date() - datetime.datetime.strptime(config.Since, "%Y-%m-%d").date()).days == -1:
-		# mitigation here, maybe find something better
-			sys.exit(0)
-	'''
 	t.datestamp = t.date.strftime("%Y-%m-%d")
+	datecheck(t.datestamp, config)
 	t.time = getTime(tw)
 	t.timestamp = t.time.strftime("%H:%M:%S")
 	t.user_id = tw.find("a", "account-group js-account-group js-action-profile js-user-profile-link js-nav")["data-user-id"]
