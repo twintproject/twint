@@ -11,23 +11,23 @@ class Url:
 
 	async def favorites(self):
 		if self.init == -1:
-			url = "https://mobile.twitter.com/{0.Username}/favorites?".format(self.config)
+			url = "https://mobile.twitter.com/{0.Username}/favorites?lang=en".format(self.config)
 		else:
-			url = "https://mobile.twitter.com/{0.Username}/favorites?max_id={1.init}".format(self.config, self)
+			url = "https://mobile.twitter.com/{0.Username}/favorites?max_id={1.init}&lang=en".format(self.config, self)
 		return url
 
 	async def followers(self):
 		if self.init == -1:
-			url = "https://mobile.twitter.com/{0.Username}/followers?".format(self.config)
+			url = "https://mobile.twitter.com/{0.Username}/followers?lang=en".format(self.config)
 		else:
-			url = "https://mobile.twitter.com/{0.Username}/followers?cursor={1.init}".format(self.config, self)
+			url = "https://mobile.twitter.com/{0.Username}/followers?cursor={1.init}&lang=en".format(self.config, self)
 		return url
 
 	async def following(self):
 		if self.init == -1:
-			url = "https://mobile.twitter.com/{0.Username}/following?".format(self.config)
+			url = "https://mobile.twitter.com/{0.Username}/following?lang=en".format(self.config)
 		else:
-			url = "https://mobile.twitter.com/{0.Username}/following?cursor={1.init}".format(self.config, self)
+			url = "https://mobile.twitter.com/{0.Username}/following?cursor={1.init}&lang=en".format(self.config, self)
 		return url
 	
 	async def search(self):
@@ -80,7 +80,7 @@ async def Response(session, url):
 async def Username(userid):
 	connect = aiohttp.TCPConnector(verify_ssl=False)
 	async with aiohttp.ClientSession(connector=connect) as session:
-		r = await Response(session, "https://twitter.com/intent/user?user_id={}".format(userid))
+		r = await Response(session, "https://twitter.com/intent/user?user_id={}&lang=en".format(userid))
 	soup = BeautifulSoup(r, "html.parser")
 	return soup.find("a", "fn url alternate-context")["href"].replace("/", "")
 
