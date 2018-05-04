@@ -28,3 +28,6 @@ class Config:
 	All = None
 	Debug = False
 	Format = None
+	Proxy_type = None
+	Proxy_host = None
+	Proxy_port = None
