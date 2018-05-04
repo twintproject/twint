@@ -16,7 +16,7 @@ import argparse
 import twint
 import sys
 
-def error():
+def error(error, message):
 	print("[-] {}: {}".format(error, message))
 	sys.exit(0)
 
@@ -32,6 +32,31 @@ def check(args):
 		error("Contradicting Args", "--users and --tweets cannot be used together.")
 	if args.csv and args.output is None:
 		error("Error", "Please specify an output file (Example: -o file.csv).")
+	if args.proxy_host is not None:
+		if args.proxy_host.lower() == "tor":
+			import socks, socket
+			socks.set_default_proxy(socks.SOCKS5, "localhost", 9050)
+			socket.socket = socks.socksocket
+		elif args.proxy_port and args.proxy_type:
+			if args.proxy_type.lower() == "socks5":
+				_type = socks.SOCKS5
+			elif args.proxy_type.lower() == "socks4":
+				_type = socks.SOCKS4
+			elif args.proxy_type.lower() == "http":
+				_type = socks.HTTP
+			else:
+				error("Error", "Proxy type allower are: socks5, socks4 and http.")
+			import socks, socket
+			socks.set_default_proxy(_type, args.proxy_host, int(args.proxy_port))
+			socket.socket = socks.socksocket
+		else:
+			error("Error", "Please specify --proxy-host, --proxy-port and --proxy-type")
+	else:
+		if args.proxy_port or args.proxy_type:
+			error("Error", "Please specify --proxy-host, --proxy-port and --proxy-type")
+
+
+
 
 def initialize(args):
 	c = twint.Config()
@@ -62,6 +87,9 @@ def initialize(args):
 	c.To = args.to
 	c.All = args.all
 	c.Debug = args.debug
+	c.Proxy_type = args.proxy_type
+	c.Proxy_host = args.proxy_host
+	c.Proxy_port = args.proxy_port
 	return c
 
 def options():
@@ -96,6 +124,9 @@ def options():
 	ap.add_argument("--following", help="Scrape who a person follows.", action="store_true")
 	ap.add_argument("--favorites", help="Scrape Tweets a user has liked.", action="store_true")
 	ap.add_argument("--debug", help="Debug mode", action="store_true")
+	ap.add_argument("--proxy-type", help="Socks5, HTTP, etc.")
+	ap.add_argument("--proxy-host", help="Proxy hostname or IP")
+	ap.add_argument("--proxy-port", help="The port of the proxy server")
 	args = ap.parse_args()
 	return args
 
