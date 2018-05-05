@@ -3,3 +3,4 @@ aiodns
 beautifulsoup4
 cchardet
 elasticsearch
+pysocks
