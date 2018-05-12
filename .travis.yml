@@ -14,4 +14,4 @@ install:
 
 # Test
 script: 
-- python twint.py -u now -s pineapple --since 2018-01-22 --until 2018-01-23
+- python Twint.py -u now -s pineapple --since 2018-01-22 --until 2018-01-23
