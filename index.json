@@ -5,7 +5,6 @@ PUT twint
       "properties": {
         "id": {"type": "long"},
         "date": {"type": "date", "format": "yyyy-MM-dd HH:mm:ss"},
-        "time": {"type": "text"},
         "timezone": {"type": "text"},
         "location": {"type": "text"},
         "hashtags": {"type": "text"},
