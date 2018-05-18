@@ -34,15 +34,16 @@ def Elastic(Tweet, config):
 	nLikes = 0
 	nReplies = 0
 	nRetweets = 0
-
+	
+	dt = "{} {}".format(Tweet.datestamp, Tweet.timestamp)
+	
 	j_data = {
 			"_index": "twint",
 			"_type": "items",
 			"_id": Tweet.id + "_raw",
 			"_source": {
 				"id": Tweet.id,
-				"date": Tweet.datestamp,
-				"time": Tweet.timestamp,
+				"date": dt,
 				"timezone": Tweet.timezone,
 				"location": Tweet.location,
 				"tweet": Tweet.tweet,
@@ -64,8 +65,7 @@ def Elastic(Tweet, config):
 				"_id": Tweet.id + "_likes_" + str(nLikes),
 				"_source": {
 					"id": Tweet.id,
-					"date": Tweet.datestamp,
-					"time": Tweet.timestamp,
+					"date": dt,
 					"timezone": Tweet.timezone,
 					"location": Tweet.location,
 					"tweet": Tweet.tweet,
@@ -89,8 +89,7 @@ def Elastic(Tweet, config):
 				"_id": Tweet.id + "_replies_" + str(nReplies),
 				"_source": {
 						"id": Tweet.id,
-						"date": Tweet.datestamp,
-						"time": Tweet.timestamp,
+						"date": dt,
 						"timezone": Tweet.timezone,
 						"location": Tweet.location,
 						"tweet": Tweet.tweet,
@@ -114,8 +113,7 @@ def Elastic(Tweet, config):
 				"_id": Tweet.id + "_retweets_" + str(nRetweets),
 				"_source": {
 					"id": Tweet.id,
-					"date": Tweet.datestamp,
-					"time": Tweet.timestamp,
+					"date": dt,
 					"timezone": Tweet.timezone,
 					"location": Tweet.location,
 					"tweet": Tweet.tweet,
