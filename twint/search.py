@@ -39,7 +39,8 @@ class Search:
 
 	async def Feed(self):
 		connect = aiohttp.TCPConnector(verify_ssl=False)
-		async with aiohttp.ClientSession(connector=connect) as session:
+		ua = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/66.0.3359.139 Chrome/66.0.3359.139 Safari/537.36'}
+		async with aiohttp.ClientSession(headers=ua, connector=connect) as session:
 			response = await get.Response(session, await get.Url(self.config, self.init).search())
 		self.feed = []
 		try:
