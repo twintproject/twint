@@ -1,4 +1,4 @@
-from . import feed, get, db, output
+from . import feed, get, db, output, elasticsearch
 from bs4 import BeautifulSoup
 import aiohttp
 import asyncio
@@ -44,6 +44,9 @@ class Following:
 
 			if self.config.Output != None:
 				output.write(User.name, self.config.Output)
+			
+			if self.config.Elasticsearch:
+				elasticsearch.Follow(self.config.Elasticsearch, self.config.Username, User.name, self.config.Essid)
 			
 			self.count += 1
 			print(User.name)

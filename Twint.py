@@ -15,6 +15,7 @@ Copyright (c) 2018 Cody Zacharias
 import argparse
 import twint
 import sys
+import os
 
 def error(error, message):
 	print("[-] {}: {}".format(error, message))
@@ -45,7 +46,7 @@ def check(args):
 			elif args.proxy_type.lower() == "http":
 				_type = socks.HTTP
 			else:
-				error("Error", "Proxy type allower are: socks5, socks4 and http.")
+				error("Error", "Proxy type allowed are: socks5, socks4 and http.")
 			import socks, socket
 			socks.set_default_proxy(_type, args.proxy_host, int(args.proxy_port))
 			socket.socket = socks.socksocket
@@ -55,7 +56,15 @@ def check(args):
 		if args.proxy_port or args.proxy_type:
 			error("Error", "Please specify --proxy-host, --proxy-port and --proxy-type")
 
-
+def loadUserList(ul):
+	if not isinstance(ul, str):
+		userlist = open(ul, "r").readline()
+	else:
+		userlist = ul.split(",")
+	un = ""
+	for user in userlist:
+		un += "%20OR%20from%3A" + user
+	return un[15:]
 
 
 def initialize(args):
@@ -90,6 +99,8 @@ def initialize(args):
 	c.Proxy_type = args.proxy_type
 	c.Proxy_host = args.proxy_host
 	c.Proxy_port = args.proxy_port
+	c.Essid = args.essid
+	c.Userlist = args.userlist
 	return c
 
 def options():
@@ -125,14 +136,21 @@ def options():
 	ap.add_argument("--favorites", help="Scrape Tweets a user has liked.", action="store_true")
 	ap.add_argument("--debug", help="Debug mode", action="store_true")
 	ap.add_argument("--proxy-type", help="Socks5, HTTP, etc.")
-	ap.add_argument("--proxy-host", help="Proxy hostname or IP")
-	ap.add_argument("--proxy-port", help="The port of the proxy server")
+	ap.add_argument("--proxy-host", help="Proxy hostname or IP.")
+	ap.add_argument("--proxy-port", help="The port of the proxy server.")
+	ap.add_argument("--essid", help="Elasticsearch Session ID, use this to differentiate scraping sessions.")
+	ap.add_argument("--userlist", help="Userlist from list or file.")
 	args = ap.parse_args()
 	return args
 
 def main():
 	args = options()
 	check(args)
+
+	if args.userlist:
+		args.username = loadUserList(args.userlist)
+		print(args.username)
+	
 	c = initialize(args)
 
 	if args.favorites:
