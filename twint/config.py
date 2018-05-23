@@ -31,3 +31,5 @@ class Config:
 	Proxy_type = None
 	Proxy_host = None
 	Proxy_port = None
+	Essid = None
+	Userlist = None

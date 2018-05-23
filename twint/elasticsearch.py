@@ -2,9 +2,11 @@ from elasticsearch import Elasticsearch, helpers
 import contextlib
 import datetime
 import time
+import sys
 
 class RecycleObject(object):
 	def write(self, junk): pass
+	def flush(self): pass
 
 @contextlib.contextmanager
 def nostdout():
@@ -26,7 +28,7 @@ def weekday(day):
 
 	return weekdays[day]
 
-def Elastic(Tweet, config):
+def Tweet(Tweet, es, session):
 	# Todo play around with this some more
 	day = weekday(Tweet.date.strftime("%A"))
 	 
@@ -40,7 +42,7 @@ def Elastic(Tweet, config):
 	j_data = {
 			"_index": "twint",
 			"_type": "items",
-			"_id": Tweet.id + "_raw",
+			"_id": Tweet.id + "_raw_" + session,
 			"_source": {
 				"id": Tweet.id,
 				"date": dt,
@@ -52,7 +54,8 @@ def Elastic(Tweet, config):
 				"username": Tweet.username,
 				"day": day,
 				"hour": Tweet.time.strftime("%H"),
-				"link": Tweet.link
+				"link": Tweet.link,
+				"essid": session
 				}
 			}
 
@@ -62,7 +65,7 @@ def Elastic(Tweet, config):
 		j_data = {
 				"_index": "twint",
 				"_type": "items",
-				"_id": Tweet.id + "_likes_" + str(nLikes),
+				"_id": Tweet.id + "_likes_" + str(nLikes) + "_" + session,
 				"_source": {
 					"id": Tweet.id,
 					"date": dt,
@@ -75,7 +78,8 @@ def Elastic(Tweet, config):
 					"username": Tweet.username,
 					"day": day,
 					"hour": Tweet.time.strftime("%H"),
-					"link": Tweet.link
+					"link": Tweet.link,
+					"essid": session
 					}
 				}
 
@@ -86,7 +90,7 @@ def Elastic(Tweet, config):
 		j_data = {
 				"_index": "twint",
 				"_type": "items",
-				"_id": Tweet.id + "_replies_" + str(nReplies),
+				"_id": Tweet.id + "_replies_" + str(nReplies) + "_" + session,
 				"_source": {
 						"id": Tweet.id,
 						"date": dt,
@@ -99,7 +103,8 @@ def Elastic(Tweet, config):
 						"username": Tweet.username,
 						"day": day,
 						"hour": Tweet.time.strftime("%H"),
-						"link": Tweet.link
+						"link": Tweet.link,
+						"essid": session
 					}
 				}
 
@@ -110,7 +115,7 @@ def Elastic(Tweet, config):
 		j_data = {
 				"_index": "twint",
 				"_type": "items",
-				"_id": Tweet.id + "_retweets_" + str(nRetweets),
+				"_id": Tweet.id + "_retweets_" + str(nRetweets) + "_" + session,
 				"_source": {
 					"id": Tweet.id,
 					"date": dt,
@@ -123,14 +128,36 @@ def Elastic(Tweet, config):
 					"username": Tweet.username,
 					"day": day,
 					"hour": Tweet.time.strftime("%H"),
-					"link": Tweet.link
+					"link": Tweet.link,
+					"essid": session
 					}
 				}
 
 		actions.append(j_data)
 		nRetweets += 1
 
-	es = Elasticsearch(config.Elasticsearch)
+	es = Elasticsearch(es)
+	with nostdout():
+		helpers.bulk(es, actions, chunk_size=2000, request_timeout=200)
+	actions = []
+
+def Follow(es, user, follow, session):
+	actions = []
+
+	j_data = {
+			"_index": "twintgraph2",
+			"_type": "items",
+			"_id": user + "_" + follow + "_" + session,
+			"_source": {
+				"user": user,
+				"follow": follow,
+				"essid": session
+			}
+	}
+
+	actions.append(j_data)
+
+	es = Elasticsearch(es)
 	with nostdout():
 		helpers.bulk(es, actions, chunk_size=2000, request_timeout=200)
 	actions = []
