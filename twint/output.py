@@ -165,7 +165,7 @@ async def Tweets(tw, location, config, conn):
 		if config.Database:
 			db.tweets(conn, Tweet)
 		if config.Elasticsearch:
-			elasticsearch.Elastic(Tweet, config)
+			elasticsearch.Tweet(Tweet, config.Elasticsearch, config.Essid)
 				
 		if config.Users_only:
 			output = Tweet.username
