@@ -39,7 +39,7 @@ class Search:
 
 	async def Feed(self):
 		connect = aiohttp.TCPConnector(verify_ssl=False)
-		if self.init == -1
+		if self.init == -1:
 			ua = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/66.0.3359.139 Chrome/66.0.3359.139 Safari/537.36'}
 		else:
 			ua = ""
