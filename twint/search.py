@@ -40,7 +40,7 @@ class Search:
 	async def Feed(self):
 		connect = aiohttp.TCPConnector(verify_ssl=False)
 		if self.init == -1:
-			ua = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/66.0.3359.139 Chrome/66.0.3359.139 Safari/537.36'}
+			ua = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0'}
 		else:
 			ua = ""
 		async with aiohttp.ClientSession(headers=ua, connector=connect) as session:
