@@ -78,7 +78,9 @@ Details on setting up Elasticsearch with Twint is located in the [wiki](https://
 ### Graph Visualization
 ![graph](https://i.imgur.com/EEJqB8n.png)
 
-[Graph](https://github.com/haccer/twint/tree/master/graph) details are also located in the [wiki](https://github.com/haccer/twint/wiki/Graph).
+[Graph](https://github.com/haccer/twint/tree/master/graph) details are also located in the [wiki](https://github.com/haccer/twint/wiki/Graph). 
+
+We are testing a (free) graph plugin for Kibana, details located in the Wiki!
 
 ## Thanks
 Thanks to [@hpiedcoq](https://github.com/hpiedcoq) & [@pielco11](https://github.com/pielco11) for contributing several features!
