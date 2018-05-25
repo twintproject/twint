@@ -57,8 +57,8 @@ def check(args):
 			error("Error", "Please specify --proxy-host, --proxy-port and --proxy-type")
 
 def loadUserList(ul):
-	if os.path.isfile(ul):
-		userlist = open(ul, "r").read().splitlines()
+	if os.path.exists(os.path.abspath(ul)):
+		userlist = open(os.path.abspath(ul), "r").read().splitlines()
 	else:
 		userlist = ul.split(",")
 	un = ""
