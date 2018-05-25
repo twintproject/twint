@@ -58,7 +58,7 @@ def check(args):
 
 def loadUserList(ul):
 	if os.path.isfile(ul):
-		userlist = open(ul, "r").readline()
+		userlist = open(ul, "r").read().splitlines()
 	else:
 		userlist = ul.split(",")
 	un = ""
@@ -149,7 +149,6 @@ def main():
 
 	if args.userlist:
 		args.username = loadUserList(args.userlist)
-		print(args.username)
 	
 	c = initialize(args)
 
