@@ -29,7 +29,8 @@ def writeCSV(Tweet, config):
             "hashtags": Tweet.hashtags,
             "link": Tweet.link,
             "retweet": Tweet.is_retweet,
-            "user_rt": Tweet.user_rt
+            "user_rt": Tweet.user_rt,
+            "mentions": Tweet.mentions,
             }
 
     if config.Custom_csv:
@@ -53,7 +54,8 @@ def writeCSV(Tweet, config):
                 "hashtags",
                 "link",
                 "retweet",
-                "user_rt"
+                "user_rt",
+                "mentions",
                 ]
         row = data
 
@@ -82,7 +84,8 @@ def writeJSON(Tweet, file):
             "hashtags": ",".join(Tweet.hashtags),
             "link": Tweet.link,
             "retweet": Tweet.is_retweet,
-            "user_rt": Tweet.user_rt
+            "user_rt": Tweet.user_rt,
+            "mentions": ",".join(Tweet.mentions)
             }
 
     with open(file, "a", newline='', encoding="utf-8") as json_file:
@@ -105,9 +108,14 @@ def getStat(tweet, stat):
     st = "ProfileTweet-action--{} u-hiddenVisually".format(stat)
     return tweet.find("span", st).find("span")["data-tweet-stat-count"]
 
-def getMentions(tweet, text):
+def getMentions(tweet):
     try:
-        mentions = tweet.find("div", "js-original-tweet")["data-mentions"].split(" ")
+        return tweet.find("div", "js-original-tweet")["data-mentions"].split(" ")
+    except:
+        return ""
+
+def textMentions(tweet, mentions, text):
+    try:
         for i in range(len(mentions)):
             mention = "@{}".format(mentions[i])
             if mention not in text:
@@ -141,7 +149,8 @@ def getTweet(tw, location, config):
     t.timezone = strftime("%Z", localtime())
     for img in tw.findAll("img", "Emoji Emoji--forText"):
         img.replaceWith("<{}>".format(img['aria-label']))
-    t.tweet = getMentions(tw, getText(tw))
+    t.mentions = getMentions(tw)
+    t.tweet = textMentions(tw, t.mentions, getText(tw))
     t.location = location
     t.hashtags = getHashtags(t.tweet)
     t.replies = getStat(tw, "reply")
@@ -181,6 +190,7 @@ def getOutput(Tweet, config, conn):
         output = output.replace("{link}", Tweet.link)
         output = output.replace("{is_retweet}", Tweet.is_retweet)
         output = output.replace("{user_rt}", Tweet.user_rt)
+        output = output.replace("{mentions}", Tweet.mentions)
     else:
         output = "{} {} {} {} ".format(Tweet.id, Tweet.datestamp,
                 Tweet.timestamp, Tweet.timezone)
