@@ -188,9 +188,9 @@ def getOutput(Tweet, config, conn):
         output = output.replace("{retweets}", Tweet.retweets)
         output = output.replace("{likes}", Tweet.likes)
         output = output.replace("{link}", Tweet.link)
-        output = output.replace("{is_retweet}", Tweet.is_retweet)
+        output = output.replace("{is_retweet}", str(Tweet.is_retweet))
         output = output.replace("{user_rt}", Tweet.user_rt)
-        output = output.replace("{mentions}", Tweet.mentions)
+        output = output.replace("{mentions}", str(Tweet.mentions))
     else:
         output = "{} {} {} {} ".format(Tweet.id, Tweet.datestamp,
                 Tweet.timestamp, Tweet.timezone)
