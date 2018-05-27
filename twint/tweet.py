@@ -6,6 +6,7 @@ class Tweet:
     timezone = ""
     user_id = ""
     username = ""
+    mentions = ""
     tweet = ""
     replies = "0"
     likes = "0"
