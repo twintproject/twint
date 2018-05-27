@@ -20,17 +20,12 @@ def error(error, message):
 def check(args):
     # Error checking
     if args.username is not None:
-        if args.users:
-            error("Contradicting Args",
-                    "Please use --users in combination with -s.")
         if args.verified:
             error("Contradicting Args",
                     "Please use --verified in combination with -s.")
         if args.userid:
             error("Contradicting Args",
                     "--userid and -u cannot be used together.")
-    if args.tweets and args.users:
-        error("Contradicting Args", "--users and --tweets cannot be used together.")
     if args.csv and args.output is None:
         error("Error", "Please specify an output file (Example: -o file.csv).")
     if args.proxy_host is not None:
@@ -86,8 +81,6 @@ def initialize(args):
     c.Store_csv = args.csv
     c.Store_json = args.json
     c.Show_hashtags = args.hashtags
-    c.Tweets_only = args.tweets
-    c.Users_only = args.users
     c.Limit = args.limit
     c.Count = args.count
     c.Stats = args.stats
@@ -116,10 +109,8 @@ def options():
     ap.add_argument("--since", help="Filter Tweets sent since date (Example: 2017-12-27).")
     ap.add_argument("--until", help="Filter Tweets sent until date (Example: 2017-12-27).")
     ap.add_argument("--fruit", help="Display 'low-hanging-fruit' Tweets.", action="store_true")
-    ap.add_argument("--tweets", help="Display Tweets only.", action="store_true")
     ap.add_argument("--verified", help="Display Tweets only from verified users (Use with -s).", 
             action="store_true")
-    ap.add_argument("--users", help="Display users only (Use with -s).", action="store_true")
     ap.add_argument("--csv", help="Write as .csv file.", action="store_true")
     ap.add_argument("--json", help="Write as .json file", action="store_true")
     ap.add_argument("--hashtags", help="Output hashtags in seperate column.", action="store_true")
