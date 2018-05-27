@@ -162,6 +162,8 @@ def getTweet(tw, location, config):
     if retweet(config, t):
         t.is_retweet = True
         t.user_rt = config.Username
+    else:
+        t.user_rt = "None"
     
     return t
 
