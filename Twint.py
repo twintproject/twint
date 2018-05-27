@@ -58,7 +58,7 @@ def check(args):
 
 def loadUserList(ul):
     if os.path.exists(os.path.abspath(ul)):
-        userlist = open(os.path.abspath(ul), "r".read().splitlines())
+        userlist = open(os.path.abspath(ul), "r").read().splitlines()
     else:
         userlist = ul.split(",")
     un = ""
@@ -96,6 +96,7 @@ def initialize(args):
     c.All = args.all
     #c.Debug = args.debug
     c.Essid = args.essid
+    c.Format = args.format
     return c
 
 def options():
@@ -140,6 +141,7 @@ def options():
     ap.add_argument("--essid", help="Elasticsearch Session ID, use this to differentiate scraping sessions.")
     ap.add_argument("--userlist", help="Userlist from list or file.")
     ap.add_argument("--retweets", help="Include user's Retweets (Warning: limited).", action="store_true")
+    ap.add_argument("--format", help="Custom output format")
     args = ap.parse_args()
     return args
 
