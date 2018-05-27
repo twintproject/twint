@@ -89,7 +89,7 @@ def writeJSON(Tweet, file):
             }
 
     with open(file, "a", newline='', encoding="utf-8") as json_file:
-        json_dump(data, json_file)
+        json.dump(data, json_file)
         json_file.write("\n")
 
 def getText(tweet):
