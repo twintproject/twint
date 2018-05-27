@@ -22,7 +22,8 @@ def init(db):
                     hashtags text,
                     link text
                     retweet bool,
-                    user_rt text
+                    user_rt text,
+                    mentions text
                 );
         """
         cursor.execute(table_tweets)
@@ -111,8 +112,9 @@ def tweets(conn, Tweet):
                     ",".join(Tweet.hashtags),
                     Tweet.link,
                     Tweet.is_retweet,
-                    Tweet.user_rt)
-        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
+                    Tweet.user_rt,
+                    ",".join(Tweet.mentions))
+        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
         conn.commit()
     except sqlite3.IntegrityError:
         pass
