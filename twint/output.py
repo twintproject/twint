@@ -24,6 +24,7 @@ def writeCSV(Tweet, config):
             "username": Tweet.username,
             "tweet": Tweet.tweet,
             "replies": Tweet.replies,
+            "retweets": Tweet.retweets,
             "likes": Tweet.likes,
             "location": Tweet.location,
             "hashtags": Tweet.hashtags,
