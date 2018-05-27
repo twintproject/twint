@@ -170,11 +170,7 @@ async def getUser(user):
     return u
 
 def getOutput(Tweet, config, conn):
-    if config.Users_only:
-        output = Tweet.username
-    elif config.Tweets_only:
-        output = Tweet.tweet
-    elif config.Format:
+    if config.Format:
         output = config.Format.replace("{id}", Tweet.id)
         output = output.replace("{date}", Tweet.datestamp)
         output = output.replace("{time}", Tweet.timestamp)
