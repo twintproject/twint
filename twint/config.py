@@ -18,8 +18,6 @@ class Config:
     Custom_csv = False
     Store_json = False
     Show_hashtags = False
-    Tweets_only = False
-    Users_only = False
     Limit = None
     Count = None
     Stats = False
@@ -28,9 +26,5 @@ class Config:
     All = None
     Debug = False
     Format = None
-    Proxy_type = None
-    Proxy_host = None
-    Proxy_port = None
     Essid = None
-    Userlist = None
     Profile = False
