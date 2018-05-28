@@ -1,3 +1,5 @@
+# Issue Template
+Please use this template!
 
 ### Initial Check 
 > If the issue is a request please specify that it is a request in the title (Example: [REQUEST] more features). If this is a question regarding 'twint' please specify that it's a question in the title (Example: [QUESTION] What is x?). Please **only** submit issues related to 'twint'. Thanks.
@@ -14,5 +16,5 @@
 ### Description of Issue
 >Please use **as much detail as possible.**
 
-### OS Details
->Using Windows, Linux? What OS version?
+### Environment Details
+>Using Windows, Linux? What OS version? Running this in Anaconda? Jupyter Notebook? Terminal?
