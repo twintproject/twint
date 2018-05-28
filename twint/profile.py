@@ -1,7 +1,4 @@
-from . import db, get, feed, output
-import asyncio
-import re
-import sys
+from . import db, get, feed, output, verbose
 
 class Profile:
     def __init__(self, config):
@@ -9,50 +6,41 @@ class Profile:
         self.feed = [-1]
         self.count = 0
         self.config = config
-
+        self.conn = db.Conn(config.Database)
         self.config.Profile = True
 
-        if self.config.Elasticsearch:
-            print("[+] Indexing to Elasticsearch @ " + str(self.config.Elasticsearch))
-
-        if self.config.Database:
-            print("[+] Inserting into Database: " + str(self.config.Database))
-            self.conn = db.init(self.config.Database)
-            if isinstance(self.conn, str):
-                print(str)
-        else:
-            self.conn = ""
-
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.main())
-
+        verbose.Elastic(config)
+        
     async def Feed(self):
-        url = await get.Url(self.config, self.init).profile()
-        response = await get.Request(self.config, url)
+        response = await get.RequestUrl(self.config, self.init)
         self.feed = []
         try:
-            self.feed, self.init = feed.profile(response)
+            if self.config.Profile_full:
+                self.feed, self.init = feed.Mobile(response)
+            else:
+                self.feed, self.init = feed.profile(response)
         except:
             pass
 
     async def tweets(self):
         await self.Feed()
-        for tweet in self.feed:
-            self.count += 1
-            await output.Tweets(tweet, "", self.config, self.conn)
+        if self.config.Profile_full:
+            self.count += await get.Multi(self.feed, self.config, self.conn)
+        else:
+            for tweet in self.feed:
+                self.count += 1
+                await output.Tweets(tweet, "", self.config, self.conn)
 
     async def main(self):
         if self.config.User_id is not None:
-            self.config.Username = await get.Username(self.config)
+            self.config.Username = await get.Username(self.config.User_id)
 
         while True:
             if len(self.feed) > 0:
                 await self.tweets()
+            elif get.Limit(self.config.Limit, self.count):
+                break
             else:
                 break
-            
-            if self.config.Limit is not None and self.count >= int(self.config.Limit):
-                break
 
-        if self.config.Count:
-            print("[+] Finished: Successfully collected {0.count} Tweets from @{0.config.Username}.".format(self))
+        verbose.Count(self.config, self.count)
