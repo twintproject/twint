@@ -1,7 +1,7 @@
 from elasticsearch import Elasticsearch, helpers
+from sys import stdout
+from time import strftime, localtime
 import contextlib
-import time
-import sys
 
 class RecycleObject(object):
     def write(self, junk): pass
@@ -9,10 +9,10 @@ class RecycleObject(object):
 
 @contextlib.contextmanager
 def nostdout():
-    savestdout = sys.stdout
-    sys.stdout = RecycleObject()
+    savestdout = stdout
+    stdout = RecycleObject()
     yield
-    sys.stdout = savestdout
+    stdout = savestdout
 
 def weekdate(day):
     weekdays = {
@@ -28,10 +28,10 @@ def weekdate(day):
     return weekdays[day]
 
 def hour(datetime):
-    return time.strftime("%H", time.localtime(datetime))
+    return strftime("%H", localtime(datetime))
 
 def Tweet(Tweet, es, session):
-    day = weekday(time.strftime("%A", time.localtime(Tweet.datetime)))
+    day = weekday(strftime("%A", localtime(Tweet.datetime)))
 
     actions = []
     nLikes = 0
