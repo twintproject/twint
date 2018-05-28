@@ -15,8 +15,8 @@ class Config:
     Fruit = False
     Verified = False
     Store_csv = False
-    Custom_csv = False
     Store_json = False
+    Custom = False
     Show_hashtags = False
     Limit = None
     Count = None
@@ -28,3 +28,9 @@ class Config:
     Format = None
     Essid = None
     Profile = False
+    Followers = False
+    Following = False
+    Favorites = False
+    TwitterSearch = False
+    User_full = False
+    Profile_full = False
