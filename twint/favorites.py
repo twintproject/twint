@@ -1,8 +1,4 @@
-from . import feed, get, db, output
-import asyncio
-import concurrent.futures
-import re
-import sys
+from . import feed, get, db, output, verbose
 
 class Favorites:
     def __init__(self, config):
@@ -10,62 +6,30 @@ class Favorites:
         self.feed = [-1]
         self.count = 0
         self.config = config
-
-        if self.config.Elasticsearch:
-            print("[+] Indexing to Elasticsearch @ " + str(self.config.Elasticsearch))
-
-        if self.config.Database:
-            print("[+] Inserting into Database: " + str(self.config.Database))
-            self.conn = db.init(self.config.Database)
-            if isinstance(self.conn, str):
-                print(str)
-                sys.exit(1)
-        else:
-            self.conn = ""
-
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.main())
+        self.conn = db.Conn(config.Database)
+        self.config.Favorites = True
+        
+        verbose.Elastic(config)
 
     async def Feed(self):
-        url = await get.Url(self.config, self.init).favorites()
-        response = await get.MobileRequest(self.config, url)
+        response = await get.RequestUrl(self.config, self.init)
         self.feed = []
         try:
-            self.feed, self.init = feed.Favorite(response)
-        except:
-            pass
-
-        return self.feed
-
-    async def favorites(self):
-        await self.Feed()
-        try:
-            with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
-                loop = asyncio.get_event_loop()
-                futures = []
-                for tweet in self.feed:
-                    self.count += 1
-                    link = tweet.find("a")["href"]
-                    url = "https://twitter.com{}&lang=en".format(link)
-                    futures.append(loop.run_in_executor(executor, await get.Tweet(url,
-                        self.config, self.conn)))
-
-                await asyncio.gather(*futures)
+            self.feed, self.init = feed.Mobile(response)
         except:
             pass
 
     async def main(self):
         if self.config.User_id is not None:
-            self.config.Username = await get.Username(self.config)
+            self.config.Username = await get.Username(self.config.User_id)
         
         while True:
             if len(self.feed) > 0:
-                await self.favorites()
+                await self.Feed()
+                self.count += await get.Multi(self.feed, self.config, self.conn)
+            elif get.Limit(self.config.Limit, self.count):
+                break
             else:
                 break
-
-            if self.config.Limit is not None and self.count >= int(self.config.Limit):
-                break
-
-        if self.config.Count:
-            print("[+] Finished: Successfully collected {0.count} Tweets that @{0.config.Username} liked.".format(self))
+        
+        verbose.Count(self.config, self.count)
