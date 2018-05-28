@@ -26,8 +26,17 @@ def check(args):
         if args.userid:
             error("Contradicting Args",
                     "--userid and -u cannot be used together.")
-    if args.csv and args.output is None:
-        error("Error", "Please specify an output file (Example: -o file.csv).")
+    if args.output is None:
+        if args.csv:
+            error("Error", "Please specify an output file (Example: -o file.csv).")
+        elif args.json:
+            error("Error", "Please specify an output file (Example: -o file.json).")
+    
+    if not args.followers and not args.following:
+        if args.user_full:
+            error("Error", "Please use --user-full with --followers or --following.")
+
+    # Proxy stuff
     if args.proxy_host is not None:
         if args.proxy_host.lower() == "tor":
             import socks, socket
@@ -87,9 +96,10 @@ def initialize(args):
     c.Database = args.database
     c.To = args.to
     c.All = args.all
-    #c.Debug = args.debug
     c.Essid = args.essid
     c.Format = args.format
+    c.User_full = args.user_full
+    c.Profile_full = args.profile_full
     return c
 
 def options():
@@ -125,14 +135,18 @@ def options():
     ap.add_argument("--followers", help="Scrape a person's followers.", action="store_true")
     ap.add_argument("--following", help="Scrape a person's follows", action="store_true")
     ap.add_argument("--favorites", help="Scrape Tweets a user has liked.", action="store_true")
-    # ap.add_argument("--debug", help="Debug mode", action="store_true")
     ap.add_argument("--proxy-type", help="Socks5, HTTP, etc.")
     ap.add_argument("--proxy-host", help="Proxy hostname or IP.")
     ap.add_argument("--proxy-port", help="The port of the proxy server.")
     ap.add_argument("--essid", help="Elasticsearch Session ID, use this to differentiate scraping sessions.")
     ap.add_argument("--userlist", help="Userlist from list or file.")
     ap.add_argument("--retweets", help="Include user's Retweets (Warning: limited).", action="store_true")
-    ap.add_argument("--format", help="Custom output format")
+    ap.add_argument("--format", help="Custom output format (See wiki for details).")
+    ap.add_argument("--user-full", help="Collect all user information (Use with followers or following only).",
+            action="store_true")
+    ap.add_argument("--profile-full", 
+            help="Slow, but effective method of collecting a user's Tweets (Including Retweets).",
+            action="store_true")
     args = ap.parse_args()
     return args
 
@@ -146,15 +160,15 @@ def main():
     c = initialize(args)
 
     if args.favorites:
-        twint.Favorites(c)
+        twint.run.Favorites(c)
     elif args.following:
-        twint.Following(c)
+        twint.run.Following(c)
     elif args.followers:
-        twint.Followers(c)
-    elif args.retweets:
-        twint.Profile(c)
+        twint.run.Followers(c)
+    elif args.retweets or args.profile_full:
+        twint.run.Profile(c)
     else:
-        twint.Search(c)
+        twint.run.Search(c)
 
 if __name__ == "__main__":
     main()
