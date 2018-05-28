@@ -31,7 +31,7 @@ A few simple examples to help you understand the basics:
 - `python3 twint.py -u username -o file.txt` - Scrape Tweets and save to file.txt.
 - `python3 twint.py -u username -o file.csv --csv` - Scrape Tweets and save as a csv file.
 - `python3 twint.py -u username --fruit` - Show Tweets with low-hanging fruit.
-- `python3 twint.py -s "Donald Trump" --verified --users` - List verified users that Tweet about Donald Trump.
+- `python3 twint.py -s "Donald Trump" --verified` - Display Tweets by verified users that Tweeted about Donald Trump.
 - `python3 twint.py -g="48.880048,2.385939,1km" -o file.csv --csv` - Scrape Tweets from a radius of 1km around a place in Paris and export them to a csv file.
 - `python3 twint.py -u username -es localhost:9200` - Output Tweets to Elasticsearch
 - `python3 twint.py -u username -o file.json --json` - Scrape Tweets and save as a json file.
@@ -39,10 +39,13 @@ A few simple examples to help you understand the basics:
 - `python3 twint.py -u username --followers` - Scrape a Twitter user's followers.
 - `python3 twint.py -u username --following` - Scrape who a Twitter user follows.
 - `python3 twint.py -u username --favorites` - Collect all the Tweets a user has favorited.
+- `python3 twint.py -u username --following --user-full` - Collect full user information a person follows
+- `python3 twint.py -u username --profile-full` - Use a slow, but effective method to gather all the Tweets from a user's profile (Including Retweets).
+- `python3 twint.py -u username --retweets` - Use a quick method to gather the last 900 Tweets (that includes retweets) from a user's profile.
 
 More detail about the commands and options are located in the [wiki](https://github.com/haccer/twint/wiki/Commands)
 
-## Using Twint as a Module
+## Using Twint as a Module (Recommended)
 Twint can now be used as a module and supports custom formatting. More details are located in the [wiki](https://github.com/haccer/twint/wiki/Module)
 
 #### Install
@@ -59,7 +62,7 @@ c.Search = "pineapple"
 c.Format = "Tweet id: {id} | Tweet: {tweet}"
 
 # Run
-twint.Search(c)
+twint.run.Search(c)
 ```
 ## Example String
 `955511208597184512 2018-01-22 18:43:19 GMT <now> pineapples are the best fruit`
