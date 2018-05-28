@@ -20,7 +20,7 @@ def init(db):
                     likes integer,
                     retweets integer,
                     hashtags text,
-                    link text
+                    link text,
                     retweet bool,
                     user_rt text,
                     mentions text
