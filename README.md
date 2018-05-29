@@ -46,7 +46,7 @@ A few simple examples to help you understand the basics:
 More detail about the commands and options are located in the [wiki](https://github.com/haccer/twint/wiki/Commands)
 
 ## Using Twint as a Module (Recommended)
-Twint can now be used as a module and supports custom formatting. More details are located in the [wiki](https://github.com/haccer/twint/wiki/Module)
+Twint can now be used as a module and supports custom formatting. **More details are located in the [wiki](https://github.com/haccer/twint/wiki/Module)**
 
 #### Install
 - `sudo pip3 install twint`
