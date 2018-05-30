@@ -27,9 +27,10 @@ class Favorites:
             if len(self.feed) > 0:
                 await self.Feed()
                 self.count += await get.Multi(self.feed, self.config, self.conn)
-            elif get.Limit(self.config.Limit, self.count):
-                break
             else:
+                break
+            
+            if get.Limit(self.config.Limit, self.count):
                 break
         
         verbose.Count(self.config, self.count)
