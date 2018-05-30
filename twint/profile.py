@@ -38,9 +38,10 @@ class Profile:
         while True:
             if len(self.feed) > 0:
                 await self.tweets()
-            elif get.Limit(self.config.Limit, self.count):
-                break
             else:
+                break
+                
+            if get.Limit(self.config.Limit, self.count):
                 break
 
         verbose.Count(self.config, self.count)
