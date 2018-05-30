@@ -47,18 +47,21 @@ class Search:
                 self.config.Until = str(self.d._until)
                 if len(self.feed) > 0:
                     await self.tweets()
-                elif get.Limit(self.config.Limit, self.count):
-                    self.d._until = self.d._until - _days
                 else:
                     self.d._until = self.d._until - _days
+                    self.feed = [-1]
+                    
+                if get.Limit(self.config.Limit, self.count):
+                    self.d._until = self.d_until - _days
                     self.feed = [-1]
         else:
             while True:
                 if len(self.feed) > 0:
                     await self.tweets()
-                elif get.Limit(self.config.Limit, self.count):
-                    break
                 else:
+                    break
+                
+                if get.Limit(self.config.Limit, self.count):
                     break
                 
         verbose.Count(self.config, self.count)
