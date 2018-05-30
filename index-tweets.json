@@ -1,6 +1,6 @@
 PUT twint
 {
-  "mappings" : {
+  "mappings": {
     "items": {
       "properties": {
         "id": {"type": "long"},
