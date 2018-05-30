@@ -34,9 +34,10 @@ class Follow:
         while True:
             if len(self.feed) > 0:
                 await self.follow()
-            elif get.Limit(self.config.Limit, self.count):
-                break
             else:
+                break
+                
+            if get.Limit(self.config.Limit, self.count):
                 break
         
         verbose.Count(self.config, self.count)
