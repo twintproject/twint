@@ -150,13 +150,48 @@ def Follow(es, user, follow, session):
     actions = []
 
     j_data = {
-            "_index": "twintgraph2",
+            "_index": "twintGraph",
             "_type": "items",
             "_id": user + "_" + follow + "_" + session,
             "_source": {
                 "user": user,
                 "follow": follow,
                 "essid": session
+                }
+            }
+    actions.append(j_data)
+
+    es = Elasticsearch(es)
+    with nostdout():
+        helpers.bulk(es, actions, chunk_size=2000, request_timeout=200)
+    actions = []
+
+def UserProfile(es, user, follow, session):
+    actions = []
+
+    j_data = {
+            "_index": "twintUser",
+            "_type": "items",
+            "_id": user.id + "_" + user.join_date + "_" + user.join_time + "_" + session,
+            "_source": {
+                "id": user.id,
+                "name": user.name,
+                "username": user.username,
+                "bio": user.bio,
+                "location": user.location,
+                "url": user.url,
+                "join_datetime": user.join_date + " " + user.join_time,
+                "join_date": user.join_date,
+                "join_time": user.join_time,
+                "tweets": user.tweets,
+                "following": user.following,
+                "followers": user.followers,
+                "likes": user.likes,
+                "media": user.media_count,
+                "private": user.is_private,
+                "verified": user.is_verified,
+                "avatar": user.avatat,
+                "session": session
                 }
             }
     actions.append(j_data)
