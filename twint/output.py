@@ -54,15 +54,15 @@ async def Users(u, config, conn):
     if config.Database:
         db.user(conn, config.Username, config.Followers, user)
 
-    #if config.Elasticsearch:
-    #    _save_date =  user.join_date
-    #    _save_time = user.join_time
-    #    user.join_date = str(datetime.strptime(user.join_date, "%d %b %Y")).split()[0]
-    #    user.join_time = str(datetime.strptime(user.join_time, "%I:%M %p")).split()[1]
-    #    elasticsearch.UserProfile(config.Elasticsearch, user,
-    #            config.Username, config.Essid)
-    #    user.join_date = _save_date
-    #    user.join_time = _save_time
+    if config.Elasticsearch:
+        _save_date =  user.join_date
+        _save_time = user.join_time
+        user.join_date = str(datetime.strptime(user.join_date, "%d %b %Y")).split()[0]
+        user.join_time = str(datetime.strptime(user.join_time, "%I:%M %p")).split()[1]
+        elasticsearch.UserProfile(config.Elasticsearch, user,
+                config.Username, config.Essid)
+        user.join_date = _save_date
+        user.join_time = _save_time
 
     _output(user, output, config)
 
