@@ -81,6 +81,7 @@ async def Multi(feed, config, conn):
             loop = asyncio.get_event_loop()
             futures = []
             for tweet in feed:
+                count += 1
                 if config.Favorites or config.Profile_full:
                     link = tweet.find("a")["href"]
                     url = "https://twitter.com{}&lang=en".format(link)
