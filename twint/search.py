@@ -52,7 +52,7 @@ class Search:
                     self.feed = [-1]
                     
                 if get.Limit(self.config.Limit, self.count):
-                    self.d._until = self.d_until - _days
+                    self.d._until = self.d._until - _days
                     self.feed = [-1]
         else:
             while True:
