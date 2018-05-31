@@ -31,7 +31,7 @@ def check(args):
             error("Error", "Please specify an output file (Example: -o file.csv).")
         elif args.json:
             error("Error", "Please specify an output file (Example: -o file.json).")
-    
+
     if not args.followers and not args.following:
         if args.user_full:
             error("Error", "Please use --user-full with --followers or --following.")
@@ -60,15 +60,18 @@ def check(args):
         if args.proxy_port or args.proxy_type:
             error("Error", "Please specify --proxy-host, --proxy-port, and --proxy-type")
 
-def loadUserList(ul):
+def loadUserList(ul, type):
     if os.path.exists(os.path.abspath(ul)):
         userlist = open(os.path.abspath(ul), "r").read().splitlines()
     else:
         userlist = ul.split(",")
-    un = ""
-    for user in userlist:
-        un += "%20OR%20from%3A" + user
-    return un[15:]
+    if type == "search":
+        un = ""
+        for user in userlist:
+            un += "%20OR%20from%3A" + user
+        return un[15:]
+    else:
+        return userlist
 
 def initialize(args):
     c = twint.Config()
@@ -119,7 +122,7 @@ def options():
     ap.add_argument("--since", help="Filter Tweets sent since date (Example: 2017-12-27).")
     ap.add_argument("--until", help="Filter Tweets sent until date (Example: 2017-12-27).")
     ap.add_argument("--fruit", help="Display 'low-hanging-fruit' Tweets.", action="store_true")
-    ap.add_argument("--verified", help="Display Tweets only from verified users (Use with -s).", 
+    ap.add_argument("--verified", help="Display Tweets only from verified users (Use with -s).",
             action="store_true")
     ap.add_argument("--csv", help="Write as .csv file.", action="store_true")
     ap.add_argument("--json", help="Write as .json file", action="store_true")
@@ -144,7 +147,7 @@ def options():
     ap.add_argument("--format", help="Custom output format (See wiki for details).")
     ap.add_argument("--user-full", help="Collect all user information (Use with followers or following only).",
             action="store_true")
-    ap.add_argument("--profile-full", 
+    ap.add_argument("--profile-full",
             help="Slow, but effective method of collecting a user's Tweets (Including Retweets).",
             action="store_true")
     args = ap.parse_args()
@@ -155,7 +158,7 @@ def main():
     check(args)
 
     if args.userlist:
-        args.username = loadUserList(args.userlist)
+        args.username = loadUserList(args.userlist, "search")
 
     c = initialize(args)
 
@@ -166,7 +169,11 @@ def main():
     elif args.followers:
         twint.run.Followers(c)
     elif args.retweets or args.profile_full:
-        twint.run.Profile(c)
+        _userlist = loadUserList(args.userlist, "profile")
+        for _user in _userlist:
+            args.username = _user
+            c = initialize(args)
+            twint.run.Profile(c)
     else:
         twint.run.Search(c)
 
