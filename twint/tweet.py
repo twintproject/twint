@@ -6,8 +6,7 @@ class tweet:
 
 def getMentions(tw):
     try:
-        _mentions = tw.find("div", "js-original-tweet")["data-mentions"].split(" ")
-        mentions = [mention.lower() for mention in _mentions]
+        mentions = tw.find("div", "js-original-tweet")["data-mentions"].split(" ")
     except:
         mentions = ""
 
