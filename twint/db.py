@@ -187,6 +187,7 @@ def tweets(conn, Tweet):
                     Tweet.location,
                     Tweet.username,
                     Tweet.tweet,
+                    Tweet.replies,
                     Tweet.likes,
                     Tweet.retweets,
                     ",".join(Tweet.hashtags),
@@ -195,7 +196,7 @@ def tweets(conn, Tweet):
                     Tweet.user_rt,
                     ",".join(Tweet.mentions),
                     date_time,)
-        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
+        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
         conn.commit()
     except sqlite3.IntegrityError:
         pass
