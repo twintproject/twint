@@ -169,10 +169,13 @@ def main():
     elif args.followers:
         twint.run.Followers(c)
     elif args.retweets or args.profile_full:
-        _userlist = loadUserList(args.userlist, "profile")
-        for _user in _userlist:
-            args.username = _user
-            c = initialize(args)
+        if args.userlist:
+            _userlist = loadUserList(args.userlist, "profile")
+            for _user in _userlist:
+                args.username = _user
+                c = initialize(args)
+                twint.run.Profile(c)
+        else:
             twint.run.Profile(c)
     else:
         twint.run.Search(c)
