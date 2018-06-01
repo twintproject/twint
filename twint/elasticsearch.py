@@ -56,7 +56,7 @@ def Tweet(Tweet, es, session):
                 "day": day,
                 "hour": hour(Tweet.datetime),
                 "link": Tweet.link,
-                "retweet": Tweet.is_retweet,
+                "retweet": Tweet.retweet,
                 "user_rt": Tweet.user_rt,
                 "essid": session
                 }
@@ -81,7 +81,7 @@ def Tweet(Tweet, es, session):
                     "day": day,
                     "hour": hour(Tweet.datetime),
                     "link": Tweet.link,
-                    "retweet": Tweet.is_retweet,
+                    "retweet": Tweet.retweet,
                     "user_rt": Tweet.user_rt,
                     "essid": session
                     }
@@ -107,7 +107,7 @@ def Tweet(Tweet, es, session):
                     "day": day,
                     "hour": hour(Tweet.datetime),
                     "link": Tweet.link,
-                    "retweet": Tweet.is_retweet,
+                    "retweet": Tweet.retweet,
                     "user_rt": Tweet.user_rt,
                     "essid": session
                     }
@@ -133,7 +133,7 @@ def Tweet(Tweet, es, session):
                     "day": day,
                     "hour": hour(Tweet.datetime),
                     "link": Tweet.link,
-                    "retweet": Tweet.is_retweet,
+                    "retweet": Tweet.retweet,
                     "user_rt": Tweet.user_rt,
                     "essid": session
                     }
@@ -190,7 +190,7 @@ def UserProfile(es, user, follow, session):
                 "media": user.media_count,
                 "private": user.is_private,
                 "verified": user.is_verified,
-                "avatar": user.avatat,
+                "avatar": user.avatar,
                 "session": session
                 }
             }
