@@ -13,7 +13,7 @@ def Tweet(config, t):
         output = output.replace("{retweets}", t.retweets)
         output = output.replace("{likes}", t.likes)
         output = output.replace("{link}", t.link)
-        output = output.replace("{is_retweet}", str(t.is_retweet))
+        output = output.replace("{is_retweet}", str(t.retweet))
         output = output.replace("{user_rt}", t.user_rt)
         output = output.replace("{mentions}", str(t.mentions))
     else:
