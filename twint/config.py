@@ -34,3 +34,4 @@ class Config:
     TwitterSearch = False
     User_full = False
     Profile_full = False
+    Store_object = False
