@@ -4,6 +4,8 @@ from . import db, elasticsearch, format, write
 from .tweet import Tweet
 from .user import User
 
+tweets_object = []
+
 def datecheck(datestamp, config):
     if config.Since and config.Until:
         d = int(datestamp.replace("-", ""))
@@ -29,9 +31,15 @@ def _output(obj, output, config):
             write.Text(output, config.Output)
 
     if config.Elasticsearch:
-        print(output, end=".", flush=True)
+        if config.Store_object:
+            tweets_object.append(tweet)
+        else:
+            print(output, end=".", flush=True)
     else:
-        print(output)
+        if config.Store_object:
+            tweets_object.append(tweet)
+        else:
+            print(output)
 
 async def Tweets(tw, location, config, conn):
     copyright = tw.find("div", "StreamItemContent--withheld")
@@ -39,12 +47,12 @@ async def Tweets(tw, location, config, conn):
         tweet = Tweet(tw, location, config)
         if datecheck(tweet.datestamp, config):
             output = format.Tweet(config, tweet)
-            
+
             if config.Database:
                 db.tweets(conn, tweet)
             if config.Elasticsearch:
                 elasticsearch.Tweet(tweet, config.Elasticsearch, config.Essid)
-            
+                
             _output(tweet, output, config)
 
 async def Users(u, config, conn):
