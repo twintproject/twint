@@ -1,5 +1,6 @@
 from datetime import datetime
 
+import Pandas
 from . import db, elasticsearch, format, write
 from .tweet import Tweet
 from .user import User
@@ -30,14 +31,17 @@ def _output(obj, output, config):
         else:
             write.Text(output, config.Output)
 
+    if config.Pandas:
+        Pandas.update(obj, config.Session)
+
     if config.Elasticsearch:
         if config.Store_object:
-            tweets_object.append(tweet)
+            tweets_object.append(obj)
         else:
             print(output, end=".", flush=True)
     else:
         if config.Store_object:
-            tweets_object.append(tweet)
+            tweets_object.append(obj)
         else:
             print(output)
 
