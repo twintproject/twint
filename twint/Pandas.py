@@ -38,7 +38,7 @@ def save(_dataframe, _dataname, _filename, _type):
     if not _type or _type == "HDF5":
         _store = pd.HDFStore(_filename)
         _store[_dataname] = _dataframe
-    elif _type = "Pickle":
+    elif _type == "Pickle":
         _dataframe.to_pickle(_filename)
     else:
         print("Please specify: DataFrame, DataFrame name, filename and type (HDF5, default, or Pickle")
@@ -51,7 +51,7 @@ def read(_dataframe, _dataname, _filename, _type):
         _store = pd.HDFStore(_filename)
         df = _store[_dataname]
         return df
-    elif _type = "Pickle":
+    elif _type == "Pickle":
         df = pd.read_pickle(_filename)
         return df
     else:
