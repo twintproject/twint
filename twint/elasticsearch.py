@@ -1,20 +1,20 @@
 from elasticsearch import Elasticsearch, helpers
-from sys import stdout
 from time import strftime, localtime
 import contextlib
+import sys
 
 class RecycleObject(object):
     def write(self, junk): pass
-    def flush(slef): pass
+    def flush(self): pass
 
 @contextlib.contextmanager
 def nostdout():
-    savestdout = stdout
+    savestdout = sys.stdout
     stdout = RecycleObject()
     yield
     stdout = savestdout
 
-def weekdate(day):
+def weekday(day):
     weekdays = {
             "Monday": 1,
             "Tuesday": 2,
@@ -43,7 +43,7 @@ def Tweet(Tweet, es, session):
     j_data = {
             "_index": "twint",
             "_type": "items",
-            "_id": Tweet.id + "_raw_" + session,
+            "_id": Tweet.id + "_raw_" + str(session),
             "_source": {
                 "id": Tweet.id,
                 "date": dt,
@@ -58,7 +58,7 @@ def Tweet(Tweet, es, session):
                 "link": Tweet.link,
                 "retweet": Tweet.retweet,
                 "user_rt": Tweet.user_rt,
-                "essid": session
+                "essid": str(session)
                 }
             }
     actions.append(j_data)
@@ -67,7 +67,7 @@ def Tweet(Tweet, es, session):
         j_data = {
                 "_index": "twint",
                 "_type": "items",
-                "_id": Tweet.id + "_likes_" + str(nLikes) + "_" + session,
+                "_id": Tweet.id + "_likes_" + str(nLikes) + "_" + str(session),
                 "_source": {
                     "id": Tweet.id,
                     "date": dt,
@@ -83,7 +83,7 @@ def Tweet(Tweet, es, session):
                     "link": Tweet.link,
                     "retweet": Tweet.retweet,
                     "user_rt": Tweet.user_rt,
-                    "essid": session
+                    "essid": str(session)
                     }
                 }
         actions.append(j_data)
@@ -93,7 +93,7 @@ def Tweet(Tweet, es, session):
         j_data = {
                 "_index": "twint",
                 "_type": "items",
-                "_id": Tweet.id + "_replies_" + str(nReplies) + "_" + session,
+                "_id": Tweet.id + "_replies_" + str(nReplies) + "_" + str(session),
                 "_source": {
                     "id": Tweet.id,
                     "date": dt,
@@ -109,7 +109,7 @@ def Tweet(Tweet, es, session):
                     "link": Tweet.link,
                     "retweet": Tweet.retweet,
                     "user_rt": Tweet.user_rt,
-                    "essid": session
+                    "essid": str(session)
                     }
                 }
         actions.append(j_data)
@@ -119,7 +119,7 @@ def Tweet(Tweet, es, session):
         j_data = {
                 "_index": "twint",
                 "_type": "items",
-                "_id": Tweet.id + "_retweets_" + str(nRetweets) + "_" + session,
+                "_id": Tweet.id + "_retweets_" + str(nRetweets) + "_" + str(session),
                 "_source": {
                     "id": Tweet.id,
                     "date": dt,
@@ -135,7 +135,7 @@ def Tweet(Tweet, es, session):
                     "link": Tweet.link,
                     "retweet": Tweet.retweet,
                     "user_rt": Tweet.user_rt,
-                    "essid": session
+                    "essid": str(session)
                     }
                 }
         actions.append(j_data)
@@ -152,11 +152,11 @@ def Follow(es, user, follow, session):
     j_data = {
             "_index": "twintGraph",
             "_type": "items",
-            "_id": user + "_" + follow + "_" + session,
+            "_id": user + "_" + follow + "_" + str(session),
             "_source": {
                 "user": user,
                 "follow": follow,
-                "essid": session
+                "essid": str(session)
                 }
             }
     actions.append(j_data)
@@ -172,7 +172,7 @@ def UserProfile(es, user, follow, session):
     j_data = {
             "_index": "twintUser",
             "_type": "items",
-            "_id": user.id + "_" + user.join_date + "_" + user.join_time + "_" + session,
+            "_id": user.id + "_" + user.join_date + "_" + user.join_time + "_" + str(session),
             "_source": {
                 "id": user.id,
                 "name": user.name,
@@ -191,7 +191,7 @@ def UserProfile(es, user, follow, session):
                 "private": user.is_private,
                 "verified": user.is_verified,
                 "avatar": user.avatar,
-                "session": session
+                "session": str(session)
                 }
             }
     actions.append(j_data)
