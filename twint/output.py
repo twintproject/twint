@@ -1,6 +1,6 @@
 from datetime import datetime
 
-import Pandas
+import .Pandas
 from . import db, elasticsearch, format, write
 from .tweet import Tweet
 from .user import User
