@@ -35,7 +35,7 @@ def save(_dataframe, _dataname, _filename, _type):
     if not _dataname:
         _dataname = "twint"
 
-    if not _type or _type == "HDF5:
+    if not _type or _type == "HDF5":
         _store = pd.HDFStore(_filename)
         _store[_dataname] = _dataframe
     elif _type = "Pickle":
