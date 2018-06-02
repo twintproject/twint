@@ -10,9 +10,9 @@ class RecycleObject(object):
 @contextlib.contextmanager
 def nostdout():
     savestdout = sys.stdout
-    stdout = RecycleObject()
+    sys.stdout = RecycleObject()
     yield
-    stdout = savestdout
+    sys.stdout = savestdout
 
 def weekday(day):
     weekdays = {
