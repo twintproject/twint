@@ -103,6 +103,8 @@ def initialize(args):
     c.Format = args.format
     c.User_full = args.user_full
     c.Profile_full = args.profile_full
+    c.Store_pandas = args.store_pandas
+    c.Pandas_type = args.pandas_type
     return c
 
 def options():
@@ -150,6 +152,8 @@ def options():
     ap.add_argument("--profile-full",
             help="Slow, but effective method of collecting a user's Tweets (Including Retweets).",
             action="store_true")
+    ap.add_argument("--store-pandas", help="Save Tweets in a DataFrame (Pandas) file.")
+    ap.add_argument("--pandas-type", help="Specify HDF5 or Pickle (HDF5 as default)")
     args = ap.parse_args()
     return args
 
@@ -159,6 +163,9 @@ def main():
 
     if args.userlist:
         args.username = loadUserList(args.userlist, "search")
+    
+    if not args.pandas_type:
+        args.pandas_type = "HDF5"
 
     c = initialize(args)
 
