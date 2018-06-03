@@ -16,11 +16,9 @@ chmod +x install.sh
 ```
 
 ### Docker
-In this directory run:
 ```
-docker build .
 xhost local:root
-docker run --name twint -v /tmp/.X11-unix:/tmp/.X11-unix -v $(PWD)/data:/data/data -e DISPLAY=unix$DISPLAY --rm <image>
+docker run --name twint -v /tmp/.X11-unix:/tmp/.X11-unix -v $(PWD)/data:/data/data -e DISPLAY=unix$DISPLAY --rm c0dy/twint-explorer
 ```
 
 ### Other

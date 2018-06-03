@@ -1,11 +1,10 @@
 PUT twint
 {
-  "mappings" : {
+  "mappings": {
     "items": {
       "properties": {
         "id": {"type": "long"},
         "date": {"type": "date", "format": "yyyy-MM-dd HH:mm:ss"},
-        "time": {"type": "text"},
         "timezone": {"type": "text"},
         "location": {"type": "text"},
         "hashtags": {"type": "text"},
@@ -16,7 +15,11 @@ PUT twint
         "user_id": {"type": "keyword"},
         "username": {"type": "keyword"},
         "day": {"type": "keyword"},
-        "hour": {"type": "keyword"}
+        "hour": {"type": "keyword"},
+        "link": {"type": "text"},
+        "retweet": {"type": "text"},
+        "user_rt": {"type": "text"},
+        "essid": {"type": "keyword"}
       }
     }
   }

@@ -3,3 +3,7 @@ aiodns
 beautifulsoup4
 cchardet
 elasticsearch
+pysocks
+pandas
+tables
+mysqlclient

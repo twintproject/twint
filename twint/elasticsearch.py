@@ -1,134 +1,202 @@
 from elasticsearch import Elasticsearch, helpers
+from time import strftime, localtime
 import contextlib
-import datetime
-import time
+import sys
 
 class RecycleObject(object):
-	def write(self, junk): pass
+    def write(self, junk): pass
+    def flush(self): pass
 
 @contextlib.contextmanager
 def nostdout():
-	savestdout = sys.stdout
-	sys.stdout = RecycleObject()
-	yield
-	sys.stdout = savestdout
+    savestdout = sys.stdout
+    sys.stdout = RecycleObject()
+    yield
+    sys.stdout = savestdout
 
 def weekday(day):
-	weekdays = {
-			"Monday": 1,
-			"Tuesday": 2,
-			"Wednesday": 3,
-			"Thursday": 4,
-			"Friday": 5,
-			"Saturday": 6,
-			"Sunday": 7,
-			}
+    weekdays = {
+            "Monday": 1,
+            "Tuesday": 2,
+            "Wednesday": 3,
+            "Thursday": 4,
+            "Friday": 5,
+            "Saturday": 6,
+            "Sunday": 7,
+            }
 
-	return weekday[day]
+    return weekdays[day]
 
-def Elastic(Tweet, config):
-	# Todo play around with this some more
-	day = weekday(Tweet.date.strftime("%A"))
-	 
-	actions = []
-	nLikes = 0
-	nReplies = 0
-	nRetweets = 0
+def hour(datetime):
+    return strftime("%H", localtime(datetime))
 
-	j_data = {
-			"_index": "twint",
-			"_type": "items",
-			"_id": Tweet.id + "_raw",
-			"_source": {
-				"id": Tweet.id,
-				"date": Tweet.datestamp,
-				"time": Tweet.timestamp,
-				"timezone": Tweet.timezone,
-				"location": Tweet.location,
-				"tweet": Tweet.tweet,
-				"hashtags": Tweet.hashtags,
-				"user_id": Tweet.user_id,
-				"username": Tweet.username,
-				"day": day,
-				"hour": Tweet.time.strftime("%H")
-				}
-			}
+def Tweet(Tweet, es, session):
+    day = weekday(strftime("%A", localtime(Tweet.datetime)))
 
-	actions.append(j_data)
+    actions = []
+    nLikes = 0
+    nReplies = 0
+    nRetweets = 0
 
-	for l in range(int(Tweet.likes)):
-		j_data = {
-				"_index": "twint",
-				"_type": "items",
-				"_id": Tweet.id + "_likes_" + str(nLikes),
-				"_source": {
-					"id": Tweet.id,
-					"date": Tweet.datestamp,
-					"time": Tweet.timestamp,
-					"timezone": Tweet.timezone,
-					"location": Tweet.location,
-					"tweet": Tweet.tweet,
-					"hashtags": Tweet.hashtags,
-					"likes": True,
-					"user_id": Tweet.user_id,
-					"username": Tweet.username,
-					"day": day,
-					"hour": Tweet.time.strftime("%H")
-					}
-				}
+    dt = "{} {}".format(Tweet.datestamp, Tweet.timestamp)
 
-		actions.append(j_data)
-		nLikes += 1
+    j_data = {
+            "_index": "twint",
+            "_type": "items",
+            "_id": Tweet.id + "_raw_" + str(session),
+            "_source": {
+                "id": Tweet.id,
+                "date": dt,
+                "timezone": Tweet.timezone,
+                "location": Tweet.location,
+                "tweet": Tweet.tweet,
+                "hashtags": Tweet.hashtags,
+                "user_id": Tweet.user_id,
+                "username": Tweet.username,
+                "day": day,
+                "hour": hour(Tweet.datetime),
+                "link": Tweet.link,
+                "retweet": Tweet.retweet,
+                "user_rt": Tweet.user_rt,
+                "essid": str(session)
+                }
+            }
+    actions.append(j_data)
 
-	for rep in range(int(Tweet.replies)):
-		j_data = {
-				"_index": "twint",
-				"_type": "items",
-				"_id": Tweet.id + "_replies_" + str(nReplies),
-				"_source": {
-						"id": Tweet.id,
-						"date": Tweet.datestamp,
-						"time": Tweet.timestamp,
-						"timezone": Tweet.timezone,
-						"location": Tweet.location,
-						"tweet": Tweet.tweet,
-						"hashtags": Tweet.hashtags,
-						"replies": True,
-						"user_id": Tweet.user_id,
-						"username": Tweet.username,
-						"day": day,
-						"hour": Tweet.time.strftime("%H")
-					}
-				}
+    for l in range(int(Tweet.likes)):
+        j_data = {
+                "_index": "twint",
+                "_type": "items",
+                "_id": Tweet.id + "_likes_" + str(nLikes) + "_" + str(session),
+                "_source": {
+                    "id": Tweet.id,
+                    "date": dt,
+                    "timezone": Tweet.timezone,
+                    "location": Tweet.location,
+                    "tweet": Tweet.tweet,
+                    "hashtags": Tweet.hashtags,
+                    "likes": True,
+                    "user_id": Tweet.user_id,
+                    "username": Tweet.username,
+                    "day": day,
+                    "hour": hour(Tweet.datetime),
+                    "link": Tweet.link,
+                    "retweet": Tweet.retweet,
+                    "user_rt": Tweet.user_rt,
+                    "essid": str(session)
+                    }
+                }
+        actions.append(j_data)
+        nLikes += 1
 
-		actions.append(j_data)
-		nReplies += 1
+    for rep in range(int(Tweet.replies)):
+        j_data = {
+                "_index": "twint",
+                "_type": "items",
+                "_id": Tweet.id + "_replies_" + str(nReplies) + "_" + str(session),
+                "_source": {
+                    "id": Tweet.id,
+                    "date": dt,
+                    "timezone": Tweet.timezone,
+                    "location": Tweet.location,
+                    "tweet": Tweet.tweet,
+                    "hashtags": Tweet.hashtags,
+                    "replies": True,
+                    "user_id": Tweet.user_id,
+                    "username": Tweet.username,
+                    "day": day,
+                    "hour": hour(Tweet.datetime),
+                    "link": Tweet.link,
+                    "retweet": Tweet.retweet,
+                    "user_rt": Tweet.user_rt,
+                    "essid": str(session)
+                    }
+                }
+        actions.append(j_data)
+        nReplies += 1
 
-	for ret in range(int(Tweet.retweets)):
-		j_data = {
-				"_index": "twint",
-				"_type": "items",
-				"_id": Tweet.id + "_retweets_" + str(nRetweets),
-				"_source": {
-					"id": Tweet.id,
-					"date": Tweet.datestamp,
-					"time": Tweet.timestamp,
-					"timezone": Tweet.timezone,
-					"location": Tweet.location,
-					"tweet": Tweet.tweet,
-					"hashtags": Tweet.hashtags,
-					"retweets": True,
-					"user_id": Tweet.user_id,
-					"username": Tweet.username,
-					"day": day,
-					"hour": Tweet.time.strftime("%H")
-					}
-				}
+    for ret in range(int(Tweet.retweets)):
+        j_data = {
+                "_index": "twint",
+                "_type": "items",
+                "_id": Tweet.id + "_retweets_" + str(nRetweets) + "_" + str(session),
+                "_source": {
+                    "id": Tweet.id,
+                    "date": dt,
+                    "timezone": Tweet.timezone,
+                    "location": Tweet.location,
+                    "tweet": Tweet.tweet,
+                    "hashtags": Tweet.hashtags,
+                    "retweets": True,
+                    "user_id": Tweet.user_id,
+                    "username": Tweet.username,
+                    "day": day,
+                    "hour": hour(Tweet.datetime),
+                    "link": Tweet.link,
+                    "retweet": Tweet.retweet,
+                    "user_rt": Tweet.user_rt,
+                    "essid": str(session)
+                    }
+                }
+        actions.append(j_data)
+        nRetweets += 1
 
-		actions.append(j_data)
-		nRetweets += 1
+    es = Elasticsearch(es)
+    with nostdout():
+        helpers.bulk(es, actions, chunk_size=2000, request_timeout=200)
+    actions = []
 
-	es = Elasticsearch(config.Elasticsearch)
-	with nostdout():
-		helpers.bulk(es, actions, chunk_size=2000, request_timeout=200)
-	actions = []
+def Follow(es, user, follow, session):
+    actions = []
+
+    j_data = {
+            "_index": "twintGraph",
+            "_type": "items",
+            "_id": user + "_" + follow + "_" + str(session),
+            "_source": {
+                "user": user,
+                "follow": follow,
+                "essid": str(session)
+                }
+            }
+    actions.append(j_data)
+
+    es = Elasticsearch(es)
+    with nostdout():
+        helpers.bulk(es, actions, chunk_size=2000, request_timeout=200)
+    actions = []
+
+def UserProfile(es, user, follow, session):
+    actions = []
+
+    j_data = {
+            "_index": "twintUser",
+            "_type": "items",
+            "_id": user.id + "_" + user.join_date + "_" + user.join_time + "_" + str(session),
+            "_source": {
+                "id": user.id,
+                "name": user.name,
+                "username": user.username,
+                "bio": user.bio,
+                "location": user.location,
+                "url": user.url,
+                "join_datetime": user.join_date + " " + user.join_time,
+                "join_date": user.join_date,
+                "join_time": user.join_time,
+                "tweets": user.tweets,
+                "following": user.following,
+                "followers": user.followers,
+                "likes": user.likes,
+                "media": user.media_count,
+                "private": user.is_private,
+                "verified": user.is_verified,
+                "avatar": user.avatar,
+                "session": str(session)
+                }
+            }
+    actions.append(j_data)
+
+    es = Elasticsearch(es)
+    with nostdout():
+        helpers.bulk(es, actions, chunk_size=2000, request_timeout=200)
+    actions = []

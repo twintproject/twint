@@ -1,169 +1,93 @@
+from datetime import datetime
+
+from . import db, elasticsearch, format, write, Pandas, dbmysql
 from .tweet import Tweet
-from .profile import User
-from . import db, elasticsearch
-from time import gmtime, strftime
-from bs4 import BeautifulSoup
-import asyncio
-import csv
-import datetime
-import json
-import re
-import sys
-import time
+from .user import User
 
-def write(entry, f):
-	print(entry, file=open(f, "a", encoding="utf-8"))
 
-def writeCSV(Tweet, file):
-	data = [
-			Tweet.id,
-			Tweet.datestamp,
-			Tweet.timestamp,
-			Tweet.timezone,
-			Tweet.user_id,
-			Tweet.username,
-			Tweet.tweet,
-			Tweet.replies,
-			Tweet.retweets,
-			Tweet.likes,
-			Tweet.location,
-			",".join(Tweet.hashtags)]
-	with open(file, "a", newline='', encoding="utf-8") as csv_file:
-		writer = csv.writer(csv_file, quoting=csv.QUOTE_ALL, delimiter=",")
-		writer.writerow(data)
+tweets_object = []
 
-def writeJSON(Tweet, file):
-	data = {
-			"id": Tweet.id,
-			"date": Tweet.datestamp,
-			"time": Tweet.timestamp,
-			"timezone": Tweet.timezone,
-			"user_id": Tweet.user_id,
-			"username": Tweet.username,
-			"tweet": Tweet.tweet,
-			"replies": Tweet.replies,
-			"retweets": Tweet.retweets,
-			"likes": Tweet.likes,
-			"location": Tweet.location,
-			"hashtags": ",".join(Tweet.hashtags)}
-	with open(file, "a", newline='', encoding="utf-8") as json_file:
-		json.dump(data, json_file)
-		json_file.write("\n")
+def datecheck(datestamp, config):
+    if config.Since and config.Until:
+        d = int(datestamp.replace("-", ""))
+        s = int(config.Since.replace("-", ""))
+        if d < s:
+            return False
+    return True
 
-def getDate(tweet):
-	datestamp = tweet.find("a", "tweet-timestamp")["title"]
-	datestamp = datestamp.rpartition(" - ")[-1]
-	return datetime.datetime.strptime(datestamp, "%d %b %Y")
+def is_tweet(tw):
+    try:
+        tw.find("div")["data-item-id"]
+        return True
+    except:
+        return False
 
-def getTime(tweet):
-	tm = int(tweet.find("span", "_timestamp")["data-time"])
-	timestamp = str(datetime.timedelta(seconds=tm))
-	timestamp = timestamp.rpartition(", ")[-1]
-	return datetime.datetime.strptime(timestamp, "%H:%M:%S")
+def _output(obj, output, config):
+    if config.Output != None:
+        if config.Store_csv:
+            write.Csv(obj, config)
+        elif config.Store_json:
+            write.Json(obj, config)
+        else:
+            write.Text(output, config.Output)
 
-def getText(tweet):
-	text = tweet.find("p", "tweet-text").text
-	text = text.replace("\n", "")
-	text = text.replace("http", " http")
-	text = text.replace("pic.twitter", " pic.twitter")
-	return text
-
-def getHashtags(text):
-	hashtag = re.findall(r'(?i)\#\w+', text, flags=re.UNICODE)
-	return hashtag
-	#return ",".join(hashtag)
-
-def getStat(tweet, stat):
-	st = "ProfileTweet-action--{} u-hiddenVisually".format(stat)
-	return tweet.find("span", st).find("span")["data-tweet-stat-count"]
-
-def getMentions(tweet, text):
-	try:
-		mentions = tweet.find("div", "js-original-tweet")["data-mentions"].split(" ")
-		for i in range(len(mentions)):
-			mention = "@{}".format(mentions[i])
-			if mention not in text:
-				text = "{} {}".format(mention, text)
-	except:
-		pass
-	return text
-
-# Sort HTML
-def getTweet(tw, location, config):
-	t = Tweet()
-	t.id = tw.find("div")["data-item-id"]
-	t.date = getDate(tw)
-	if config.Since and config.Until:
-		if (t.date.date() - datetime.datetime.strptime(config.Since, "%Y-%m-%d").date()).days == -1:
-			# mitigation here, maybe find something better
-			sys.exit(0)
-	t.datestamp = t.date.strftime("%Y-%m-%d")
-	t.time = getTime(tw)
-	t.timestamp = t.time.strftime("%H:%M:%S")
-	t.user_id = tw.find("a", "account-group js-account-group js-action-profile js-user-profile-link js-nav")["data-user-id"]
-	t.username = tw.find("span", "username").text.replace("@", "")
-	t.timezone = strftime("%Z", gmtime())
-	for img in tw.findAll("img", "Emoji Emoji--forText"):
-		img.replaceWith("<{}>".format(img['aria-label']))
-	t.tweet = getMentions(tw, getText(tw))
-	t.location = location
-	t.hashtags = getHashtags(t.tweet)
-	t.replies = getStat(tw, "reply")
-	t.retweets = getStat(tw, "retweet")
-	t.likes = getStat(tw, "favorite")
-	return t
-
-async def getUser(user):
-	u = User()
-	u.name = user.find("a")["name"]
-	return u
+    if config.Pandas:
+        Pandas.update(obj, config.Essid)
+    if config.Elasticsearch:
+        if config.Store_object:
+            tweets_object.append(obj)
+        else:
+            print(output, end=".", flush=True)
+    else:
+        if config.Store_object:
+            tweets_object.append(obj)
+        else:
+            print(output)
 
 async def Tweets(tw, location, config, conn):
-	copyright = tw.find("div", "StreamItemContent--withheld")
-	if copyright is None:
-		Tweet = getTweet(tw, location, config)
+    copyright = tw.find("div", "StreamItemContent--withheld")
+    if copyright is None and is_tweet(tw):
+        tweet = Tweet(tw, location, config)
+        if datecheck(tweet.datestamp, config):
+            output = format.Tweet(config, tweet)
+           
+            if config.hostname:
+                dbmysql.tweets(conn, tweet, config)
+            elif config.Database:
+                db.tweets(conn, tweet, config)
+            if config.Elasticsearch:
+                elasticsearch.Tweet(tweet, config.Elasticsearch, config.Essid)
+            _output(tweet, output, config)
 
-		if config.Database:
-			db.tweets(conn, Tweet)
-		if config.Elasticsearch:
-			elasticsearch.Elastic(Tweet, config)
-		
-		if config.Users_only:
-			output = Tweet.username
-		elif config.Tweets_only:
-			output = Tweet.tweet
-		elif config.Format:
-			output = config.Format.replace("{id}", Tweet.id)
-			output = output.replace("{date}", Tweet.datestamp)
-			output = output.replace("{time}", Tweet.timestamp)
-			output = output.replace("{user_id}", Tweet.user_id)
-			output = output.replace("{username}", Tweet.username)
-			output = output.replace("{timezone}", Tweet.timezone)
-			output = output.replace("{tweet}", Tweet.tweet)
-			output = output.replace("{location}", Tweet.location)
-			output = output.replace("{hashtags}", str(Tweet.hashtags))
-			output = output.replace("{replies}", Tweet.replies)
-			output = output.replace("{retweets}", Tweet.retweets)
-			output = output.replace("{likes}", Tweet.likes)
-		else:
-			output = "{} {} {} {} <{}> {}".format(Tweet.id, Tweet.datestamp, Tweet.timestamp, Tweet.timezone, Tweet.username, Tweet.tweet)
-			if config.Show_hashtags:
-				output+= " {}".format(",".join(Tweet.hashtags))
-			if config.Stats:
-				output+= " | {} replies {} retweets {} likes".format(Tweet.replies, Tweet.retweets, Tweet.likes)
-			if config.Location:
-				output+= " | Location {}".format(Tweet.location)
+async def Users(u, config, conn):
+    user = User(u)
+    output = format.User(config.Format, user)
 
-		if config.Output != None:
-			if config.Store_csv:
-				writeCSV(Tweet, config.Output)
-			elif config.Store_json:
-				writeJSON(Tweet, config.Output)
-			else:
-				write(output, config.Output)
-		
-		# Print output
-		if config.Elasticsearch:
-			print(output, end=".", flush=True)
-		else:
-			print(output)
+    if config.hostname:
+        dbmysql.user(conn, config.Username, config.Followers, user)
+    elif config.Database:
+        db.user(conn, config.Username, config.Followers, user)
+
+    if config.Elasticsearch:
+        _save_date =  user.join_date
+        _save_time = user.join_time
+        user.join_date = str(datetime.strptime(user.join_date, "%d %b %Y")).split()[0]
+        user.join_time = str(datetime.strptime(user.join_time, "%I:%M %p")).split()[1]
+        elasticsearch.UserProfile(config.Elasticsearch, user,
+                config.Username, config.Essid)
+        user.join_date = _save_date
+        user.join_time = _save_time
+    
+    _output(user, output, config)
+
+async def Username(username, config, conn):
+    if config.hostname:
+        dbmysql.follow(conn, config.Username, config.Followers, username)
+    elif config.Database:
+        db.follow(conn, config.Username, config.Followers, username)
+
+    if config.Elasticsearch:
+        elasticsearch.Follow(config.Elasticsearch, username,
+                config.Username, config.Essid)
+
+    _output(username, username, config)

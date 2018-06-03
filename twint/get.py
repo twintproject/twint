@@ -1,98 +1,106 @@
-from . import output
+from . import url
+from .output import Tweets, Users
+from async_timeout import timeout
 from bs4 import BeautifulSoup
 import aiohttp
-import async_timeout
 import asyncio
+import concurrent.futures
 
-class Url:
-	def __init__(self, config, init):
-		self.config = config
-		self.init = init
+async def RequestUrl(config, init):
+    if config.Profile:
+        if config.Profile_full:
+            _url = await url.MobileProfile(config.Username, init)
+            response = await MobileRequest(_url)
+        else:
+            _url = await url.Profile(config.Username, init)
+            response = await Request(_url)
+    elif config.TwitterSearch:
+        _url = await url.Search(config, init)
+        response = await Request(_url)
+    else:
+        if config.Following:
+            _url = await url.Following(config.Username, init)
+        elif config.Followers:
+            _url = await url.Followers(config.Username, init)
+        else:
+            _url = await url.Favorites(config.Username, init)
+        response = await MobileRequest(_url)
 
-	async def favorites(self):
-		if self.init == -1:
-			url = "https://mobile.twitter.com/{0.Username}/favorites?".format(self.config)
-		else:
-			url = "https://mobile.twitter.com/{0.Username}/favorites?max_id={1.init}".format(self.config, self)
-		return url
+    return response
 
-	async def followers(self):
-		if self.init == -1:
-			url = "https://mobile.twitter.com/{0.Username}/followers?".format(self.config)
-		else:
-			url = "https://mobile.twitter.com/{0.Username}/followers?cursor={1.init}".format(self.config, self)
-		return url
+async def MobileRequest(url):
+    ua = {'User-Agent': 'Lynx/2.8.5rel.1 libwww-FM/2.14 SSL-MM/1.4.1 GNUTLS/0.8.12'}
+    connect = aiohttp.TCPConnector(verify_ssl=False)
+    async with aiohttp.ClientSession(headers=ua, connector=connect) as session:
+        return await Response(session, url)
 
-	async def following(self):
-		if self.init == -1:
-			url = "https://mobile.twitter.com/{0.Username}/following?".format(self.config)
-		else:
-			url = "https://mobile.twitter.com/{0.Username}/following?cursor={1.init}".format(self.config, self)
-		return url
-	
-	async def search(self):
-		if self.init == -1:
-			url = "https://twitter.com/search?f=tweets&vertical=default&lang=en&q="
-		else:
-			url = "https://twitter.com/i/search/timeline?f=tweets&vertical=default"
-			url+= "&lang=en&include_available_features=1&include_entities=1&reset_"
-			url+= "error_state=false&src=typd&max_position={0.init}&q=".format(self)
-
-		if self.config.Lang != None:
-			url = url.replace("lang=en", "l={0.Lang}&lang=en".format(self.config))
-		if self.config.Username != None:
-			url+= "from%3A{0.Username}".format(self.config)
-		if self.config.Geo != None:
-			self.config.Geo = self.config.Geo.replace(" ", "")
-			url+= "geocode%3A{0.Geo}".format(self.config)
-		if self.config.Search != None:
-			self.config.Search = self.config.Search.replace(" ", "%20")
-			self.config.Search = self.config.Search.replace("#", "%23")
-			url+= "%20{0.Search}".format(self.config)
-		if self.config.Year != None:
-			url+= "%20until%3A{0.Year}-1-1".format(self.config)
-		if self.config.Since != None:
-			url+= "%20since%3A{0.Since}".format(self.config)
-		if self.config.Until != None:
-			url+= "%20until%3A{0.Until}".format(self.config)
-		if self.config.Fruit:
-			url+= "%20myspace.com%20OR%20last.fm%20OR"
-			url+= "%20mail%20OR%20email%20OR%20gmail%20OR%20e-mail"
-			url+= "%20OR%20phone%20OR%20call%20me%20OR%20text%20me"
-			url+= "%20OR%20keybase"
-		if self.config.Verified:
-			url+= "%20filter%3Averfied"
-		if self.config.To:
-			url+= "%20to%3A{0.To}".format(self.config)
-		if self.config.All:
-			url+= "%20to%3A{0.All}%20OR%20from%3A{0.All}%20OR%20@{0.All}".format(self.config)
-		if self.config.Near:
-			self.config.Near = self.config.Near.replace(" ", "%20")
-			self.config.Near = self.config.Near.replace(",", "%2C")
-			url+= "%20near%3A{0.Near}".format(self.config)
-		return url
+async def Request(url):
+    connect = aiohttp.TCPConnector(verify_ssl=False)
+    async with aiohttp.ClientSession(connector=connect) as session:
+        return await Response(session, url)
 
 async def Response(session, url):
-	with async_timeout.timeout(30):
-		async with session.get(url) as response:
-			return await response.text()
+    with timeout(30):
+        async with session.get(url) as response:
+            return await response.text()
 
-async def Username(userid):
-	connect = aiohttp.TCPConnector(verify_ssl=False)
-	async with aiohttp.ClientSession(connector=connect) as session:
-		r = await Response(session, "https://twitter.com/intent/user?user_id={}".format(userid))
-	soup = BeautifulSoup(r, "html.parser")
-	return soup.find("a", "fn url alternate-context")["href"].replace("/", "")
+async def Username(_id):
+    url = "https://twitter.com/intent/user?user_id={}&lang=en".format(_id)
+    r = Request(url)
+    soup = BeautifulSoup(r, "html.parser")
+
+    return soup.find("a", "fn url alternate-context")["href"].replace("/", "")
 
 async def Tweet(url, config, conn):
-	try:
-		connect = aiohttp.TCPConnector(verify_ssl=False)
-		async with aiohttp.ClientSession(connector=connect) as session:
-			response = await Response(session, url)
-		soup = BeautifulSoup(response, "html.parser")
-		tweet = soup.find("div", "permalink-inner permalink-tweet-container")
-		# Experimental
-		location = soup.find("span", "ProfileHeaderCard-locationText u-dir").text.replace("\n", "").replace(" ", "").replace(",", ", ")
-		await output.Tweets(tweet, location, config, conn)
-	except:
-		pass
+    try:
+        response = await Request(url)
+        soup = BeautifulSoup(response, "html.parser")
+        tweet = soup.find("div", "permalink-inner permalink-tweet-container")
+        location = soup.find("span", "ProfileHeaderCard-locationText u-dir").text
+        location = location[15:].replace("\n", " ")[:-10]
+        await Tweets(tweet, location, config, conn)
+    except:
+        pass
+
+async def User(url, config, conn):
+    try:
+        response = await Request(url)
+        soup = BeautifulSoup(response, "html.parser")
+        await Users(soup, config, conn)
+    except:
+        pass
+
+def Limit(Limit, count):
+    if Limit is not None and count >= int(Limit):
+        return True
+
+async def Multi(feed, config, conn):
+    count = 0
+    try:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+            loop = asyncio.get_event_loop()
+            futures = []
+            for tweet in feed:
+                count += 1
+                if config.Favorites or config.Profile_full:
+                    link = tweet.find("a")["href"]
+                    url = "https://twitter.com{}&lang=en".format(link)
+                elif config.User_full:
+                    username = tweet.find("a")["name"]
+                    url = "http://twitter.com/{}?lang=en".format(username)
+                else:
+                    link = tweet.find("a", "tweet-timestamp js-permalink js-nav js-tooltip")["href"]
+                    url = "https://twitter.com{}?lang=en".format(link)
+                
+                if config.User_full:
+                    futures.append(loop.run_in_executor(executor, await User(url,
+                        config, conn)))
+                else:
+                    futures.append(loop.run_in_executor(executor, await Tweet(url,
+                        config, conn)))
+
+            await asyncio.gather(*futures)
+    except:
+        pass
+
+    return count
