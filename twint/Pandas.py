@@ -1,4 +1,5 @@
 import pandas as pd
+from time import strftime, localtime
 
 from .elasticsearch import *
 
