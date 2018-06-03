@@ -5,7 +5,7 @@ from .elasticsearch import *
 _blocks = []
 
 
-def update(_tweet, session):
+def update(Tweet, session):
     day = weekday(strftime("%A", localtime(Tweet.datetime)))
     dt = "{} {}".format(Tweet.datestamp, Tweet.timestamp)
 
