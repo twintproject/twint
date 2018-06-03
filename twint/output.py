@@ -29,7 +29,7 @@ def _output(obj, output, config):
             write.Json(obj, config)
         else:
             write.Text(output, config.Output)
-
+            
     if config.Pandas:
         Pandas.update(obj, config.Essid)
 

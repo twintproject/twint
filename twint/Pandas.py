@@ -1,10 +1,10 @@
-import pandas as pd
+import warnings
 from time import strftime, localtime
+import pandas as pd
 
 from .elasticsearch import *
 
 _blocks = []
-
 
 def update(Tweet, session):
     day = weekday(strftime("%A", localtime(Tweet.datetime)))
@@ -32,27 +32,34 @@ def get():
     df = pd.DataFrame(_blocks)
     return df
 
-def save(_dataframe, _dataname, _filename, _type):
-    if not _dataname:
+def save(_filename, _dataframe, **options):
+    if options.get("dataname"):
+        _dataname = options.get("dataname")
+    else:
         _dataname = "twint"
 
-    if not _type or _type == "HDF5":
-        _store = pd.HDFStore(_filename)
-        _store[_dataname] = _dataframe
-    elif _type == "Pickle":
-        _dataframe.to_pickle(_filename)
+    if not options.get("type"):
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            _store = pd.HDFStore(_filename)
+            _store[_dataname] = _dataframe
+            _store.close()
+    elif options.get("type") == "Pickle":
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            _dataframe.to_pickle(_filename)
     else:
-        print("Please specify: DataFrame, DataFrame name, filename and type (HDF5, default, or Pickle")
+        print("Please specify: filename, DataFrame, DataFrame name and type (HDF5, default, or Pickle")
 
-def read(_dataframe, _dataname, _filename, _type):
-    if not _dataname:
+def read(_filename, **options):
+    if not options.get("dataname"):
         _dataname = "Twint"
 
-    if not _type or _type == "HDF5":
+    if not options.get("type"):
         _store = pd.HDFStore(_filename)
         df = _store[_dataname]
         return df
-    elif _type == "Pickle":
+    elif options.get("type") == "Pickle":
         df = pd.read_pickle(_filename)
         return df
     else:
