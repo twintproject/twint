@@ -13,13 +13,13 @@ c.Store_csv = True
 c.hostname="localhost"
 c.Database = "twitterdata_v9"
 c.DB_user = "root"
-c.DB_pwd = "init00"
+c.DB_pwd = "password"
 
 
 #para sacar los followers de un usuario con y sin  full dator
 #################################################################################################
 #c.User_full = True
-c.Username = "nestorpomar" 
+c.Username = "elonmusk" 
 twint.run.Following(c)
 
 
