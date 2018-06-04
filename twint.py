@@ -143,7 +143,7 @@ def options():
             action="store_true")
     ap.add_argument("--stats", help="Show number of replies, retweets, and likes.", action="store_true")
     ap.add_argument("--hostname", help="Store the mysql database host")
-	ap.add_argument("-db", "--database", help="Store Tweets in a sqlite3  or mysql database.")
+	ap.add_argument("-db", "--database", help="Store Tweets in a sqlite3 database or mysql.")
 	ap.add_argument("--DB_user", help="Store the mysql database user")
 	ap.add_argument("--DB_pwd", help="Store the mysql database pwd")
     ap.add_argument("--to", help="Search Tweets to a user.")
