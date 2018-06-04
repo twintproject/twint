@@ -1,0 +1,30 @@
+PUT twint
+{
+  "mappings": {
+    "items": {
+      "properties": {
+        "id": {"type": "long"},
+        "date": {"type": "date", "format": "yyyy-MM-dd HH:mm:ss"},
+        "timezone": {"type": "text"},
+        "location": {"type": "text"},
+        "hashtags": {"type": "text"},
+        "tweet": {"type": "text"},
+        "replies": {"type": "boolean"},
+        "retweets": {"type": "boolean"},
+        "likes": {"type": "boolean"},
+        "user_id": {"type": "keyword"},
+        "username": {"type": "keyword"},
+        "day": {"type": "keyword"},
+        "hour": {"type": "keyword"},
+        "link": {"type": "text"},
+        "retweet": {"type": "text"},
+        "user_rt": {"type": "text"},
+        "essid": {"type": "keyword"}
+      }
+    }
+  }
+  ,
+  "settings": {
+    "number_of_shards": 1
+  }
+}
