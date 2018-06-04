@@ -197,6 +197,8 @@ def main():
                 twint.run.Profile(c)
         else:
             twint.run.Profile(c)
+    else:
+        twint.run.Search(c)
 
 if __name__ == "__main__":
     main()
