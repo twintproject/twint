@@ -1,0 +1,24 @@
+{
+  "name": "twint-explorer",
+  "version": "1.0.0",
+  "description": "Twint Explorer",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "rebuild": "electron-rebuild -f -w sqlite3",
+    "build": "electron-packager . --all twint --ignore-modules=node_modules/electron-*"
+  },
+  "author": "Francesco Poldi @pielco11",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^1.8.4",
+    "jquery": "^3.3.1",
+    "uikit": "^3.0.0-beta.40",
+    "vis": "^4.21.0"
+  },
+  "devDependencies": {
+    "electron-osx-sign": "^0.4.10",
+    "electron-packager": "^12.0.1",
+    "electron-rebuild": "^1.7.3"
+  }
+}
