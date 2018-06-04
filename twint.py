@@ -142,10 +142,10 @@ def options():
     ap.add_argument("--count", help="Display number of Tweets scraped at the end of session.",
             action="store_true")
     ap.add_argument("--stats", help="Show number of replies, retweets, and likes.", action="store_true")
-    ap.add_argument("--hostname", help="Store the database host")
+    ap.add_argument("--hostname", help="Store the mysql database host")
 	ap.add_argument("-db", "--database", help="Store Tweets in a sqlite3 database or mysql.")
-	ap.add_argument("--DB_user", help="Store the database user")
-	ap.add_argument("--DB_pwd", help="Store the database pwd")
+	ap.add_argument("--DB_user", help="Store the mysql database user")
+	ap.add_argument("--DB_pwd", help="Store the mysql database pwd")
     ap.add_argument("--to", help="Search Tweets to a user.")
     ap.add_argument("--all", help="Search all Tweets associated with a user.")
     ap.add_argument("--followers", help="Scrape a person's followers.", action="store_true")
@@ -165,7 +165,7 @@ def options():
             action="store_true")
     ap.add_argument("--store-pandas", help="Save Tweets in a DataFrame (Pandas) file.")
     ap.add_argument("--pandas-type", help="Specify HDF5 or Pickle (HDF5 as default)")
-    ap.add_argument("--search_name", help="name for identify the search like -3dprinter stuff- only for mysql")
+    ap.add_argument("--search_name", help="name for identify the search like -3dprinter stuff-  only for mysql")
     args = ap.parse_args()
     
     return args
