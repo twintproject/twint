@@ -32,7 +32,7 @@ def check(args):
         elif args.json:
             error("Error", "Please specify an output file (Example: -o file.json).")
     if args.hostname:
-        if args.Database= None or args.DB_user=None or args.DB_pwd= None:
+        if args.Database is None or args.DB_user is None or args.DB_pwd is None:
             error("Error", "Please specify database name, user and password")
 
 
@@ -100,10 +100,10 @@ def initialize(args):
     c.Limit = args.limit
     c.Count = args.count
     c.Stats = args.stats
-	c.hostname = args.hostname
-	c.Database = args.database
-	c.DB_user = args.DB_user
-	c.DB_pwd = args.DB_pwd
+    c.hostname = args.hostname
+    c.Database = args.database
+    c.DB_user = args.DB_user
+    c.DB_pwd = args.DB_pwd
     c.To = args.to
     c.All = args.all
     c.Essid = args.essid
@@ -143,9 +143,9 @@ def options():
             action="store_true")
     ap.add_argument("--stats", help="Show number of replies, retweets, and likes.", action="store_true")
     ap.add_argument("--hostname", help="Store the mysql database host")
-	ap.add_argument("-db", "--database", help="Store Tweets in a sqlite3  or mysql database.")
-	ap.add_argument("--DB_user", help="Store the mysql database user")
-	ap.add_argument("--DB_pwd", help="Store the mysql database pwd")
+    ap.add_argument("-db", "--database", help="Store Tweets in a sqlite3  or mysql database.")
+    ap.add_argument("--DB_user", help="Store the mysql database user")
+    ap.add_argument("--DB_pwd", help="Store the mysql database pwd")
     ap.add_argument("--to", help="Search Tweets to a user.")
     ap.add_argument("--all", help="Search all Tweets associated with a user.")
     ap.add_argument("--followers", help="Scrape a person's followers.", action="store_true")
