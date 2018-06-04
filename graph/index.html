@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Twint OSINT Explorer</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/uikit.min.css" />
+        <script src="js/uikit.min.js"></script>
+        <script src="js/uikit-icons.min.js"></script>
+        <link rel="stylesheet" href="photon/css/photon.min.css">
+        <style>
+                body {
+                    color: #d3d3d3;
+                    font: 12pt arial;
+                    min-height: 100px;
+                    min-width: 100px;
+                }
+
+                #pane {
+                    width: auto;
+                    height: auto;
+                    min-width: 400px;
+                    min-height: 400px;
+                    overflow:hidden;
+                }
+
+                #includedContent {
+                    width: 100%;
+                    height: 100%;
+                    overflow: hidden;
+                }
+        </style>
+</head>
+<body>
+        <div class="window">
+            <div class="window-content">
+              <div class="pane-group">
+                <nav class="nav-group">
+                    <h5 class="nav-group-title">Favorites</h5>
+                    <a class="nav-group-item" id="loadHome">
+                        <span class="icon icon-home"></span>
+                    </a>
+                    <span class="nav-group-item" id="dashboard">
+                        <ul class="uk-iconnav uk-iconnav-vertical">
+                            <li><a href="#" uk-icon="icon: image"> Dashboard </a></li>
+                        </ul>
+                    </span>
+                    <span class="nav-group-item" id="twint">
+                        <ul class="uk-iconnav uk-iconnav-vertical">
+                            <li><a href="#" uk-icon="icon: social"> Graph </a></li>
+                        </ul>
+                    </span>
+                  </nav>
+                  <div class="pane" id="pane">
+                    <div id="includedContent"></div>
+                    <script>window.$ = window.jQuery = require('jquery');</script>
+                    <script>
+                    const {ipcRenderer} = require('electron');
+                    $("#twint").click(function(){
+                        $("#includedContent").load("pages/form.html");
+                    });
+                    $("#dashboard").click(function(){
+                        $("#includedContent").load("pages/dashboard.html");
+                    });
+                    $(document).ready(function(){
+                        $("#includedContent").load("pages/home.html");
+                    });
+                    $("#loadHome").click(function(){
+                        $("#includedContent").load("pages/home.html");
+                    });
+                    </script>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </body>
+    </html>
