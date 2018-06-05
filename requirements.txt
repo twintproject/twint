@@ -6,3 +6,4 @@ elasticsearch
 pysocks
 pandas
 tables
+mysqlclient

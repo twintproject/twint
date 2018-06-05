@@ -1,4 +1,4 @@
-from . import datelock, db, get, feed, output, verbose
+from . import datelock, db, get, feed, output, verbose, dbmysql
 from datetime import timedelta
 
 class Search:
@@ -7,7 +7,10 @@ class Search:
         self.feed = [-1]
         self.count = 0
         self.config = config
-        self.conn = db.Conn(config.Database)
+        if config.hostname:
+            self.conn = dbmysql.Conn(config.hostname, config.Database, config.DB_user, config.DB_pwd)
+        else:
+            self.conn = db.Conn(config.Database)
         self.d = datelock.Set(self.config.Until, self.config.Since)
         self.config.TwitterSearch = True
 

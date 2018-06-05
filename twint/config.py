@@ -20,8 +20,11 @@ class Config:
     Show_hashtags = False
     Limit = None
     Count = None
-    Stats = False
+    Stats = False  
+    hostname = None #mysql
     Database = None
+    DB_user = None #mysql
+    DB_pwd = None  #mysql
     To = None
     All = None
     Debug = False
@@ -38,3 +41,4 @@ class Config:
     Store_pandas = False
     Pandas_type = None
     Pandas = False
+    search_name = "-" #for identify a records in mysql with the search it provides from.  it cannot be null for DB requirements. a tweet must be in several search so the PK are tweet ID and search_name
