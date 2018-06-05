@@ -21,7 +21,7 @@ def init(db):
         table_tweets = """
             CREATE TABLE IF NOT EXISTS
                 tweets (
-                    id integer primary key,
+                    id integer not null,
                     user_id integer,
                     date text not null,
                     time text not null,
@@ -38,7 +38,8 @@ def init(db):
                     user_rt text,
                     mentions text,
                     date_update text not null,
-                    search_name text primary key
+                    search_name text not null
+                    PRIMARY KEY (id, search_name)
                 );
         """
         cursor.execute(table_tweets)
