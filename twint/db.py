@@ -38,7 +38,7 @@ def init(db):
                     user_rt text,
                     mentions text,
                     date_update text not null,
-                    search_name text not null
+                    search_name text not null,
                     PRIMARY KEY (id, search_name)
                 );
         """
