@@ -31,6 +31,10 @@ def check(args):
             error("Error", "Please specify an output file (Example: -o file.csv).")
         elif args.json:
             error("Error", "Please specify an output file (Example: -o file.json).")
+    if args.hostname:
+        if args.Database is None or args.DB_user is None or args.DB_pwd is None:
+            error("Error", "Please specify database name, user and password")
+
 
     if not args.followers and not args.following:
         if args.user_full:
@@ -96,7 +100,10 @@ def initialize(args):
     c.Limit = args.limit
     c.Count = args.count
     c.Stats = args.stats
+    c.hostname = args.hostname
     c.Database = args.database
+    c.DB_user = args.DB_user
+    c.DB_pwd = args.DB_pwd
     c.To = args.to
     c.All = args.all
     c.Essid = args.essid
@@ -105,6 +112,7 @@ def initialize(args):
     c.Profile_full = args.profile_full
     c.Store_pandas = args.store_pandas
     c.Pandas_type = args.pandas_type
+    c.search_name = args.search_name
     return c
 
 def options():
@@ -124,7 +132,7 @@ def options():
     ap.add_argument("--since", help="Filter Tweets sent since date (Example: 2017-12-27).")
     ap.add_argument("--until", help="Filter Tweets sent until date (Example: 2017-12-27).")
     ap.add_argument("--fruit", help="Display 'low-hanging-fruit' Tweets.", action="store_true")
-    ap.add_argument("--verified", help="Display Tweets only from verified users (Use with -s).",
+    ap.add_argument("--verified", help="Display Tweets only from verified users (Use with -s).", 
             action="store_true")
     ap.add_argument("--csv", help="Write as .csv file.", action="store_true")
     ap.add_argument("--json", help="Write as .json file", action="store_true")
@@ -134,7 +142,10 @@ def options():
     ap.add_argument("--count", help="Display number of Tweets scraped at the end of session.",
             action="store_true")
     ap.add_argument("--stats", help="Show number of replies, retweets, and likes.", action="store_true")
-    ap.add_argument("-db", "--database", help="Store Tweets in a sqlite3 database.")
+    ap.add_argument("--hostname", help="Store the mysql database host")
+    ap.add_argument("-db", "--database", help="Store Tweets in a sqlite3  or mysql database.")
+    ap.add_argument("--DB_user", help="Store the mysql database user")
+    ap.add_argument("--DB_pwd", help="Store the mysql database pwd")
     ap.add_argument("--to", help="Search Tweets to a user.")
     ap.add_argument("--all", help="Search all Tweets associated with a user.")
     ap.add_argument("--followers", help="Scrape a person's followers.", action="store_true")
@@ -149,12 +160,14 @@ def options():
     ap.add_argument("--format", help="Custom output format (See wiki for details).")
     ap.add_argument("--user-full", help="Collect all user information (Use with followers or following only).",
             action="store_true")
-    ap.add_argument("--profile-full",
+    ap.add_argument("--profile-full", 
             help="Slow, but effective method of collecting a user's Tweets (Including Retweets).",
             action="store_true")
     ap.add_argument("--store-pandas", help="Save Tweets in a DataFrame (Pandas) file.")
     ap.add_argument("--pandas-type", help="Specify HDF5 or Pickle (HDF5 as default)")
+    ap.add_argument("--search_name", help="name for identify the search like -3dprinter stuff- only for mysql")
     args = ap.parse_args()
+    
     return args
 
 def main():
