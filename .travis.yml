@@ -1,0 +1,17 @@
+language: python
+
+# Python Version
+python: 
+- 3.5
+- 3.6
+
+# Linux Only. Travis doesn't support Python for osx
+os: linux
+
+# Install Dependencies
+install: 
+- pip install -r requirements.txt
+
+# Test
+script: 
+- python test.py
