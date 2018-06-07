@@ -79,6 +79,6 @@ async def Search(config, init):
     if config.Near:
         config.Near = config.Near.replace(" ", "%20")
         config.Near = config.Near.replace(",", "%2C")
-        url += "%20near%3A{0.Near}".format(config)
+        url += "%20near%3A\"{0.Near}\"".format(config)
 
     return url
