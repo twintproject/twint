@@ -1,8 +1,9 @@
 from datetime import datetime
 
-from . import db, elasticsearch, format, write, Pandas
+from . import db, elasticsearch, format, write, Pandas, dbmysql
 from .tweet import Tweet
 from .user import User
+
 
 tweets_object = []
 
@@ -29,10 +30,9 @@ def _output(obj, output, config):
             write.Json(obj, config)
         else:
             write.Text(output, config.Output)
-            
+
     if config.Pandas:
         Pandas.update(obj, config.Essid)
-
     if config.Elasticsearch:
         if config.Store_object:
             tweets_object.append(obj)
@@ -50,19 +50,22 @@ async def Tweets(tw, location, config, conn):
         tweet = Tweet(tw, location, config)
         if datecheck(tweet.datestamp, config):
             output = format.Tweet(config, tweet)
-
-            if config.Database:
-                db.tweets(conn, tweet)
+           
+            if config.hostname:
+                dbmysql.tweets(conn, tweet, config)
+            elif config.Database:
+                db.tweets(conn, tweet, config)
             if config.Elasticsearch:
                 elasticsearch.Tweet(tweet, config.Elasticsearch, config.Essid)
-                
             _output(tweet, output, config)
 
 async def Users(u, config, conn):
     user = User(u)
     output = format.User(config.Format, user)
 
-    if config.Database:
+    if config.hostname:
+        dbmysql.user(conn, config.Username, config.Followers, user)
+    elif config.Database:
         db.user(conn, config.Username, config.Followers, user)
 
     if config.Elasticsearch:
@@ -74,11 +77,13 @@ async def Users(u, config, conn):
                 config.Username, config.Essid)
         user.join_date = _save_date
         user.join_time = _save_time
-
+    
     _output(user, output, config)
 
 async def Username(username, config, conn):
-    if config.Database:
+    if config.hostname:
+        dbmysql.follow(conn, config.Username, config.Followers, username)
+    elif config.Database:
         db.follow(conn, config.Username, config.Followers, username)
 
     if config.Elasticsearch:
