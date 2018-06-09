@@ -46,7 +46,7 @@ async def Profile(username, init):
 async def Search(config, init):
     url = "{}/search/timeline?f=tweets&vertical=default&lang=en".format(base)
     url += "&include_available_features=1&include_entities=1&"
-    url += "reset_error_state=false&src=typd&max_position={}&q=".format(init)
+    url += "reset_error_state=false&src=typd&qf=off&max_position={}&q=".format(init)
 
     if config.Lang:
         url = url.replace("lang=en", "l={0.Lang}&lang=en".format(config))
@@ -79,6 +79,6 @@ async def Search(config, init):
     if config.Near:
         config.Near = config.Near.replace(" ", "%20")
         config.Near = config.Near.replace(",", "%2C")
-        url += "%20near%3A{0.Near}".format(config)
+        url += "%20near%3A%22{0.Near}%22".format(config)
 
     return url

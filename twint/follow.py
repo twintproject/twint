@@ -1,4 +1,4 @@
-from . import feed, get, db, output, verbose
+from . import feed, get, db, output, verbose, dbmysql
 
 class Follow:
     def __init__(self, config):
@@ -6,7 +6,10 @@ class Follow:
         self.feed = [-1]
         self.count = 0
         self.config = config
-        self.conn = db.Conn(config.Database)
+        if config.hostname:
+            self.conn = dbmysql.Conn(config.hostname, config.Database, config.DB_user, config.DB_pwd)
+        else:
+            self.conn = db.Conn(config.Database)
         verbose.Elastic(config)
 
     async def Feed(self):

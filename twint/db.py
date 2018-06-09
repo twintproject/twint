@@ -21,7 +21,7 @@ def init(db):
         table_tweets = """
             CREATE TABLE IF NOT EXISTS
                 tweets (
-                    id integer primary key,
+                    id integer not null,
                     user_id integer,
                     date text not null,
                     time text not null,
@@ -37,7 +37,9 @@ def init(db):
                     retweet bool,
                     user_rt text,
                     mentions text,
-                    date_update text not null
+                    date_update text not null,
+                    search_name text not null,
+                    PRIMARY KEY (id, search_name)
                 );
         """
         cursor.execute(table_tweets)
@@ -175,7 +177,7 @@ def user(conn, Username, Followers,  User):
     except sqlite3.IntegrityError:
         pass
 
-def tweets(conn, Tweet):
+def tweets(conn, Tweet, config):
     try:
         date_time = str(datetime.now())
         cursor = conn.cursor()
@@ -195,8 +197,9 @@ def tweets(conn, Tweet):
                     Tweet.retweet,
                     Tweet.user_rt,
                     ",".join(Tweet.mentions),
-                    date_time,)
-        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
+                    date_time,
+                    config.search_name,)
+        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
         conn.commit()
     except sqlite3.IntegrityError:
         pass
