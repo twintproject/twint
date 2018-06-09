@@ -6,6 +6,10 @@ def run(x):
 
 def Favorites(config):
     config.Favorites = True
+    if config.Username:
+        config.search_name="Favourites"+str(config.Username) #to identify to which user is related to
+    else:
+        config.search_name="Favourites"+str(config.User_id) #to identify to which user is related to
     run(favorites.Favorites(config).main())
 
 def Followers(config):
