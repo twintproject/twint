@@ -21,7 +21,7 @@ def init(hostname,Database,db_user,db_pwd):
                      passwd=db_pwd,  # your password
                      db=Database,# name of the data base
 					 charset='utf8mb4',
-                     use_unicode=True)          
+                     use_unicode=True)
         cursor = conn.cursor()
        #here would be the code for creating the tables if them don't exist
         return conn
@@ -33,7 +33,7 @@ def fTable(Followers):
         table = "followers_names"
     else:
         table = "following_names"
-    
+
     return table
 
 def uTable(Followers):
@@ -41,7 +41,7 @@ def uTable(Followers):
         table = "followers"
     else:
         table = "following"
-    
+
     return table
 
 def follow(conn, Username, Followers, User):
@@ -74,16 +74,16 @@ def user(conn, Username, Followers,  User):
                 User.media_count,
                 User.is_private,
                 User.is_verified,
-                User.avatar, 
+                User.avatar,
                 date_time,
                 Username,)
         query = 'INSERT INTO {} VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'.format(uTable(Followers))
         cursor.execute(query, entry)
         conn.commit()
- 
+
     except MySQLdb.IntegrityError:
         pass
-           
+
 
 def tweets(conn, Tweet, config):
     try:
@@ -106,7 +106,7 @@ def tweets(conn, Tweet, config):
                     Tweet.user_rt,
                     ",".join(Tweet.mentions),
                     date_time,
-                    config.search_name,)
+                    config.Search_name,)
         cursor.execute('INSERT INTO tweets VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', entry)
         conn.commit()
     except MySQLdb.IntegrityError:
