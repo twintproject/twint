@@ -53,13 +53,13 @@ async def Tweets(tw, location, config, conn):
         tweet = Tweet(tw, location, config)
         if datecheck(tweet.datestamp, config):
             output = format.Tweet(config, tweet)
-           
+
             if config.hostname:
                 dbmysql.tweets(conn, tweet, config)
             elif config.Database:
                 db.tweets(conn, tweet, config)
             if config.Elasticsearch:
-                elasticsearch.Tweet(tweet, config.Elasticsearch, config.Essid)
+                elasticsearch.Tweet(tweet, config)
             _output(tweet, output, config)
 
 async def Users(u, config, conn):
@@ -76,11 +76,10 @@ async def Users(u, config, conn):
         _save_time = user.join_time
         user.join_date = str(datetime.strptime(user.join_date, "%d %b %Y")).split()[0]
         user.join_time = str(datetime.strptime(user.join_time, "%I:%M %p")).split()[1]
-        elasticsearch.UserProfile(config.Elasticsearch, user,
-                config.Username, config.Essid)
+        elasticsearch.UserProfile(user, config)
         user.join_date = _save_date
         user.join_time = _save_time
-    
+
     _output(user, output, config)
 
 async def Username(username, config, conn):
@@ -90,7 +89,6 @@ async def Username(username, config, conn):
         db.follow(conn, config.Username, config.Followers, username)
 
     if config.Elasticsearch:
-        elasticsearch.Follow(config.Elasticsearch, username,
-                config.Username, config.Essid)
+        elasticsearch.Follow(username, config)
 
     _output(username, username, config)
