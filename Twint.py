@@ -112,7 +112,10 @@ def initialize(args):
     c.Profile_full = args.profile_full
     c.Store_pandas = args.store_pandas
     c.Pandas_type = args.pandas_type
-    c.search_name = args.search_name
+    c.Search_name = args.search_name
+    c.Index_tweets = args.index_tweets
+    c.Index_follow = args.index_follow
+    c.Index_users = args.index_users
     return c
 
 def options():
@@ -132,7 +135,7 @@ def options():
     ap.add_argument("--since", help="Filter Tweets sent since date (Example: 2017-12-27).")
     ap.add_argument("--until", help="Filter Tweets sent until date (Example: 2017-12-27).")
     ap.add_argument("--fruit", help="Display 'low-hanging-fruit' Tweets.", action="store_true")
-    ap.add_argument("--verified", help="Display Tweets only from verified users (Use with -s).", 
+    ap.add_argument("--verified", help="Display Tweets only from verified users (Use with -s).",
             action="store_true")
     ap.add_argument("--csv", help="Write as .csv file.", action="store_true")
     ap.add_argument("--json", help="Write as .json file", action="store_true")
@@ -160,14 +163,17 @@ def options():
     ap.add_argument("--format", help="Custom output format (See wiki for details).")
     ap.add_argument("--user-full", help="Collect all user information (Use with followers or following only).",
             action="store_true")
-    ap.add_argument("--profile-full", 
+    ap.add_argument("--profile-full",
             help="Slow, but effective method of collecting a user's Tweets (Including Retweets).",
             action="store_true")
     ap.add_argument("--store-pandas", help="Save Tweets in a DataFrame (Pandas) file.")
     ap.add_argument("--pandas-type", help="Specify HDF5 or Pickle (HDF5 as default)")
-    ap.add_argument("--search_name", help="name for identify the search like -3dprinter stuff- only for mysql")
+    ap.add_argument("--search_name", help="Name for identify the search like -3dprinter stuff- only for mysql")
+    ap.add_argument("-it", "--index-tweets", help="Custom Elasticsearch Index name for Tweets.")
+    ap.add_argument("-if", "--index-follow", help="Custom Elasticsearch Index name for Follows.")
+    ap.add_argument("-iu", "--index-users", help="Custom Elasticsearch Index name for Users.")
     args = ap.parse_args()
-    
+
     return args
 
 def main():
@@ -176,9 +182,18 @@ def main():
 
     if args.userlist:
         args.username = loadUserList(args.userlist, "search")
-    
+
     if not args.pandas_type:
         args.pandas_type = "HDF5"
+
+    if not args.index_tweets:
+        args.index_tweets = "twint"
+
+    if not args.index_follow:
+        args.index_follow = "twintGraph"
+
+    if not args.index_users:
+        args.index_users = "twintUser"
 
     c = initialize(args)
 
