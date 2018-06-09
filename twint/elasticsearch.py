@@ -30,7 +30,7 @@ def weekday(day):
 def hour(datetime):
     return strftime("%H", localtime(datetime))
 
-def Tweet(Tweet, es, session):
+def Tweet(Tweet, config):
     day = weekday(strftime("%A", localtime(Tweet.datetime)))
 
     actions = []
@@ -41,9 +41,9 @@ def Tweet(Tweet, es, session):
     dt = "{} {}".format(Tweet.datestamp, Tweet.timestamp)
 
     j_data = {
-            "_index": "twint",
+            "_index": config.Index_tweets,
             "_type": "items",
-            "_id": Tweet.id + "_raw_" + str(session),
+            "_id": Tweet.id + "_raw_" + config.Essid,
             "_source": {
                 "id": Tweet.id,
                 "date": dt,
@@ -58,16 +58,16 @@ def Tweet(Tweet, es, session):
                 "link": Tweet.link,
                 "retweet": Tweet.retweet,
                 "user_rt": Tweet.user_rt,
-                "essid": str(session)
+                "essid": config.Essid
                 }
             }
     actions.append(j_data)
 
     for l in range(int(Tweet.likes)):
         j_data = {
-                "_index": "twint",
+                "_index": config.Index_tweets,
                 "_type": "items",
-                "_id": Tweet.id + "_likes_" + str(nLikes) + "_" + str(session),
+                "_id": Tweet.id + "_likes_" + str(nLikes) + "_" + config.Essid,
                 "_source": {
                     "id": Tweet.id,
                     "date": dt,
@@ -83,7 +83,7 @@ def Tweet(Tweet, es, session):
                     "link": Tweet.link,
                     "retweet": Tweet.retweet,
                     "user_rt": Tweet.user_rt,
-                    "essid": str(session)
+                    "essid": config.Essid
                     }
                 }
         actions.append(j_data)
@@ -91,9 +91,9 @@ def Tweet(Tweet, es, session):
 
     for rep in range(int(Tweet.replies)):
         j_data = {
-                "_index": "twint",
+                "_index": config.Index_tweets,
                 "_type": "items",
-                "_id": Tweet.id + "_replies_" + str(nReplies) + "_" + str(session),
+                "_id": Tweet.id + "_replies_" + str(nReplies) + "_" + config.Essid,
                 "_source": {
                     "id": Tweet.id,
                     "date": dt,
@@ -109,7 +109,7 @@ def Tweet(Tweet, es, session):
                     "link": Tweet.link,
                     "retweet": Tweet.retweet,
                     "user_rt": Tweet.user_rt,
-                    "essid": str(session)
+                    "essid": config.Essid
                     }
                 }
         actions.append(j_data)
@@ -117,9 +117,9 @@ def Tweet(Tweet, es, session):
 
     for ret in range(int(Tweet.retweets)):
         j_data = {
-                "_index": "twint",
+                "_index": config.Index_tweets,
                 "_type": "items",
-                "_id": Tweet.id + "_retweets_" + str(nRetweets) + "_" + str(session),
+                "_id": Tweet.id + "_retweets_" + str(nRetweets) + "_" + config.Essid,
                 "_source": {
                     "id": Tweet.id,
                     "date": dt,
@@ -135,44 +135,44 @@ def Tweet(Tweet, es, session):
                     "link": Tweet.link,
                     "retweet": Tweet.retweet,
                     "user_rt": Tweet.user_rt,
-                    "essid": str(session)
+                    "essid": config.Essid
                     }
                 }
         actions.append(j_data)
         nRetweets += 1
 
-    es = Elasticsearch(es)
+    es = Elasticsearch(config.Elasticsearch)
     with nostdout():
         helpers.bulk(es, actions, chunk_size=2000, request_timeout=200)
     actions = []
 
-def Follow(es, user, follow, session):
+def Follow(user, config):
     actions = []
 
     j_data = {
-            "_index": "twintGraph",
+            "_index": config.Index_follow,
             "_type": "items",
-            "_id": user + "_" + follow + "_" + str(session),
+            "_id": user + "_" + config.Username + "_" + config.Essid,
             "_source": {
                 "user": user,
-                "follow": follow,
-                "essid": str(session)
+                "follow": config.Username,
+                "essid": config.Essid
                 }
             }
     actions.append(j_data)
 
-    es = Elasticsearch(es)
+    es = Elasticsearch(config.Elasticsearch)
     with nostdout():
         helpers.bulk(es, actions, chunk_size=2000, request_timeout=200)
     actions = []
 
-def UserProfile(es, user, follow, session):
+def UserProfile(user, config):
     actions = []
 
     j_data = {
-            "_index": "twintUser",
+            "_index": config.Index_users,
             "_type": "items",
-            "_id": user.id + "_" + user.join_date + "_" + user.join_time + "_" + str(session),
+            "_id": user.id + "_" + user.join_date + "_" + user.join_time + "_" + config.Essid,
             "_source": {
                 "id": user.id,
                 "name": user.name,
@@ -191,12 +191,12 @@ def UserProfile(es, user, follow, session):
                 "private": user.is_private,
                 "verified": user.is_verified,
                 "avatar": user.avatar,
-                "session": str(session)
+                "session": config.Essid
                 }
             }
     actions.append(j_data)
 
-    es = Elasticsearch(es)
+    es = Elasticsearch(config.Elasticsearch)
     with nostdout():
         helpers.bulk(es, actions, chunk_size=2000, request_timeout=200)
     actions = []
