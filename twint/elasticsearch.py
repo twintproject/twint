@@ -43,7 +43,7 @@ def Tweet(Tweet, config):
     j_data = {
             "_index": config.Index_tweets,
             "_type": "items",
-            "_id": Tweet.id + "_raw_" + config.Essid,
+            "_id": Tweet.id + "_raw_" + str(config.Essid),
             "_source": {
                 "id": Tweet.id,
                 "date": dt,
@@ -58,7 +58,7 @@ def Tweet(Tweet, config):
                 "link": Tweet.link,
                 "retweet": Tweet.retweet,
                 "user_rt": Tweet.user_rt,
-                "essid": config.Essid
+                "essid": str(config.Essid)
                 }
             }
     actions.append(j_data)
@@ -67,7 +67,7 @@ def Tweet(Tweet, config):
         j_data = {
                 "_index": config.Index_tweets,
                 "_type": "items",
-                "_id": Tweet.id + "_likes_" + str(nLikes) + "_" + config.Essid,
+                "_id": Tweet.id + "_likes_" + str(nLikes) + "_" + str(config.Essid),
                 "_source": {
                     "id": Tweet.id,
                     "date": dt,
@@ -83,7 +83,7 @@ def Tweet(Tweet, config):
                     "link": Tweet.link,
                     "retweet": Tweet.retweet,
                     "user_rt": Tweet.user_rt,
-                    "essid": config.Essid
+                    "essid": str(config.Essid)
                     }
                 }
         actions.append(j_data)
@@ -93,7 +93,7 @@ def Tweet(Tweet, config):
         j_data = {
                 "_index": config.Index_tweets,
                 "_type": "items",
-                "_id": Tweet.id + "_replies_" + str(nReplies) + "_" + config.Essid,
+                "_id": Tweet.id + "_replies_" + str(nReplies) + "_" + str(config.Essid),
                 "_source": {
                     "id": Tweet.id,
                     "date": dt,
@@ -109,7 +109,7 @@ def Tweet(Tweet, config):
                     "link": Tweet.link,
                     "retweet": Tweet.retweet,
                     "user_rt": Tweet.user_rt,
-                    "essid": config.Essid
+                    "essid": str(config.Essid)
                     }
                 }
         actions.append(j_data)
@@ -119,7 +119,7 @@ def Tweet(Tweet, config):
         j_data = {
                 "_index": config.Index_tweets,
                 "_type": "items",
-                "_id": Tweet.id + "_retweets_" + str(nRetweets) + "_" + config.Essid,
+                "_id": Tweet.id + "_retweets_" + str(nRetweets) + "_" + str(config.Essid),
                 "_source": {
                     "id": Tweet.id,
                     "date": dt,
@@ -135,7 +135,7 @@ def Tweet(Tweet, config):
                     "link": Tweet.link,
                     "retweet": Tweet.retweet,
                     "user_rt": Tweet.user_rt,
-                    "essid": config.Essid
+                    "essid": str(config.Essid)
                     }
                 }
         actions.append(j_data)
@@ -152,11 +152,11 @@ def Follow(user, config):
     j_data = {
             "_index": config.Index_follow,
             "_type": "items",
-            "_id": user + "_" + config.Username + "_" + config.Essid,
+            "_id": user + "_" + config.Username + "_" + str(config.Essid),
             "_source": {
                 "user": user,
                 "follow": config.Username,
-                "essid": config.Essid
+                "essid": str(config.Essid)
                 }
             }
     actions.append(j_data)
@@ -172,7 +172,7 @@ def UserProfile(user, config):
     j_data = {
             "_index": config.Index_users,
             "_type": "items",
-            "_id": user.id + "_" + user.join_date + "_" + user.join_time + "_" + config.Essid,
+            "_id": user.id + "_" + user.join_date + "_" + user.join_time + "_" + str(config.Essid),
             "_source": {
                 "id": user.id,
                 "name": user.name,
@@ -191,7 +191,7 @@ def UserProfile(user, config):
                 "private": user.is_private,
                 "verified": user.is_verified,
                 "avatar": user.avatar,
-                "session": config.Essid
+                "session": str(config.Essid)
                 }
             }
     actions.append(j_data)
