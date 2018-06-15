@@ -31,7 +31,16 @@ def hour(datetime):
     return strftime("%H", localtime(datetime))
 
 def Tweet(Tweet, config):
-    day = weekday(strftime("%A", localtime(Tweet.datetime)))
+    weekdays = {
+            "Monday": 1,
+            "Tuesday": 2,
+            "Wednesday": 3,
+            "Thursday": 4,
+            "Friday": 5,
+            "Saturday": 6,
+            "Sunday": 7,
+            }
+    day = weekdays[strftime("%A", localtime(Tweet.datetime))]
 
     actions = []
     nLikes = 0
