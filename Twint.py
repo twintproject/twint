@@ -197,7 +197,6 @@ def main():
 
     if not args.essid:
         args.essid = ""
-        print(args.essid)
 
     c = initialize(args)
 
