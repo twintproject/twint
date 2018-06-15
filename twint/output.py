@@ -42,7 +42,10 @@ def _output(obj, output, config):
         if config.Store_object:
             tweets_object.append(obj)
         else:
-            print(output)
+            try:
+                print(output)
+            except UnicodeEncodeError:
+                pass
 
 async def Tweets(tw, location, config, conn):
     copyright = tw.find("div", "StreamItemContent--withheld")
