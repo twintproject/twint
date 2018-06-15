@@ -42,6 +42,6 @@ class Config:
     Pandas_type = None
     Pandas = False
     Search_name = "-" #for identify a records in mysql with the search it provides from.  it cannot be null for DB requirements. a tweet must be in several search so the PK are tweet ID and search_name
-    Index_tweets = None
-    Index_follow = None
-    Index_users = None
+    Index_tweets = "twint"
+    Index_follow = "twintGraph"
+    Index_users = "twintUser"
