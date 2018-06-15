@@ -29,7 +29,7 @@ class Config:
     All = None
     Debug = False
     Format = None
-    Essid = None
+    Essid = ""
     Profile = False
     Followers = False
     Following = False
