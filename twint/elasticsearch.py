@@ -46,7 +46,6 @@ def Tweet(Tweet, config):
     nLikes = 0
     nReplies = 0
     nRetweets = 0
-    print(config.Essid)
 
     dt = "{} {}".format(Tweet.datestamp, Tweet.timestamp)
 
