@@ -25,6 +25,7 @@ def update(Tweet, session):
                 "retweet": Tweet.retweet,
                 "user_rt": Tweet.user_rt,
                 "essid": str(session)
+                'mentions': Tweet.mentions
                 }
     _blocks.append(_data)
 
