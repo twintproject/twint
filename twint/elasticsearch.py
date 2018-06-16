@@ -31,7 +31,16 @@ def hour(datetime):
     return strftime("%H", localtime(datetime))
 
 def Tweet(Tweet, config):
-    day = weekday(strftime("%A", localtime(Tweet.datetime)))
+    weekdays = {
+            "Monday": 1,
+            "Tuesday": 2,
+            "Wednesday": 3,
+            "Thursday": 4,
+            "Friday": 5,
+            "Saturday": 6,
+            "Sunday": 7,
+            }
+    day = weekdays[strftime("%A", localtime(Tweet.datetime))]
 
     actions = []
     nLikes = 0
@@ -43,7 +52,7 @@ def Tweet(Tweet, config):
     j_data = {
             "_index": config.Index_tweets,
             "_type": "items",
-            "_id": Tweet.id + "_raw_" + str(config.Essid),
+            "_id": Tweet.id + "_raw_" + config.Essid,
             "_source": {
                 "id": Tweet.id,
                 "date": dt,
@@ -58,7 +67,7 @@ def Tweet(Tweet, config):
                 "link": Tweet.link,
                 "retweet": Tweet.retweet,
                 "user_rt": Tweet.user_rt,
-                "essid": str(config.Essid)
+                "essid": config.Essid
                 }
             }
     actions.append(j_data)
@@ -67,7 +76,7 @@ def Tweet(Tweet, config):
         j_data = {
                 "_index": config.Index_tweets,
                 "_type": "items",
-                "_id": Tweet.id + "_likes_" + str(nLikes) + "_" + str(config.Essid),
+                "_id": Tweet.id + "_likes_" + str(nLikes) + "_" + config.Essid,
                 "_source": {
                     "id": Tweet.id,
                     "date": dt,
@@ -83,7 +92,7 @@ def Tweet(Tweet, config):
                     "link": Tweet.link,
                     "retweet": Tweet.retweet,
                     "user_rt": Tweet.user_rt,
-                    "essid": str(config.Essid)
+                    "essid": config.Essid
                     }
                 }
         actions.append(j_data)
@@ -93,7 +102,7 @@ def Tweet(Tweet, config):
         j_data = {
                 "_index": config.Index_tweets,
                 "_type": "items",
-                "_id": Tweet.id + "_replies_" + str(nReplies) + "_" + str(config.Essid),
+                "_id": Tweet.id + "_replies_" + str(nReplies) + "_" + config.Essid,
                 "_source": {
                     "id": Tweet.id,
                     "date": dt,
@@ -109,7 +118,7 @@ def Tweet(Tweet, config):
                     "link": Tweet.link,
                     "retweet": Tweet.retweet,
                     "user_rt": Tweet.user_rt,
-                    "essid": str(config.Essid)
+                    "essid": config.Essid
                     }
                 }
         actions.append(j_data)
@@ -119,7 +128,7 @@ def Tweet(Tweet, config):
         j_data = {
                 "_index": config.Index_tweets,
                 "_type": "items",
-                "_id": Tweet.id + "_retweets_" + str(nRetweets) + "_" + str(config.Essid),
+                "_id": Tweet.id + "_retweets_" + str(nRetweets) + "_" + config.Essid,
                 "_source": {
                     "id": Tweet.id,
                     "date": dt,
@@ -135,7 +144,7 @@ def Tweet(Tweet, config):
                     "link": Tweet.link,
                     "retweet": Tweet.retweet,
                     "user_rt": Tweet.user_rt,
-                    "essid": str(config.Essid)
+                    "essid": config.Essid
                     }
                 }
         actions.append(j_data)
@@ -152,11 +161,11 @@ def Follow(user, config):
     j_data = {
             "_index": config.Index_follow,
             "_type": "items",
-            "_id": user + "_" + config.Username + "_" + str(config.Essid),
+            "_id": user + "_" + config.Username + "_" + config.Essid,
             "_source": {
                 "user": user,
                 "follow": config.Username,
-                "essid": str(config.Essid)
+                "essid": config.Essid
                 }
             }
     actions.append(j_data)
@@ -172,7 +181,7 @@ def UserProfile(user, config):
     j_data = {
             "_index": config.Index_users,
             "_type": "items",
-            "_id": user.id + "_" + user.join_date + "_" + user.join_time + "_" + str(config.Essid),
+            "_id": user.id + "_" + user.join_date + "_" + user.join_time + "_" + config.Essid,
             "_source": {
                 "id": user.id,
                 "name": user.name,
@@ -191,7 +200,7 @@ def UserProfile(user, config):
                 "private": user.is_private,
                 "verified": user.is_verified,
                 "avatar": user.avatar,
-                "session": str(config.Essid)
+                "session": config.Essid
                 }
             }
     actions.append(j_data)
