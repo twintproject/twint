@@ -54,9 +54,7 @@ async def Tweets(tw, location, config, conn):
         if datecheck(tweet.datestamp, config):
             output = format.Tweet(config, tweet)
 
-            if config.hostname:
-                dbmysql.tweets(conn, tweet, config)
-            elif config.Database:
+            if config.Database:
                 db.tweets(conn, tweet, config)
             if config.Elasticsearch:
                 elasticsearch.Tweet(tweet, config)
@@ -83,9 +81,7 @@ async def Users(u, config, conn):
     _output(user, output, config)
 
 async def Username(username, config, conn):
-    if config.hostname:
-        dbmysql.follow(conn, config.Username, config.Followers, username)
-    elif config.Database:
+    if config.Database:
         db.follow(conn, config.Username, config.Followers, username)
 
     if config.Elasticsearch:

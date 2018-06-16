@@ -6,9 +6,7 @@ class Follow:
         self.feed = [-1]
         self.count = 0
         self.config = config
-        if config.hostname:
-            self.conn = dbmysql.Conn(config.hostname, config.Database, config.DB_user, config.DB_pwd)
-        else:
+        if config.Database:
             self.conn = db.Conn(config.Database)
         verbose.Elastic(config)
 
@@ -27,7 +25,7 @@ class Follow:
         else:
             for user in self.feed:
                 self.count += 1
-                username = user.find("a")["name"] 
+                username = user.find("a")["name"]
                 await output.Username(username, self.config, self.conn)
 
     async def main(self):
@@ -39,8 +37,8 @@ class Follow:
                 await self.follow()
             else:
                 break
-                
+
             if get.Limit(self.config.Limit, self.count):
                 break
-        
+
         verbose.Count(self.config, self.count)
