@@ -195,6 +195,9 @@ def main():
     if not args.index_users:
         args.index_users = "twintUser"
 
+    if not args.essid:
+        args.essid = ""
+
     c = initialize(args)
 
     if args.favorites:
