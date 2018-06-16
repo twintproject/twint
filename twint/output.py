@@ -64,9 +64,7 @@ async def Users(u, config, conn):
     user = User(u)
     output = format.User(config.Format, user)
 
-    if config.hostname:
-        dbmysql.user(conn, config.Username, config.Followers, user)
-    elif config.Database:
+    if config.Database:
         db.user(conn, config.Username, config.Followers, user)
 
     if config.Elasticsearch:
