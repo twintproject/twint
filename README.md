@@ -21,9 +21,9 @@ Some of the benefits of using Twint vs Twitter API:
 - `pip3 install -r requirements.txt`
 
 ## Installing
-- **Git**: `git clone https://github.com/haccer/twint.git`
+- **Git**: `git clone https://github.com/twintproject/twint.git`
 - **Pip**: `pip3 install twint`
-- **With MySQL**: `git clone -b mysql --single-branch https://github.com/haccer/twint.git twint-mysql`
+- **With MySQL**: `git clone -b mysql --single-branch https://github.com/twintproject/twint.git twint-mysql`
 
 ## Basic Examples and Combos.
 A few simple examples to help you understand the basics:
@@ -48,10 +48,10 @@ A few simple examples to help you understand the basics:
 - `python3 twint.py -u username --profile-full` - Use a slow, but effective method to gather all the Tweets from a user's profile (Including Retweets).
 - `python3 twint.py -u username --retweets` - Use a quick method to gather the last 900 Tweets (that includes retweets) from a user's profile.
 
-More detail about the commands and options are located in the [wiki](https://github.com/haccer/twint/wiki/Commands)
+More detail about the commands and options are located in the [wiki](https://github.com/twintproject/twint/wiki/Commands)
 
 ## Using Twint as a Module (Recommended)
-Twint can now be used as a module and supports custom formatting. **More details are located in the [wiki](https://github.com/haccer/twint/wiki/Module)**
+Twint can now be used as a module and supports custom formatting. **More details are located in the [wiki](https://github.com/twintproject/twint/wiki/Module)**
 
 #### Example
 ```python
@@ -79,19 +79,15 @@ twint.run.Search(c)
 - MySQL (See MySQL Branch)
 ### Elasticsearch Setup
 
-Details on setting up Elasticsearch with Twint is located in the [wiki](https://github.com/haccer/twint/wiki/Elasticsearch). 
+Details on setting up Elasticsearch with Twint is located in the [wiki](https://github.com/twintproject/twint/wiki/Elasticsearch). 
 
 ### Graph Visualization
 ![graph](https://i.imgur.com/EEJqB8n.png)
 
-[Graph](https://github.com/haccer/twint/tree/master/graph) details are also located in the [wiki](https://github.com/haccer/twint/wiki/Graph). 
+[Graph](https://github.com/twintproject/twint/tree/master/graph) details are also located in the [wiki](https://github.com/twintproject/twint/wiki/Graph). 
 
 We are testing a (free) graph plugin for Kibana, details located in the Wiki!
 
-## Thanks
-Thanks to [@hpiedcoq](https://github.com/hpiedcoq) & [@pielco11](https://github.com/pielco11) for contributing several features!
-
 ## Contact
-Shout me out on Twitter: [@now](https://twitter.com/now)
 
-If you have problems or have suggestions don't hesitate to open an issue or ask about it directly. 
+If you have any questions, want to join in on discussions, or need extra help, you are welcome to join our OSINT focused [Slack server](https://os-int.slack.com/join/shared_invite/enQtMzc4NzY5ODI3NDI3LWRlOGNhN2U3OTUwY2Q1OTk5MDI2YjliOWQ1OTI5NzAyZjc0MDhiYTQ3NTY4MjMxY2E0MTRhOTVlN2M0ZmJhMjI).

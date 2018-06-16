@@ -198,7 +198,7 @@ def tweets(conn, Tweet, config):
                     Tweet.user_rt,
                     ",".join(Tweet.mentions),
                     date_time,
-                    config.Search_name,)
+                    config.search_name,)
         cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
         conn.commit()
     except sqlite3.IntegrityError:
