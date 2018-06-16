@@ -1,4 +1,4 @@
-from . import db, get, feed, output, verbose, dbmysql
+from . import db, get, feed, output, verbose
 
 class Profile:
     def __init__(self, config):
