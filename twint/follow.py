@@ -6,8 +6,7 @@ class Follow:
         self.feed = [-1]
         self.count = 0
         self.config = config
-        if config.Database:
-            self.conn = db.Conn(config.Database)
+        self.conn = db.Conn(config.Database)
         verbose.Elastic(config)
 
     async def Feed(self):
