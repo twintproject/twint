@@ -91,7 +91,7 @@ def init(db):
                 );
         """
         cursor.execute(table_followers)
-        
+
         table_following = """
             CREATE TABLE IF NOT EXISTS
                 following (
@@ -127,7 +127,7 @@ def fTable(Followers):
         table = "followers_names"
     else:
         table = "following_names"
-    
+
     return table
 
 def uTable(Followers):
@@ -135,7 +135,7 @@ def uTable(Followers):
         table = "followers"
     else:
         table = "following"
-    
+
     return table
 
 def follow(conn, Username, Followers, User):
@@ -168,7 +168,7 @@ def user(conn, Username, Followers,  User):
                 User.media_count,
                 User.is_private,
                 User.is_verified,
-                User.avatar, 
+                User.avatar,
                 date_time,
                 Username,)
         query = 'INSERT INTO {} VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'.format(uTable(Followers))

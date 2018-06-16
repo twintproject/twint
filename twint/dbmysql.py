@@ -33,7 +33,6 @@ def fTable(Followers):
         table = "followers_names"
     else:
         table = "following_names"
-    
     return table
 
 def uTable(Followers):
@@ -41,7 +40,6 @@ def uTable(Followers):
         table = "followers"
     else:
         table = "following"
-    
     return table
 
 def follow(conn, Username, Followers, User):
@@ -80,10 +78,9 @@ def user(conn, Username, Followers,  User):
         query = 'INSERT INTO {} VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'.format(uTable(Followers))
         cursor.execute(query, entry)
         conn.commit()
- 
     except MySQLdb.IntegrityError:
         pass
-           
+
 
 def tweets(conn, Tweet, config):
     try:
