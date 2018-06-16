@@ -1,4 +1,4 @@
-from . import feed, get, db, output, verbose, dbmysql
+from . import feed, get, db, output, verbose
 
 class Follow:
     def __init__(self, config):
