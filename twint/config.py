@@ -43,3 +43,6 @@ class Config:
     Index_users = "twintUser"
     Debug = False
     Resume = None
+    Images = False
+    Videos = False
+    Media = False
