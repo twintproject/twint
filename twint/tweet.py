@@ -24,9 +24,9 @@ def getTweet(tw, mentions):
     try:
         text = getText(tw)
         for i in range(len(mentions)):
-            mention = "@{}".format(mentions[i])
+            mention = f"@{mentions[i]}"
             if mention not in text:
-                text = "{} {}".format(mention, text)
+                text = f"{mention} {text}"
     except:
         text = getText(tw)
 
@@ -36,7 +36,7 @@ def getHashtags(text):
     return re.findall(r'(?i)\#\w+', text, flags=re.UNICODE)
 
 def getStat(tw, _type):
-    st = "ProfileTweet-action--{} u-hiddenVisually".format(_type)
+    st = f"ProfileTweet-action--{_type} u-hiddenVisually"
     return tw.find("span", st).find("span")["data-tweet-stat-count"]
 
 def getRetweet(profile, username, user):
@@ -61,7 +61,7 @@ def Tweet(tw, location, config):
     t.username = tw.find("span", "username").text.replace("@", "")
     t.timezone = strftime("%Z", localtime())
     for img in tw.findAll("img", "Emoji Emoji--forText"):
-        img.replaceWith("<{}>".format(img['aria-label']))
+        img.replaceWith(img["alt"])
     t.mentions = getMentions(tw)
     t.tweet = getTweet(tw, t.mentions)
     t.location = location
@@ -69,7 +69,7 @@ def Tweet(tw, location, config):
     t.replies = getStat(tw, "reply")
     t.retweets = getStat(tw, "retweet")
     t.likes = getStat(tw, "favorite")
-    t.link = "https://twitter.com/{0.username}/status/{0.id}".format(t)
+    t.link = f"https://twitter.com/{t.username}/status/{t.id}"
     t.retweet = getRetweet(config.Profile, t.username, config.Username)
     t.user_rt = getUser_rt(config.Profile, t.username, config.Username)
     return t

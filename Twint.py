@@ -116,6 +116,8 @@ def initialize(args):
     c.Index_tweets = args.index_tweets
     c.Index_follow = args.index_follow
     c.Index_users = args.index_users
+    c.Debug = args.debug
+    c.Resume = args.resume
     return c
 
 def options():
@@ -172,6 +174,8 @@ def options():
     ap.add_argument("-it", "--index-tweets", help="Custom Elasticsearch Index name for Tweets.")
     ap.add_argument("-if", "--index-follow", help="Custom Elasticsearch Index name for Follows.")
     ap.add_argument("-iu", "--index-users", help="Custom Elasticsearch Index name for Users.")
+    ap.add_argument("--debug", help="Store information in debug logs", action="store_true")
+    ap.add_argument("--resume", help="Resume from Tweet ID.")
     args = ap.parse_args()
 
     return args
@@ -219,4 +223,9 @@ def main():
         twint.run.Search(c)
 
 if __name__ == "__main__":
+    version = ".".join(str(v) for v in sys.version_info[:2])
+    if float(version) < 3.6:
+        print("[-] TWINT requires Python version 3.6+.")
+        sys.exit(0)
+
     main()

@@ -1,3 +1,4 @@
+## TODO - Fix Weekday situation
 from elasticsearch import Elasticsearch, helpers
 from time import strftime, localtime
 import contextlib
@@ -47,7 +48,7 @@ def Tweet(Tweet, config):
     nReplies = 0
     nRetweets = 0
 
-    dt = "{} {}".format(Tweet.datestamp, Tweet.timestamp)
+    dt = f"{Tweet.datestamp} {Tweet.timestamp}"
 
     j_data = {
             "_index": config.Index_tweets,

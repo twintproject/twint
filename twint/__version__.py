@@ -1,3 +1,3 @@
-VERSION = (1, 1, 3, 5) #mysql support
+VERSION = (1, 1, 4)
 
 __version__ = '.'.join(map(str, VERSION))

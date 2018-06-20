@@ -26,6 +26,9 @@ async def RequestUrl(config, init):
             _url = await url.Favorites(config.Username, init)
         response = await MobileRequest(_url)
 
+    if config.Debug:
+        print(_url, file=open("twint-request_urls.log", "a", encoding="utf-8"))
+
     return response
 
 async def MobileRequest(url):
@@ -45,7 +48,7 @@ async def Response(session, url):
             return await response.text()
 
 async def Username(_id):
-    url = "https://twitter.com/intent/user?user_id={}&lang=en".format(_id)
+    url = f"https://twitter.com/intent/user?user_id={_id}&lang=en"
     r = Request(url)
     soup = BeautifulSoup(r, "html.parser")
 
@@ -84,13 +87,13 @@ async def Multi(feed, config, conn):
                 count += 1
                 if config.Favorites or config.Profile_full:
                     link = tweet.find("a")["href"]
-                    url = "https://twitter.com{}&lang=en".format(link)
+                    url = f"https://twitter.com{link}&lang=en"
                 elif config.User_full:
                     username = tweet.find("a")["name"]
-                    url = "http://twitter.com/{}?lang=en".format(username)
+                    url = f"http://twitter.com/{username}?lang=en"
                 else:
                     link = tweet.find("a", "tweet-timestamp js-permalink js-nav js-tooltip")["href"]
-                    url = "https://twitter.com{}?lang=en".format(link)
+                    url = f"https://twitter.com{link}?lang=en"
                 
                 if config.User_full:
                     futures.append(loop.run_in_executor(executor, await User(url,
