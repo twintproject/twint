@@ -5,5 +5,3 @@ cchardet
 elasticsearch
 pysocks
 pandas
-tables
-mysqlclient

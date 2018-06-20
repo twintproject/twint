@@ -1,9 +1,8 @@
-from datetime import datetime
-
-from . import db, elasticsearch, format, write, Pandas
+from . import format
 from .tweet import Tweet
 from .user import User
-
+from datetime import datetime
+from .storage import db, elasticsearch, write, panda
 
 tweets_object = []
 
@@ -53,17 +52,19 @@ async def Tweets(tw, location, config, conn):
         tweet = Tweet(tw, location, config)
         if datecheck(tweet.datestamp, config):
             output = format.Tweet(config, tweet)
-
+            
             if config.Database:
                 db.tweets(conn, tweet, config)
+            
             if config.Elasticsearch:
                 elasticsearch.Tweet(tweet, config)
+            
             _output(tweet, output, config)
 
 async def Users(u, config, conn):
     user = User(u)
     output = format.User(config.Format, user)
-
+    
     if config.Database:
         db.user(conn, config.Username, config.Followers, user)
 

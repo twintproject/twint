@@ -23,7 +23,6 @@ Some of the benefits of using Twint vs Twitter API:
 ## Installing
 - **Git**: `git clone https://github.com/twintproject/twint.git`
 - **Pip**: `pip3 install twint`
-- **With MySQL**: `git clone -b mysql --single-branch https://github.com/twintproject/twint.git twint-mysql`
 
 ## Basic Examples and Combos.
 A few simple examples to help you understand the basics:
@@ -76,7 +75,7 @@ twint.run.Search(c)
 - SQLite
 - Mysql (DB collation utf8mb4)
 - Elasticsearch
-- MySQL (See MySQL Branch)
+
 ### Elasticsearch Setup
 
 Details on setting up Elasticsearch with Twint is located in the [wiki](https://github.com/twintproject/twint/wiki/Elasticsearch). 

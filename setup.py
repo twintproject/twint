@@ -7,7 +7,7 @@ import sys
 # Package meta-data
 NAME = 'twint'
 DESCRIPTION = 'An advanced Twitter scraping & OSINT tool.'
-URL = 'https://github.com/haccer/twint'
+URL = 'https://github.com/twintproject/twint'
 EMAIL = 'codyzacharias@pm.me'
 AUTHOR = 'Cody Zacharias'
 REQUIRES_PYTHON = '>=3.5.0'
@@ -15,7 +15,8 @@ VERSION = None
 
 # Packages required
 REQUIRED = [
-		'aiohttp', 'aiodns', 'beautifulsoup4', 'cchardet', 'elasticsearch'
+		'aiohttp', 'aiodns', 'beautifulsoup4', 'cchardet', 
+                'elasticsearch', 'pysocks', 'pandas'
 		]
 
 here = os.path.abspath(os.path.dirname(__file__))
