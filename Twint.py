@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 '''
 Twint.py - Twitter Intelligence Tool (formerly known as Tweep).
 
