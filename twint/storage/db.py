@@ -38,8 +38,7 @@ def init(db):
                     user_rt text,
                     mentions text,
                     date_update text not null,
-                    search_name text not null,
-                    PRIMARY KEY (id, search_name)
+                    PRIMARY KEY (id)
                 );
         """
         cursor.execute(table_tweets)
@@ -199,9 +198,8 @@ def tweets(conn, Tweet, config):
                     Tweet.retweet,
                     Tweet.user_rt,
                     ",".join(Tweet.mentions),
-                    date_time,
-                    config.search_name,)
-        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
+                    date_time)
+        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
         conn.commit()
     except sqlite3.IntegrityError:
         pass
