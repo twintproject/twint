@@ -118,6 +118,10 @@ def initialize(args):
     c.Index_users = args.index_users
     c.Debug = args.debug
     c.Resume = args.resume
+    c.Images = args.images
+    c.Videos = args.videos
+    c.Media = args.media
+    c.Replies = args.replies
     return c
 
 def options():
@@ -176,9 +180,10 @@ def options():
     ap.add_argument("-iu", "--index-users", help="Custom Elasticsearch Index name for Users.")
     ap.add_argument("--debug", help="Store information in debug logs", action="store_true")
     ap.add_argument("--resume", help="Resume from Tweet ID.")
-    ap.add_argument("--videos", help="Display only Tweets with videos.")
-    ap.add_argument("--images", help="Display only Tweets with images.")
-    ap.add_argument("--media", help="Display Tweets with only images or videos.")
+    ap.add_argument("--videos", help="Display only Tweets with videos.", action="store_true")
+    ap.add_argument("--images", help="Display only Tweets with images.", action="store_true")
+    ap.add_argument("--media", help="Display Tweets with only images or videos.", action="store_true")
+    ap.add_argument("--replies", help="Display replies to a subject.", action="store_true")
     args = ap.parse_args()
 
     return args
