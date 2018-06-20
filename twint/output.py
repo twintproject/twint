@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from . import db, elasticsearch, format, write, Pandas, dbmysql
+from . import db, elasticsearch, format, write, Pandas
 from .tweet import Tweet
 from .user import User
 
@@ -54,9 +54,7 @@ async def Tweets(tw, location, config, conn):
         if datecheck(tweet.datestamp, config):
             output = format.Tweet(config, tweet)
 
-            if config.hostname:
-                dbmysql.tweets(conn, tweet, config)
-            elif config.Database:
+            if config.Database:
                 db.tweets(conn, tweet, config)
             if config.Elasticsearch:
                 elasticsearch.Tweet(tweet, config)
@@ -66,9 +64,7 @@ async def Users(u, config, conn):
     user = User(u)
     output = format.User(config.Format, user)
 
-    if config.hostname:
-        dbmysql.user(conn, config.Username, config.Followers, user)
-    elif config.Database:
+    if config.Database:
         db.user(conn, config.Username, config.Followers, user)
 
     if config.Elasticsearch:
@@ -83,9 +79,7 @@ async def Users(u, config, conn):
     _output(user, output, config)
 
 async def Username(username, config, conn):
-    if config.hostname:
-        dbmysql.follow(conn, config.Username, config.Followers, username)
-    elif config.Database:
+    if config.Database:
         db.follow(conn, config.Username, config.Followers, username)
 
     if config.Elasticsearch:

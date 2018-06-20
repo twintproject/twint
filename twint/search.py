@@ -1,4 +1,4 @@
-from . import datelock, db, get, feed, output, verbose, dbmysql
+from . import datelock, db, get, feed, output, verbose
 from datetime import timedelta
 
 class Search:
@@ -7,10 +7,7 @@ class Search:
         self.feed = [-1]
         self.count = 0
         self.config = config
-        if config.hostname:
-            self.conn = dbmysql.Conn(config.hostname, config.Database, config.DB_user, config.DB_pwd)
-        else:
-            self.conn = db.Conn(config.Database)
+        self.conn = db.Conn(config.Database)
         self.d = datelock.Set(self.config.Until, self.config.Since)
         self.config.TwitterSearch = True
 
@@ -53,7 +50,7 @@ class Search:
                 else:
                     self.d._until = self.d._until - _days
                     self.feed = [-1]
-                    
+
                 if get.Limit(self.config.Limit, self.count):
                     self.d._until = self.d._until - _days
                     self.feed = [-1]
@@ -63,8 +60,8 @@ class Search:
                     await self.tweets()
                 else:
                     break
-                
+
                 if get.Limit(self.config.Limit, self.count):
                     break
-                
+
         verbose.Count(self.config, self.count)
