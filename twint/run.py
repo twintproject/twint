@@ -80,6 +80,7 @@ class Twint:
             self.config.Username = await get.Username(self.config.User_id)
         
         if self.config.TwitterSearch and self.config.Since and self.config.Until:
+            _days = timedelta(days=int(self.config.Timedelta))
             while self.d._since < self.d._until:
                 self.config.Since = str(self.d._until - _days)
                 self.config.Until = str(self.d._until)
