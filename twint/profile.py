@@ -1,4 +1,4 @@
-from . import db, get, feed, output, verbose, dbmysql
+from . import db, get, feed, output, verbose
 
 class Profile:
     def __init__(self, config):
@@ -7,15 +7,12 @@ class Profile:
         self.count = 0
         self.config = config
 
-        if config.hostname:
-            self.conn = dbmysql.Conn(config.hostname, config.Database, config.DB_user, config.DB_pwd)
-        else:
-            self.conn = db.Conn(config.Database)
+        self.conn = db.Conn(config.Database)
 
         self.config.Profile = True
 
         verbose.Elastic(config)
-        
+
     async def Feed(self):
         response = await get.RequestUrl(self.config, self.init)
         self.feed = []
@@ -45,7 +42,7 @@ class Profile:
                 await self.tweets()
             else:
                 break
-                
+
             if get.Limit(self.config.Limit, self.count):
                 break
 
