@@ -17,21 +17,20 @@ def Tweet(config, t):
         output = output.replace("{user_rt}", t.user_rt)
         output = output.replace("{mentions}", str(t.mentions))
     else:
-        output = "{} {} {} {} ".format(t.id, t.datestamp,
-                t.timestamp, t.timezone)
+        output = f"{t.id} {t.datestamp} {t.timestamp} {t.timezone} "
 
         if config.Profile and t.username.lower() != config.Username:
            output += "RT "
 
-        output += "<{}> {}".format(t.username, t.tweet)
+        output += f"<{t.username}> {t.tweet}"
 
         if config.Show_hashtags:
-            output += " {}".format(",".join(t.hashtags))
+            hashtags = ",".join(t.hashtags)
+            output += f" {hashtags}"
         if config.Stats:
-            output += " | {} replies {} retweets {} likes".format(t.replies,
-                    t.retweets, t.likes)
+            output += f" | {t.replies} replies {t.retweets} retweets {t.likes} likes"
         if config.Location:
-            output += " | Location {}".format(t.location)
+            output += f" | Location {t.location}"
 
     return output
 
@@ -54,12 +53,12 @@ def User(_format, u):
         output += output.replace("{verified}", u.is_verified)
         output += output.replace("{avatar}", u.avatar)
     else:
-        output = "{0.id} | {0.name} | @{0.username} | Private: ".format(u)
-        output += "{0.is_private} | Verified: {0.is_verified} |".format(u)
-        output += " Bio: {0.bio} | Location: {0.location} | Url: ".format(u)
-        output += "{0.url} | Joined: {0.join_date} {0.join_time} ".format(u)
-        output += "| Tweets: {0.tweets} | Following: {0.following}".format(u)
-        output += " | Followers: {0.followers} | Likes: {0.likes} ".format(u)
-        output += "| Media: {0.media_count} | Avatar: {0.avatar}".format(u)
+        output = f"{u.id} | {u.name} | @{u.username} | Private: "
+        output += f"{u.is_private} | Verified: {u.is_verified} |"
+        output += f" Bio: {u.bio} | Location: {u.location} | Url: "
+        output += f"{u.url} | Joined: {u.join_date} {u.join_time} "
+        output += f"| Tweets: {u.tweets} | Following: {u.following}"
+        output += f" | Followers: {u.followers} | Likes: {u.likes} "
+        output += f"| Media: {u.media_count} | Avatar: {u.avatar}"
 
     return output

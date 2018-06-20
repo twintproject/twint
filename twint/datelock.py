@@ -17,7 +17,7 @@ def Set(Until, Since):
         d._since = datetime.datetime.strptime(Since, "%Y-%m-%d").date()
         d._since_def_user = True
     else:
-        d._since = datetime.datetime.strptime("2006-03-21", "%Y-%m-%d").date() # the 1st Tweet
+        d._since = datetime.datetime.strptime("2006-03-21", "%Y-%m-%d").date()
         d._since_def_user = False
 
     return d

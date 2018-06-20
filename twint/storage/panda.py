@@ -1,14 +1,13 @@
-import warnings
+from .elasticsearch import *
 from time import strftime, localtime
 import pandas as pd
-
-from .elasticsearch import *
+import warnings
 
 _blocks = []
 
 def update(Tweet, session):
     day = weekday(strftime("%A", localtime(Tweet.datetime)))
-    dt = "{} {}".format(Tweet.datestamp, Tweet.timestamp)
+    dt = f"{Tweet.datestamp} {Tweet.timestamp}"
 
     _data = {
                 "id": Tweet.id,

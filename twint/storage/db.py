@@ -2,10 +2,10 @@ from datetime import datetime
 import sqlite3
 import sys
 
-def Conn(Database):
-    if Database:
-        print("[+] Inserting into Database: " + str(Database))
-        conn = init(Database)
+def Conn(database):
+    if database:
+        print("[+] Inserting into Database: " + str(database))
+        conn = init(database)
         if isinstance(conn, str):
             print(str)
             sys.exit(1)
@@ -143,7 +143,8 @@ def follow(conn, Username, Followers, User):
         date_time = str(datetime.now())
         cursor = conn.cursor()
         entry = (User, date_time, Username,)
-        query = 'INSERT INTO {} VALUES(?,?,?)'.format(fTable(Followers))
+        table = fTable(Followers)
+        query = f"INSERT INTO {table} VALUES(?,?,?)"
         cursor.execute(query, entry)
         conn.commit()
     except sqlite3.IntegrityError:
@@ -171,7 +172,8 @@ def user(conn, Username, Followers,  User):
                 User.avatar,
                 date_time,
                 Username,)
-        query = 'INSERT INTO {} VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'.format(uTable(Followers))
+        table = uTable(Followers)
+        query = f"INSERT INTO {table} VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
         cursor.execute(query, entry)
         conn.commit()
     except sqlite3.IntegrityError:

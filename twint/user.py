@@ -43,7 +43,7 @@ def join(ur):
     return jd.split(" - ")
 
 def stat(ur, _type):
-    _class = "ProfileNav-item ProfileNav-item--{}".format(_type)
+    _class = f"ProfileNav-item ProfileNav-item--{_type}"
     stat = ur.find("li", _class)
     return stat.find("span", "ProfileNav-value")["data-count"]
 
@@ -71,7 +71,7 @@ def verified(ur):
 def User(ur):
     u = user()
     for img in ur.findAll("img", "Emoji Emoji--forText"):
-        img.replaceWith("<{}>".format(img['aria-label']))
+        img.replaceWith(img["alt"])
     u.id = inf(ur, "id")
     u.name = inf(ur, "name")
     u.username = inf(ur, "username")
