@@ -46,3 +46,4 @@ class Config:
     Images = False
     Videos = False
     Media = False
+    Replies = False
