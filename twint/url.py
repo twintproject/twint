@@ -81,10 +81,12 @@ async def Search(config, init):
         config.Near = config.Near.replace(",", "%2C")
         url += f"%20near%3A%22{config.Near}%22"
     if config.Images:
-        url += f"%20filter%3Aimages"
+        url += "%20filter%3Aimages"
     if config.Videos:
-        url += f"%20filter%3Avideos"
+        url += "%20filter%3Avideos"
     if config.Media:
-        url += f"%20filter%3Amedia"
+        url += "%20filter%3Amedia"
+    if config.Replies:
+        url += "%20filter%3Areplies"
 
     return url
