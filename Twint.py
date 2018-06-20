@@ -176,6 +176,9 @@ def options():
     ap.add_argument("-iu", "--index-users", help="Custom Elasticsearch Index name for Users.")
     ap.add_argument("--debug", help="Store information in debug logs", action="store_true")
     ap.add_argument("--resume", help="Resume from Tweet ID.")
+    ap.add_argument("--videos", help="Display only Tweets with videos.")
+    ap.add_argument("--images", help="Display only Tweets with images.")
+    ap.add_argument("--media", help="Display Tweets with only images or videos.")
     args = ap.parse_args()
 
     return args
