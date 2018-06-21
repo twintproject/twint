@@ -50,7 +50,7 @@ class Twint:
         else:
             for user in self.feed:
                 self.count += 1
-                username = user.find("a"["name"])
+                username = user.find("a")["name"]
                 await output.Username(username, self.config, self.conn)
 
     async def favorite(self):
@@ -121,7 +121,7 @@ def Favorites(config):
     run(config)
 
 def Followers(config):
-    config.Follwers = True
+    config.Followers = True
     run(config)
 
 def Following(config):
