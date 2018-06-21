@@ -17,7 +17,7 @@ Some of the benefits of using Twint vs Twitter API:
 - **No rate limitations**
 
 ## Requirements
-- Python 3.5/3.6
+- Python 3.6
 - `pip3 install -r requirements.txt`
 
 ## Installing
