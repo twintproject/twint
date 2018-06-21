@@ -41,7 +41,7 @@ setup(
 	author_email=EMAIL,
 	python_requires=REQUIRES_PYTHON,
 	url=URL,
-	packages=['twint'],
+	packages=['twint', 'twint.storage'],
 	install_requires=REQUIRED,
 	license='MIT',
 	classifiers=[
