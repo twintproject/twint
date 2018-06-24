@@ -31,7 +31,7 @@ def _output(obj, output, config):
             write.Text(output, config.Output)
 
     if config.Pandas:
-        Pandas.update(obj, config.Essid)
+        panda.update(obj, config.Essid)
     if config.Elasticsearch:
         if config.Store_object:
             tweets_object.append(obj)
