@@ -47,3 +47,4 @@ class Config:
     Videos = False
     Media = False
     Replies = False
+    Pandas_clean = True
