@@ -32,6 +32,9 @@ def get():
     df = pd.DataFrame(_blocks)
     return df
 
+def clean():
+    _blocks.clear()
+
 def save(_filename, _dataframe, **options):
     if options.get("dataname"):
         _dataname = options.get("dataname")
