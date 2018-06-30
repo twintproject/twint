@@ -5,6 +5,8 @@ from datetime import datetime
 from .storage import db, elasticsearch, write, panda
 
 tweets_object = []
+follow_object = []
+user_object = []
 
 def datecheck(datestamp, config):
     if config.Since and config.Until:
@@ -28,23 +30,17 @@ def _output(obj, output, config):
         elif config.Store_json:
             write.Json(obj, config)
         else:
-            write.Text(output, config.Output)
+            write.Text(output, config.Output)   
 
     if config.Pandas:
         panda.update(obj, config.Essid)
     if config.Elasticsearch:
-        if config.Store_object:
-            tweets_object.append(obj)
-        else:
-            print(output, end=".", flush=True)
+        print("", end=".", flush=True)
     else:
-        if config.Store_object:
-            tweets_object.append(obj)
-        else:
-            try:
-                print(output)
-            except UnicodeEncodeError:
-                pass
+        try:
+            print(output)
+        except UnicodeEncodeError:
+            pass
 
 async def Tweets(tw, location, config, conn):
     copyright = tw.find("div", "StreamItemContent--withheld")
@@ -58,6 +54,9 @@ async def Tweets(tw, location, config, conn):
             
             if config.Elasticsearch:
                 elasticsearch.Tweet(tweet, config)
+            
+            if config.Store_object:
+                tweets_object.append(tweet)
             
             _output(tweet, output, config)
 
@@ -76,6 +75,9 @@ async def Users(u, config, conn):
         elasticsearch.UserProfile(user, config)
         user.join_date = _save_date
         user.join_time = _save_time
+    
+    if config.Store_object:
+        user_object.append(user)
 
     _output(user, output, config)
 
@@ -85,5 +87,9 @@ async def Username(username, config, conn):
 
     if config.Elasticsearch:
         elasticsearch.Follow(username, config)
+    
+    if config.Store_object:
+        _follow_couple = {config.Username: username}
+        follow_object.append(_follow_couple)
 
     _output(username, username, config)
