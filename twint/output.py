@@ -5,7 +5,7 @@ from datetime import datetime
 from .storage import db, elasticsearch, write, panda
 
 tweets_object = []
-follow_object = []
+follow_object = {}
 user_object = []
 
 _follow_list = []
