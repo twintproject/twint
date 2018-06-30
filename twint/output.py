@@ -4,6 +4,9 @@ from .user import User
 from datetime import datetime
 from .storage import db, elasticsearch, write, panda
 
+global follow_object
+global user_object
+
 tweets_object = []
 follow_object = {}
 user_object = []
