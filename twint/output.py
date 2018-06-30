@@ -94,7 +94,7 @@ async def Username(username, config, conn):
     if config.Elasticsearch:
         elasticsearch.Follow(username, config)
     
-    if config.Store_object:
+    #if config.Store_object:
         #_follow_list.append(username)
         #_old_obj = follow_object[config.Username]
         #follow_object = {config.Username: {_old_obj,
