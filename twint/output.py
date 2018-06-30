@@ -89,7 +89,7 @@ async def Username(username, config, conn):
         elasticsearch.Follow(username, config)
     
     if config.Store_object:
-        _follow_couple = {config.Username: {username: config.Followers*"followers" + config.Following*"following"}}
+        _follow_couple = {config.Username: {"username": username, "type": config.Followers*"followers" + config.Following*"following"}}
         follow_object.append(_follow_couple)
 
     _output(username, username, config)
