@@ -8,6 +8,8 @@ tweets_object = []
 follow_object = []
 user_object = []
 
+_follow_list = []
+
 def datecheck(datestamp, config):
     if config.Since and config.Until:
         d = int(datestamp.replace("-", ""))
@@ -89,7 +91,7 @@ async def Username(username, config, conn):
         elasticsearch.Follow(username, config)
     
     if config.Store_object:
-        _follow_couple = {config.Username: {"username": username, "type": config.Followers*"followers" + config.Following*"following"}}
-        follow_object.append(_follow_couple)
+        _follow_list.append(username)
+        follow_object = {config.Username: {config.Followers*"followers" + config.Following*"following": _follow_list}}
 
     _output(username, username, config)
