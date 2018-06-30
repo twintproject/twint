@@ -97,7 +97,8 @@ async def Username(username, config, conn):
     if config.Store_object:
         _follow_list.append(username)
         _old_obj = follow_object[config.Username]
-        follow_object = {config.Username: {_old_obj,
-                                           config.Followers*"followers" + config.Following*"following": _follow_list}}
+        #follow_object = {config.Username: {_old_obj,
+        #                                   config.Followers*"followers" + config.Following*"following": _follow_list}}
+        # old[list(old)[0]] for attr and list(old) for what
 
     _output(username, username, config)
