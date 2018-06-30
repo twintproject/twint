@@ -125,10 +125,12 @@ def Favorites(config):
 
 def Followers(config):
     config.Followers = True
+    config.Following = False
     run(config)
 
 def Following(config):
     config.Following = True
+    config.Followers = False
     run(config)
 
 def Profile(config):
