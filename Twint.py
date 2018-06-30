@@ -123,6 +123,7 @@ def initialize(args):
     c.Media = args.media
     c.Replies = args.replies
     c.Pandas_clean = args.pandas_clean
+    c.ES_count = {"likes":True,"replies":True,"retweets":True}
     return c
 
 def options():
@@ -186,6 +187,7 @@ def options():
     ap.add_argument("--media", help="Display Tweets with only images or videos.", action="store_true")
     ap.add_argument("--replies", help="Display replies to a subject.", action="store_true")
     ap.add_argument("-pc","--pandas-clean", help="Automatically clean Pandas dataframe at every scrape.")
+    ap.add_argument("-ec","--es-count", help="Choose what NOT to count: likes and/or replies and/or retweets; only for Elasticsearch.")
     args = ap.parse_args()
 
     return args
@@ -216,6 +218,15 @@ def main():
         twint.storage.panda.clean()
 
     c = initialize(args)
+
+    if "likes" in args.es_count:
+        c.ES_count["likes"] == False
+    
+    if "replies" in args.es_count:
+        c.ES_count["replies"] == False
+    
+    if "retweets" in args.es_count:
+        c.ES_count["retweets"] == False
 
     if args.favorites:
         twint.run.Favorites(c)
