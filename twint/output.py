@@ -4,9 +4,6 @@ from .user import User
 from datetime import datetime
 from .storage import db, elasticsearch, write, panda
 
-global follow_object
-global user_object
-
 tweets_object = []
 follow_object = {}
 user_object = []
@@ -66,6 +63,8 @@ async def Tweets(tw, location, config, conn):
             _output(tweet, output, config)
 
 async def Users(u, config, conn):
+    global user_object
+
     user = User(u)
     output = format.User(config.Format, user)
     
@@ -87,6 +86,8 @@ async def Users(u, config, conn):
     _output(user, output, config)
 
 async def Username(username, config, conn):
+    global follow_object
+
     if config.Database:
         db.follow(conn, config.Username, config.Followers, username)
 
