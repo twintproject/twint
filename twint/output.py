@@ -32,8 +32,11 @@ def is_tweet(tw):
 def _output(obj, output, config, **extra):
     if config.Lowercase:
         obj.username = obj.username.lower()
-        obj.mentions = obj.mentions.lower()
-        obj.hashtags = obj.hashtags.lower()
+        for i in range(len(obj.mentions)):
+            obj.mentions[i] = obj.mentions[i].lower()
+        for i in range(len(obj.hashtags)):
+            obj.hashtags[i] = obj.hashtags[i].lower()
+
 
     if config.Output != None:
         if config.Store_csv:
