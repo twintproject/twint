@@ -10,6 +10,10 @@ user_object = []
 
 _follow_list = []
 
+def clean_follow_list():
+    global _follow_list
+    _follow_list = []
+
 def datecheck(datestamp, config):
     if config.Since and config.Until:
         d = int(datestamp.replace("-", ""))
@@ -107,4 +111,4 @@ async def Username(username, config, conn):
             follow_object = {config.Username: {config.Followers*"followers" + config.Following*"following":
                                                _follow_list}}
 
-    _output(username, username, config, follow_object = follow_object)
+    _output(username, username, config, follow_object=follow_object)

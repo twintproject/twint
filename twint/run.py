@@ -16,6 +16,9 @@ class Twint:
         self.d = datelock.Set(self.config.Until, self.config.Since)
         verbose.Elastic(config.Elasticsearch)
 
+        if self.config.Store_object:
+            output.clean_follow_list()
+
         if self.config.Pandas_clean:
             storage.panda.clean()
 
@@ -124,11 +127,13 @@ def Favorites(config):
     run(config)
 
 def Followers(config):
+    output.clean_follow_list()
     config.Followers = True
     config.Following = False
     run(config)
 
 def Following(config):
+    output.clean_follow_list()
     config.Following = True
     config.Followers = False
     run(config)

@@ -73,6 +73,8 @@ def get():
         df = pd.DataFrame(_object_blocks[_type])
     else:
         _df = pd.DataFrame(_object_blocks[_type])
+        print(df)
+        print(_df)
         df = pd.concat([df, _df])
     return df
 
