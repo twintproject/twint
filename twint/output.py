@@ -98,7 +98,7 @@ async def Username(username, config, conn):
         _follow_list.append(username)
         try:
             _old_obj = follow_object[config.Username]
-            follow_object = {config.Username: {list(_old_obj): _old_obj[list(_old_obj)[0]],
+            follow_object = {config.Username: {list(_old_obj)[0]: _old_obj[list(_old_obj)[0]],
                                                config.Followers*"followers" + config.Following*"following":
                                                _follow_list}}
         except KeyError:
