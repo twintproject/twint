@@ -8,24 +8,27 @@ https://github.com/haccer/twint/wiki
 Licensed under MIT License
 Copyright (c) 2018 Cody Zacharias
 '''
-import argparse
-import twint
 import sys
 import os
+import argparse
+import twint
 
-def error(error, message):
-    print("[-] {}: {}".format(error, message))
+def error(_error, message):
+    """ Print errors to stdout
+    """
+    print("[-] {}: {}".format(_error, message))
     sys.exit(0)
 
 def check(args):
-    # Error checking
+    """ Error checking
+    """
     if args.username is not None:
         if args.verified:
             error("Contradicting Args",
-                    "Please use --verified in combination with -s.")
+                  "Please use --verified in combination with -s.")
         if args.userid:
             error("Contradicting Args",
-                    "--userid and -u cannot be used together.")
+                  "--userid and -u cannot be used together.")
     if args.output is None:
         if args.csv:
             error("Error", "Please specify an output file (Example: -o file.csv).")
@@ -42,8 +45,9 @@ def check(args):
 
     # Proxy stuff
     if args.proxy_host is not None:
+        import socks
+        import socket
         if args.proxy_host.lower() == "tor":
-            import socks, socket
             socks.set_default_proxy(socks.SOCKS5, "localhost", 9050)
             socket.socket = socks.socksocket
         elif args.proxy_port and args.proxy_type:
@@ -55,7 +59,6 @@ def check(args):
                 _type = socks.HTTP
             else:
                 error("Error", "Proxy types allowed are: socks5, socks4, and http.")
-            import socks, socket
             socks.set_default_proxy(_type, args.proxy_host, int(args.proxy_port))
             socket.socket = socks.socksocket
         else:
@@ -64,20 +67,23 @@ def check(args):
         if args.proxy_port or args.proxy_type:
             error("Error", "Please specify --proxy-host, --proxy-port, and --proxy-type")
 
-def loadUserList(ul, type):
+def loadUserList(ul, _type):
+    """ Concatenate users
+    """
     if os.path.exists(os.path.abspath(ul)):
         userlist = open(os.path.abspath(ul), "r").read().splitlines()
     else:
         userlist = ul.split(",")
-    if type == "search":
+    if _type == "search":
         un = ""
         for user in userlist:
             un += "%20OR%20from%3A" + user
         return un[15:]
-    else:
-        return userlist
+    return userlist
 
 def initialize(args):
+    """ Set default values for config from args
+    """
     c = twint.Config()
     c.Username = args.username
     c.User_id = args.userid
@@ -123,13 +129,15 @@ def initialize(args):
     c.Media = args.media
     c.Replies = args.replies
     c.Pandas_clean = args.pandas_clean
-    c.ES_count = {"likes":True,"replies":True,"retweets":True}
+    c.ES_count = {"likes":True, "replies":True, "retweets":True}
     return c
 
 def options():
+    """ Parse arguments
+    """
     ap = argparse.ArgumentParser(prog="Twint.py",
-            usage="python3 %(prog)s [options]",
-            description="TWINT - An Advanced Twitter Scraping Tool.")
+                                 usage="python3 %(prog)s [options]",
+                                 description="TWINT - An Advanced Twitter Scraping Tool.")
     ap.add_argument("-u", "--username", help="User's Tweets you want to scrape.")
     ap.add_argument("-s", "--search", help="Search for Tweets containing this word or phrase.")
     ap.add_argument("-g", "--geo", help="Search for geocoded Tweets.")
@@ -144,15 +152,16 @@ def options():
     ap.add_argument("--until", help="Filter Tweets sent until date (Example: 2017-12-27).")
     ap.add_argument("--fruit", help="Display 'low-hanging-fruit' Tweets.", action="store_true")
     ap.add_argument("--verified", help="Display Tweets only from verified users (Use with -s).",
-            action="store_true")
+                    action="store_true")
     ap.add_argument("--csv", help="Write as .csv file.", action="store_true")
     ap.add_argument("--json", help="Write as .json file", action="store_true")
     ap.add_argument("--hashtags", help="Output hashtags in seperate column.", action="store_true")
     ap.add_argument("--userid", help="Twitter user id.")
     ap.add_argument("--limit", help="Number of Tweets to pull (Increments of 20).")
     ap.add_argument("--count", help="Display number of Tweets scraped at the end of session.",
-            action="store_true")
-    ap.add_argument("--stats", help="Show number of replies, retweets, and likes.", action="store_true")
+                    action="store_true")
+    ap.add_argument("--stats", help="Show number of replies, retweets, and likes.",
+                    action="store_true")
     ap.add_argument("--hostname", help="Store the mysql database host")
     ap.add_argument("-db", "--database", help="Store Tweets in a sqlite3  or mysql database.")
     ap.add_argument("--DB_user", help="Store the mysql database user")
@@ -165,54 +174,56 @@ def options():
     ap.add_argument("--proxy-type", help="Socks5, HTTP, etc.")
     ap.add_argument("--proxy-host", help="Proxy hostname or IP.")
     ap.add_argument("--proxy-port", help="The port of the proxy server.")
-    ap.add_argument("--essid", help="Elasticsearch Session ID, use this to differentiate scraping sessions.")
+    ap.add_argument("--essid",
+                    help="Elasticsearch Session ID, use this to differentiate scraping sessions.",
+                    nargs="?", const="")
     ap.add_argument("--userlist", help="Userlist from list or file.")
-    ap.add_argument("--retweets", help="Include user's Retweets (Warning: limited).", action="store_true")
+    ap.add_argument("--retweets",
+                    help="Include user's Retweets (Warning: limited).",
+                    action="store_true")
     ap.add_argument("--format", help="Custom output format (See wiki for details).")
-    ap.add_argument("--user-full", help="Collect all user information (Use with followers or following only).",
-            action="store_true")
+    ap.add_argument("--user-full",
+                    help="Collect all user information (Use with followers or following only).",
+                    action="store_true")
     ap.add_argument("--profile-full",
-            help="Slow, but effective method of collecting a user's Tweets (Including Retweets).",
-            action="store_true")
+                    help="Slow, but effective method of collecting a user's Tweets and RT.",
+                    action="store_true")
     ap.add_argument("--store-pandas", help="Save Tweets in a DataFrame (Pandas) file.")
-    ap.add_argument("--pandas-type", help="Specify HDF5 or Pickle (HDF5 as default)")
-    ap.add_argument("--search_name", help="Name for identify the search like -3dprinter stuff- only for mysql")
-    ap.add_argument("-it", "--index-tweets", help="Custom Elasticsearch Index name for Tweets.")
-    ap.add_argument("-if", "--index-follow", help="Custom Elasticsearch Index name for Follows.")
-    ap.add_argument("-iu", "--index-users", help="Custom Elasticsearch Index name for Users.")
-    ap.add_argument("--debug", help="Store information in debug logs", action="store_true")
+    ap.add_argument("--pandas-type",
+                    help="Specify HDF5 or Pickle (HDF5 as default)", nargs="?", const="HDF5")
+    ap.add_argument("--search_name",
+                    help="Name for identify the search like -3dprinter stuff- only for mysql")
+    ap.add_argument("-it", "--index-tweets",
+                    help="Custom Elasticsearch Index name for Tweets.", nargs="?", const="twint")
+    ap.add_argument("-if", "--index-follow",
+                    help="Custom Elasticsearch Index name for Follows.",
+                    nargs="?", const="twintGraph")
+    ap.add_argument("-iu", "--index-users", help="Custom Elasticsearch Index name for Users.",
+                    nargs="?", const="twintUser")
+    ap.add_argument("--debug",
+                    help="Store information in debug logs", action="store_true")
     ap.add_argument("--resume", help="Resume from Tweet ID.")
     ap.add_argument("--videos", help="Display only Tweets with videos.", action="store_true")
     ap.add_argument("--images", help="Display only Tweets with images.", action="store_true")
-    ap.add_argument("--media", help="Display Tweets with only images or videos.", action="store_true")
+    ap.add_argument("--media",
+                    help="Display Tweets with only images or videos.", action="store_true")
     ap.add_argument("--replies", help="Display replies to a subject.", action="store_true")
-    ap.add_argument("-pc","--pandas-clean", help="Automatically clean Pandas dataframe at every scrape.")
-    ap.add_argument("-ec","--es-count", help="Choose what NOT to count: likes and/or replies and/or retweets; only for Elasticsearch.")
+    ap.add_argument("-pc", "--pandas-clean",
+                    help="Automatically clean Pandas dataframe at every scrape.")
+    ap.add_argument("-ec", "--es-count",
+                    help="What NOT to count: likes, replies, retweets; only for Elasticsearch.")
     args = ap.parse_args()
 
     return args
 
 def main():
+    """ Main
+    """
     args = options()
     check(args)
 
     if args.userlist:
         args.username = loadUserList(args.userlist, "search")
-
-    if not args.pandas_type:
-        args.pandas_type = "HDF5"
-
-    if not args.index_tweets:
-        args.index_tweets = "twint"
-
-    if not args.index_follow:
-        args.index_follow = "twintGraph"
-
-    if not args.index_users:
-        args.index_users = "twintUser"
-
-    if not args.essid:
-        args.essid = ""
 
     if args.pandas_clean:
         twint.storage.panda.clean()
@@ -221,10 +232,10 @@ def main():
 
     if "likes" in args.es_count:
         c.ES_count["likes"] == False
-    
+
     if "replies" in args.es_count:
         c.ES_count["replies"] == False
-    
+
     if "retweets" in args.es_count:
         c.ES_count["retweets"] == False
 
