@@ -32,7 +32,7 @@ def _output(obj, output, config):
         elif config.Store_json:
             write.Json(obj, config)
         else:
-            write.Text(output, config.Output)   
+            write.Text(output, config.Output)
 
     if config.Pandas:
         panda.update(obj, config.Essid)
@@ -50,16 +50,16 @@ async def Tweets(tw, location, config, conn):
         tweet = Tweet(tw, location, config)
         if datecheck(tweet.datestamp, config):
             output = format.Tweet(config, tweet)
-            
+
             if config.Database:
                 db.tweets(conn, tweet, config)
-            
+
             if config.Elasticsearch:
                 elasticsearch.Tweet(tweet, config)
-            
+
             if config.Store_object:
                 tweets_object.append(tweet)
-            
+
             _output(tweet, output, config)
 
 async def Users(u, config, conn):
@@ -67,7 +67,7 @@ async def Users(u, config, conn):
 
     user = User(u)
     output = format.User(config.Format, user)
-    
+
     if config.Database:
         db.user(conn, config.Username, config.Followers, user)
 
@@ -79,7 +79,7 @@ async def Users(u, config, conn):
         elasticsearch.UserProfile(user, config)
         user.join_date = _save_date
         user.join_time = _save_time
-    
+
     if config.Store_object:
         user_object.append(user)
 
@@ -93,12 +93,11 @@ async def Username(username, config, conn):
 
     if config.Elasticsearch:
         elasticsearch.Follow(username, config)
-    
-    #if config.Store_object:
-        #_follow_list.append(username)
-        #_old_obj = follow_object[config.Username]
-        #follow_object = {config.Username: {_old_obj,
-        #                                   config.Followers*"followers" + config.Following*"following": _follow_list}}
-        # old[list(old)[0]] for attr and list(old) for what
+
+    if config.Store_object:
+        _follow_list.append(username)
+        _old_obj = follow_object[config.Username]
+        follow_object = {config.Username: {list(_old_obj): _old_obj[list(_old_obj)[0]],
+                                           config.Followers*"followers" + config.Following*"following": _follow_list}}
 
     _output(username, username, config)
