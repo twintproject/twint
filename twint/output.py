@@ -25,7 +25,7 @@ def is_tweet(tw):
     except:
         return False
 
-def _output(obj, output, config):
+def _output(obj, output, config, **extra):
     if config.Output != None:
         if config.Store_csv:
             write.Csv(obj, config)
@@ -34,8 +34,10 @@ def _output(obj, output, config):
         else:
             write.Text(output, config.Output)
 
-    if config.Pandas:
+    if config.Pandas and not (config.Following or config.Followers):
         panda.update(obj, config.Essid)
+    if extra.get("follow_object"):
+        panda.update(follow_object, config.Essid)
     if config.Elasticsearch:
         print("", end=".", flush=True)
     else:
@@ -58,7 +60,7 @@ async def Tweets(tw, location, config, conn):
                 elasticsearch.Tweet(tweet, config)
 
             if config.Store_object:
-                tweets_object.append(tweet)
+                tweets_object.append(tweet) #twint.tweet.tweet
 
             _output(tweet, output, config)
 
@@ -72,7 +74,7 @@ async def Users(u, config, conn):
         db.user(conn, config.Username, config.Followers, user)
 
     if config.Elasticsearch:
-        _save_date =  user.join_date
+        _save_date = user.join_date
         _save_time = user.join_time
         user.join_date = str(datetime.strptime(user.join_date, "%d %b %Y")).split()[0]
         user.join_time = str(datetime.strptime(user.join_time, "%I:%M %p")).split()[1]
@@ -81,7 +83,7 @@ async def Users(u, config, conn):
         user.join_time = _save_time
 
     if config.Store_object:
-        user_object.append(user)
+        user_object.append(user) # twint.user.user
 
     _output(user, output, config)
 
@@ -94,8 +96,8 @@ async def Username(username, config, conn):
     if config.Elasticsearch:
         elasticsearch.Follow(username, config)
 
-    if config.Store_object:
-        _follow_list.append(username)
+    if config.Store_object or config.Pandas:
+        _follow_list.append(username) # follow_object : dict
         try:
             _old_obj = follow_object[config.Username]
             follow_object = {config.Username: {list(_old_obj)[0]: _old_obj[list(_old_obj)[0]],
@@ -105,4 +107,4 @@ async def Username(username, config, conn):
             follow_object = {config.Username: {config.Followers*"followers" + config.Following*"following":
                                                _follow_list}}
 
-    _output(username, username, config)
+    _output(username, username, config, follow_object = follow_object)

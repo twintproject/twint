@@ -2,7 +2,10 @@ from time import strftime, localtime
 import re
 
 class tweet:
-    pass
+    type = "tweet"
+
+    def __init__(self):
+        pass
 
 def getMentions(tw):
     try:
@@ -48,7 +51,7 @@ def getUser_rt(profile, username, user):
         user_rt = user
     else:
         user_rt = "None"
-    
+
     return user_rt
 
 def Tweet(tw, location, config):

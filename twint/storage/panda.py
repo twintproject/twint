@@ -1,36 +1,86 @@
-from .elasticsearch import *
 from time import strftime, localtime
 import pandas as pd
 import warnings
 
-_blocks = []
+from .elasticsearch import *
 
-def update(Tweet, session):
-    dt = f"{Tweet.datestamp} {Tweet.timestamp}"
+df = None
 
-    _data = {
-                "id": Tweet.id,
-                "date": dt,
-                "timezone": Tweet.timezone,
-                "location": Tweet.location,
-                "tweet": Tweet.tweet,
-                "hashtags": Tweet.hashtags,
-                "user_id": Tweet.user_id,
-                "username": Tweet.username,
-                "link": Tweet.link,
-                "retweet": Tweet.retweet,
-                "user_rt": Tweet.user_rt,
-                "essid": str(session),
-                'mentions': Tweet.mentions
-                }
-    _blocks.append(_data)
+_object_blocks = {
+    "tweets": [],
+    "users": [],
+    "follow": []
+}
+_type = ""
+
+def update(object, session):
+    global _type
+
+    try:
+        _type = isinstance(object, dict)*"follow"
+    except NameError:
+        _type = ((object.type == "tweets")*"tweets" +
+                (object.type == "users")*"users")
+
+    if _type == "tweets":
+        dt = f"{object.datestamp} {object.timestamp}"
+        _data = {
+            "id": object.id,
+            "date": dt,
+            "timezone": object.timezone,
+            "location": object.location,
+            "tweet": object.tweet,
+            "hashtags": object.hashtags,
+            "user_id": object.user_id,
+            "username": object.username,
+            "link": object.link,
+            "retweet": object.retweet,
+            "user_rt": object.user_rt,
+            "essid": str(session),
+            'mentions': object.mentions
+            }
+        _object_blocks[_type].append(_data)
+    elif _type == "users":
+        _data = {
+            "id": object.id,
+            "name": object.name,
+            "username": object.username,
+            "bio": object.bio,
+            "location": object.location,
+            "url": object.url,
+            "join_datetime": object.join_date + " " + object.join_time,
+            "join_date": object.join_date,
+            "join_time": object.join_time,
+            "tweets": object.tweets,
+            "following": object.following,
+            "followers": object.followers,
+            "likes": object.likes,
+            "media": object.media_count,
+            "private": object.is_private,
+            "verified": object.is_verified,
+            "avatar": object.avatar,
+            "session": str(session)
+            }
+        _object_blocks[_type].append(_data)
+    elif isinstance(object, dict):
+        _object_blocks[_type] = object
+    else:
+        print("Wrong type of object passed!")
 
 def get():
-    df = pd.DataFrame(_blocks)
+    global df
+    if df is None:
+        df = pd.DataFrame(_object_blocks[_type])
+    else:
+        _df = pd.DataFrame(_object_blocks[_type])
+        df = pd.concat([df, _df])
     return df
 
 def clean():
-    _blocks.clear()
+    _object_blocks["tweets"].clear()
+    _object_blocks["follow"].clear()
+    _object_blocks["users"].clear()
+
 
 def save(_filename, _dataframe, **options):
     if options.get("dataname"):
