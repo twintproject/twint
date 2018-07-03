@@ -176,7 +176,7 @@ def options():
     ap.add_argument("--proxy-port", help="The port of the proxy server.")
     ap.add_argument("--essid",
                     help="Elasticsearch Session ID, use this to differentiate scraping sessions.",
-                    nargs="?", const="")
+                    nargs="?", default="")
     ap.add_argument("--userlist", help="Userlist from list or file.")
     ap.add_argument("--retweets",
                     help="Include user's Retweets (Warning: limited).",
@@ -190,16 +190,16 @@ def options():
                     action="store_true")
     ap.add_argument("--store-pandas", help="Save Tweets in a DataFrame (Pandas) file.")
     ap.add_argument("--pandas-type",
-                    help="Specify HDF5 or Pickle (HDF5 as default)", nargs="?", const="HDF5")
+                    help="Specify HDF5 or Pickle (HDF5 as default)", nargs="?", default="HDF5")
     ap.add_argument("--search_name",
                     help="Name for identify the search like -3dprinter stuff- only for mysql")
     ap.add_argument("-it", "--index-tweets",
-                    help="Custom Elasticsearch Index name for Tweets.", nargs="?", const="twint")
+                    help="Custom Elasticsearch Index name for Tweets.", nargs="?", default="twint")
     ap.add_argument("-if", "--index-follow",
                     help="Custom Elasticsearch Index name for Follows.",
-                    nargs="?", const="twintGraph")
+                    nargs="?", default="twintGraph")
     ap.add_argument("-iu", "--index-users", help="Custom Elasticsearch Index name for Users.",
-                    nargs="?", const="twintUser")
+                    nargs="?", default="twintUser")
     ap.add_argument("--debug",
                     help="Store information in debug logs", action="store_true")
     ap.add_argument("--resume", help="Resume from Tweet ID.")
@@ -210,7 +210,7 @@ def options():
     ap.add_argument("--replies", help="Display replies to a subject.", action="store_true")
     ap.add_argument("-pc", "--pandas-clean",
                     help="Automatically clean Pandas dataframe at every scrape.")
-    ap.add_argument("-ec", "--es-count",
+    ap.add_argument("-ec", "--es-count", nargs="?", default="",
                     help="What NOT to count: likes, replies, retweets; only for Elasticsearch.")
     args = ap.parse_args()
 
@@ -230,14 +230,16 @@ def main():
 
     c = initialize(args)
 
-    if "likes" in args.es_count:
-        c.ES_count["likes"] == False
+    if "likes" in str(args.es_count):
+        c.ES_count["likes"] = False
 
-    if "replies" in args.es_count:
-        c.ES_count["replies"] == False
+    if "replies" in str(args.es_count):
+        c.ES_count["replies"] = False
 
-    if "retweets" in args.es_count:
-        c.ES_count["retweets"] == False
+    if "retweets" in str(args.es_count):
+        c.ES_count["retweets"] = False
+
+    print(args.es_count)
 
     if args.favorites:
         twint.run.Favorites(c)
