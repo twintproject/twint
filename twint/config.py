@@ -49,4 +49,5 @@ class Config:
     Replies = False
     Pandas_clean = True
     ES_count = {"likes":True,"replies":True,"retweets":True}
-    Lowercase = True
+    Lowercase = False
+    Pandas_au = True

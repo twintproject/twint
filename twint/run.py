@@ -131,12 +131,16 @@ def Followers(config):
     config.Followers = True
     config.Following = False
     run(config)
+    if config.Pandas_au:
+        storage.panda._autoget()
 
 def Following(config):
     output.clean_follow_list()
     config.Following = True
     config.Followers = False
     run(config)
+    if config.Pandas_au:
+        storage.panda._autoget()
 
 def Profile(config):
     config.Profile = True
@@ -144,4 +148,8 @@ def Profile(config):
 
 def Search(config):
     config.TwitterSearch = True
+    config.Following = False
+    config.Followers = False
     run(config)
+    if config.Pandas_au:
+        storage.panda._autoget()

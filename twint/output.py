@@ -4,8 +4,10 @@ from .user import User
 from datetime import datetime
 from .storage import db, elasticsearch, write, panda
 
+class follow_object:
+    type = "follow"
+
 tweets_object = []
-follow_object = {}
 user_object = []
 
 _follow_list = []
@@ -36,8 +38,6 @@ def _output(obj, output, config, **extra):
             obj.mentions[i] = obj.mentions[i].lower()
         for i in range(len(obj.hashtags)):
             obj.hashtags[i] = obj.hashtags[i].lower()
-
-
     if config.Output != None:
         if config.Store_csv:
             write.Csv(obj, config)
@@ -48,7 +48,10 @@ def _output(obj, output, config, **extra):
 
     if config.Pandas and not (config.Following or config.Followers):
         panda.update(obj, config.Essid)
-    if extra.get("follow_object"):
+    if extra.get("follow_list"):
+        follow_object.username = config.Username
+        follow_object.action = config.Following*"following" + config.Followers*"followers"
+        follow_object.users = _follow_list
         panda.update(follow_object, config.Essid)
     if config.Elasticsearch:
         print("", end=".", flush=True)
@@ -109,14 +112,5 @@ async def Username(username, config, conn):
         elasticsearch.Follow(username, config)
 
     if config.Store_object or config.Pandas:
-        _follow_list.append(username) # follow_object : dict
-        try:
-            _old_obj = follow_object[config.Username]
-            follow_object = {config.Username: {list(_old_obj)[0]: _old_obj[list(_old_obj)[0]],
-                                               config.Followers*"followers" + config.Following*"following":
-                                               _follow_list}}
-        except KeyError:
-            follow_object = {config.Username: {config.Followers*"followers" + config.Following*"following":
-                                               _follow_list}}
-
-    _output(username, username, config, follow_object=follow_object)
+        _follow_list.append(username)
+    _output(username, username, config, follow_list=_follow_list)

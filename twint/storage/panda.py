@@ -4,25 +4,49 @@ import warnings
 
 from .elasticsearch import *
 
-df = None
+## TODO: use pd.merge to merge followers and Following
+##       use pd.concat to concat two different users
+##       merge_df = pd.merge(followers, following, on= object.username, how="inner")
+
+Tweets_df = None
+Follow_df = None
+User_df = None
 
 _object_blocks = {
-    "tweets": [],
-    "users": [],
+    "tweet": [],
+    "user": [],
     "follow": []
 }
 _type = ""
 
+def _concat(df):
+    if df is None:
+        df = pd.DataFrame(_object_blocks[_type])
+    else:
+        _df = pd.DataFrame(_object_blocks[_type])
+        df = pd.concat([df, _df], sort=True)
+    return df
+
+def _autoget():
+    global Tweets_df
+    global Follow_df
+    global User_df
+
+    if _type == "tweet":
+        Tweets_df = _concat(Tweets_df)
+    if _type == "follow":
+        Follow_df = _concat(Follow_df)
+    if _type == "user":
+       User_df = _concat(User_df)
+
 def update(object, session):
     global _type
 
-    try:
-        _type = isinstance(object, dict)*"follow"
-    except NameError:
-        _type = ((object.type == "tweets")*"tweets" +
-                (object.type == "users")*"users")
+    _type = ((object.type == "tweet")*"tweet" +
+             (object.type == "user")*"user" +
+             (object.type == "follow")*"follow")
 
-    if _type == "tweets":
+    if _type == "tweet":
         dt = f"{object.datestamp} {object.timestamp}"
         _data = {
             "id": object.id,
@@ -40,7 +64,7 @@ def update(object, session):
             'mentions': object.mentions
             }
         _object_blocks[_type].append(_data)
-    elif _type == "users":
+    elif _type == "user":
         _data = {
             "id": object.id,
             "name": object.name,
@@ -62,26 +86,18 @@ def update(object, session):
             "session": str(session)
             }
         _object_blocks[_type].append(_data)
-    elif isinstance(object, dict):
-        _object_blocks[_type] = object
+    elif _type == "follow":
+        _data = {
+            object.action : {object.username: object.users}
+        }
+        _object_blocks[_type] = _data
     else:
         print("Wrong type of object passed!")
 
-def get():
-    global df
-    if df is None:
-        df = pd.DataFrame(_object_blocks[_type])
-    else:
-        _df = pd.DataFrame(_object_blocks[_type])
-        print(df)
-        print(_df)
-        df = pd.concat([df, _df])
-    return df
-
 def clean():
-    _object_blocks["tweets"].clear()
+    _object_blocks["tweet"].clear()
     _object_blocks["follow"].clear()
-    _object_blocks["users"].clear()
+    _object_blocks["user"].clear()
 
 
 def save(_filename, _dataframe, **options):
@@ -93,15 +109,16 @@ def save(_filename, _dataframe, **options):
     if not options.get("type"):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            _store = pd.HDFStore(_filename)
+            _store = pd.HDFStore(_filename + ".h5")
             _store[_dataname] = _dataframe
             _store.close()
     elif options.get("type") == "Pickle":
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            _dataframe.to_pickle(_filename)
+            _dataframe.to_pickle(_filename + ".pkl")
     else:
-        print("Please specify: filename, DataFrame, DataFrame name and type (HDF5, default, or Pickle")
+        print("""Please specify: filename, DataFrame, DataFrame name and type
+              (HDF5, default, or Pickle)""")
 
 def read(_filename, **options):
     if not options.get("dataname"):
@@ -110,11 +127,12 @@ def read(_filename, **options):
         _dataname = options.get("dataname")
 
     if not options.get("type"):
-        _store = pd.HDFStore(_filename)
-        df = _store[_dataname]
-        return df
+        _store = pd.HDFStore(_filename + ".h5")
+        _df = _store[_dataname]
+        return _df
     elif options.get("type") == "Pickle":
-        df = pd.read_pickle(_filename)
-        return df
+        _df = pd.read_pickle(_filename + ".pkl")
+        return _df
     else:
-        print("Please specify: DataFrame, DataFrame name (twint as default), filename and type (HDF5, default, or Pickle")
+        print("""Please specify: DataFrame, DataFrame name (twint as default),
+              filename and type (HDF5, default, or Pickle""")
