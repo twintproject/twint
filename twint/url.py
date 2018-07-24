@@ -66,10 +66,10 @@ async def Search(config, init):
     if config.Until:
         url += f"%20until%3A{config.Until}"
     if config.Fruit:
-        url += "%20myspace.com%20OR%20last.fm%20OR"
-        url += "%20mail%20OR%20email%20OR%20gmail%20OR%20e-mail"
-        url += "%20OR%20phone%20OR%20call%20me%20OR%20text%20me"
-        url += "%20OR%20keybase"
+        url += "%20%22myspace.com%22%20OR%20%22last.fm%22%20OR"
+        url += "%20%22mail%22%20OR%20%22email%22%20OR%20%22gmail%22%20OR%20%22e-mail%22"
+        url += "%20OR%20%22phone%22%20OR%20%22call%20me%22%20OR%20%22text%20me%22"
+        url += "%20OR%20%22keybase%22"
     if config.Verified:
         url += "%20filter%3Averified"
     if config.To:
