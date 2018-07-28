@@ -122,6 +122,7 @@ def initialize(args):
     c.Videos = args.videos
     c.Media = args.media
     c.Replies = args.replies
+    c.Pandas_clean = args.pandas_clean
     return c
 
 def options():
@@ -184,6 +185,7 @@ def options():
     ap.add_argument("--images", help="Display only Tweets with images.", action="store_true")
     ap.add_argument("--media", help="Display Tweets with only images or videos.", action="store_true")
     ap.add_argument("--replies", help="Display replies to a subject.", action="store_true")
+    ap.add_argument("-pc","--pandas-clean", help="Automatically clean Pandas dataframe at every scrape.")
     args = ap.parse_args()
 
     return args
@@ -209,6 +211,9 @@ def main():
 
     if not args.essid:
         args.essid = ""
+
+    if args.pandas_clean:
+        twint.storage.panda.clean()
 
     c = initialize(args)
 
