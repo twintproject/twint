@@ -111,7 +111,7 @@ class Twint:
                     break
         
         if self.config.Count:
-            verbose.Count(self.count, self.config.Username)
+            verbose.Count(self.count, self.config)
 
 def run(config):
     get_event_loop().run_until_complete(Twint(config).main())
