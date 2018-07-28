@@ -219,7 +219,7 @@ def main():
 
     if args.favorites:
         if args.userlist:
-           _userlist = loadUserList(args.userlist, "profile")
+           _userlist = loadUserList(args.userlist, "favorites")
         for _user in _userlist:
            args.username = _user
            c = initialize(args)
@@ -228,7 +228,7 @@ def main():
         twint.run.Favorites(c)
     elif args.following:
         if args.userlist:
-           _userlist = loadUserList(args.userlist, "profile")
+           _userlist = loadUserList(args.userlist, "following")
         for _user in _userlist:
            args.username = _user
            c = initialize(args)
@@ -237,7 +237,7 @@ def main():
         twint.run.Following(c)
     elif args.followers:
         if args.userlist:
-           _userlist = loadUserList(args.userlist, "profile")
+           _userlist = loadUserList(args.userlist, "followers")
         for _user in _userlist:
            args.username = _user
            c = initialize(args)
