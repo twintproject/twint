@@ -44,7 +44,7 @@ A few simple examples to help you understand the basics:
 - `python3 twint.py -u username --following` - Scrape who a Twitter user follows.
 - `python3 twint.py -u username --favorites` - Collect all the Tweets a user has favorited.
 - `python3 twint.py -u username --following --user-full` - Collect full user information a person follows
-- `python3 twint.py -u username --profile-full` - Use a slow, but effective method to gather all the Tweets from a user's profile (Including Retweets).
+- `python3 twint.py -u username --profile-full` - Use a slow, but effective method to gather Tweets from a user's profile (Gathers ~3200 Tweets, Including Retweets).
 - `python3 twint.py -u username --retweets` - Use a quick method to gather the last 900 Tweets (that includes retweets) from a user's profile.
 - `python3 twint.py -u username --resume 10940389583058` - Resume a search starting from the specified Tweet ID.
 
