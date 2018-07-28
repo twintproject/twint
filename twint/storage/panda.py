@@ -6,7 +6,6 @@ import warnings
 _blocks = []
 
 def update(Tweet, session):
-    day = weekday(strftime("%A", localtime(Tweet.datetime)))
     dt = f"{Tweet.datestamp} {Tweet.timestamp}"
 
     _data = {
@@ -18,8 +17,6 @@ def update(Tweet, session):
                 "hashtags": Tweet.hashtags,
                 "user_id": Tweet.user_id,
                 "username": Tweet.username,
-                "day": day,
-                "hour": hour(Tweet.datetime),
                 "link": Tweet.link,
                 "retweet": Tweet.retweet,
                 "user_rt": Tweet.user_rt,
@@ -31,6 +28,9 @@ def update(Tweet, session):
 def get():
     df = pd.DataFrame(_blocks)
     return df
+
+def clean():
+    _blocks.clear()
 
 def save(_filename, _dataframe, **options):
     if options.get("dataname"):
@@ -53,7 +53,9 @@ def save(_filename, _dataframe, **options):
 
 def read(_filename, **options):
     if not options.get("dataname"):
-        _dataname = "Twint"
+        _dataname = "twint"
+    else:
+        _dataname = options.get("dataname")
 
     if not options.get("type"):
         _store = pd.HDFStore(_filename)
