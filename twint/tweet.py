@@ -14,7 +14,7 @@ def getMentions(tw):
 
 def getText(tw):
     text = tw.find("p", "tweet-text").text
-    text = text.replace("\n", "")
+    text = text.replace("\n", " ")
     text = text.replace("http", " http")
     text = text.replace("pic.twitter", " pic.twitter")
 
