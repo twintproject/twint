@@ -14,3 +14,9 @@ install:
 # Test
 script: 
 - python test.py
+
+branches:
+  only:
+    - master
+    - dev
+    - patch-location-db
