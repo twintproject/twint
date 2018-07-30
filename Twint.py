@@ -218,11 +218,32 @@ def main():
     c = initialize(args)
 
     if args.favorites:
-        twint.run.Favorites(c)
+        if args.userlist:
+            _userlist = loadUserList(args.userlist, "favorites")
+            for _user in _userlist:
+                args.username = _user
+                c = initialize(args)
+                twint.run.Favorites(c)
+        else:
+            twint.run.Favorites(c)
     elif args.following:
-        twint.run.Following(c)
+        if args.userlist:
+            _userlist = loadUserList(args.userlist, "following")
+            for _user in _userlist:
+                args.username = _user
+                c = initialize(args)
+                twint.run.Following(c)
+        else:
+            twint.run.Following(c)
     elif args.followers:
-        twint.run.Followers(c)
+        if args.userlist:
+            _userlist = loadUserList(args.userlist, "followers")
+            for _user in _userlist:
+                args.username = _user
+                c = initialize(args)
+                twint.run.Followers(c)
+        else:
+            twint.run.Followers(c)
     elif args.retweets or args.profile_full:
         if args.userlist:
             _userlist = loadUserList(args.userlist, "profile")
