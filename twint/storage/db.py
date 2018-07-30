@@ -73,7 +73,6 @@ def init(db):
                     name text,
                     username text not null,
                     bio text,
-                    location text,
                     url text,
                     join_date text not null,
                     join_time text not null,
