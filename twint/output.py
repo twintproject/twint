@@ -24,7 +24,10 @@ def is_tweet(tw):
 def _output(obj, output, config):
     if config.Output != None:
         if config.Store_csv:
-            write.Csv(obj, config)
+            try :
+                write.Csv(obj, config)
+            except Exception as e:
+                print("Error: " + str(e))
         elif config.Store_json:
             write.Json(obj, config)
         else:
@@ -43,8 +46,9 @@ def _output(obj, output, config):
         else:
             try:
                 print(output)
-            except UnicodeEncodeError:
                 pass
+            except UnicodeEncodeError:
+                print("unicode error")
 
 async def Tweets(tw, location, config, conn):
     copyright = tw.find("div", "StreamItemContent--withheld")
