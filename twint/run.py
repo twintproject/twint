@@ -117,7 +117,7 @@ class Twint:
                     break
 
         if self.config.Count:
-            verbose.Count(self.count, self.config.Username)
+            verbose.Count(self.count, self.config)
 
 def run(config):
     get_event_loop().run_until_complete(Twint(config).main())
@@ -132,7 +132,7 @@ def Followers(config):
     config.Following = False
     run(config)
     if config.Pandas_au:
-        storage.panda._autoget()
+        storage.panda._autoget("follow")
 
 def Following(config):
     output.clean_follow_list()
@@ -140,10 +140,11 @@ def Following(config):
     config.Followers = False
     run(config)
     if config.Pandas_au:
-        storage.panda._autoget()
+        storage.panda._autoget("follow")
 
 def Profile(config):
     config.Profile = True
+    # _type = Profile
     run(config)
 
 def Search(config):
@@ -152,4 +153,4 @@ def Search(config):
     config.Followers = False
     run(config)
     if config.Pandas_au:
-        storage.panda._autoget()
+        storage.panda._autoget("tweet")

@@ -21,30 +21,32 @@ _type = ""
 
 def _concat(df):
     if df is None:
-        df = pd.DataFrame(_object_blocks[_type])
+        df = pd.DataFrame(_object_blocks["follow"])
     else:
-        _df = pd.DataFrame(_object_blocks[_type])
+        _df = pd.DataFrame(_object_blocks["follow"])
         df = pd.concat([df, _df], sort=True)
     return df
 
-def _autoget():
+def _autoget(type):
     global Tweets_df
     global Follow_df
     global User_df
 
-    if _type == "tweet":
+    if type == "search":
         Tweets_df = _concat(Tweets_df)
-    if _type == "follow":
+    if type == "follow":
         Follow_df = _concat(Follow_df)
-    if _type == "user":
+    if type == "profile":
        User_df = _concat(User_df)
 
-def update(object, session):
+def update(object, config):
     global _type
 
-    _type = ((object.type == "tweet")*"tweet" +
-             (object.type == "user")*"user" +
-             (object.type == "follow")*"follow")
+    try:
+        _type = ((object.type == "tweet")*"tweet" +
+                 (object.type == "user")*"user")
+    except AttributeError:
+        _type = "follow"
 
     if _type == "tweet":
         dt = f"{object.datestamp} {object.timestamp}"
@@ -60,7 +62,7 @@ def update(object, session):
             "link": object.link,
             "retweet": object.retweet,
             "user_rt": object.user_rt,
-            "essid": str(session),
+            "essid": str(config.Essid),
             'mentions': object.mentions
             }
         _object_blocks[_type].append(_data)
@@ -83,12 +85,13 @@ def update(object, session):
             "private": object.is_private,
             "verified": object.is_verified,
             "avatar": object.avatar,
-            "session": str(session)
+            "session": str(config.Essid)
             }
         _object_blocks[_type].append(_data)
     elif _type == "follow":
         _data = {
-            object.action : {object.username: object.users}
+            config.Following*"following" + config.Followers*"folloers" :
+                             {config.Username: object[config.Username]}
         }
         _object_blocks[_type] = _data
     else:

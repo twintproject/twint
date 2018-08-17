@@ -4,8 +4,7 @@ from .user import User
 from datetime import datetime
 from .storage import db, elasticsearch, write, panda
 
-class follow_object:
-    type = "follow"
+follow_object = {}
 
 tweets_object = []
 user_object = []
@@ -112,5 +111,12 @@ async def Username(username, config, conn):
         elasticsearch.Follow(username, config)
 
     if config.Store_object or config.Pandas:
-        _follow_list.append(username)
+        try:
+            __old_follow_list = follow_object[config.Username]
+        except KeyError:
+            __old_follow_list = []
+        __old_follow_list.append(username)
+        follow_object.update({config.Username: __old_follow_list})
+        if config.Panda_au:
+            panda.update(follow_object, config)
     _output(username, username, config, follow_list=_follow_list)
