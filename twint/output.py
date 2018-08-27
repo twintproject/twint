@@ -2,8 +2,8 @@ from . import format
 from .tweet import Tweet
 from .user import User
 from datetime import datetime
-from .storage import db, elasticsearch, write, panda
-
+from .storage import db, elasticsearch, write, panda, general_storage
+import pdb
 tweets_object = []
 
 def datecheck(datestamp, config):
@@ -29,9 +29,11 @@ def _output(obj, output, config):
             write.Json(obj, config)
         else:
             write.Text(output, config.Output)
-
+            
     if config.Pandas:
         panda.update(obj, config.Essid)
+    if config.GeneralStorage:
+        general_storage.update(obj, config.Essid)
     if config.Elasticsearch:
         if config.Store_object:
             tweets_object.append(obj)
