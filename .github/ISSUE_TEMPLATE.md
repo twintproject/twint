@@ -6,8 +6,8 @@ Please use this template!
 
 >Make sure you've checked the following:
 
-- [] Python version is 3.5 or higher.
-- [] Using the latest version of Twint.
+- [] Python version is 3.6;
+- [] Using the latest version of Twint;
 - [] I have searched the issues and there are no duplicates of this issue/question/request.
 
 ### Command Ran
