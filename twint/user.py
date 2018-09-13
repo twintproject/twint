@@ -4,9 +4,11 @@ class user:
 def inf(ur, _type):
     try:
         group = ur.find("div", "user-actions btn-group not-following ")
-    except:
-        group = ur.find("div", "user-actions btn-group not-following protected")
-    
+        if group == None :
+            group = ur.find("div", "user-actions btn-group not-following protected")
+    except Exception as e:
+        print("Error: " + str(e))
+
     if _type == "id":
         ret = group["data-user-id"]
     elif _type == "name":
@@ -42,15 +44,41 @@ def join(ur):
     jd = ur.find("span", "ProfileHeaderCard-joinDateText js-tooltip u-dir")["title"]
     return jd.split(" - ")
 
+def convertToInt(x):
+    multDict = {
+        "k" : 1000,
+        "m" : 1000000,
+        "b" : 1000000000,
+    }
+    try :
+        y = int(x)
+        return y
+    except :
+        pass
+    
+    try :
+        y = float(str(x)[:-1])
+        y = y * multDict[str(x)[-1:].lower()]
+        return int(y)
+    except :
+        pass
+
+    return 0
+
 def stat(ur, _type):
     _class = f"ProfileNav-item ProfileNav-item--{_type}"
     stat = ur.find("li", _class)
-    return stat.find("span", "ProfileNav-value")["data-count"]
+    try :
+        r = stat.find("span", "ProfileNav-value")["data-count"]
+    except AttributeError:
+        r = "0"
+    return r
 
 def media(ur):
     try:
         media_count = ur.find("a", "PhotoRail-headingWithCount js-nav").text
         media_count = media_count.replace("\n", "")[32:].split(" ")[0]
+        media_count = convertToInt(media_count)
     except:
         media_count = "0"
 
