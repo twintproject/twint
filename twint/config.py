@@ -48,3 +48,4 @@ class Config:
     Media = False
     Replies = False
     Pandas_clean = True
+    Bearer_token = ""
