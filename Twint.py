@@ -123,6 +123,7 @@ def initialize(args):
     c.Media = args.media
     c.Replies = args.replies
     c.Pandas_clean = args.pandas_clean
+    c.Bearer_token = args.bearer_token
     return c
 
 def options():
@@ -186,6 +187,7 @@ def options():
     ap.add_argument("--media", help="Display Tweets with only images or videos.", action="store_true")
     ap.add_argument("--replies", help="Display replies to a subject.", action="store_true")
     ap.add_argument("-pc","--pandas-clean", help="Automatically clean Pandas dataframe at every scrape.")
+    ap.add_argument("--bearer-token", help='twitter token')
     args = ap.parse_args()
 
     return args

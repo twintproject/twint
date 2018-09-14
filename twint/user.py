@@ -17,7 +17,7 @@ def inf(ur, _type):
         ret = group["data-screen-name"]
     elif _type == "private":
         ret = group["data-protected"]
-    
+
     return ret
 
 def card(ur, _type):
@@ -37,7 +37,7 @@ def card(ur, _type):
             ret = ur.find("span", "ProfileHeaderCard-urlText u-dir").find("a")["title"]
         except:
             ret = "None"
-    
+
     return ret
 
 def join(ur):
@@ -55,7 +55,7 @@ def convertToInt(x):
         return y
     except :
         pass
-    
+
     try :
         y = float(str(x)[:-1])
         y = y * multDict[str(x)[-1:].lower()]
@@ -116,4 +116,5 @@ def User(ur):
     u.is_private = inf(ur, "private")
     u.is_verified = verified(ur)
     u.avatar = ur.find("img", "ProfileAvatar-image")["src"]
+    u.background_image = ur.find('div',{'class':'ProfileCanopy-headerBg'}).find('img').get('src')
     return u
