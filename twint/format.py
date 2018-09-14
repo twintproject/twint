@@ -9,9 +9,9 @@ def Tweet(config, t):
         output = output.replace("{tweet}", t.tweet)
         output = output.replace("{location}", t.location)
         output = output.replace("{hashtags}", str(t.hashtags))
-        output = output.replace("{replies}", t.replies)
-        output = output.replace("{retweets}", t.retweets)
-        output = output.replace("{likes}", t.likes)
+        output = output.replace("{replies}", t.replies_count)
+        output = output.replace("{retweets}", t.retweets_count)
+        output = output.replace("{likes}", t.likes_count)
         output = output.replace("{link}", t.link)
         output = output.replace("{is_retweet}", str(t.retweet))
         output = output.replace("{user_rt}", t.user_rt)
@@ -52,6 +52,7 @@ def User(_format, u):
         output += output.replace("{private}", u.is_private)
         output += output.replace("{verified}", u.is_verified)
         output += output.replace("{avatar}", u.avatar)
+        output += output.replace("{background_image}", u.background_image)
     else:
         output = f"{u.id} | {u.name} | @{u.username} | Private: "
         output += f"{u.is_private} | Verified: {u.is_verified} |"
@@ -60,5 +61,5 @@ def User(_format, u):
         output += f"| Tweets: {u.tweets} | Following: {u.following}"
         output += f" | Followers: {u.followers} | Likes: {u.likes} "
         output += f"| Media: {u.media_count} | Avatar: {u.avatar}"
-
+        output += f" | Background Image: {u.background_image}"
     return output
