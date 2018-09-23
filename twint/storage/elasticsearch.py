@@ -73,8 +73,9 @@ def Tweet(Tweet, config):
             }
     actions.append(j_data)
 
-    for l in range(int(Tweet.likes)):
-        j_data = {
+    if config.ES_count["likes"] is not False:
+        for l in range(int(Tweet.likes)):
+            j_data = {
                 "_index": config.Index_tweets,
                 "_type": config.Index_type,
                 "_id": Tweet.id + "_likes_" + str(nLikes) + "_" + config.Essid,
@@ -96,11 +97,12 @@ def Tweet(Tweet, config):
                     "essid": config.Essid
                     }
                 }
-        actions.append(j_data)
-        nLikes += 1
+            actions.append(j_data)
+            nLikes += 1
 
-    for rep in range(int(Tweet.replies)):
-        j_data = {
+    if config.ES_count["replies"] is not False:
+        for rep in range(int(Tweet.replies)):
+            j_data = {
                 "_index": config.Index_tweets,
                 "_type": config.Index_type,
                 "_id": Tweet.id + "_replies_" + str(nReplies) + "_" + config.Essid,
@@ -122,11 +124,12 @@ def Tweet(Tweet, config):
                     "essid": config.Essid
                     }
                 }
-        actions.append(j_data)
-        nReplies += 1
+            actions.append(j_data)
+            nReplies += 1
 
-    for ret in range(int(Tweet.retweets)):
-        j_data = {
+    if config.ES_count["retweets"] is not False:
+        for ret in range(int(Tweet.retweets)):
+            j_data = {
                 "_index": config.Index_tweets,
                 "_type": config.Index_type,
                 "_id": Tweet.id + "_retweets_" + str(nRetweets) + "_" + config.Essid,
@@ -148,8 +151,8 @@ def Tweet(Tweet, config):
                     "essid": config.Essid
                     }
                 }
-        actions.append(j_data)
-        nRetweets += 1
+            actions.append(j_data)
+            nRetweets += 1
 
     es = Elasticsearch(config.Elasticsearch)
     with nostdout():
