@@ -2,9 +2,16 @@ from time import strftime, localtime
 import re
 
 class tweet:
-    pass
+    """Define Tweet class
+    """
+    type = "tweet"
+
+    def __init__(self):
+        pass
 
 def getMentions(tw):
+    """Extract ment from tweet
+    """
     try:
         mentions = tw.find("div", "js-original-tweet")["data-mentions"].split(" ")
     except:
@@ -13,6 +20,8 @@ def getMentions(tw):
     return mentions
 
 def getText(tw):
+    """Replace some text
+    """
     text = tw.find("p", "tweet-text").text
     text = text.replace("\n", " ")
     text = text.replace("http", " http")
@@ -33,9 +42,13 @@ def getTweet(tw, mentions):
     return text
 
 def getHashtags(text):
+    """Get hashtags of tweet
+    """
     return re.findall(r'(?i)\#\w+', text, flags=re.UNICODE)
 
 def getStat(tw, _type):
+    """Get stats about Tweet
+    """
     st = f"ProfileTweet-action--{_type} u-hiddenVisually"
     return tw.find("span", st).find("span")["data-tweet-stat-count"]
 
@@ -44,14 +57,18 @@ def getRetweet(profile, username, user):
         return True
 
 def getUser_rt(profile, username, user):
+    """Get username that retweeted
+    """
     if getRetweet(profile, username, user):
         user_rt = user
     else:
         user_rt = "None"
-    
+
     return user_rt
 
 def Tweet(tw, location, config):
+    """Create Tweet object
+    """
     t = tweet()
     t.id = tw.find("div")["data-item-id"]
     t.datetime = int(tw.find("span", "_timestamp")["data-time"])

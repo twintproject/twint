@@ -16,6 +16,9 @@ class Twint:
         self.d = datelock.Set(self.config.Until, self.config.Since)
         verbose.Elastic(config.Elasticsearch)
 
+        if self.config.Store_object:
+            output.clean_follow_list()
+
         if self.config.Pandas_clean:
             storage.panda.clean()
 
@@ -124,17 +127,35 @@ def Favorites(config):
     run(config)
 
 def Followers(config):
+    output.clean_follow_list()
     config.Followers = True
+    config.Following = False
     run(config)
+    if config.Pandas_au:
+        storage.panda._autoget("followers")
+        if config.User_full:
+            storage.panda._autoget("user")
+    storage.panda.clean()
 
 def Following(config):
+    output.clean_follow_list()
     config.Following = True
+    config.Followers = False
     run(config)
+    if config.Pandas_au:
+        storage.panda._autoget("following")
+        if config.User_full:
+            storage.panda._autoget("user")
+    storage.panda.clean()
 
 def Profile(config):
-    config.Profile = True
     run(config)
+
 
 def Search(config):
     config.TwitterSearch = True
+    config.Following = False
+    config.Followers = False
     run(config)
+    if config.Pandas_au:
+        storage.panda._autoget("tweet")
