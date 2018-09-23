@@ -43,30 +43,6 @@ def check(args):
         if args.user_full:
             error("Error", "Please use --user-full with --followers or --following.")
 
-    # Proxy stuff
-    if args.proxy_host is not None:
-        import socks
-        import socket
-        if args.proxy_host.lower() == "tor":
-            socks.set_default_proxy(socks.SOCKS5, "localhost", 9050)
-            socket.socket = socks.socksocket
-        elif args.proxy_port and args.proxy_type:
-            if args.proxy_type.lower() == "socks5":
-                _type = socks.SOCKS5
-            elif args.proxy_type.lower() == "socks4":
-                _type = socks.SOCKS4
-            elif args.proxy_type.lower() == "http":
-                _type = socks.HTTP
-            else:
-                error("Error", "Proxy types allowed are: socks5, socks4, and http.")
-            socks.set_default_proxy(_type, args.proxy_host, int(args.proxy_port))
-            socket.socket = socks.socksocket
-        else:
-            error("Error", "Please specify --proxy-host, --proxy-port, and --proxy-type")
-    else:
-        if args.proxy_port or args.proxy_type:
-            error("Error", "Please specify --proxy-host, --proxy-port, and --proxy-type")
-
 def loadUserList(ul, _type):
     """ Concatenate users
     """
