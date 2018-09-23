@@ -4,10 +4,6 @@ import warnings
 
 from .elasticsearch import *
 
-## TODO: use pd.merge to merge followers and Following
-##       use pd.concat to concat two different users
-##       merge_df = pd.merge(followers, following, on= object.username, how="inner")
-
 Tweets_df = None
 Follow_df = None
 User_df = None
@@ -15,15 +11,16 @@ User_df = None
 _object_blocks = {
     "tweet": [],
     "user": [],
-    "follow": []
+    "following": [],
+    "followers": []
 }
 _type = ""
 
-def _concat(df):
+def _concat(df, type):
     if df is None:
-        df = pd.DataFrame(_object_blocks["follow"])
+        df = pd.DataFrame(_object_blocks[type])
     else:
-        _df = pd.DataFrame(_object_blocks["follow"])
+        _df = pd.DataFrame(_object_blocks[type])
         df = pd.concat([df, _df], sort=True)
     return df
 
@@ -32,12 +29,13 @@ def _autoget(type):
     global Follow_df
     global User_df
 
-    if type == "search":
-        Tweets_df = _concat(Tweets_df)
-    if type == "follow":
-        Follow_df = _concat(Follow_df)
-    if type == "profile":
-       User_df = _concat(User_df)
+    if type == "tweet":
+        Tweets_df = _concat(Tweets_df, type)
+    if type == "followers" or type == "following":
+        Follow_df = _concat(Follow_df, type)
+    if type == "user":
+        User_df = _concat(User_df, type)
+
 
 def update(object, config):
     global _type
@@ -46,7 +44,7 @@ def update(object, config):
         _type = ((object.type == "tweet")*"tweet" +
                  (object.type == "user")*"user")
     except AttributeError:
-        _type = "follow"
+        _type = config.Following*"following" + config.Followers*"followers"
 
     if _type == "tweet":
         dt = f"{object.datestamp} {object.timestamp}"
@@ -62,7 +60,7 @@ def update(object, config):
             "link": object.link,
             "retweet": object.retweet,
             "user_rt": object.user_rt,
-            "essid": str(config.Essid),
+            "essid": config.Essid,
             'mentions': object.mentions
             }
         _object_blocks[_type].append(_data)
@@ -88,18 +86,20 @@ def update(object, config):
             "session": str(config.Essid)
             }
         _object_blocks[_type].append(_data)
-    elif _type == "follow":
+    elif _type == "followers" or _type == "following":
         _data = {
-            config.Following*"following" + config.Followers*"folloers" :
-                             {config.Username: object[config.Username]}
+            config.Following*"following" + config.Followers*"followers" :
+                             {config.Username: object[_type]}
         }
         _object_blocks[_type] = _data
     else:
         print("Wrong type of object passed!")
 
+
 def clean():
     _object_blocks["tweet"].clear()
-    _object_blocks["follow"].clear()
+    _object_blocks["following"].clear()
+    _object_blocks["followers"].clear()
     _object_blocks["user"].clear()
 
 

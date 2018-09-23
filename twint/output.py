@@ -45,8 +45,8 @@ def _output(obj, output, config, **extra):
         else:
             write.Text(output, config.Output)
 
-    if config.Pandas and not (config.Following or config.Followers):
-        panda.update(obj, config.Essid)
+    if config.Pandas and config.User_full:
+        panda.update(obj, config)
     if extra.get("follow_list"):
         follow_object.username = config.Username
         follow_object.action = config.Following*"following" + config.Followers*"followers"
@@ -103,6 +103,7 @@ async def Users(u, config, conn):
 
 async def Username(username, config, conn):
     global follow_object
+    follow_var = config.Following*"following" + config.Followers*"followers"
 
     if config.Database:
         db.follow(conn, config.Username, config.Followers, username)
@@ -112,11 +113,10 @@ async def Username(username, config, conn):
 
     if config.Store_object or config.Pandas:
         try:
-            __old_follow_list = follow_object[config.Username]
+            _ = follow_object[config.Username][follow_var]
         except KeyError:
-            __old_follow_list = []
-        __old_follow_list.append(username)
-        follow_object.update({config.Username: __old_follow_list})
-        if config.Panda_au:
-            panda.update(follow_object, config)
+            follow_object.update({config.Username: {follow_var: []}})
+        follow_object[config.Username][follow_var].append(username)
+        if config.Pandas_au:
+            panda.update(follow_object[config.Username], config)
     _output(username, username, config, follow_list=_follow_list)
