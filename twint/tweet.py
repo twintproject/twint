@@ -23,7 +23,7 @@ def getText(tw):
     """Replace some text
     """
     text = tw.find("p", "tweet-text").text
-    text = text.replace("\n", "")
+    text = text.replace("\n", " ")
     text = text.replace("http", " http")
     text = text.replace("pic.twitter", " pic.twitter")
 

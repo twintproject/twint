@@ -41,6 +41,7 @@ class Config:
     Index_tweets = "twint"
     Index_follow = "twintGraph"
     Index_users = "twintUser"
+    Index_type = "items"
     Debug = False
     Resume = None
     Images = False

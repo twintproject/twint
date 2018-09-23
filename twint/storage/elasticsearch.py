@@ -44,15 +44,15 @@ def Tweet(Tweet, config):
     day = weekdays[strftime("%A", localtime(Tweet.datetime))]
 
     actions = []
-    nLikes = 0
-    nReplies = 0
-    nRetweets = 0
+    nLikes = 1
+    nReplies = 1
+    nRetweets = 1
 
     dt = f"{Tweet.datestamp} {Tweet.timestamp}"
 
     j_data = {
             "_index": config.Index_tweets,
-            "_type": "items",
+            "_type": config.Index_type,
             "_id": Tweet.id + "_raw_" + config.Essid,
             "_source": {
                 "id": Tweet.id,
@@ -77,7 +77,7 @@ def Tweet(Tweet, config):
         for l in range(int(Tweet.likes)):
             j_data = {
                 "_index": config.Index_tweets,
-                "_type": "items",
+                "_type": config.Index_type,
                 "_id": Tweet.id + "_likes_" + str(nLikes) + "_" + config.Essid,
                 "_source": {
                     "id": Tweet.id,
@@ -104,7 +104,7 @@ def Tweet(Tweet, config):
         for rep in range(int(Tweet.replies)):
             j_data = {
                 "_index": config.Index_tweets,
-                "_type": "items",
+                "_type": config.Index_type,
                 "_id": Tweet.id + "_replies_" + str(nReplies) + "_" + config.Essid,
                 "_source": {
                     "id": Tweet.id,
@@ -131,7 +131,7 @@ def Tweet(Tweet, config):
         for ret in range(int(Tweet.retweets)):
             j_data = {
                 "_index": config.Index_tweets,
-                "_type": "items",
+                "_type": config.Index_type,
                 "_id": Tweet.id + "_retweets_" + str(nRetweets) + "_" + config.Essid,
                 "_source": {
                     "id": Tweet.id,
@@ -164,7 +164,7 @@ def Follow(user, config):
 
     j_data = {
             "_index": config.Index_follow,
-            "_type": "items",
+            "_type": config.Index_type,
             "_id": user + "_" + config.Username + "_" + config.Essid,
             "_source": {
                 "user": user,
@@ -184,7 +184,7 @@ def UserProfile(user, config):
 
     j_data = {
             "_index": config.Index_users,
-            "_type": "items",
+            "_type": config.Index_type,
             "_id": user.id + "_" + user.join_date + "_" + user.join_time + "_" + config.Essid,
             "_source": {
                 "id": user.id,

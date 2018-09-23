@@ -39,7 +39,10 @@ def _output(obj, output, config, **extra):
             obj.hashtags[i] = obj.hashtags[i].lower()
     if config.Output != None:
         if config.Store_csv:
-            write.Csv(obj, config)
+            try :
+                write.Csv(obj, config)
+            except Exception as e:
+                print("Error: " + str(e))
         elif config.Store_json:
             write.Json(obj, config)
         else:
@@ -55,10 +58,14 @@ def _output(obj, output, config, **extra):
     if config.Elasticsearch:
         print("", end=".", flush=True)
     else:
-        try:
-            print(output)
-        except UnicodeEncodeError:
-            pass
+        if config.Store_object:
+            tweets_object.append(obj)
+        else:
+            try:
+                print(output)
+                pass
+            except UnicodeEncodeError:
+                print("unicode error")
 
 async def Tweets(tw, location, config, conn):
     copyright = tw.find("div", "StreamItemContent--withheld")
