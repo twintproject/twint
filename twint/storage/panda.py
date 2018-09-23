@@ -1,7 +1,6 @@
 from time import strftime, localtime
 import pandas as pd
 import warnings
-
 from .elasticsearch import *
 
 Tweets_df = None
@@ -101,7 +100,6 @@ def clean():
     _object_blocks["following"].clear()
     _object_blocks["followers"].clear()
     _object_blocks["user"].clear()
-
 
 def save(_filename, _dataframe, **options):
     if options.get("dataname"):

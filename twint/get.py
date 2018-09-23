@@ -80,7 +80,7 @@ async def Response(session, url):
 
 async def Username(_id):
     url = f"https://twitter.com/intent/user?user_id={_id}&lang=en"
-    r = Request(url)
+    r = await Request(url)
     soup = BeautifulSoup(r, "html.parser")
 
     return soup.find("a", "fn url alternate-context")["href"].replace("/", "")

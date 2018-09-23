@@ -30,7 +30,7 @@ If you are not getting these outputs I suggest you to dig in the corresponding d
 
 Now that everything is up and running:
 
-1. Index some data: `python3.6 twint.py --elasticsearch localhost:9200 -u user --database twint.db` (the `--database` arg is optional, `--elasticsearch` is mandatory and its value is for default settings, as in our case;
+1. Index some data: `python3.6 Twint.py --elasticsearch localhost:9200 -u user --database twint.db` (the `--database` arg is optional, `--elasticsearch` is mandatory and its value is for default settings, as in our case;
 
 2. Now we can create the index (that I already created): open your browser and go to `http://localhost:5601` (again, this is a default value), `Dev Tools` tab, copy&paste `index-tweets.json` and than click the green arrow. Expected output is 
 

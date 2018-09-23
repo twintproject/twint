@@ -188,6 +188,7 @@ def options():
                     help="Automatically clean Pandas dataframe at every scrape.")
     ap.add_argument("-ec", "--es-count", nargs="?", default="",
                     help="What NOT to count: likes, replies, retweets; only for Elasticsearch.")
+    ap.add_argument("-pc","--pandas-clean", help="Automatically clean Pandas dataframe at every scrape.")
     args = ap.parse_args()
 
     return args
@@ -215,14 +216,38 @@ def main():
     if "retweets" in str(args.es_count):
         c.ES_count["retweets"] = False
 
-    print(args.es_count)
+    if args.pandas_clean:
+        twint.storage.panda.clean()
+
+    c = initialize(args)
 
     if args.favorites:
-        twint.run.Favorites(c)
+        if args.userlist:
+            _userlist = loadUserList(args.userlist, "favorites")
+            for _user in _userlist:
+                args.username = _user
+                c = initialize(args)
+                twint.run.Favorites(c)
+        else:
+            twint.run.Favorites(c)
     elif args.following:
-        twint.run.Following(c)
+        if args.userlist:
+            _userlist = loadUserList(args.userlist, "following")
+            for _user in _userlist:
+                args.username = _user
+                c = initialize(args)
+                twint.run.Following(c)
+        else:
+            twint.run.Following(c)
     elif args.followers:
-        twint.run.Followers(c)
+        if args.userlist:
+            _userlist = loadUserList(args.userlist, "followers")
+            for _user in _userlist:
+                args.username = _user
+                c = initialize(args)
+                twint.run.Followers(c)
+        else:
+            twint.run.Followers(c)
     elif args.retweets or args.profile_full:
         if args.userlist:
             _userlist = loadUserList(args.userlist, "profile")
