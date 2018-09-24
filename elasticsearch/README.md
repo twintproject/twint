@@ -57,8 +57,10 @@ Useful when you want to study the activity of a user, in the `Search` bar type `
 
 ### Ready-to-Use Visualizations
 With the newest versions of Kibana users can export objects, for example, but not limited to, visualizations and dashboards. 
+
 Making visualizations is a simple but not easy process, you have to combine how you want to index data and how you want to visualize it.
-To help you gettin started with Twint and Elasticsearch, I made some basic visualization and a dashboard. To use them you have just to import them: go to `Management` tab, `Saved Objects`, `Import` and then select `dashboard_visualizations.json`. 
+
+To help you getting started with Twint and Elasticsearch, I made some basic visualization and a dashboard. To use them you have just to import them: go to `Management` tab, `Saved Objects`, `Import` and then select `dashboard_visualizations.json`. 
 After this just to go `Dashboard` tab and click on `Twint Dashboard`.
 
 ![2](https://i.imgur.com/QhqaENq.png)
