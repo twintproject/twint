@@ -52,3 +52,6 @@ class Config:
     ES_count = {"likes":True,"replies":True,"retweets":True}
     Lowercase = False
     Pandas_au = True
+    Proxy_host = None
+    Proxy_port = 0
+    Proxy_type = None
