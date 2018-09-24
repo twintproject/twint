@@ -11,6 +11,7 @@ from . import url
 from .output import Tweets, Users
 
 async def RequestUrl(config, init):
+    _connector = None
     if config.Proxy_host is not None:
         if config.Proxy_host.lower() == "tor":
             connector = SocksConnector(
@@ -43,13 +44,13 @@ async def RequestUrl(config, init):
     if config.Profile:
         if config.Profile_full:
             _url = await url.MobileProfile(config.Username, init)
-            response = await MobileRequest(_url, _connector)
+            response = await MobileRequest(_url, connector=_connector)
         else:
             _url = await url.Profile(config.Username, init)
-            response = await Request(_url, _connector)
+            response = await Request(_url, connector=_connector)
     elif config.TwitterSearch:
         _url = await url.Search(config, init)
-        response = await Request(_url, _connector)
+        response = await Request(_url, options=_connector)
     else:
         if config.Following:
             _url = await url.Following(config.Username, init)
@@ -57,20 +58,28 @@ async def RequestUrl(config, init):
             _url = await url.Followers(config.Username, init)
         else:
             _url = await url.Favorites(config.Username, init)
-        response = await MobileRequest(_url, _connector)
+        response = await MobileRequest(_url, connector=_connector)
 
     if config.Debug:
         print(_url, file=open("twint-request_urls.log", "a", encoding="utf-8"))
 
     return response
 
-async def MobileRequest(url, connector):
+async def MobileRequest(url, **options):
     ua = {'User-Agent': 'Lynx/2.8.5rel.1 libwww-FM/2.14 SSL-MM/1.4.1 GNUTLS/0.8.12'}
-    async with aiohttp.ClientSession(headers=ua, connector=connector) as session:
+    connector = options.get("_connector")
+    if connector:
+        async with aiohttp.ClientSession(headers=ua, connector=connector) as session:
+            return await Response(session, url)
+    async with aiohttp.ClientSession(headers=ua) as session:
         return await Response(session, url)
 
-async def Request(url, connector):
-    async with aiohttp.ClientSession(connector=connector) as session:
+async def Request(url, **options):
+    connector = options.get("_connector")
+    if connector:
+        async with aiohttp.ClientSession(connector=connector) as session:
+            return await Response(session, url)
+    async with aiohttp.ClientSession() as session:
         return await Response(session, url)
 
 async def Response(session, url):
