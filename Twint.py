@@ -188,7 +188,6 @@ def options():
                     help="Automatically clean Pandas dataframe at every scrape.")
     ap.add_argument("-ec", "--es-count", nargs="?", default="",
                     help="What NOT to count: likes, replies, retweets; only for Elasticsearch.")
-    ap.add_argument("-pc","--pandas-clean", help="Automatically clean Pandas dataframe at every scrape.")
     args = ap.parse_args()
 
     return args

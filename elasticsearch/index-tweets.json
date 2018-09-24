@@ -1,4 +1,4 @@
-PUT twint
+PUT twinttweets
 {
   "mappings": {
     "items": {

@@ -38,9 +38,9 @@ class Config:
     Store_pandas = False
     Pandas_type = None
     Pandas = False
-    Index_tweets = "twint"
-    Index_follow = "twintGraph"
-    Index_users = "twintUser"
+    Index_tweets = "twinttweets"
+    Index_follow = "twintgraph"
+    Index_users = "twintuser"
     Index_type = "items"
     Debug = False
     Resume = None

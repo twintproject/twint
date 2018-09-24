@@ -1,4 +1,4 @@
-PUT twintGraph
+PUT twintgraph
 {
   "mappings": {
     "items": {
