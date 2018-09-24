@@ -30,7 +30,7 @@ If you are not getting these outputs I suggest you to dig in the corresponding d
 
 Now that everything is up and running:
 
-1. Index some data: `python3.6 Twint.py --elasticsearch localhost:9200 -u user --database twint.db` (the `--database` arg is optional, `--elasticsearch` is mandatory and its value is for default settings, as in our case;
+1. Index some data: `python3.6 Twint.py --elasticsearch localhost:9200 -u user` (in this case `--elasticsearch` is mandatory argument and its value is a host:port combination, where the Elasticsearch instance is binding to);
 
 2. Now we can create the index (that I already created): open your browser and go to `http://localhost:5601` (again, this is a default value), `Dev Tools` tab, copy&paste `index-tweets.json` and than click the green arrow. Expected output is 
 
@@ -47,6 +47,22 @@ Now that everything is up and running:
 4. Go to the `Discover` tab, choose `twint` and you should see something like this:
 
 ![1](https://i.imgur.com/Ut9173J.png)
+
+PS: "twint" is just a custom name, feel free to change it accordingly at your needs, now as now the index name for tweets is `twinttweets`
+
+### Useful Tricks 
+1. Filter out "multiplied" data and analyze only original tweets.
+Useful when you want to study the activity of a user, in the `Search` bar type `NOT _exists_:likes NOT _exists_:retweets NOT _exists_:replies`
+
+
+### Ready-to-Use Visualizations
+With the newest versions of Kibana users can export objects, for example, but not limited to, visualizations and dashboards. 
+Making visualizations is a simple but not easy process, you have to combine how you want to index data and how you want to visualize it.
+To help you gettin started with Twint and Elasticsearch, I made some basic visualization and a dashboard. To use them you have just to import them: go to `Management` tab, `Saved Objects`, `Import` and then select `dashboard_visualizations.json`. 
+After this just to go `Dashboard` tab and click on `Twint Dashboard`.
+
+![2](https://i.imgur.com/QhqaENq.png)
+
 
 ### Notes
 
