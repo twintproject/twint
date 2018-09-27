@@ -77,7 +77,7 @@ With the newest versions of Kibana users can export objects, for example, but no
 
 Making visualizations is a simple but not easy process, you have to combine how you want to index data and how you want to visualize it.
 
-To help you getting started with Twint and Elasticsearch, I made some basic visualization and a dashboard. To use them you have just to import them: go to `Management` tab (the gear), `Saved Objects`, `Import` and then select `dashboard_visualizations.json`. 
+To help you getting started with Twint and Elasticsearch, I made some basic visualization and a dashboard. To use them you have just to import them: go to `Management` tab (the gear), `Saved Objects`, `Import` and then select `visualizations.json`, repeat the process for `dashboard.json`. 
 After this just to go `Dashboard` tab and click on `Twint Dashboard`.
 
 ![2](https://i.imgur.com/iaH3s7z.png)
