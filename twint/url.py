@@ -1,7 +1,11 @@
+#from datetime import datetime
+#import logging
+
 mobile = "https://mobile.twitter.com"
 base = "https://twitter.com/i"
 
 async def Favorites(username, init):
+    #logging.info("[<] " + str(datetime.now()) + ':: url+Favorites')
     url = f"{mobile}/{username}/favorites?lang=en"
 
     if init != -1:
@@ -10,6 +14,7 @@ async def Favorites(username, init):
     return url
 
 async def Followers(username, init):
+    #logging.info("[<] " + str(datetime.now()) + ':: url+Followers')
     url = f"{mobile}/{username}/followers?lang=en"
 
     if init != -1:
@@ -18,6 +23,7 @@ async def Followers(username, init):
     return url
 
 async def Following(username, init):
+    #logging.info("[<] " + str(datetime.now()) + ':: url+Following')
     url = f"{mobile}/{username}/following?lang=en"
 
     if init != -1:
@@ -26,6 +32,7 @@ async def Following(username, init):
     return url
 
 async def MobileProfile(username, init):
+    #logging.info("[<] " + str(datetime.now()) + ':: url+MobileProfile')
     url = f"{mobile}/{username}?lang=en"
 
     if init != -1:
@@ -34,6 +41,7 @@ async def MobileProfile(username, init):
     return url
 
 async def Profile(username, init):
+    #logging.info("[<] " + str(datetime.now()) + ':: url+Profile')
     url = f"{base}/profiles/show/{username}/timeline/tweets?include_"
     url += "available_features=1&lang=en&include_entities=1"
     url += "&include_new_items_bar=true"
@@ -44,6 +52,7 @@ async def Profile(username, init):
     return url
 
 async def Search(config, init):
+    #logging.info("[<] " + str(datetime.now()) + ':: url+Search')
     url = f"{base}/search/timeline?f=tweets&vertical=default&lang=en"
     url += "&include_available_features=1&include_entities=1&"
     url += f"reset_error_state=false&src=typd&qf=off&max_position={init}&q="

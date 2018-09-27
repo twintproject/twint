@@ -4,6 +4,8 @@ from .user import User
 from datetime import datetime
 from .storage import db, elasticsearch, write, panda
 
+#import logging
+
 follow_object = {}
 
 tweets_object = []
@@ -12,10 +14,12 @@ user_object = []
 _follow_list = []
 
 def clean_follow_list():
+    #logging.info("[<] " + str(datetime.now()) + ':: output+clean_follow_list')
     global _follow_list
     _follow_list = []
 
 def datecheck(datestamp, config):
+    #logging.info("[<] " + str(datetime.now()) + ':: output+datecheck')
     if config.Since and config.Until:
         d = int(datestamp.replace("-", ""))
         s = int(config.Since.replace("-", ""))
@@ -24,6 +28,7 @@ def datecheck(datestamp, config):
     return True
 
 def is_tweet(tw):
+    #logging.info("[<] " + str(datetime.now()) + ':: output+is_tweet')
     try:
         tw.find("div")["data-item-id"]
         return True
@@ -31,6 +36,7 @@ def is_tweet(tw):
         return False
 
 def _output(obj, output, config, **extra):
+    #logging.info("[<] " + str(datetime.now()) + ':: output+_output')
     if config.Lowercase:
         obj.username = obj.username.lower()
         for i in range(len(obj.mentions)):
@@ -68,6 +74,7 @@ def _output(obj, output, config, **extra):
                 print("unicode error")
 
 async def Tweets(tw, location, config, conn):
+    #logging.info("[<] " + str(datetime.now()) + ':: output+Tweets')
     copyright = tw.find("div", "StreamItemContent--withheld")
     if copyright is None and is_tweet(tw):
         tweet = Tweet(tw, location, config)
@@ -86,6 +93,7 @@ async def Tweets(tw, location, config, conn):
             _output(tweet, output, config)
 
 async def Users(u, config, conn):
+    #logging.info("[<] " + str(datetime.now()) + ':: output+Users')
     global user_object
 
     user = User(u)
@@ -109,6 +117,7 @@ async def Users(u, config, conn):
     _output(user, output, config)
 
 async def Username(username, config, conn):
+    #logging.info("[<] " + str(datetime.now()) + ':: output+Username')
     global follow_object
     follow_var = config.Following*"following" + config.Followers*"followers"
 
