@@ -80,4 +80,5 @@ Making visualizations is a simple but not easy process, you have to combine how 
 To help you getting started with Twint and Elasticsearch, I made some basic visualization and a dashboard. To use them you have just to import them: go to `Management` tab (the gear), `Saved Objects`, `Import` and then select `dashboard_visualizations.json`. 
 After this just to go `Dashboard` tab and click on `Twint Dashboard`.
 
-![2](https://i.imgur.com/QhqaENq.png)
+![2](https://i.imgur.com/iaH3s7z.png)
+![3](https://i.imgur.com/hVeCrqL.png)
