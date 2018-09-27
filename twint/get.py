@@ -1,4 +1,5 @@
 from async_timeout import timeout
+from datetime import datetime
 from bs4 import BeautifulSoup
 import sys
 import aiohttp
@@ -10,7 +11,10 @@ from aiohttp_socks import SocksConnector, SocksVer
 from . import url
 from .output import Tweets, Users
 
+#import logging
+
 async def RequestUrl(config, init):
+    #loggin.info("[<] " + str(datetime.now()) + ':: get+requestURL')
     _connector = None
     if config.Proxy_host is not None:
         if config.Proxy_host.lower() == "tor":
@@ -66,6 +70,7 @@ async def RequestUrl(config, init):
     return response
 
 async def MobileRequest(url, **options):
+    #loggin.info("[<] " + str(datetime.now()) + ':: get+MobileRequest')
     ua = {'User-Agent': 'Lynx/2.8.5rel.1 libwww-FM/2.14 SSL-MM/1.4.1 GNUTLS/0.8.12'}
     connector = options.get("_connector")
     if connector:
@@ -75,6 +80,7 @@ async def MobileRequest(url, **options):
         return await Response(session, url)
 
 async def Request(url, **options):
+    #loggin.info("[<] " + str(datetime.now()) + ':: get+Request')
     connector = options.get("_connector")
     if connector:
         async with aiohttp.ClientSession(connector=connector) as session:
@@ -83,11 +89,13 @@ async def Request(url, **options):
         return await Response(session, url)
 
 async def Response(session, url):
+    #loggin.info("[<] " + str(datetime.now()) + ':: get+Response')
     with timeout(30):
         async with session.get(url, ssl=False) as response:
             return await response.text()
 
 async def Username(_id):
+    #loggin.info("[<] " + str(datetime.now()) + ':: get+Username')
     url = f"https://twitter.com/intent/user?user_id={_id}&lang=en"
     r = await Request(url)
     soup = BeautifulSoup(r, "html.parser")
@@ -95,6 +103,7 @@ async def Username(_id):
     return soup.find("a", "fn url alternate-context")["href"].replace("/", "")
 
 async def Tweet(url, config, conn):
+    #loggin.info("[<] " + str(datetime.now()) + ':: Tweet')
     try:
         response = await Request(url)
         soup = BeautifulSoup(response, "html.parser")
@@ -106,6 +115,7 @@ async def Tweet(url, config, conn):
         pass
 
 async def User(url, config, conn):
+    #loggin.info("[<] " + str(datetime.now()) + ':: get+User')
     try:
         response = await Request(url)
         soup = BeautifulSoup(response, "html.parser")
@@ -114,10 +124,12 @@ async def User(url, config, conn):
         pass
 
 def Limit(Limit, count):
+    #loggin.info("[<] " + str(datetime.now()) + ':: get+Limit')
     if Limit is not None and count >= int(Limit):
         return True
 
 async def Multi(feed, config, conn):
+    #loggin.info("[<] " + str(datetime.now()) + ':: get+Multi')
     count = 0
     try:
         with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
