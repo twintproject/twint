@@ -49,8 +49,8 @@ class Config:
     Media = False
     Replies = False
     Pandas_clean = True
-    ES_count = {"likes":True,"replies":True,"retweets":True}
-    Lowercase = False
+    ES_count = {"likes":False,"replies":False,"retweets":False}
+    Lowercase = True
     Pandas_au = True
     Proxy_host = None
     Proxy_port = 0
