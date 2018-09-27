@@ -68,12 +68,16 @@ def Tweet(Tweet, config):
                 "link": Tweet.link,
                 "retweet": Tweet.retweet,
                 "user_rt": Tweet.user_rt,
-                "essid": config.Essid
+                "essid": config.Essid,
+                "nlikes": int(Tweet.likes),
+                "nreplies": int(Tweet.replies),
+                "nretweets": int(Tweet.retweets),
+                "search": str(config.Search)
                 }
             }
     actions.append(j_data)
 
-    if config.ES_count["likes"] is not False:
+    if config.ES_count["likes"]:
         for l in range(int(Tweet.likes)):
             j_data = {
                 "_index": config.Index_tweets,
@@ -100,7 +104,7 @@ def Tweet(Tweet, config):
             actions.append(j_data)
             nLikes += 1
 
-    if config.ES_count["replies"] is not False:
+    if config.ES_count["replies"]:
         for rep in range(int(Tweet.replies)):
             j_data = {
                 "_index": config.Index_tweets,
@@ -127,7 +131,7 @@ def Tweet(Tweet, config):
             actions.append(j_data)
             nReplies += 1
 
-    if config.ES_count["retweets"] is not False:
+    if config.ES_count["retweets"]:
         for ret in range(int(Tweet.retweets)):
             j_data = {
                 "_index": config.Index_tweets,

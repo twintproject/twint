@@ -207,18 +207,16 @@ def main():
     c = initialize(args)
 
     if "likes" in str(args.es_count):
-        c.ES_count["likes"] = False
+        c.ES_count["likes"] = True
 
     if "replies" in str(args.es_count):
-        c.ES_count["replies"] = False
+        c.ES_count["replies"] = True
 
     if "retweets" in str(args.es_count):
-        c.ES_count["retweets"] = False
+        c.ES_count["retweets"] = True
 
     if args.pandas_clean:
         twint.storage.panda.clean()
-
-    c = initialize(args)
 
     if args.favorites:
         if args.userlist:
