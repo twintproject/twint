@@ -11,8 +11,8 @@ def Follow(response):
     cursor = soup.find_all("div", "w-button-more")
     try:
         cursor = findall(r'cursor=(.*?)">', str(cursor))[0]
-    except:
-        pass
+    except Exception as e:
+        print(e)
 
     return follow, cursor
 
@@ -23,8 +23,8 @@ def Mobile(response):
     max_id = soup.find_all("div", "w-button-more")
     try:
         max_id = findall(r'max_id=(.*?)">', str(max_id))[0]
-    except:
-        pass
+    except Exception as e:
+        print(e)
 
     return tweets, max_id
 
