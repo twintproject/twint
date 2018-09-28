@@ -120,8 +120,8 @@ async def User(url, config, conn):
         response = await Request(url)
         soup = BeautifulSoup(response, "html.parser")
         await Users(soup, config, conn)
-    except:
-        pass
+    except Exception as e:
+        print(e)
 
 def Limit(Limit, count):
     #loggin.info("[<] " + str(datetime.now()) + ':: get+Limit')
