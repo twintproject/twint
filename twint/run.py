@@ -7,7 +7,7 @@ from .storage import db
 
 class Twint:
     def __init__(self, config):
-        #loggin.info("[<] " + str(datetime.now()) + ':: run+Twint+__init__')
+        #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+__init__')
         if config.Resume is not None and config.TwitterSearch:
             self.init = f"TWEET-{config.Resume}-0"
         else:
@@ -32,7 +32,7 @@ class Twint:
                 self.config.Timedelta = (self.d._until - self.d._since).days
 
     async def Feed(self):
-        #loggin.info("[<] " + str(datetime.now()) + ':: run+Twint+Feed')
+        #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+Feed')
         response = await get.RequestUrl(self.config, self.init)
         if self.config.Debug:
             print(response, file=open("twint-last-request.log", "w", encoding="utf-8"))
@@ -51,10 +51,10 @@ class Twint:
             elif self.config.TwitterSearch:
                 self.feed, self.init = feed.Json(response)
         except Exception as e:
-            print(e)
+            print(str(e) + " [x] run.Feed")
 
     async def follow(self):
-        #loggin.info("[<] " + str(datetime.now()) + ':: run+Twint+follow')
+        #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+follow')
         await self.Feed()
         if self.config.User_full:
             self.count += await get.Multi(self.feed, self.config, self.conn)
@@ -65,12 +65,12 @@ class Twint:
                 await output.Username(username, self.config, self.conn)
 
     async def favorite(self):
-        #loggin.info("[<] " + str(datetime.now()) + ':: run+Twint+favorite')
+        #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+favorite')
         await self.Feed()
         self.count += await get.Multi(self.feed, self.config, self.conn)
 
     async def profile(self):
-        #loggin.info("[<] " + str(datetime.now()) + ':: run+Twint+profile')
+        #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+profile')
         await self.Feed()
         if self.config.Profile_full:
             self.count += await get.Multi(self.feed, self.config, self.conn)
@@ -80,7 +80,7 @@ class Twint:
                 await output.Tweets(tweet, "", self.config, self.conn)
 
     async def tweets(self):
-        #loggin.info("[<] " + str(datetime.now()) + ':: run+Twint+tweets')
+        #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+tweets')
         await self.Feed()
         if self.config.Location:
             self.count += await get.Multi(self.feed, self.config, self.conn)
@@ -90,7 +90,7 @@ class Twint:
                 await output.Tweets(tweet, "", self.config, self.conn)
 
     async def main(self):
-        #loggin.info("[<] " + str(datetime.now()) + ':: run+Twint+main')
+        #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+main')
         if self.config.User_id is not None:
             self.config.Username = await get.Username(self.config.User_id)
 
@@ -105,7 +105,7 @@ class Twint:
                     self.d._until = self.d._until - _days
                     self.feed = [-1]
 
-                #loggin.info("[<] " + str(datetime.now()) + ':: run+Twint+main+CallingGetLimit1')
+                #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+main+CallingGetLimit1')
                 if get.Limit(self.config.Limit, self.count):
                     self.d._until = self.d._until - _days
                     self.feed = [-1]
@@ -123,7 +123,7 @@ class Twint:
                 else:
                     break
 
-                #loggin.info("[<] " + str(datetime.now()) + ':: run+Twint+main+CallingGetLimit2')
+                #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+main+CallingGetLimit2')
                 if get.Limit(self.config.Limit, self.count):
                     break
 
@@ -131,16 +131,16 @@ class Twint:
             verbose.Count(self.count, self.config)
 
 def run(config):
-    #loggin.info("[<] " + str(datetime.now()) + ':: run+run')
+    #logging.info("[<] " + str(datetime.now()) + ':: run+run')
     get_event_loop().run_until_complete(Twint(config).main())
 
 def Favorites(config):
-    #loggin.info("[<] " + str(datetime.now()) + ':: run+Favorites')
+    #logging.info("[<] " + str(datetime.now()) + ':: run+Favorites')
     config.Favorites = True
     run(config)
 
 def Followers(config):
-    #loggin.info("[<] " + str(datetime.now()) + ':: run+Followers')
+    #logging.info("[<] " + str(datetime.now()) + ':: run+Followers')
     output.clean_follow_list()
     config.Followers = True
     config.Following = False
@@ -149,10 +149,11 @@ def Followers(config):
         storage.panda._autoget("followers")
         if config.User_full:
             storage.panda._autoget("user")
-    storage.panda.clean()
+    if config.Pandas:
+        storage.panda.clean()
 
 def Following(config):
-    #loggin.info("[<] " + str(datetime.now()) + ':: run+Following')
+    #logging.info("[<] " + str(datetime.now()) + ':: run+Following')
     output.clean_follow_list()
     config.Following = True
     config.Followers = False
@@ -161,15 +162,16 @@ def Following(config):
         storage.panda._autoget("following")
         if config.User_full:
             storage.panda._autoget("user")
-    storage.panda.clean()
+    if config.Pandas:
+        storage.panda.clean()
 
 def Profile(config):
     config.Profile = True
-    #loggin.info("[<] " + str(datetime.now()) + ':: run+Profile')
+    #logging.info("[<] " + str(datetime.now()) + ':: run+Profile')
     run(config)
 
 def Search(config):
-    #loggin.info("[<] " + str(datetime.now()) + ':: run+Search')
+    #logging.info("[<] " + str(datetime.now()) + ':: run+Search')
     config.TwitterSearch = True
     config.Following = False
     config.Followers = False

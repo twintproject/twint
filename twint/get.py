@@ -112,7 +112,7 @@ async def Tweet(url, config, conn):
         location = location[15:].replace("\n", " ")[:-10]
         await Tweets(tweet, location, config, conn)
     except Exception as e:
-        print(e)
+        print(str(e) + " [x] get.Tweet")
 
 async def User(url, config, conn):
     #loggin.info("[<] " + str(datetime.now()) + ':: get+User')
@@ -121,7 +121,7 @@ async def User(url, config, conn):
         soup = BeautifulSoup(response, "html.parser")
         await Users(soup, config, conn)
     except Exception as e:
-        print(e)
+        print(str(e) + " [x] get.User")
 
 def Limit(Limit, count):
     #loggin.info("[<] " + str(datetime.now()) + ':: get+Limit')
@@ -156,6 +156,10 @@ async def Multi(feed, config, conn):
 
             await asyncio.gather(*futures)
     except Exception as e:
-        print(e)
+        # TODO: fix error not error
+        # print(str(e) + " [x] get.Multi")
+        # will return "'NoneType' object is not callable"
+        # but still works
+        pass
 
     return count

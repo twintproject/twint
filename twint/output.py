@@ -40,10 +40,9 @@ def _output(obj, output, config, **extra):
     if config.Lowercase:
         if isinstance(obj, str):
             obj = obj.lower()
-        elif str(type(obj)).split()[0] == "<class":
+        elif str(type(obj)) == "<class 'twint.user.user'>":
             pass
         else:
-            print(type(obj))
             obj.username = obj.username.lower()
             for i in range(len(obj.mentions)):
                 obj.mentions[i] = obj.mentions[i].lower()
@@ -54,7 +53,7 @@ def _output(obj, output, config, **extra):
             try :
                 write.Csv(obj, config)
             except Exception as e:
-                print("Error: " + str(e))
+                print(str(e) + " [x] output._output")
         elif config.Store_json:
             write.Json(obj, config)
         else:
@@ -77,7 +76,7 @@ def _output(obj, output, config, **extra):
                 print(output)
                 pass
             except UnicodeEncodeError:
-                print("unicode error")
+                print("unicode error [x] output._output")
 
 async def Tweets(tw, location, config, conn):
     #logging.info("[<] " + str(datetime.now()) + ':: output+Tweets')
