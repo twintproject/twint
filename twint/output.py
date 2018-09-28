@@ -38,11 +38,17 @@ def is_tweet(tw):
 def _output(obj, output, config, **extra):
     #logging.info("[<] " + str(datetime.now()) + ':: output+_output')
     if config.Lowercase:
-        obj.username = obj.username.lower()
-        for i in range(len(obj.mentions)):
-            obj.mentions[i] = obj.mentions[i].lower()
-        for i in range(len(obj.hashtags)):
-            obj.hashtags[i] = obj.hashtags[i].lower()
+        if isinstance(obj, str):
+            obj = obj.lower()
+        elif str(type(obj)).split()[0] == "<class":
+            pass
+        else:
+            print(type(obj))
+            obj.username = obj.username.lower()
+            for i in range(len(obj.mentions)):
+                obj.mentions[i] = obj.mentions[i].lower()
+            for i in range(len(obj.hashtags)):
+                obj.hashtags[i] = obj.hashtags[i].lower()
     if config.Output != None:
         if config.Store_csv:
             try :
