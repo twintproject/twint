@@ -50,8 +50,8 @@ class Twint:
                     self.feed, self.init = feed.profile(response)
             elif self.config.TwitterSearch:
                 self.feed, self.init = feed.Json(response)
-        except:
-            pass
+        except Exception as e:
+            print(e)
 
     async def follow(self):
         #loggin.info("[<] " + str(datetime.now()) + ':: run+Twint+follow')
