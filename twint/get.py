@@ -111,8 +111,8 @@ async def Tweet(url, config, conn):
         location = soup.find("span", "ProfileHeaderCard-locationText u-dir").text
         location = location[15:].replace("\n", " ")[:-10]
         await Tweets(tweet, location, config, conn)
-    except:
-        pass
+    except Exception as e:
+        print(e)
 
 async def User(url, config, conn):
     #loggin.info("[<] " + str(datetime.now()) + ':: get+User')
@@ -155,7 +155,7 @@ async def Multi(feed, config, conn):
                         config, conn)))
 
             await asyncio.gather(*futures)
-    except:
-        pass
+    except Exception as e:
+        print(e)
 
     return count
