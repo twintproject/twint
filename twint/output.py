@@ -88,6 +88,9 @@ async def Tweets(tw, location, config, conn):
 
             if config.Database:
                 db.tweets(conn, tweet, config)
+            
+            if config.Pandas:
+                panda.update(tweet, config)
 
             if config.Elasticsearch:
                 elasticsearch.Tweet(tweet, config)
