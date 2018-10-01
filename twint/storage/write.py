@@ -44,5 +44,5 @@ def Json(obj, config):
     null, data = struct(obj, config.Custom, Type(config))
 
     with open(config.Output, "a", newline='', encoding="utf-8") as json_file:
-        json.dump(data, json_file)
+        json.dump(data, json_file, ensure_ascii=False)
         json_file.write("\n")

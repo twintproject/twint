@@ -44,15 +44,15 @@ def Tweet(Tweet, config):
     day = weekdays[strftime("%A", localtime(Tweet.datetime))]
 
     actions = []
-    nLikes = 0
-    nReplies = 0
-    nRetweets = 0
+    nLikes = 1
+    nReplies = 1
+    nRetweets = 1
 
     dt = f"{Tweet.datestamp} {Tweet.timestamp}"
 
     j_data = {
             "_index": config.Index_tweets,
-            "_type": "items",
+            "_type": config.Index_type,
             "_id": Tweet.id + "_raw_" + config.Essid,
             "_source": {
                 "id": Tweet.id,
@@ -68,15 +68,20 @@ def Tweet(Tweet, config):
                 "link": Tweet.link,
                 "retweet": Tweet.retweet,
                 "user_rt": Tweet.user_rt,
-                "essid": config.Essid
+                "essid": config.Essid,
+                "nlikes": int(Tweet.likes),
+                "nreplies": int(Tweet.replies),
+                "nretweets": int(Tweet.retweets),
+                "search": str(config.Search)
                 }
             }
     actions.append(j_data)
 
-    for l in range(int(Tweet.likes)):
-        j_data = {
+    if config.ES_count["likes"]:
+        for l in range(int(Tweet.likes)):
+            j_data = {
                 "_index": config.Index_tweets,
-                "_type": "items",
+                "_type": config.Index_type,
                 "_id": Tweet.id + "_likes_" + str(nLikes) + "_" + config.Essid,
                 "_source": {
                     "id": Tweet.id,
@@ -96,13 +101,14 @@ def Tweet(Tweet, config):
                     "essid": config.Essid
                     }
                 }
-        actions.append(j_data)
-        nLikes += 1
+            actions.append(j_data)
+            nLikes += 1
 
-    for rep in range(int(Tweet.replies)):
-        j_data = {
+    if config.ES_count["replies"]:
+        for rep in range(int(Tweet.replies)):
+            j_data = {
                 "_index": config.Index_tweets,
-                "_type": "items",
+                "_type": config.Index_type,
                 "_id": Tweet.id + "_replies_" + str(nReplies) + "_" + config.Essid,
                 "_source": {
                     "id": Tweet.id,
@@ -122,13 +128,14 @@ def Tweet(Tweet, config):
                     "essid": config.Essid
                     }
                 }
-        actions.append(j_data)
-        nReplies += 1
+            actions.append(j_data)
+            nReplies += 1
 
-    for ret in range(int(Tweet.retweets)):
-        j_data = {
+    if config.ES_count["retweets"]:
+        for ret in range(int(Tweet.retweets)):
+            j_data = {
                 "_index": config.Index_tweets,
-                "_type": "items",
+                "_type": config.Index_type,
                 "_id": Tweet.id + "_retweets_" + str(nRetweets) + "_" + config.Essid,
                 "_source": {
                     "id": Tweet.id,
@@ -148,8 +155,8 @@ def Tweet(Tweet, config):
                     "essid": config.Essid
                     }
                 }
-        actions.append(j_data)
-        nRetweets += 1
+            actions.append(j_data)
+            nRetweets += 1
 
     es = Elasticsearch(config.Elasticsearch)
     with nostdout():
@@ -161,7 +168,7 @@ def Follow(user, config):
 
     j_data = {
             "_index": config.Index_follow,
-            "_type": "items",
+            "_type": config.Index_type,
             "_id": user + "_" + config.Username + "_" + config.Essid,
             "_source": {
                 "user": user,
@@ -181,7 +188,7 @@ def UserProfile(user, config):
 
     j_data = {
             "_index": config.Index_users,
-            "_type": "items",
+            "_type": config.Index_type,
             "_id": user.id + "_" + user.join_date + "_" + user.join_time + "_" + config.Essid,
             "_source": {
                 "id": user.id,

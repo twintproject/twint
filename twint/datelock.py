@@ -1,11 +1,14 @@
 import datetime
 
+#import logging
+
 class Datelock:
     _until = None
     _since = None
     _since_def_user = None
 
 def Set(Until, Since):
+    #logging.info("[<] " + str(datetime.datetime.now()) + ':: datelock+Set')
     d = Datelock()
 
     if Until:

@@ -1,4 +1,4 @@
-PUT twintUser
+PUT twintuser
 {
   "mappings": {
     "items": {

@@ -5,3 +5,5 @@ cchardet
 elasticsearch
 pysocks
 pandas
+aiohttp_socks
+schedule

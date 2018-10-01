@@ -1,5 +1,8 @@
 class user:
-    pass
+    type = "user"
+
+    def __init__(self):
+        pass
 
 def inf(ur, _type):
     try:
@@ -17,7 +20,7 @@ def inf(ur, _type):
         ret = group["data-screen-name"]
     elif _type == "private":
         ret = group["data-protected"]
-    
+
     return ret
 
 def card(ur, _type):
@@ -37,7 +40,7 @@ def card(ur, _type):
             ret = ur.find("span", "ProfileHeaderCard-urlText u-dir").find("a")["title"]
         except:
             ret = "None"
-    
+
     return ret
 
 def join(ur):

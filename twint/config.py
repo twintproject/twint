@@ -38,9 +38,10 @@ class Config:
     Store_pandas = False
     Pandas_type = None
     Pandas = False
-    Index_tweets = "twint"
-    Index_follow = "twintGraph"
-    Index_users = "twintUser"
+    Index_tweets = "twinttweets"
+    Index_follow = "twintgraph"
+    Index_users = "twintuser"
+    Index_type = "items"
     Debug = False
     Resume = None
     Images = False
@@ -48,3 +49,9 @@ class Config:
     Media = False
     Replies = False
     Pandas_clean = True
+    ES_count = {"likes":False,"replies":False,"retweets":False}
+    Lowercase = True
+    Pandas_au = True
+    Proxy_host = None
+    Proxy_port = 0
+    Proxy_type = None
