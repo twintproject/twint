@@ -1,4 +1,8 @@
+#import logging
+#from datetime import datetime
+
 def Tweet(config, t):
+    #logging.info("[<] " + str(datetime.now()) + ':: format+Tweet')
     if config.Format:
         output = config.Format.replace("{id}", t.id)
         output = output.replace("{date}", t.datestamp)
@@ -35,6 +39,7 @@ def Tweet(config, t):
     return output
 
 def User(_format, u):
+    #logging.info("[<] " + str(datetime.now()) + ':: format+User')
     if _format:
         output = _format.replace("{id}", u.id)
         output += output.replace("{name}", u.name)

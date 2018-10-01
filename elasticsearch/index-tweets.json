@@ -1,4 +1,4 @@
-PUT twint
+PUT twinttweets
 {
   "mappings": {
     "items": {
@@ -14,12 +14,16 @@ PUT twint
         "likes": {"type": "boolean"},
         "user_id": {"type": "keyword"},
         "username": {"type": "keyword"},
-        "day": {"type": "keyword"},
-        "hour": {"type": "keyword"},
+        "day": {"type": "integer"},
+        "hour": {"type": "integer"},
         "link": {"type": "text"},
         "retweet": {"type": "text"},
         "user_rt": {"type": "text"},
-        "essid": {"type": "keyword"}
+        "essid": {"type": "keyword"},
+        "nlikes": {"type": "integer"},
+        "nreplies": {"type": "integer"},
+        "nretweets": {"type": "integer"},
+        "search": {"type": "text"}
       }
     }
   }
