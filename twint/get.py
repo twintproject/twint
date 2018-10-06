@@ -146,7 +146,7 @@ async def Multi(feed, config, conn):
                 else:
                     link = tweet.find("a", "tweet-timestamp js-permalink js-nav js-tooltip")["href"]
                     url = f"https://twitter.com{link}?lang=en"
-                
+
                 if config.User_full:
                     futures.append(loop.run_in_executor(executor, await User(url,
                         config, conn)))
