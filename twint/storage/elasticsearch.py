@@ -56,22 +56,37 @@ def Tweet(Tweet, config):
             "_id": Tweet.id + "_raw_" + config.Essid,
             "_source": {
                 "id": Tweet.id,
+                "conversation_id": Tweet.conversation_id,
+                "created_at": Tweet.created_at,
                 "date": dt,
                 "timezone": Tweet.timezone,
+                "place": Tweet.place,
                 "location": Tweet.location,
                 "tweet": Tweet.tweet,
                 "hashtags": Tweet.hashtags,
                 "user_id": Tweet.user_id,
+                "user_id_str": Tweet.user_id_str,
                 "username": Tweet.username,
+                "name": Tweet.name,
+                "profile_image_url": Tweet.profile_image_url,
                 "day": day,
                 "hour": hour(Tweet.datetime),
                 "link": Tweet.link,
+                "gif_url": Tweet.gif_url,
+                "gif_thumb": Tweet.gif_thumb,
+                "video_url": Tweet.video_url,
+                "video_thumb": Tweet.video_thumb,
+                "is_reply_to": Tweet.is_reply_to,
+                "has_parent_tweet": Tweet.has_parent_tweet,
                 "retweet": Tweet.retweet,
-                "user_rt": Tweet.user_rt,
                 "essid": config.Essid,
                 "nlikes": int(Tweet.likes),
                 "nreplies": int(Tweet.replies),
                 "nretweets": int(Tweet.retweets),
+                "is_quote_status": Tweet.is_quote_status,
+                "quote_id": Tweet.quote_id,
+                "quote_id_str": Tweet.quote_id_str,
+                "quote_url": Tweet.quote_url,
                 "search": str(config.Search)
                 }
             }
@@ -208,6 +223,7 @@ def UserProfile(user, config):
                 "private": user.is_private,
                 "verified": user.is_verified,
                 "avatar": user.avatar,
+                "background_image": user.background_image,
                 "session": config.Essid
                 }
             }
