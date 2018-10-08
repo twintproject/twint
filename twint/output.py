@@ -1,4 +1,4 @@
-from . import format
+from . import format, get
 from .tweet import Tweet
 from .user import User
 from datetime import datetime
@@ -78,17 +78,37 @@ def _output(obj, output, config, **extra):
             except UnicodeEncodeError:
                 print("unicode error [x] output._output")
 
+async def tweetUserData(tweet,config, conn):
+    user_ids = set()
+    usernames = []
+    for user in tweet.mentions:
+        if db.get_user_id(conn, user["id"]) == -1 and user["id"] not in user_ids:
+                user_ids.add(user["id"])
+                usernames.append(user["screen_name"])
+    for user in tweet.tags:
+        if db.get_user_id(conn, user["id"]) == -1 and user["id"] not in user_ids:
+                user_ids.add(user["id"])
+                usernames.append(user["screen_name"])
+    for user in tweet.replies:
+        if db.get_user_id(conn, user["id"]) == -1 and user["id"] not in user_ids:
+                user_ids.add(user["id"])
+                usernames.append(user["screen_name"])
+    for user in usernames:
+        url = f"http://twitter.com/{user}?lang=en"
+        await get.User(url, config, conn)
+
 async def Tweets(tw, location, config, conn):
     #logging.info("[<] " + str(datetime.now()) + ':: output+Tweets')
     copyright = tw.find("div", "StreamItemContent--withheld")
     if copyright is None and is_tweet(tw):
         tweet = Tweet(tw, location, config)
+        await tweetUserData(tweet, config, conn)
         if datecheck(tweet.datestamp, config):
             output = format.Tweet(config, tweet)
 
             if config.Database:
                 db.tweets(conn, tweet, config)
-            
+
             if config.Pandas:
                 panda.update(tweet, config)
 
@@ -108,7 +128,8 @@ async def Users(u, config, conn):
     output = format.User(config.Format, user)
 
     if config.Database:
-        db.user(conn, config.Username, config.Followers, user)
+        #db.user(conn, config.Username, config.Followers, user)
+        db.user(conn, config, user)
 
     if config.Elasticsearch:
         _save_date = user.join_date
