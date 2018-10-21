@@ -10,6 +10,7 @@ from aiohttp_socks import SocksConnector, SocksVer
 
 from . import url
 from .output import Tweets, Users
+from .user import inf
 
 #import logging
 
@@ -101,6 +102,14 @@ async def Username(_id):
     soup = BeautifulSoup(r, "html.parser")
 
     return soup.find("a", "fn url alternate-context")["href"].replace("/", "")
+
+async def UserId(username):
+    #loggin.info("[<] " + str(datetime.now()) + ':: get+UserId')
+    url = f"http://twitter.com/{username}?lang=en"
+    r = await Request(url)
+    soup = BeautifulSoup(r, "html.parser")
+
+    return int(inf(soup, "id"))
 
 async def Tweet(url, config, conn):
     #loggin.info("[<] " + str(datetime.now()) + ':: Tweet')
