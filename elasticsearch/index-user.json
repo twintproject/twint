@@ -17,10 +17,9 @@ PUT twintuser
         "followers": {"type": "integer"},
         "likes": {"type": "integer"},
         "media": {"type": "integer"},
-        "private": {"type": "integer"},
-        "verified": {"type": "integer"},
+        "private": {"type": "boolean"},
+        "verified": {"type": "boolean"},
         "avatar": {"type": "text"},
-        "background_image": {"type": "text"},
         "session": {"type": "keyword"}
       }
     }
