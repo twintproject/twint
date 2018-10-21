@@ -57,7 +57,7 @@ def Tweet(Tweet, config):
             "_source": {
                 "id": Tweet.id,
                 "conversation_id": Tweet.conversation_id,
-                "created_at": Tweet.created_at,
+                "created_at": Tweet.datetime,
                 "date": dt,
                 "timezone": Tweet.timezone,
                 "place": Tweet.place,
