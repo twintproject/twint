@@ -53,11 +53,11 @@ def Tweet(Tweet, config):
     j_data = {
             "_index": config.Index_tweets,
             "_type": config.Index_type,
-            "_id": Tweet.id + "_raw_" + config.Essid,
+            "_id": str(Tweet.id) + "_raw_" + config.Essid,
             "_source": {
-                "id": Tweet.id,
+                "id": str(Tweet.id),
                 "conversation_id": Tweet.conversation_id,
-                "created_at": Tweet.created_at,
+                "created_at": Tweet.datetime,
                 "date": dt,
                 "timezone": Tweet.timezone,
                 "place": Tweet.place,
@@ -95,81 +95,138 @@ def Tweet(Tweet, config):
     if config.ES_count["likes"]:
         for l in range(int(Tweet.likes)):
             j_data = {
-                "_index": config.Index_tweets,
-                "_type": config.Index_type,
-                "_id": Tweet.id + "_likes_" + str(nLikes) + "_" + config.Essid,
-                "_source": {
-                    "id": Tweet.id,
-                    "date": dt,
-                    "timezone": Tweet.timezone,
-                    "location": Tweet.location,
-                    "tweet": Tweet.tweet,
-                    "hashtags": Tweet.hashtags,
-                    "likes": True,
-                    "user_id": Tweet.user_id,
-                    "username": Tweet.username,
-                    "day": day,
-                    "hour": hour(Tweet.datetime),
-                    "link": Tweet.link,
-                    "retweet": Tweet.retweet,
-                    "user_rt": Tweet.user_rt,
-                    "essid": config.Essid
+                    "_index": config.Index_tweets,
+                    "_type": config.Index_type,
+                    "_id": str(Tweet.id) + "_like_" + str(nLikes) + config.Essid,
+                    "_source": {
+                        "id": str(Tweet.id),
+                        "conversation_id": Tweet.conversation_id,
+                        "created_at": Tweet.datetime,
+                        "date": dt,
+                        "timezone": Tweet.timezone,
+                        "place": Tweet.place,
+                        "location": Tweet.location,
+                        "tweet": Tweet.tweet,
+                        "hashtags": Tweet.hashtags,
+                        "user_id": Tweet.user_id,
+                        "user_id_str": Tweet.user_id_str,
+                        "username": Tweet.username,
+                        "name": Tweet.name,
+                        "profile_image_url": Tweet.profile_image_url,
+                        "day": day,
+                        "hour": hour(Tweet.datetime),
+                        "link": Tweet.link,
+                        "gif_url": Tweet.gif_url,
+                        "gif_thumb": Tweet.gif_thumb,
+                        "video_url": Tweet.video_url,
+                        "video_thumb": Tweet.video_thumb,
+                        "is_reply_to": Tweet.is_reply_to,
+                        "has_parent_tweet": Tweet.has_parent_tweet,
+                        "retweet": Tweet.retweet,
+                        "essid": config.Essid,
+                        "nlikes": int(Tweet.likes_count),
+                        "nreplies": int(Tweet.replies_count),
+                        "nretweets": int(Tweet.retweets_count),
+                        "is_quote_status": Tweet.is_quote_status,
+                        "quote_id": Tweet.quote_id,
+                        "quote_id_str": Tweet.quote_id_str,
+                        "quote_url": Tweet.quote_url,
+                        "search": str(config.Search),
+                        "likes": True
+                        }
                     }
-                }
             actions.append(j_data)
             nLikes += 1
 
     if config.ES_count["replies"]:
         for rep in range(int(Tweet.replies)):
             j_data = {
-                "_index": config.Index_tweets,
-                "_type": config.Index_type,
-                "_id": Tweet.id + "_replies_" + str(nReplies) + "_" + config.Essid,
-                "_source": {
-                    "id": Tweet.id,
-                    "date": dt,
-                    "timezone": Tweet.timezone,
-                    "location": Tweet.location,
-                    "tweet": Tweet.tweet,
-                    "hashtags": Tweet.hashtags,
-                    "replies": True,
-                    "user_id": Tweet.user_id,
-                    "username": Tweet.username,
-                    "day": day,
-                    "hour": hour(Tweet.datetime),
-                    "link": Tweet.link,
-                    "retweet": Tweet.retweet,
-                    "user_rt": Tweet.user_rt,
-                    "essid": config.Essid
+                    "_index": config.Index_tweets,
+                    "_type": config.Index_type,
+                    "_id": str(Tweet.id) + "_reply_" + str(nReplies) + config.Essid,
+                    "_source": {
+                        "id": str(Tweet.id),
+                        "conversation_id": Tweet.conversation_id,
+                        "created_at": Tweet.datetime,
+                        "date": dt,
+                        "timezone": Tweet.timezone,
+                        "place": Tweet.place,
+                        "location": Tweet.location,
+                        "tweet": Tweet.tweet,
+                        "hashtags": Tweet.hashtags,
+                        "user_id": Tweet.user_id,
+                        "user_id_str": Tweet.user_id_str,
+                        "username": Tweet.username,
+                        "name": Tweet.name,
+                        "profile_image_url": Tweet.profile_image_url,
+                        "day": day,
+                        "hour": hour(Tweet.datetime),
+                        "link": Tweet.link,
+                        "gif_url": Tweet.gif_url,
+                        "gif_thumb": Tweet.gif_thumb,
+                        "video_url": Tweet.video_url,
+                        "video_thumb": Tweet.video_thumb,
+                        "is_reply_to": Tweet.is_reply_to,
+                        "has_parent_tweet": Tweet.has_parent_tweet,
+                        "retweet": Tweet.retweet,
+                        "essid": config.Essid,
+                        "nlikes": int(Tweet.likes_count),
+                        "nreplies": int(Tweet.replies_count),
+                        "nretweets": int(Tweet.retweets_count),
+                        "is_quote_status": Tweet.is_quote_status,
+                        "quote_id": Tweet.quote_id,
+                        "quote_id_str": Tweet.quote_id_str,
+                        "quote_url": Tweet.quote_url,
+                        "search": str(config.Search),
+                        "replies": True
+                        }
                     }
-                }
             actions.append(j_data)
             nReplies += 1
 
     if config.ES_count["retweets"]:
         for ret in range(int(Tweet.retweets)):
             j_data = {
-                "_index": config.Index_tweets,
-                "_type": config.Index_type,
-                "_id": Tweet.id + "_retweets_" + str(nRetweets) + "_" + config.Essid,
-                "_source": {
-                    "id": Tweet.id,
-                    "date": dt,
-                    "timezone": Tweet.timezone,
-                    "location": Tweet.location,
-                    "tweet": Tweet.tweet,
-                    "hashtags": Tweet.hashtags,
-                    "retweets": True,
-                    "user_id": Tweet.user_id,
-                    "username": Tweet.username,
-                    "day": day,
-                    "hour": hour(Tweet.datetime),
-                    "link": Tweet.link,
-                    "retweet": Tweet.retweet,
-                    "user_rt": Tweet.user_rt,
-                    "essid": config.Essid
+                    "_index": config.Index_tweets,
+                    "_type": config.Index_type,
+                    "_id": str(Tweet.id) + "_retweet_" + str(nRetweets) + config.Essid,
+                    "_source": {
+                        "id": str(Tweet.id),
+                        "conversation_id": Tweet.conversation_id,
+                        "created_at": Tweet.datetime,
+                        "date": dt,
+                        "timezone": Tweet.timezone,
+                        "place": Tweet.place,
+                        "location": Tweet.location,
+                        "tweet": Tweet.tweet,
+                        "hashtags": Tweet.hashtags,
+                        "user_id": Tweet.user_id,
+                        "user_id_str": Tweet.user_id_str,
+                        "username": Tweet.username,
+                        "name": Tweet.name,
+                        "profile_image_url": Tweet.profile_image_url,
+                        "day": day,
+                        "hour": hour(Tweet.datetime),
+                        "link": Tweet.link,
+                        "gif_url": Tweet.gif_url,
+                        "gif_thumb": Tweet.gif_thumb,
+                        "video_url": Tweet.video_url,
+                        "video_thumb": Tweet.video_thumb,
+                        "is_reply_to": Tweet.is_reply_to,
+                        "has_parent_tweet": Tweet.has_parent_tweet,
+                        "retweet": Tweet.retweet,
+                        "essid": config.Essid,
+                        "nlikes": int(Tweet.likes_count),
+                        "nreplies": int(Tweet.replies_count),
+                        "nretweets": int(Tweet.retweets_count),
+                        "is_quote_status": Tweet.is_quote_status,
+                        "quote_id": Tweet.quote_id,
+                        "quote_id_str": Tweet.quote_id_str,
+                        "quote_url": Tweet.quote_url,
+                        "search": str(config.Search),
+                        "retweets": True
+                        }
                     }
-                }
             actions.append(j_data)
             nRetweets += 1
 
