@@ -45,7 +45,7 @@ def _output(obj, output, config, **extra):
         else:
             obj.username = obj.username.lower()
             for i in range(len(obj.mentions)):
-                obj.mentions[i] = obj.mentions[i].lower()
+                obj.mentions[i] = obj.mentions[i]["screen_name"].lower()
             for i in range(len(obj.hashtags)):
                 obj.hashtags[i] = obj.hashtags[i].lower()
     if config.Output != None:
