@@ -105,6 +105,9 @@ def initialize(args):
     c.Media = args.media
     c.Replies = args.replies
     c.Pandas_clean = args.pandas_clean
+    c.Proxy_host = args.proxy_host
+    c.Proxy_port = args.proxy_port
+    c.Proxy_type = args.proxy_type
     c.ES_count = {"likes":True, "replies":True, "retweets":True}
     return c
 
