@@ -54,7 +54,7 @@ async def RequestUrl(config, init):
             response = await Request(_url, connector=_connector)
     elif config.TwitterSearch:
         _url = await url.Search(config, init)
-        response = await Request(_url, options=_connector)
+        response = await Request(_url, connector=_connector)
     else:
         if config.Following:
             _url = await url.Following(config.Username, init)
@@ -72,7 +72,7 @@ async def RequestUrl(config, init):
 async def MobileRequest(url, **options):
     #loggin.info("[<] " + str(datetime.now()) + ':: get+MobileRequest')
     ua = {'User-Agent': 'Lynx/2.8.5rel.1 libwww-FM/2.14 SSL-MM/1.4.1 GNUTLS/0.8.12'}
-    connector = options.get("_connector")
+    connector = options.get("connector")
     if connector:
         async with aiohttp.ClientSession(headers=ua, connector=connector) as session:
             return await Response(session, url)
@@ -81,7 +81,7 @@ async def MobileRequest(url, **options):
 
 async def Request(url, **options):
     #loggin.info("[<] " + str(datetime.now()) + ':: get+Request')
-    connector = options.get("_connector")
+    connector = options.get("connector")
     if connector:
         async with aiohttp.ClientSession(connector=connector) as session:
             return await Response(session, url)
