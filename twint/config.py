@@ -33,6 +33,7 @@ class Config:
     Favorites = False
     TwitterSearch = False
     User_full = False
+    User_info = True
     Profile_full = False
     Store_object = False
     Store_pandas = False
