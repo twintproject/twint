@@ -18,7 +18,7 @@ async def RequestUrl(config, init):
     _connector = None
     if config.Proxy_host is not None:
         if config.Proxy_host.lower() == "tor":
-            connector = SocksConnector(
+            _connector = SocksConnector(
                 socks_ver=SocksVer.SOCKS5,
                 host='127.0.0.1',
                 port=9050,
