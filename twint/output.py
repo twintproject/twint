@@ -102,7 +102,7 @@ async def Tweets(tw, location, config, conn):
     copyright = tw.find("div", "StreamItemContent--withheld")
     if copyright is None and is_tweet(tw):
         tweet = Tweet(tw, location, config)
-        if config.Database is not None:
+        if config.Database is not None and config.User_info:
             await tweetUserData(tweet, config, conn)
         if datecheck(tweet.datestamp, config):
             output = format.Tweet(config, tweet)
