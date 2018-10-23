@@ -116,6 +116,8 @@ class Twint:
             while True:
                 if len(self.feed) > 0:
                     if self.config.Followers or self.config.Following:
+                        url = f"http://twitter.com/{self.config.Username}?lang=en"
+                        await get.User(url, self.config, self.conn)
                         await self.follow()
                     elif self.config.Favorites:
                         await self.favorite()
