@@ -45,7 +45,7 @@ def _output(obj, output, config, **extra):
         else:
             obj.username = obj.username.lower()
             for i in range(len(obj.mentions)):
-                obj.mentions[i] = obj.mentions[i].lower()
+                obj.mentions[i] = obj.mentions[i]["screen_name"].lower()
             for i in range(len(obj.hashtags)):
                 obj.hashtags[i] = obj.hashtags[i].lower()
     if config.Output != None:
@@ -83,6 +83,8 @@ async def Tweets(tw, location, config, conn):
     copyright = tw.find("div", "StreamItemContent--withheld")
     if copyright is None and is_tweet(tw):
         tweet = Tweet(tw, location, config)
+        if config.Database is not None and config.User_info:
+            await tweetUserData(tweet, config, conn)
         if datecheck(tweet.datestamp, config):
             output = format.Tweet(config, tweet)
 

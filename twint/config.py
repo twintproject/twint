@@ -33,6 +33,7 @@ class Config:
     Favorites = False
     TwitterSearch = False
     User_full = False
+    User_info = True
     Profile_full = False
     Store_object = False
     Store_pandas = False
@@ -49,7 +50,6 @@ class Config:
     Media = False
     Replies = False
     Pandas_clean = True
-    ES_count = {"likes":False,"replies":False,"retweets":False}
     Lowercase = True
     Pandas_au = True
     Proxy_host = None
