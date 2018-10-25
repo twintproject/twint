@@ -101,6 +101,9 @@ class Twint:
         if self.config.User_id is not None:
             self.config.Username = await get.Username(self.config.User_id)
 
+        if self.config.Username is not None:
+            self.config.User_id = await get.UserId(self.config.Username)
+
         if self.config.TwitterSearch and self.config.Since and self.config.Until:
             _days = timedelta(days=int(self.config.Timedelta))
             while self.d._since < self.d._until:
