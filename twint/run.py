@@ -11,7 +11,7 @@ class Twint:
         if config.Resume is not None and config.TwitterSearch:
             self.init = f"TWEET-{config.Resume}-0"
         else:
-            self.init = -1
+            self.init = "-1"
         self.feed = [-1]
         self.count = 0
         self.config = config
@@ -38,20 +38,21 @@ class Twint:
             print(response, file=open("twint-last-request.log", "w", encoding="utf-8"))
 
         self.feed = []
-        try:
-            if self.config.Favorites:
-                self.feed, self.init = feed.Mobile(response)
-            elif self.config.Followers or self.config.Following:
-                self.feed, self.init = feed.Follow(response)
-            elif self.config.Profile:
-                if self.config.Profile_full:
+        while len(self.feed) == 0:
+            try:
+                if self.config.Favorites:
                     self.feed, self.init = feed.Mobile(response)
-                else:
-                    self.feed, self.init = feed.profile(response)
-            elif self.config.TwitterSearch:
-                self.feed, self.init = feed.Json(response)
-        except Exception as e:
-            print(str(e) + " [x] run.Feed")
+                elif self.config.Followers or self.config.Following:
+                    self.feed, self.init = feed.Follow(response)
+                elif self.config.Profile:
+                    if self.config.Profile_full:
+                        self.feed, self.init = feed.Mobile(response)
+                    else:
+                        self.feed, self.init = feed.profile(response)
+                elif self.config.TwitterSearch:
+                    self.feed, self.init = feed.Json(response)
+            except Exception as e:
+                print(str(e) + " [x] run.Feed")
 
     async def follow(self):
         #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+follow')
