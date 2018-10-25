@@ -7,15 +7,14 @@ def tweetData(t):
             "user_id": int(t.user_id),
             "username": t.username,
             "tweet": t.tweet,
-            "replies": int(t.replies),
-            "retweets": int(t.retweets),
-            "likes": int(t.likes),
+            "replies": int(t.replies_count),
+            "retweets": int(t.retweets_count),
+            "likes": int(t.likes_count),
             "location": t.location,
-            "hashtags": ",".join(t.hashtags),
+            "hashtags": t.hashtags,
             "link": t.link,
             "retweet": t.retweet,
-            "user_rt": t.user_rt,
-            "mentions": ",".join(t.mentions)
+            "mentions": t.mentions
             }
     return data
 
@@ -35,7 +34,6 @@ def tweetFieldnames():
             "hashtags",
             "link",
             "retweet",
-            "user_rt",
             "mentions"
             ]
     return fieldnames
