@@ -13,9 +13,9 @@ def Tweet(config, t):
         output = output.replace("{tweet}", t.tweet)
         output = output.replace("{location}", t.location)
         output = output.replace("{hashtags}", str(t.hashtags))
-        output = output.replace("{replies}", t.replies)
-        output = output.replace("{retweets}", t.retweets)
-        output = output.replace("{likes}", t.likes)
+        output = output.replace("{replies}", t.replies_count)
+        output = output.replace("{retweets}", t.retweets_count)
+        output = output.replace("{likes}", t.likes_count)
         output = output.replace("{link}", t.link)
         output = output.replace("{is_retweet}", str(t.retweet))
         output = output.replace("{user_rt}", t.user_rt)
@@ -32,7 +32,7 @@ def Tweet(config, t):
             hashtags = ",".join(t.hashtags)
             output += f" {hashtags}"
         if config.Stats:
-            output += f" | {t.replies} replies {t.retweets} retweets {t.likes} likes"
+            output += f" | {t.replies_count} replies {t.retweets_count} retweets {t.likes_count} likes"
         if config.Location:
             output += f" | Location {t.location}"
 
