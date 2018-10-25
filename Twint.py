@@ -91,6 +91,7 @@ def initialize(args):
     c.Essid = args.essid
     c.Format = args.format
     c.User_full = args.user_full
+    c.User_info = args.user_info
     c.Profile_full = args.profile_full
     c.Store_pandas = args.store_pandas
     c.Pandas_type = args.pandas_type
@@ -164,6 +165,7 @@ def options():
     ap.add_argument("--user-full",
                     help="Collect all user information (Use with followers or following only).",
                     action="store_true")
+    ap.add_argument("--user-info", help="Scrape user's info in tweet", action="store_false")
     ap.add_argument("--profile-full",
                     help="Slow, but effective method of collecting a user's Tweets and RT.",
                     action="store_true")
@@ -189,8 +191,6 @@ def options():
     ap.add_argument("--replies", help="Display replies to a subject.", action="store_true")
     ap.add_argument("-pc", "--pandas-clean",
                     help="Automatically clean Pandas dataframe at every scrape.")
-    ap.add_argument("-ec", "--es-count", nargs="?", default="",
-                    help="What NOT to count: likes, replies, retweets; only for Elasticsearch.")
     args = ap.parse_args()
 
     return args
@@ -208,15 +208,6 @@ def main():
         twint.storage.panda.clean()
 
     c = initialize(args)
-
-    if "likes" in str(args.es_count):
-        c.ES_count["likes"] = True
-
-    if "replies" in str(args.es_count):
-        c.ES_count["replies"] = True
-
-    if "retweets" in str(args.es_count):
-        c.ES_count["retweets"] = True
 
     if args.pandas_clean:
         twint.storage.panda.clean()
