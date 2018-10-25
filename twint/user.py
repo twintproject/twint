@@ -20,6 +20,10 @@ def inf(ur, _type):
         ret = group["data-screen-name"]
     elif _type == "private":
         ret = group["data-protected"]
+        if ret == 'true':
+            ret = 1
+        else:
+            ret = 0
 
     return ret
 
@@ -28,18 +32,18 @@ def card(ur, _type):
         try:
             ret = ur.find("p", "ProfileHeaderCard-bio u-dir").text.replace("\n", " ")
         except:
-            ret = "None"
+            ret = None
     elif _type == "location":
         try:
             ret = ur.find("span", "ProfileHeaderCard-locationText u-dir").text
             ret = ret[15:].replace("\n", " ")[:-10]
         except:
-            ret = "None"
+            ret = None
     elif _type == "url":
         try:
             ret = ur.find("span", "ProfileHeaderCard-urlText u-dir").find("a")["title"]
         except:
-            ret = "None"
+            ret = None
 
     return ret
 
@@ -54,11 +58,13 @@ def convertToInt(x):
         "b" : 1000000000,
     }
     try :
+        if ',' in x:
+            x = x.replace(',', '')
         y = int(x)
         return y
     except :
         pass
-    
+
     try :
         y = float(str(x)[:-1])
         y = y * multDict[str(x)[-1:].lower()]
@@ -79,11 +85,10 @@ def stat(ur, _type):
 
 def media(ur):
     try:
-        media_count = ur.find("a", "PhotoRail-headingWithCount js-nav").text
-        media_count = media_count.replace("\n", "")[32:].split(" ")[0]
-        media_count = convertToInt(media_count)
+      media_count = ur.find("a", "PhotoRail-headingWithCount js-nav").text.strip().split(" ")[0]
+      media_count = convertToInt(media_count)
     except:
-        media_count = "0"
+      media_count = 0
 
     return media_count
 
@@ -91,11 +96,11 @@ def verified(ur):
     try:
         is_verified = ur.find("span", "ProfileHeaderCard-badges").text
         if "Verified account" in is_verified:
-            is_verified = "true"
+            is_verified = 1
         else:
-            is_verified = "false"
+            is_verified = 0
     except:
-        is_verified = "false"
+        is_verified = 0
 
     return is_verified
 
@@ -119,4 +124,5 @@ def User(ur):
     u.is_private = inf(ur, "private")
     u.is_verified = verified(ur)
     u.avatar = ur.find("img", "ProfileAvatar-image")["src"]
+    u.background_image = ur.find('div',{'class':'ProfileCanopy-headerBg'}).find('img').get('src')
     return u
