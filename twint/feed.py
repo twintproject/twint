@@ -43,7 +43,4 @@ def Json(response):
     html = json_response["items_html"]
     soup = BeautifulSoup(html, "html.parser")
     feed = soup.find_all("li", "js-stream-item")
-    split = json_response["min_position"].split("-")
-    split[1] = feed[-1]["data-item-id"]
-    
-    return feed, "-".join(split)
+    return feed, json_response["min_position"]

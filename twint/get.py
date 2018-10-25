@@ -53,8 +53,8 @@ async def RequestUrl(config, init):
             _url = await url.Profile(config.Username, init)
             response = await Request(_url, connector=_connector)
     elif config.TwitterSearch:
-        _url = await url.Search(config, init)
-        response = await Request(_url, connector=_connector)
+        _url, params = await url.Search(config, init)
+        response = await Request(_url, params=params, connector=_connector)
     else:
         if config.Following:
             _url = await url.Following(config.Username, init)
@@ -71,16 +71,6 @@ async def RequestUrl(config, init):
 
 async def MobileRequest(url, **options):
     #loggin.info("[<] " + str(datetime.now()) + ':: get+MobileRequest')
-    ua = {'User-Agent': 'Lynx/2.8.5rel.1 libwww-FM/2.14 SSL-MM/1.4.1 GNUTLS/0.8.12'}
-    connector = options.get("connector")
-    if connector:
-        async with aiohttp.ClientSession(headers=ua, connector=connector) as session:
-            return await Response(session, url)
-    async with aiohttp.ClientSession(headers=ua) as session:
-        return await Response(session, url)
-
-async def Request(url, **options):
-    #loggin.info("[<] " + str(datetime.now()) + ':: get+Request')
     connector = options.get("connector")
     if connector:
         async with aiohttp.ClientSession(connector=connector) as session:
@@ -88,10 +78,20 @@ async def Request(url, **options):
     async with aiohttp.ClientSession() as session:
         return await Response(session, url)
 
-async def Response(session, url):
+
+async def Request(url, connector=None, params=[]):
+    #loggin.info("[<] " + str(datetime.now()) + ':: get+Request')
+    if connector:
+        async with aiohttp.ClientSession(connector=connector) as session:
+            return await Response(session, url, params)
+    async with aiohttp.ClientSession() as session:
+        return await Response(session, url, params)
+
+async def Response(session, url, params=[]):
     #loggin.info("[<] " + str(datetime.now()) + ':: get+Response')
+    headers = {'User-Agent': 'Lynx/2.8.5rel.1 libwww-FM/2.14 SSL-MM/1.4.1 GNUTLS/0.8.12' }
     with timeout(30):
-        async with session.get(url, ssl=False) as response:
+        async with session.get(url, ssl=False, headers=headers, params=params) as response:
             return await response.text()
 
 async def Username(_id):
