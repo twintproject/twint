@@ -92,6 +92,7 @@ Details on setting up Elasticsearch with Twint is located in the [wiki](https://
 [Graph](https://github.com/twintproject/twint/tree/master/graph) details are also located in the [wiki](https://github.com/twintproject/twint/wiki/Graph).
 
 We are developing a Twint Desktop App.
+[Twint Desktop App](https://imgur.com/a/iCqAFHt)
 
 ## FAQ
 > While scraping tweets and saving them to a database, the process is a bit slow
