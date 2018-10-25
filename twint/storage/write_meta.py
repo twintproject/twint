@@ -1,42 +1,74 @@
 def tweetData(t):
     data = {
             "id": int(t.id),
+            "conversation_id": t.conversation_id,
+            "created_at": t.datetime,
             "date": t.datestamp,
             "time": t.timestamp,
             "timezone": t.timezone,
-            "user_id": int(t.user_id),
+            "user_id": t.user_id,
             "username": t.username,
+            "name": t.name,
+            "place": t.place,
             "tweet": t.tweet,
-            "replies": int(t.replies),
-            "retweets": int(t.retweets),
-            "likes": int(t.likes),
+            "tags": t.tags,
+            "replies": t.replies,
+            "mentions": t.mentions,
+            "urls": t.urls,
+            "photos": t.photos,
+            "replies_count": int(t.replies_count),
+            "retweets_count": int(t.retweets_count),
+            "likes_count": int(t.likes_count),
             "location": t.location,
-            "hashtags": ",".join(t.hashtags),
+            "hashtags": t.hashtags,
             "link": t.link,
             "retweet": t.retweet,
-            "user_rt": t.user_rt,
-            "mentions": ",".join(t.mentions)
+            "gif_url": t.gif_url,
+            "gif_thumb": t.gif_thumb,
+            "video_url": t.video_url,
+            "video_thumb": t.video_thumb,
+            "is_quote_status": t.is_quote_status,
+            "quote_id": t.quote_id,
+            "quote_url": t.quote_url,
+            "is_reply_to": t.is_reply_to,
+            "has_parent_tweet": t.has_parent_tweet
             }
     return data
 
 def tweetFieldnames():
     fieldnames = [
             "id",
+            "conversation_id",
+            "created_at",
             "date",
             "time",
             "timezone",
             "user_id",
             "username",
+            "name",
+            "place",
             "tweet",
+            "tags",
             "replies",
-            "retweets",
-            "likes",
+            "mentions",
+            "urls",
+            "photos",
+            "replies_count",
+            "retweets_count",
+            "likes_count",
             "location",
             "hashtags",
             "link",
             "retweet",
-            "user_rt",
-            "mentions"
+            "gif_url",
+            "gif_thumb",
+            "video_url",
+            "video_thumb",
+            "is_quote_status",
+            "quote_id",
+            "quote_url",
+            "is_reply_to",
+            "has_parent_tweet"
             ]
     return fieldnames
 
@@ -57,7 +89,8 @@ def userData(u):
             "media": int(u.media_count),
             "private": u.is_private,
             "verified": u.is_verified,
-            "avatar": u.avatar
+            "avatar": u.avatar,
+            "background_image": u.background_image
             }
     return data
 
@@ -78,7 +111,8 @@ def userFieldnames():
             "media",
             "private",
             "verified",
-            "avatar"
+            "avatar",
+            "background_image"
             ]
     return fieldnames
 
