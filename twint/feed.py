@@ -34,7 +34,7 @@ def profile(response):
     html = json_response["items_html"]
     soup = BeautifulSoup(html, "html.parser")
     feed = soup.find_all("li", "js-stream-item")
-    
+
     return feed, feed[-1]["data-item-id"]
 
 def Json(response):
