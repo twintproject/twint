@@ -79,7 +79,7 @@ async def MobileRequest(url, **options):
         return await Response(session, url)
 
 
-async def Request(url, connector, params=[]):
+async def Request(url, connector=None, params=[]):
     #loggin.info("[<] " + str(datetime.now()) + ':: get+Request')
     if connector:
         async with aiohttp.ClientSession(connector=connector) as session:
