@@ -11,7 +11,7 @@ class Twint:
         if config.Resume is not None and config.TwitterSearch:
             self.init = f"TWEET-{config.Resume}-0"
         else:
-            self.init = -1
+            self.init = "-1"
         self.feed = [-1]
         self.count = 0
         self.config = config
@@ -93,9 +93,6 @@ class Twint:
         #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+main')
         if self.config.User_id is not None:
             self.config.Username = await get.Username(self.config.User_id)
-
-        if self.config.Username is not None:
-            self.config.User_id = await get.UserId(self.config.Username)
 
         if self.config.TwitterSearch and self.config.Since and self.config.Until:
             _days = timedelta(days=int(self.config.Timedelta))
