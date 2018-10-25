@@ -38,20 +38,27 @@ class Twint:
             print(response, file=open("twint-last-request.log", "w", encoding="utf-8"))
 
         self.feed = []
-        try:
-            if self.config.Favorites:
-                self.feed, self.init = feed.Mobile(response)
-            elif self.config.Followers or self.config.Following:
-                self.feed, self.init = feed.Follow(response)
-            elif self.config.Profile:
-                if self.config.Profile_full:
+        consecutive_errors_count = 0
+        while True:
+            try:
+                if self.config.Favorites:
                     self.feed, self.init = feed.Mobile(response)
-                else:
-                    self.feed, self.init = feed.profile(response)
-            elif self.config.TwitterSearch:
-                self.feed, self.init = feed.Json(response)
-        except Exception as e:
-            print(str(e) + " [x] run.Feed")
+                elif self.config.Followers or self.config.Following:
+                    self.feed, self.init = feed.Follow(response)
+                elif self.config.Profile:
+                    if self.config.Profile_full:
+                        self.feed, self.init = feed.Mobile(response)
+                    else:
+                        self.feed, self.init = feed.profile(response)
+                elif self.config.TwitterSearch:
+                    self.feed, self.init = feed.Json(response)
+                break
+            except Exception as e:
+                # Exit only we're 3 times sure it is the end of the road
+                consecutive_errors_count += 1
+                if consecutive_errors_count < 3: continue
+                print(str(e) + " [x] run.Feed")
+                break
 
     async def follow(self):
         #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+follow')
