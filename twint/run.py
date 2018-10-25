@@ -11,7 +11,7 @@ class Twint:
         if config.Resume is not None and config.TwitterSearch:
             self.init = f"TWEET-{config.Resume}-0"
         else:
-            self.init = -1
+            self.init = "-1"
         self.feed = [-1]
         self.count = 0
         self.config = config
