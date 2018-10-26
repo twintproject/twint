@@ -106,6 +106,7 @@ def initialize(args):
     c.Proxy_type = args.proxy_type
     c.ES_count = {"likes":True, "replies":True, "retweets":True}
     c.Retweets = args.retweets
+    c.Query = args.query
     return c
 
 def options():
@@ -187,6 +188,7 @@ def options():
     ap.add_argument("--replies", help="Display replies to a subject.", action="store_true")
     ap.add_argument("-pc", "--pandas-clean",
                     help="Automatically clean Pandas dataframe at every scrape.")
+    ap.add_argument("--query", help="Search query")
     args = ap.parse_args()
 
     return args
@@ -198,7 +200,7 @@ def main():
     check(args)
 
     if args.userlist:
-        args.username = loadUserList(args.userlist, "search")
+        args.query = loadUserList(args.userlist, "search")
 
     if args.pandas_clean:
         twint.storage.panda.clean()
