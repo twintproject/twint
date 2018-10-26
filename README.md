@@ -10,7 +10,7 @@ Formerly known as Tweep, Twint is an advanced Twitter scraping tool written in P
 
 Twint utilizes Twitter's search operators to let you scrape Tweets from specific users, scrape Tweets relating to certain topics, hashtags & trends, or sort out *sensitive* information from Tweets like e-mail and phone numbers. I find this very useful, and you can get really creative with it too.
 
-Twint also makes special queries to Twitter allowing you to also scrape a Twitter user's followers, Tweets a user has liked, and who they follow **without** any authentication, API, Selenium, or browser emulation. 
+Twint also makes special queries to Twitter allowing you to also scrape a Twitter user's followers, Tweets a user has liked, and who they follow **without** any authentication, API, Selenium, or browser emulation.
 
 ## tl;dr Benefits
 Some of the benefits of using Twint vs Twitter API:
@@ -54,6 +54,8 @@ A few simple examples to help you understand the basics:
 More detail about the commands and options are located in the [wiki](https://github.com/twintproject/twint/wiki/Commands)
 
 ## Using Twint as a Module (Recommended)
+To install Twint as module run `pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@origin/master#egg=twint`
+
 Twint can now be used as a module and supports custom formatting. **More details are located in the [wiki](https://github.com/twintproject/twint/wiki/Module)**
 
 #### Example
@@ -82,14 +84,20 @@ twint.run.Search(c)
 
 ### Elasticsearch Setup
 
-Details on setting up Elasticsearch with Twint is located in the [wiki](https://github.com/twintproject/twint/wiki/Elasticsearch). 
+Details on setting up Elasticsearch with Twint is located in the [wiki](https://github.com/twintproject/twint/wiki/Elasticsearch).
 
 ### Graph Visualization
 ![graph](https://i.imgur.com/EEJqB8n.png)
 
-[Graph](https://github.com/twintproject/twint/tree/master/graph) details are also located in the [wiki](https://github.com/twintproject/twint/wiki/Graph). 
+[Graph](https://github.com/twintproject/twint/tree/master/graph) details are also located in the [wiki](https://github.com/twintproject/twint/wiki/Graph).
 
-We are testing a (free) graph plugin for Kibana, details located in the Wiki!
+We are developing a Twint Desktop App.
+
+![4](https://i.imgur.com/DzcfIgL.png)
+
+## FAQ
+> While scraping tweets and saving them to a database, the process is a bit slow
+That's because also the informations about the user (bio, likes, etc.) are stored in the database. To avoid this process pass `--user-info` to CLI, or specify `c.User_info = False` if you are using Twint as module.
 
 ## Contact
 
