@@ -244,8 +244,15 @@ def main():
                 twint.run.Profile(c)
         else:
             twint.run.Profile(c)
-    elif args.user_full and args.username:
-        twint.run.Lookup(c)
+    elif args.user_full:
+        if args.userlist:
+            _userlist = loadUserList(args.userlist, "userlist")
+            for _user in _userlist:
+                args.username = _user
+                c = initialize(args)
+                twint.run.Lookup(c)
+        else:
+            twint.run.Lookup(c)
     else:
         twint.run.Search(c)
 
