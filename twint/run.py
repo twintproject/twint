@@ -105,7 +105,8 @@ class Twint:
             self.config.Username = await get.Username(self.config.User_id)
 
         if self.config.Username is not None:
-            self.config.User_id = await get.UserId(self.config.Username)
+            url = f"http://twitter.com/{self.config.Username}?lang=en"
+            self.config.User_id = await get.User(url, self.config, self.conn, True)
 
         if self.config.TwitterSearch and self.config.Since and self.config.Until:
             _days = timedelta(days=int(self.config.Timedelta))
@@ -126,8 +127,6 @@ class Twint:
             while True:
                 if len(self.feed) > 0:
                     if self.config.Followers or self.config.Following:
-                        url = f"http://twitter.com/{self.config.Username}?lang=en"
-                        await get.User(url, self.config, self.conn)
                         await self.follow()
                     elif self.config.Favorites:
                         await self.favorite()
