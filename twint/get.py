@@ -103,14 +103,6 @@ async def Username(_id):
 
     return soup.find("a", "fn url alternate-context")["href"].replace("/", "")
 
-async def UserId(username):
-    #loggin.info("[<] " + str(datetime.now()) + ':: get+UserId')
-    url = f"http://twitter.com/{username}?lang=en"
-    r = await Request(url)
-    soup = BeautifulSoup(r, "html.parser")
-
-    return int(inf(soup, "id"))
-
 async def Tweet(url, config, conn):
     #loggin.info("[<] " + str(datetime.now()) + ':: Tweet')
     try:
@@ -123,7 +115,7 @@ async def Tweet(url, config, conn):
     except Exception as e:
         print(str(e) + " [x] get.Tweet")
 
-async def User(url, config, conn):
+async def User(url, config, conn, user_id = False):
     #loggin.info("[<] " + str(datetime.now()) + ':: get+User')
     try:
         response = await Request(url)
@@ -131,6 +123,9 @@ async def User(url, config, conn):
         await Users(soup, config, conn)
     except Exception as e:
         print(str(e) + " [x] get.User")
+
+    if user_id:
+        return int(inf(soup, "id"))
 
 def Limit(Limit, count):
     #loggin.info("[<] " + str(datetime.now()) + ':: get+Limit')
