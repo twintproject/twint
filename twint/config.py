@@ -55,4 +55,4 @@ class Config:
     Proxy_host = None
     Proxy_port = 0
     Proxy_type = None
-    Retweets = None
+    Retweets = False
