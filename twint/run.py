@@ -2,7 +2,7 @@ from . import datelock, feed, get, output, verbose, storage
 from asyncio import get_event_loop
 from datetime import timedelta, datetime
 from .storage import db
-
+import asyncio
 #import logging
 
 class Twint:
@@ -178,6 +178,13 @@ def Following(config):
             storage.panda._autoget("user")
     if config.Pandas:
         storage.panda.clean()
+
+def Lookup(config):
+    #logging.info("[<] " + str(datetime.now()) + ':: run+Lookup')
+    url = f"http://twitter.com/{config.Username}?lang=en"
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(get.User(url, config, db.Conn(config.Database)))
+    loop.close()
 
 def Profile(config):
     config.Profile = True

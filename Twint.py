@@ -38,11 +38,6 @@ def check(args):
         if args.Database is None or args.DB_user is None or args.DB_pwd is None:
             error("Error", "Please specify database name, user and password")
 
-
-    if not args.followers and not args.following:
-        if args.user_full:
-            error("Error", "Please use --user-full with --followers or --following.")
-
 def loadUserList(ul, _type):
     """ Concatenate users
     """
@@ -249,6 +244,8 @@ def main():
                 twint.run.Profile(c)
         else:
             twint.run.Profile(c)
+    elif args.user_full and args.username:
+        twint.run.Lookup(c)
     else:
         twint.run.Search(c)
 
