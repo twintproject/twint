@@ -103,14 +103,6 @@ async def Username(_id):
 
     return soup.find("a", "fn url alternate-context")["href"].replace("/", "")
 
-async def UserId(username):
-    #loggin.info("[<] " + str(datetime.now()) + ':: get+UserId')
-    url = f"http://twitter.com/{username}?lang=en"
-    r = await Request(url)
-    soup = BeautifulSoup(r, "html.parser")
-
-    return int(inf(soup, "id"))
-
 async def Tweet(url, config, conn):
     #loggin.info("[<] " + str(datetime.now()) + ':: Tweet')
     try:
