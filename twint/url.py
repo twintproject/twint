@@ -67,6 +67,8 @@ async def Search(config, init):
     if config.Lang:
         params.append(("l", config.Lang))
         params.append(("lang", "en"))
+    if config.Query:
+        q += f"from:{config.Query}"
     if config.Username:
         q += f"from:{config.Username}"
     if config.Geo:
