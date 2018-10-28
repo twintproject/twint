@@ -82,20 +82,17 @@ async def tweetUserData(tweet,config, conn):
     user_ids = set()
     usernames = []
     for user in tweet.mentions:
-        if config.Database:
-            if db.get_user_id(conn, user["id"]) == -1 and user["id"] not in user_ids:
+        if db.get_user_id(conn, user["id"]) == -1 and user["id"] not in user_ids:
                 user_ids.add(user["id"])
-        usernames.append(user["screen_name"])
+                usernames.append(user["screen_name"])
     for user in tweet.tags:
-        if config.Database:
-            if db.get_user_id(conn, user["id"]) == -1 and user["id"] not in user_ids:
+        if db.get_user_id(conn, user["id"]) == -1 and user["id"] not in user_ids:
                 user_ids.add(user["id"])
-        usernames.append(user["screen_name"])
+                usernames.append(user["screen_name"])
     for user in tweet.replies:
-        if config.Database:
-            if db.get_user_id(conn, user["id"]) == -1 and user["id"] not in user_ids:
+        if db.get_user_id(conn, user["id"]) == -1 and user["id"] not in user_ids:
                 user_ids.add(user["id"])
-        usernames.append(user["screen_name"])
+                usernames.append(user["screen_name"])
     for user in usernames:
         url = f"http://twitter.com/{user}?lang=en"
         await get.User(url, config, conn)
@@ -106,7 +103,7 @@ async def Tweets(tw, location, config, conn):
     if copyright is None and is_tweet(tw):
         tweet = Tweet(tw, location, config)
 
-        if (config.Database or config.Elasticsearch) and config.User_info:
+        if config.Database is not None and config.User_info:
             await tweetUserData(tweet, config, conn)
 
         if datecheck(tweet.datestamp, config):
