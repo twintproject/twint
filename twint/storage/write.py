@@ -29,19 +29,25 @@ def struct(obj, custom, _type):
     return fieldnames, row
 
 def Csv(obj, config):
-    fieldnames, row = struct(obj, config.Custom, Type(config))
+    _obj_type = obj.__class__.__name__
+    if _obj_type == "str": _obj_type = "username"
+    Output_csv = {"tweet": config.Output.split(".")[0] + "_tweets.csv",
+                  "user": config.Output.split(".")[0] + "_users.csv",
+                  "username": config.Output.split(".")[0] + "_usernames.csv"}
 
-    if not (os.path.exists(config.Output)):
-        with open(config.Output, "w", newline='', encoding="utf-8") as csv_file:
+    fieldnames, row = struct(obj, config.Custom[_obj_type], _obj_type)
+
+    if not (os.path.exists(Output_csv[_obj_type])):
+        with open(Output_csv[_obj_type], "w", newline='', encoding="utf-8") as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             writer.writeheader()
 
-    with open(config.Output, "a", newline='', encoding="utf-8") as csv_file:
+    with open(Output_csv[_obj_type], "a", newline='', encoding="utf-8") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writerow(row)
 
 def Json(obj, config):
-    null, data = struct(obj, config.Custom, Type(config))
+    null, data = struct(obj, config.Custom[_obj_type], Type(config))
 
     with open(config.Output, "a", newline='', encoding="utf-8") as json_file:
         json.dump(data, json_file, ensure_ascii=False)
