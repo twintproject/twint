@@ -162,7 +162,7 @@ def options():
     ap.add_argument("--user-full",
                     help="Collect all user information (Use with followers or following only).",
                     action="store_true")
-    ap.add_argument("--user-info", help="Scrape user's info in tweet", action="store_false")
+    ap.add_argument("--user-info", help="Scrape user's info in tweet", action="store_true")
     ap.add_argument("--profile-full",
                     help="Slow, but effective method of collecting a user's Tweets and RT.",
                     action="store_true")
