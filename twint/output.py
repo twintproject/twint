@@ -114,19 +114,25 @@ async def Tweets(tw, location, config, conn):
                     _duplicate_dict[user["screen_name"]]
                 except KeyError:
                     _duplicate_dict[user["screen_name"]] = True
+                    _user = user["screen_name"]
+                    url = f"http://twitter.com/{_user}?lang=en"
+                    await get.User(url, config, conn)
             for user in tweet.tags:
                 try:
                     _duplicate_dict[user["screen_name"]]
                 except KeyError:
                     _duplicate_dict[user["screen_name"]] = True
+                    _user = user["screen_name"]
+                    url = f"http://twitter.com/{_user}?lang=en"
+                    await get.User(url, config, conn)
             for user in tweet.replies:
                 try:
                     _duplicate_dict[user["screen_name"]]
                 except KeyError:
                     _duplicate_dict[user["screen_name"]] = True
-            for user in _duplicate_dict:
-                url = f"http://twitter.com/{user}?lang=en"
-                await get.User(url, config, conn)
+                    _user = user["screen_name"]
+                    url = f"http://twitter.com/{_user}?lang=en"
+                    await get.User(url, config, conn)
 
         if datecheck(tweet.datestamp, config):
             output = format.Tweet(config, tweet)
