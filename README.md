@@ -96,8 +96,8 @@ We are developing a Twint Desktop App.
 ![4](https://i.imgur.com/DzcfIgL.png)
 
 ## FAQ
-> While scraping tweets and saving them to a database, the process is a bit slow
-That's because also the informations about the user (bio, likes, etc.) are stored in the database. To avoid this process pass `--user-info` to CLI, or specify `c.User_info = False` if you are using Twint as module.
+> While scraping tweets and saving them to a database, I want also save users infos
+Pass `--user-info` to CLI, or specify `c.User_info = True` if you are using Twint as module.
 
 ## Contact
 
