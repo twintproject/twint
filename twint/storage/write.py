@@ -49,12 +49,12 @@ def Csv(obj, config):
 def Json(obj, config):
     _obj_type = obj.__class__.__name__
     if _obj_type == "str": _obj_type = "username"
-    Output_csv = {"tweet": config.Output.split(".")[0] + "_tweets.json",
+    Output_json = {"tweet": config.Output.split(".")[0] + "_tweets.json",
                   "user": config.Output.split(".")[0] + "_users.json",
                   "username": config.Output.split(".")[0] + "_usernames.json"}
 
     null, data = struct(obj, config.Custom[_obj_type], _obj_type)
 
-    with open(Output_csv[_obj_type], "a", newline='', encoding="utf-8") as json_file:
+    with open(Output_json[_obj_type], "a", newline='', encoding="utf-8") as json_file:
         json.dump(data, json_file, ensure_ascii=False)
         json_file.write("\n")
