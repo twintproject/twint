@@ -27,7 +27,7 @@ Some of the benefits of using Twint vs Twitter API:
 - **Git**: `git clone https://github.com/twintproject/twint.git`
 - **Pip**: `pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@origin/master#egg=twint`
 
-## CLI Basic Examples and Combos.
+## CLI Basic Examples and Combos
 A few simple examples to help you understand the basics:
 
 - `python3 Twint.py -u username` - Scrape all the Tweets from *user*'s timeline.
@@ -95,9 +95,12 @@ We are developing a Twint Desktop App.
 
 ## FAQ
 > While scraping tweets and saving them to a database, I want also save users infos
+
 Pass `--user-info` to CLI, or specify `c.User_info = True` if you are using Twint as module.
 
-> I tried scraping tweets from a user, I know
+> I tried scraping tweets from a user, I know that they exist but I'm not getting them
+
+Twitter can shadow-ban accounts, which means that their tweets will not be available via search. To solve this, pass `--profile-full` if you are using Twint via CLI or, if are using Twint as module, add `config.Profile_full = True`. Please note that this process will be quite slow.
 ## More Examples
 
 #### Followers/Following
