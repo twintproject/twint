@@ -25,9 +25,9 @@ Some of the benefits of using Twint vs Twitter API:
 
 ## Installing
 - **Git**: `git clone https://github.com/twintproject/twint.git`
-- **Pip**: `pip3 install twint`
+- **Pip**: `pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@origin/master#egg=twint`
 
-## Basic Examples and Combos.
+## CLI Basic Examples and Combos.
 A few simple examples to help you understand the basics:
 
 - `python3 Twint.py -u username` - Scrape all the Tweets from *user*'s timeline.
@@ -53,12 +53,10 @@ A few simple examples to help you understand the basics:
 
 More detail about the commands and options are located in the [wiki](https://github.com/twintproject/twint/wiki/Commands)
 
-## Using Twint as a Module (Recommended)
-To install Twint as module run `pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@origin/master#egg=twint`
+## Module Example
 
 Twint can now be used as a module and supports custom formatting. **More details are located in the [wiki](https://github.com/twintproject/twint/wiki/Module)**
 
-#### Example
 ```python
 import twint
 
@@ -71,22 +69,22 @@ c.Format = "Tweet id: {id} | Tweet: {tweet}"
 # Run
 twint.run.Search(c)
 ```
-## Example String
+> Output
+
 `955511208597184512 2018-01-22 18:43:19 GMT <now> pineapples are the best fruit`
 
 ## Storing Options
-- Write to file.
+- Write to file
 - CSV
 - JSON
 - SQLite
-- Mysql (DB collation utf8mb4)
 - Elasticsearch
 
-### Elasticsearch Setup
+## Elasticsearch Setup
 
 Details on setting up Elasticsearch with Twint is located in the [wiki](https://github.com/twintproject/twint/wiki/Elasticsearch).
 
-### Graph Visualization
+## Graph Visualization
 ![graph](https://i.imgur.com/EEJqB8n.png)
 
 [Graph](https://github.com/twintproject/twint/tree/master/graph) details are also located in the [wiki](https://github.com/twintproject/twint/wiki/Graph).
@@ -98,6 +96,49 @@ We are developing a Twint Desktop App.
 ## FAQ
 > While scraping tweets and saving them to a database, I want also save users infos
 Pass `--user-info` to CLI, or specify `c.User_info = True` if you are using Twint as module.
+
+> I tried scraping tweets from a user, I know
+## More Examples
+
+#### Followers/Following
+
+> To get only follower usernames/following usernames
+
+`python Twint.py -u username --followers`
+
+`python Twint.py -u username --following`
+
+> To get user info of followers/following users
+
+`python Twint.py -u username --followers --user-full`
+
+`python Twint.py -u username --following --user-full`
+
+#### userlist
+
+> get only user info of user
+
+`python Twint.py -u username --user-full`
+
+> get user info of users from a userlist
+
+`python Twint.py --userlist inputlist --user-full`
+
+#### Only tweets without user info
+
+> To get only tweets without user info
+
+`python Twint.py -u username --profile-full --user-info`  or `set c.User_info = False`
+
+`python Twint.py -u username --user-info`  or `set c.User_info = False`
+
+#### Tweets with user info works ONLY with a Database (currently)
+
+> To get tweets along with user info of users mentioned in tweet/replied to
+
+`python Twint.py -u username -db database.db`
+
+`python Twint.py -u username --profile-full -db database.db`
 
 ## Contact
 
