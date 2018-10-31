@@ -104,7 +104,6 @@ def initialize(args):
     c.Proxy_host = args.proxy_host
     c.Proxy_port = args.proxy_port
     c.Proxy_type = args.proxy_type
-    c.ES_count = {"likes":True, "replies":True, "retweets":True}
     c.Retweets = args.retweets
     return c
 
