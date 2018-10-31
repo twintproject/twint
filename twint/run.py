@@ -17,6 +17,7 @@ class Twint:
                 self.init = "-1"
         self.feed = [-1]
         self.count = 0
+        self.user_agent = ""
         self.config = config
         self.conn = db.Conn(config.Database)
         self.d = datelock.Set(self.config.Until, self.config.Since)
@@ -36,13 +37,13 @@ class Twint:
 
     async def Feed(self):
         #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+Feed')
-        response = await get.RequestUrl(self.config, self.init)
-        if self.config.Debug:
-            print(response, file=open("twint-last-request.log", "w", encoding="utf-8"))
-
-        self.feed = []
         consecutive_errors_count = 0
         while True:
+            response = await get.RequestUrl(self.config, self.init, headers=[("User-Agent", self.user_agent)])
+            if self.config.Debug:
+                print(response, file=open("twint-last-request.log", "w", encoding="utf-8"))
+
+            self.feed = []
             try:
                 if self.config.Favorites:
                     self.feed, self.init = feed.Mobile(response)
@@ -57,10 +58,14 @@ class Twint:
                     self.feed, self.init = feed.Json(response)
                 break
             except Exception as e:
-                # Exit only we're 3 times sure it is the end of the road
+                # Sometimes Twitter says there is no data. But it's a lie.
                 consecutive_errors_count += 1
-                if consecutive_errors_count < 3: continue
+                if consecutive_errors_count < self.config.Retries_count:
+                    # Change disguise
+                    self.user_agent = await get.RandomUserAgent()
+                    continue
                 print(str(e) + " [x] run.Feed")
+                print("[!] if get this error but you know for sure that more tweets exist, please open an issue and we will investigate it!")
                 break
 
     async def follow(self):
@@ -100,6 +105,7 @@ class Twint:
                 await output.Tweets(tweet, "", self.config, self.conn)
 
     async def main(self):
+        self.user_agent = await get.RandomUserAgent()
         #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+main')
         if self.config.User_id is not None:
             self.config.Username = await get.Username(self.config.User_id)
