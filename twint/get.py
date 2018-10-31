@@ -5,7 +5,8 @@ import sys
 import aiohttp
 import asyncio
 import concurrent.futures
-
+import random
+from json import loads
 from aiohttp_socks import SocksConnector, SocksVer
 
 from . import url
@@ -14,7 +15,7 @@ from .user import inf
 
 #import logging
 
-async def RequestUrl(config, init):
+async def RequestUrl(config, init, headers = []):
     #loggin.info("[<] " + str(datetime.now()) + ':: get+requestURL')
     _connector = None
     if config.Proxy_host is not None:
@@ -45,17 +46,16 @@ async def RequestUrl(config, init):
             print("Error: Please specify --proxy-host, --proxy-port, and --proxy-type")
             sys.exit(1)
 
-
     if config.Profile:
         if config.Profile_full:
             _url = await url.MobileProfile(config.Username, init)
             response = await MobileRequest(_url, connector=_connector)
         else:
             _url = await url.Profile(config.Username, init)
-            response = await Request(_url, connector=_connector)
+            response = await Request(_url, connector=_connector, headers=headers)
     elif config.TwitterSearch:
         _url, params = await url.Search(config, init)
-        response = await Request(_url, params=params, connector=_connector)
+        response = await Request(_url, params=params, connector=_connector, headers=headers)
     else:
         if config.Following:
             _url = await url.Following(config.Username, init)
@@ -80,20 +80,25 @@ async def MobileRequest(url, **options):
         return await Response(session, url)
 
 
-async def Request(url, connector=None, params=[]):
+async def Request(url, connector=None, params=[], headers=[]):
     #loggin.info("[<] " + str(datetime.now()) + ':: get+Request')
     if connector:
-        async with aiohttp.ClientSession(connector=connector) as session:
+        async with aiohttp.ClientSession(connector=connector, headers=headers) as session:
             return await Response(session, url, params)
     async with aiohttp.ClientSession() as session:
         return await Response(session, url, params)
 
 async def Response(session, url, params=[]):
     #loggin.info("[<] " + str(datetime.now()) + ':: get+Response')
-    headers = {'User-Agent': 'Lynx/2.8.5rel.1 libwww-FM/2.14 SSL-MM/1.4.1 GNUTLS/0.8.12' }
     with timeout(30):
-        async with session.get(url, ssl=False, headers=headers, params=params) as response:
+        async with session.get(url, ssl=False, params=params) as response:
             return await response.text()
+
+async def RandomUserAgent():
+    url = "https://fake-useragent.herokuapp.com/browsers/0.1.8"
+    r = await Request(url)
+    browsers = loads(r)['browsers']
+    return random.choice(browsers[random.choice(list(browsers))])
 
 async def Username(_id):
     #loggin.info("[<] " + str(datetime.now()) + ':: get+Username')
