@@ -11,7 +11,7 @@ class Twint:
         if config.Resume is not None and config.TwitterSearch:
             self.init = f"TWEET-{config.Resume}-0"
         else:
-            if config.Profile_full | config.Retweets:
+            if config.Profile_full | config.Retweets | config.Favorites:
                 self.init = -1
             else:
                 self.init = "-1"
