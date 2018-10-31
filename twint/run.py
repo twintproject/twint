@@ -65,6 +65,7 @@ class Twint:
                     self.user_agent = await get.RandomUserAgent()
                     continue
                 print(str(e) + " [x] run.Feed")
+                print("[!] if get this error but you know for sure that more tweets exist, please open an issue and we will investigate it!")
                 break
 
     async def follow(self):
