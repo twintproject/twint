@@ -73,6 +73,22 @@ twint.run.Search(c)
 
 `955511208597184512 2018-01-22 18:43:19 GMT <now> pineapples are the best fruit`
 
+```python
+import twint
+
+c = twint.Config()
+
+c.Username = "noneprivacy"
+c.Custom["tweet"] = ["id"]
+c.Custom["user"] = ["bio"]
+c.Custom[""]
+c.Limit = 10
+c.Store_csv = True
+c.Output = "none"
+
+twint.run.Search(c)
+```
+
 ## Storing Options
 - Write to file
 - CSV
