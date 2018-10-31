@@ -6,6 +6,7 @@ from .storage import db, elasticsearch, write, panda
 
 #import logging
 
+_duplicate_dict = {}
 follow_object = {}
 
 tweets_object = []
@@ -99,12 +100,39 @@ async def tweetUserData(tweet,config, conn):
 
 async def Tweets(tw, location, config, conn):
     #logging.info("[<] " + str(datetime.now()) + ':: output+Tweets')
+    global _duplicate_dict
     copyright = tw.find("div", "StreamItemContent--withheld")
     if copyright is None and is_tweet(tw):
         tweet = Tweet(tw, location, config)
 
         if config.Database is not None and config.User_info:
             await tweetUserData(tweet, config, conn)
+
+        if config.User_info:
+            for user in tweet.mentions:
+                try:
+                    _duplicate_dict[user["screen_name"]]
+                except KeyError:
+                    _duplicate_dict[user["screen_name"]] = True
+                    _user = user["screen_name"]
+                    url = f"http://twitter.com/{_user}?lang=en"
+                    await get.User(url, config, conn)
+            for user in tweet.tags:
+                try:
+                    _duplicate_dict[user["screen_name"]]
+                except KeyError:
+                    _duplicate_dict[user["screen_name"]] = True
+                    _user = user["screen_name"]
+                    url = f"http://twitter.com/{_user}?lang=en"
+                    await get.User(url, config, conn)
+            for user in tweet.replies:
+                try:
+                    _duplicate_dict[user["screen_name"]]
+                except KeyError:
+                    _duplicate_dict[user["screen_name"]] = True
+                    _user = user["screen_name"]
+                    url = f"http://twitter.com/{_user}?lang=en"
+                    await get.User(url, config, conn)
 
         if datecheck(tweet.datestamp, config):
             output = format.Tweet(config, tweet)

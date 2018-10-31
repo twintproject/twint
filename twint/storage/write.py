@@ -28,21 +28,41 @@ def struct(obj, custom, _type):
 
     return fieldnames, row
 
-def Csv(obj, config):
-    fieldnames, row = struct(obj, config.Custom, Type(config))
+def createDirIfMissing(dirname):
+    if not os.path.exists(dirname):
+        os.makedirs(dirname)
 
-    if not (os.path.exists(config.Output)):
-        with open(config.Output, "w", newline='', encoding="utf-8") as csv_file:
+def Csv(obj, config):
+    _obj_type = obj.__class__.__name__
+    if _obj_type == "str": _obj_type = "username"
+    Output_csv = {"tweet": config.Output.split(".")[0] + "/tweets.csv",
+                  "user": config.Output.split(".")[0] + "/users.csv",
+                  "username": config.Output.split(".")[0] + "/usernames.csv"}
+
+    fieldnames, row = struct(obj, config.Custom[_obj_type], _obj_type)
+
+    createDirIfMissing(config.Output.split(".")[0])
+
+    if not (os.path.exists(Output_csv[_obj_type])):
+        with open(Output_csv[_obj_type], "w", newline='', encoding="utf-8") as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             writer.writeheader()
 
-    with open(config.Output, "a", newline='', encoding="utf-8") as csv_file:
+    with open(Output_csv[_obj_type], "a", newline='', encoding="utf-8") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writerow(row)
 
 def Json(obj, config):
-    null, data = struct(obj, config.Custom, Type(config))
+    _obj_type = obj.__class__.__name__
+    if _obj_type == "str": _obj_type = "username"
+    Output_json = {"tweet": config.Output.split(".")[0] + "/tweets.json",
+                  "user": config.Output.split(".")[0] + "/users.json",
+                  "username": config.Output.split(".")[0] + "/usernames.json"}
 
-    with open(config.Output, "a", newline='', encoding="utf-8") as json_file:
+    null, data = struct(obj, config.Custom[_obj_type], _obj_type)
+
+    createDirIfMissing(config.Output.split(".")[0])
+
+    with open(Output_json[_obj_type], "a", newline='', encoding="utf-8") as json_file:
         json.dump(data, json_file, ensure_ascii=False)
         json_file.write("\n")
