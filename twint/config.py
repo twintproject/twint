@@ -16,7 +16,7 @@ class Config:
     Verified = False
     Store_csv = False
     Store_json = False
-    Custom = False
+    Custom = {"tweet": None, "user": None, "username": None}
     Show_hashtags = False
     Limit = None
     Count = None

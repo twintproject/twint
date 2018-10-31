@@ -12,7 +12,7 @@ def Follow(response):
     try:
         cursor = findall(r'cursor=(.*?)">', str(cursor))[0]
     except Exception as e:
-        print(e)
+        print(str(e) + " [x] feed.Follow")
 
     return follow, cursor
 
@@ -24,7 +24,7 @@ def Mobile(response):
     try:
         max_id = findall(r'max_id=(.*?)">', str(max_id))[0]
     except Exception as e:
-        print(e)
+        print(str(e) + " [x] feed.Mobile")
 
     return tweets, max_id
 
