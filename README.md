@@ -134,11 +134,11 @@ Twitter can shadow-ban accounts, which means that their tweets will not be avail
 
 #### userlist
 
-> get only user info of user
+> To get only user info of user
 
 `python Twint.py -u username --user-full`
 
-> get user info of users from a userlist
+> To get user info of users from a userlist
 
 `python Twint.py --userlist inputlist --user-full`
 
@@ -146,17 +146,17 @@ Twitter can shadow-ban accounts, which means that their tweets will not be avail
 
 > To get only tweets without user info
 
-`python Twint.py -u username --profile-full --user-info`  or `set c.User_info = False`
+`python Twint.py -u username --profile-full`  or `set c.User_info = False`
 
-`python Twint.py -u username --user-info`  or `set c.User_info = False`
+`python Twint.py -u username`  or `set c.User_info = False`
 
 #### Tweets with user info works ONLY with a Database (currently)
 
 > To get tweets along with user info of users mentioned in tweet/replied to
 
-`python Twint.py -u username -db database.db`
+`python Twint.py -u username --user-info -db database.db`
 
-`python Twint.py -u username --profile-full -db database.db`
+`python Twint.py -u username --profile-full --user-info -db database.db`
 
 ## Contact
 
