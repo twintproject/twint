@@ -33,7 +33,7 @@ def profile(response):
     json_response = loads(response)
     html = json_response["items_html"]
     soup = BeautifulSoup(html, "html.parser")
-    feed = soup.find_all("li", "js-stream-item")
+    feed = soup.find_all("div", "tweet")
 
     return feed, feed[-1]["data-item-id"]
 
@@ -42,5 +42,5 @@ def Json(response):
     json_response = loads(response)
     html = json_response["items_html"]
     soup = BeautifulSoup(html, "html.parser")
-    feed = soup.find_all("li", "js-stream-item")
+    feed = soup.find_all("div", "tweet")
     return feed, json_response["min_position"]
