@@ -73,11 +73,11 @@ def _output(obj, output, config, **extra):
         if config.Store_object:
             tweets_object.append(obj)
         else:
-            try:
-                print(output)
-                pass
-            except UnicodeEncodeError:
-                print("unicode error [x] output._output")
+            if not config.Hide_output:
+                try:
+                    print(output)
+                except UnicodeEncodeError:
+                    print("unicode error [x] output._output")
 
 async def tweetUserData(tweet,config, conn):
     user_ids = set()

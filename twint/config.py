@@ -58,3 +58,4 @@ class Config:
     Proxy_type = None
     Retweets = False
     Query = None
+    Hide_output = False
