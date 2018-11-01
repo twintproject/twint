@@ -44,7 +44,7 @@ def getReplies(tw):
     #logging.info("[<] " + str(datetime.now()) + ':: tweet+getReplies')
     """Extract replies from tweet
     """
-    replyToUsersJSON = json.loads(tw.find("div")["data-reply-to-users-json"])
+    replyToUsersJSON = json.loads(tw["data-reply-to-users-json"])
 
     replies = [{"id":int(reply["id_str"]),"id_str": reply["id_str"],"screen_name":reply["screen_name"]} for reply in replyToUsersJSON]
 
@@ -118,16 +118,16 @@ def Tweet(tw, location, config):
     """
     ##logging.info("[<] " + str(datetime.now()) + ':: tweet+Tweet')
     t = tweet()
-    t.id = int(tw.find("div")["data-item-id"])
-    t.id_str = tw.find("div")["data-item-id"]
-    t.conversation_id = tw.find("div")["data-conversation-id"]
+    t.id = int(tw["data-item-id"])
+    t.id_str = tw["data-item-id"]
+    t.conversation_id = tw["data-conversation-id"]
     t.datetime = int(tw.find("span", "_timestamp")["data-time-ms"])
     t.datestamp = strftime("%Y-%m-%d", localtime(t.datetime/1000.0))
     t.timestamp = strftime("%H:%M:%S", localtime(t.datetime/1000.0))
-    t.user_id = int(tw.find("div")["data-user-id"])
-    t.user_id_str = tw.find("div")["data-user-id"]
-    t.username = tw.find("div")["data-screen-name"]
-    t.name = tw.find("div")["data-name"]
+    t.user_id = int(tw["data-user-id"])
+    t.user_id_str = tw["data-user-id"]
+    t.username = tw["data-screen-name"]
+    t.name = tw["data-name"]
     t.profile_image_url = tw.find("img", "js-action-profile-avatar").get('src').replace("_bigger","")
     t.place = tw.find("a","js-geo-pivot-link").text.strip() if tw.find("a","js-geo-pivot-link") else None
     t.timezone = strftime("%Z", localtime())
@@ -148,8 +148,8 @@ def Tweet(tw, location, config):
     t.retweet = getRetweet(config.Profile, t.username, config.Username)
     t.gif_url, t.gif_thumb, t.video_url, t.video_thumb = getRawURLS(tw, t.link, config)
     t.is_quote_status, t.quote_id, t.quote_id_str, t.quote_url = getQuoteInfo(tw)
-    t.is_reply_to = int(bool(tw.find("div")["data-is-reply-to"])) if tw.find("div").has_attr("data-is-reply-to") else 0
-    t.has_parent_tweet = int(bool(tw.find("div")["data-has-parent-tweet"])) if tw.find("div").has_attr("data-has-parent-tweet") else 0
+    t.is_reply_to = int(bool(tw["data-is-reply-to"])) if tw.has_attr("data-is-reply-to") else 0
+    t.has_parent_tweet = int(bool(tw["data-has-parent-tweet"])) if tw.has_attr("data-has-parent-tweet") else 0
     t.in_reply_to_screen_name = ""
     t.in_reply_to_status_id = 0
     t.in_reply_to_status_id_str = ""
