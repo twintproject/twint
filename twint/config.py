@@ -59,3 +59,4 @@ class Config:
     Retweets = False
     Query = None
     Hide_output = False
+    Get_replies = False
