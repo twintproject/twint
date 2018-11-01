@@ -31,7 +31,7 @@ def datecheck(datestamp, config):
 def is_tweet(tw):
     #logging.info("[<] " + str(datetime.now()) + ':: output+is_tweet')
     try:
-        tw.find("div")["data-item-id"]
+        tw["data-item-id"]
         return True
     except:
         return False
@@ -79,77 +79,89 @@ def _output(obj, output, config, **extra):
                 except UnicodeEncodeError:
                     print("unicode error [x] output._output")
 
-async def tweetUserData(tweet,config, conn):
-    user_ids = set()
+async def checkData(tweet, location, config, conn):
     usernames = []
-    for user in tweet.mentions:
-        if db.get_user_id(conn, user["id"]) == -1 and user["id"] not in user_ids:
-                user_ids.add(user["id"])
-                usernames.append(user["screen_name"])
-    for user in tweet.tags:
-        if db.get_user_id(conn, user["id"]) == -1 and user["id"] not in user_ids:
-                user_ids.add(user["id"])
-                usernames.append(user["screen_name"])
-    for user in tweet.replies:
-        if db.get_user_id(conn, user["id"]) == -1 and user["id"] not in user_ids:
-                user_ids.add(user["id"])
-                usernames.append(user["screen_name"])
-    for user in usernames:
-        url = f"http://twitter.com/{user}?lang=en"
-        await get.User(url, config, conn)
-
-async def Tweets(tw, location, config, conn):
-    #logging.info("[<] " + str(datetime.now()) + ':: output+Tweets')
+    user_ids = set()
     global _duplicate_dict
-    copyright = tw.find("div", "StreamItemContent--withheld")
-    if copyright is None and is_tweet(tw):
-        tweet = Tweet(tw, location, config)
+    copyright = tweet.find("div", "StreamItemContent--withheld")
+    if copyright is None and is_tweet(tweet):
+        tweet = Tweet(tweet, location, config)
 
-        if config.Database is not None and config.User_info:
-            await tweetUserData(tweet, config, conn)
+    if config.Database is not None and config.User_info:
+        for user in tweet.mentions:
+            if db.get_user_id(conn, user["id"]) == -1 and user["id"] not in user_ids:
+                user_ids.add(user["id"])
+                usernames.append(user["screen_name"])
+        for user in tweet.tags:
+            if db.get_user_id(conn, user["id"]) == -1 and user["id"] not in user_ids:
+                user_ids.add(user["id"])
+                usernames.append(user["screen_name"])
+        for user in tweet.replies:
+            if db.get_user_id(conn, user["id"]) == -1 and user["id"] not in user_ids:
+                user_ids.add(user["id"])
+                usernames.append(user["screen_name"])
 
-        if config.User_info:
-            for user in tweet.mentions:
-                try:
-                    _duplicate_dict[user["screen_name"]]
-                except KeyError:
-                    _duplicate_dict[user["screen_name"]] = True
-                    _user = user["screen_name"]
-                    url = f"http://twitter.com/{_user}?lang=en"
-                    await get.User(url, config, conn)
-            for user in tweet.tags:
-                try:
-                    _duplicate_dict[user["screen_name"]]
-                except KeyError:
-                    _duplicate_dict[user["screen_name"]] = True
-                    _user = user["screen_name"]
-                    url = f"http://twitter.com/{_user}?lang=en"
-                    await get.User(url, config, conn)
-            for user in tweet.replies:
-                try:
-                    _duplicate_dict[user["screen_name"]]
-                except KeyError:
-                    _duplicate_dict[user["screen_name"]] = True
-                    _user = user["screen_name"]
-                    url = f"http://twitter.com/{_user}?lang=en"
-                    await get.User(url, config, conn)
+    if config.Database is not None and config.User_info:
+        for user in usernames:
+            url = f"http://twitter.com/{user}?lang=en"
+            await get.User(url, config, conn)
 
-        if datecheck(tweet.datestamp, config):
-            output = format.Tweet(config, tweet)
+    if config.User_info:
+        for user in tweet.mentions:
+            try:
+                _duplicate_dict[user["screen_name"]]
+            except KeyError:
+                _duplicate_dict[user["screen_name"]] = True
+                _user = user["screen_name"]
+                url = f"http://twitter.com/{_user}?lang=en"
+                await get.User(url, config, conn)
+        for user in tweet.tags:
+            try:
+                _duplicate_dict[user["screen_name"]]
+            except KeyError:
+                _duplicate_dict[user["screen_name"]] = True
+                _user = user["screen_name"]
+                url = f"http://twitter.com/{_user}?lang=en"
+                await get.User(url, config, conn)
+        for user in tweet.replies:
+            try:
+                _duplicate_dict[user["screen_name"]]
+            except KeyError:
+                _duplicate_dict[user["screen_name"]] = True
+                _user = user["screen_name"]
+                url = f"http://twitter.com/{_user}?lang=en"
+                await get.User(url, config, conn)
 
-            if config.Database:
-                db.tweets(conn, tweet, config)
+    if datecheck(tweet.datestamp, config):
+        output = format.Tweet(config, tweet)
 
-            if config.Pandas:
-                panda.update(tweet, config)
+        if config.Database:
+            db.tweets(conn, tweet, config)
 
-            if config.Elasticsearch:
-                elasticsearch.Tweet(tweet, config)
+        if config.Pandas:
+            panda.update(tweet, config)
 
-            if config.Store_object:
-                tweets_object.append(tweet) #twint.tweet.tweet
+        if config.Elasticsearch:
+            elasticsearch.Tweet(tweet, config)
 
-            _output(tweet, output, config)
+        if config.Store_object:
+            tweets_object.append(tweet) #twint.tweet.tweet
+
+        _output(tweet, output, config)
+
+async def Tweets(tweets, location, config, conn, url=''):
+    if (config.Profile_full or config.Location) and config.Get_replies:
+        for tw in tweets:
+            await checkData(tw, location, config, conn)
+    elif config.Favorites or config.Profile_full or config.Location:
+        for tw in tweets:
+            if tw['data-item-id'] == url.split('?')[0].split('/')[-1]:
+                await checkData(tw, location, config, conn)
+    elif config.TwitterSearch:
+            await checkData(tweets, location, config, conn)
+    else:
+        if int(tweets["data-user-id"]) == config.User_id:
+            await checkData(tweets, location, config, conn)
 
 async def Users(u, config, conn):
     #logging.info("[<] " + str(datetime.now()) + ':: output+Users')
