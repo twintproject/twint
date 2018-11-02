@@ -2,6 +2,7 @@ from async_timeout import timeout
 from datetime import datetime
 from bs4 import BeautifulSoup
 import sys
+import socket
 import aiohttp
 import asyncio
 import concurrent.futures
@@ -79,7 +80,17 @@ async def MobileRequest(url, **options):
     async with aiohttp.ClientSession() as session:
         return await Response(session, url)
 
-
+def ForceNewTorIdentity(config):
+    try:
+        tor_c = socket.create_connection(('127.0.0.1', config.Tor_control_port))
+        tor_c.send('AUTHENTICATE "{}"\r\nSIGNAL NEWNYM\r\n'.format(config.Tor_control_password).encode())
+        response = tor_c.recv(1024)
+        if response != b'250 OK\r\n250 OK\r\n':
+            sys.stderr.write('Unexpected response from Tor control port: {}\n'.format(response))
+    except Exception as e:
+        sys.stderr.write('Error connecting to Tor control port: {}\n'.format(repr(e)))
+        sys.stderr.write('If you want to rotate Tor ports automatically - enable Tor control port\n')
+        
 async def Request(url, connector=None, params=[], headers=[]):
     #loggin.info("[<] " + str(datetime.now()) + ':: get+Request')
     if connector:
