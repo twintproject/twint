@@ -1,5 +1,6 @@
 ## TODO - Fix Weekday situation
 from elasticsearch import Elasticsearch, helpers
+from geopy.geocoders import Nominatim
 from time import strftime, localtime
 import contextlib
 import sys
@@ -8,9 +9,17 @@ _index_tweet_status = False
 _index_follow_status = False
 _index_user_status = False
 
+geolocator = Nominatim(user_agent="twint-1.2")
+
 class RecycleObject(object):
     def write(self, junk): pass
     def flush(self): pass
+
+def getLocation(place):
+    location = geolocator.geocode(place)
+    if location:
+        return {"lat": location.latitude, "lon": location.longitude}
+    return {}
 
 def handleIndexResponse(response):
     try:
@@ -171,6 +180,8 @@ def Tweet(Tweet, config):
             }
     day = weekdays[strftime("%A", localtime(Tweet.datetime))]
 
+    location = getLocation(config.Near)
+
     actions = []
 
     dt = f"{Tweet.datestamp} {Tweet.timestamp}"
@@ -213,7 +224,8 @@ def Tweet(Tweet, config):
                 "quote_id_str": Tweet.quote_id_str,
                 "quote_url": Tweet.quote_url,
                 "search": str(config.Search),
-                "near": config.Near
+                "near": config.Near,
+                "geo_point": location
                 }
             }
     actions.append(j_data)
