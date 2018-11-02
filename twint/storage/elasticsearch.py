@@ -17,9 +17,7 @@ class RecycleObject(object):
 
 def getLocation(place):
     location = geolocator.geocode(place)
-    if location:
-        return {"lat": location.latitude, "lon": location.longitude}
-    return {}
+    return {"lat": location.latitude, "lon": location.longitude}
 
 def handleIndexResponse(response):
     try:
@@ -182,8 +180,6 @@ def Tweet(Tweet, config):
             }
     day = weekdays[strftime("%A", localtime(Tweet.datetime))]
 
-    location = getLocation(config.Near)
-
     actions = []
 
     dt = f"{Tweet.datestamp} {Tweet.timestamp}"
@@ -226,10 +222,11 @@ def Tweet(Tweet, config):
                 "quote_id_str": Tweet.quote_id_str,
                 "quote_url": Tweet.quote_url,
                 "search": str(config.Search),
-                "near": config.Near,
-                "geo_tweet": location
+                "near": config.Near
                 }
             }
+    if config.Near:
+        j_data["_source"].update({"geo_tweet": getLocation(config.Near)})
     actions.append(j_data)
 
     es = Elasticsearch(config.Elasticsearch)
@@ -266,8 +263,6 @@ def UserProfile(user, config):
     global _index_user_status
     actions = []
 
-    location = getLocation(config.Location)
-
     j_data = {
             "_index": config.Index_users,
             "_type": config.Index_type,
@@ -291,10 +286,11 @@ def UserProfile(user, config):
                 "verified": user.is_verified,
                 "avatar": user.avatar,
                 "background_image": user.background_image,
-                "session": config.Essid,
-                "geo_user": location
+                "session": config.Essid
                 }
             }
+    if config.Location:
+        j_data["_source"].update({"geo_user": getLocation(config.Location)})
     actions.append(j_data)
 
     es = Elasticsearch(config.Elasticsearch)
