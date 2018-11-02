@@ -22,7 +22,7 @@ PUT twintuser
         "avatar": {"type": "text"},
         "background_image": {"type": "text"},
         "session": {"type": "keyword"},
-        "geo_user": {"type": "geopoint"}
+        "geo_user": {"type": "geo_point"}
       }
     }
   }
