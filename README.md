@@ -21,11 +21,36 @@ Some of the benefits of using Twint vs Twitter API:
 
 ## Requirements
 - Python 3.6
-- `pip3 install -r requirements.txt`
 
 ## Installing
-- **Git**: `git clone https://github.com/twintproject/twint.git`
-- **Pip**: `pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@origin/master#egg=twint`
+
+### Stable version
+**Pip:**    
+```bash
+pip3 install twint
+``` 
+
+**Pipenv**:      
+```bash
+pipenv install twint
+```
+
+### Development version
+**Git:**    
+```bash
+git clone https://github.com/twintproject/twint.git
+pip3 install -r requirements.txt
+```
+
+**Pip:**        
+```bash
+pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@origin/master#egg=twint
+```    
+
+**Pipenv**:    
+```bash
+pipenv install -e git+https://github.com/twintproject/twint.git#egg=twint
+```
 
 ## CLI Basic Examples and Combos
 A few simple examples to help you understand the basics:
