@@ -60,7 +60,7 @@ def _output(obj, output, config, **extra):
         else:
             write.Text(output, config.Output)
 
-    if config.Pandas and config.User_full:
+    if config.Pandas and obj.type == "user":
         panda.update(obj, config)
     if extra.get("follow_list"):
         follow_object.username = config.Username
