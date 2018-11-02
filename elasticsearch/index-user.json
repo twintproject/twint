@@ -21,7 +21,8 @@ PUT twintuser
         "verified": {"type": "integer"},
         "avatar": {"type": "text"},
         "background_image": {"type": "text"},
-        "session": {"type": "keyword"}
+        "session": {"type": "keyword"},
+        "geo_user": {"type": "geopoint"}
       }
     }
   }
