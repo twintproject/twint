@@ -36,6 +36,7 @@ PUT twinttweets
           "quote_id_str": {"type": "text"},
           "quote_url": {"type": "text"},
           "search": {"type": "text"},
+          "near":  {"type": "text"}
       }
     }
   }

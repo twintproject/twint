@@ -28,7 +28,7 @@ def handleIndexResponse(response):
     else:
         print("[x] error with shards :: storage.elasticsearch.HandleIndexCreation")
         return False
-        
+
 def createIndex(config, instance, **scope):
     if scope.get("scope") == "tweet":
         tweets_body = {
@@ -68,6 +68,7 @@ def createIndex(config, instance, **scope):
                             "quote_id_str": {"type": "text"},
                             "quote_url": {"type": "text"},
                             "search": {"type": "text"},
+                            "near": {"type": "text"}
                             }
                         }
                     },
@@ -211,7 +212,8 @@ def Tweet(Tweet, config):
                 "quote_id": Tweet.quote_id,
                 "quote_id_str": Tweet.quote_id_str,
                 "quote_url": Tweet.quote_url,
-                "search": str(config.Search)
+                "search": str(config.Search),
+                "near": config.Near
                 }
             }
     actions.append(j_data)
