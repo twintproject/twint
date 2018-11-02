@@ -62,3 +62,4 @@ class Config:
     Query = None
     Hide_output = False
     Get_replies = False
+    Near = ""
