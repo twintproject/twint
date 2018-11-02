@@ -77,7 +77,8 @@ def createIndex(config, instance, **scope):
                             "quote_id_str": {"type": "text"},
                             "quote_url": {"type": "text"},
                             "search": {"type": "text"},
-                            "near": {"type": "text"}
+                            "near": {"type": "text"},
+                            "geo_tweet": {"type": "geopoint"}
                             }
                         }
                     },
@@ -129,7 +130,8 @@ def createIndex(config, instance, **scope):
                             "verified": {"type": "integer"},
                             "avatar": {"type": "text"},
                             "background_image": {"type": "text"},
-                            "session": {"type": "keyword"}
+                            "session": {"type": "keyword"},
+                            "geo_user": {"type": "geopoint"}
                             }
                         }
                     },
@@ -225,7 +227,7 @@ def Tweet(Tweet, config):
                 "quote_url": Tweet.quote_url,
                 "search": str(config.Search),
                 "near": config.Near,
-                "geo_point": location
+                "geo_tweet": location
                 }
             }
     actions.append(j_data)
@@ -264,6 +266,8 @@ def UserProfile(user, config):
     global _index_user_status
     actions = []
 
+    location = getLocation(config.Location)
+
     j_data = {
             "_index": config.Index_users,
             "_type": config.Index_type,
@@ -287,7 +291,8 @@ def UserProfile(user, config):
                 "verified": user.is_verified,
                 "avatar": user.avatar,
                 "background_image": user.background_image,
-                "session": config.Essid
+                "session": config.Essid,
+                "geo_user": location
                 }
             }
     actions.append(j_data)
