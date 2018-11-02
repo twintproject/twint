@@ -56,6 +56,8 @@ class Config:
     Proxy_host = None
     Proxy_port = 0
     Proxy_type = None
+    Tor_control_port = 9051
+    Tor_control_password = None
     Retweets = False
     Query = None
     Hide_output = False

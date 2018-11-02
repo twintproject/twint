@@ -1,7 +1,8 @@
 from . import datelock, feed, get, output, verbose, storage
-from asyncio import get_event_loop
+from asyncio import get_event_loop, TimeoutError
 from datetime import timedelta, datetime
 from .storage import db
+import sys
 
 #import logging
 
@@ -55,6 +56,19 @@ class Twint:
                 elif self.config.TwitterSearch:
                     self.feed, self.init = feed.Json(response)
                 break
+            except TimeoutError as e:
+                if self.config.Proxy_host.lower() == "tor":
+                    print("[?] Timed out, changing Tor identity...")
+                    if self.config.Tor_control_password is None:
+                        sys.stderr.write("Error: config.Tor_control_password must be set for proxy autorotation!\r\n")
+                        sys.stderr.write("Info: What is it? See https://stem.torproject.org/faq.html#can-i-interact-with-tors-controller-interface-directly\r\n")
+                        break
+                    else:
+                        get.ForceNewTorIdentity(self.config)
+                        continue
+                else:
+                    print(str(e))
+                    break                
             except Exception as e:
                 # Sometimes Twitter says there is no data. But it's a lie.
                 consecutive_errors_count += 1
