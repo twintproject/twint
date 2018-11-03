@@ -134,7 +134,10 @@ async def checkData(tweet, location, config, conn):
 
     if datecheck(tweet.datestamp, config):
         output = format.Tweet(config, tweet)
-
+        
+        if config.Custom_storage is not None:
+            config.Custom_storage.handle_tweet_from_twint(tweet)
+        
         if config.Database:
             db.tweets(conn, tweet, config)
 
