@@ -1,5 +1,5 @@
 from . import datelock, feed, get, output, verbose, storage
-from asyncio import get_event_loop, TimeoutError
+from asyncio import get_event_loop, CancelledError
 from datetime import timedelta, datetime
 from .storage import db
 import sys
