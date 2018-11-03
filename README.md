@@ -82,6 +82,7 @@ More detail about the commands and options are located in the [wiki](https://git
 
 Twint can now be used as a module and supports custom formatting. **More details are located in the [wiki](https://github.com/twintproject/twint/wiki/Module)**
 
+#### Basic usage
 ```python
 import twint
 
@@ -98,6 +99,7 @@ twint.run.Search(c)
 
 `955511208597184512 2018-01-22 18:43:19 GMT <now> pineapples are the best fruit`
 
+#### Custom fields and csv
 ```python
 import twint
 
@@ -112,9 +114,29 @@ c.Output = "none"
 
 twint.run.Search(c)
 ```
+#### Custom storage
+```python
+import twint
+
+# Configure
+c = twint.Config()
+c.Username = "now"
+c.Search = "pineapple"
+c.Format = "Tweet id: {id} | Tweet: {tweet}"
+c.Custom_storage = self
+
+twint.run.Search(c)
+
+...
+
+# Delegate method for custom storage
+def handle_tweet_from_twint(self, tweet):
+    save_anywhere(tweet) #  Your other logic
+```
 
 ## Storing Options
 - Write to file
+- Custom (Tweets only)
 - CSV
 - JSON
 - SQLite
