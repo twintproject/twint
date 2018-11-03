@@ -38,12 +38,12 @@ class Twint:
         #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+Feed')
         consecutive_errors_count = 0
         while True:
-            response = await get.RequestUrl(self.config, self.init, headers=[("User-Agent", self.user_agent)])
-            if self.config.Debug:
-                print(response, file=open("twint-last-request.log", "w", encoding="utf-8"))
-
-            self.feed = []
             try:
+                response = await get.RequestUrl(self.config, self.init, headers=[("User-Agent", self.user_agent)])
+                if self.config.Debug:
+                    print(response, file=open("twint-last-request.log", "w", encoding="utf-8"))
+
+                self.feed = []
                 if self.config.Favorites:
                     self.feed, self.init = feed.Mobile(response)
                 elif self.config.Followers or self.config.Following:
@@ -56,7 +56,7 @@ class Twint:
                 elif self.config.TwitterSearch:
                     self.feed, self.init = feed.Json(response)
                 break
-            except TimeoutError as e:
+            except CancelledError as e:
                 if self.config.Proxy_host.lower() == "tor":
                     print("[?] Timed out, changing Tor identity...")
                     if self.config.Tor_control_password is None:
