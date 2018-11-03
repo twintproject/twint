@@ -10,13 +10,13 @@ DESCRIPTION = 'An advanced Twitter scraping & OSINT tool.'
 URL = 'https://github.com/twintproject/twint'
 EMAIL = 'codyzacharias@pm.me'
 AUTHOR = 'Cody Zacharias'
-REQUIRES_PYTHON = '>=3.5.0'
+REQUIRES_PYTHON = '>=3.6.0'
 VERSION = None
 
 # Packages required
 REQUIRED = [
 		'aiohttp', 'aiodns', 'beautifulsoup4', 'cchardet', 
-                'elasticsearch', 'pysocks', 'pandas'
+                'elasticsearch', 'pysocks', 'pandas', 'aiohttp_socks', 'schedule', 'geopy'
 		]
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -48,7 +48,6 @@ setup(
 		'License :: OSI Approved :: MIT License',
 		'Programming Language :: Python',
 		'Programming Language :: Python :: 3',
-		'Programming Language :: Python :: 3.5',
 		'Programming Language :: Python :: 3.6'
 		],
 )
