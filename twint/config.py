@@ -22,6 +22,7 @@ class Config:
     Count = None
     Stats = False
     Database = None
+    Custom_storage = None
     To = None
     All = None
     Debug = False
