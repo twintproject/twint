@@ -68,7 +68,7 @@ class Twint:
                         continue
                 else:
                     print(str(e))
-                    break                
+                    break
             except Exception as e:
                 # Sometimes Twitter says there is no data. But it's a lie.
                 consecutive_errors_count += 1
