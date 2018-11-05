@@ -17,7 +17,10 @@ class RecycleObject(object):
 
 def getLocation(place):
     location = geolocator.geocode(place)
-    return {"lat": location.latitude, "lon": location.longitude}
+    if location:
+        return {"lat": location.latitude, "lon": location.longitude}
+    else:
+        return {}
 
 def handleIndexResponse(response):
     try:
@@ -76,6 +79,7 @@ def createIndex(config, instance, **scope):
                             "quote_url": {"type": "text"},
                             "search": {"type": "text"},
                             "near": {"type": "text"},
+                            "geo_near": {"type": "geopoint"},
                             "geo_tweet": {"type": "geopoint"}
                             }
                         }
@@ -226,7 +230,9 @@ def Tweet(Tweet, config):
                 }
             }
     if config.Near:
-        j_data["_source"].update({"geo_tweet": getLocation(config.Near)})
+        j_data["_source"].update({"geo_near": getLocation(config.Near)})
+    if Tweet.place:
+        j_data["_source"].update({"geo_tweet": getLocation(Tweet.place)})
     actions.append(j_data)
 
     es = Elasticsearch(config.Elasticsearch)
@@ -290,7 +296,9 @@ def UserProfile(user, config):
                 }
             }
     if config.Location:
-        j_data["_source"].update({"geo_user": getLocation(config.Location)})
+        _loc = getLocation(user.location)
+        if _loc:
+            j_data["_source"].update({"geo_user": _loc})
     actions.append(j_data)
 
     es = Elasticsearch(config.Elasticsearch)
