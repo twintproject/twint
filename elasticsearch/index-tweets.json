@@ -37,6 +37,7 @@ PUT twinttweets
           "quote_url": {"type": "text"},
           "search": {"type": "text"},
           "near":  {"type": "text"},
+          "geo_near": {"type": "geo_point"},
           "geo_tweet": {"type": "geo_point"}
       }
     }

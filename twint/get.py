@@ -90,7 +90,7 @@ def ForceNewTorIdentity(config):
     except Exception as e:
         sys.stderr.write('Error connecting to Tor control port: {}\n'.format(repr(e)))
         sys.stderr.write('If you want to rotate Tor ports automatically - enable Tor control port\n')
-        
+
 async def Request(url, connector=None, params=[], headers=[]):
     #loggin.info("[<] " + str(datetime.now()) + ':: get+Request')
     if connector:
