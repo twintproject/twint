@@ -129,7 +129,7 @@ def Tweet(tw, location, config):
     t.username = tw["data-screen-name"]
     t.name = tw["data-name"]
     t.profile_image_url = tw.find("img", "js-action-profile-avatar").get('src').replace("_bigger","")
-    t.place = tw.find("a",{'class':"u-textUserColor js-nav js-geo-pivot-link"}).text.strip() if tw.find("a","js-geo-pivot-link") else None
+    t.place = tw.find("a","js-geo-pivot-link").text.strip() if tw.find("a","js-geo-pivot-link") else None
     t.timezone = strftime("%Z", localtime())
     for img in tw.findAll("img", "Emoji Emoji--forText"):
         img.replaceWith(img["alt"])
