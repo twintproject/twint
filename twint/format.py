@@ -4,10 +4,10 @@
 def Tweet(config, t):
     #logging.info("[<] " + str(datetime.now()) + ':: format+Tweet')
     if config.Format:
-        output = config.Format.replace("{id}", t.id)
+        output = config.Format.replace("{id}", t.id_str)
         output = output.replace("{date}", t.datestamp)
         output = output.replace("{time}", t.timestamp)
-        output = output.replace("{user_id}", t.user_id)
+        output = output.replace("{user_id}", t.user_id_str)
         output = output.replace("{username}", t.username)
         output = output.replace("{timezone}", t.timezone)
         output = output.replace("{tweet}", t.tweet)
@@ -18,12 +18,11 @@ def Tweet(config, t):
         output = output.replace("{likes}", t.likes_count)
         output = output.replace("{link}", t.link)
         output = output.replace("{is_retweet}", str(t.retweet))
-        output = output.replace("{user_rt}", t.user_rt)
         output = output.replace("{mentions}", str(t.mentions))
     else:
-        output = f"{t.id} {t.datestamp} {t.timestamp} {t.timezone} "
+        output = f"{t.id_str} {t.datestamp} {t.timestamp} {t.timezone} "
 
-        if config.Profile and t.username.lower() != config.Username:
+        if t.retweet == 1:
            output += "RT "
 
         output += f"<{t.username}> {t.tweet}"
@@ -53,9 +52,9 @@ def User(_format, u):
         output += output.replace("{following}", u.following)
         output += output.replace("{followers}", u.followers)
         output += output.replace("{likes}", u.likes)
-        output += output.replace("{media}", u.media_count)
-        output += output.replace("{private}", u.is_private)
-        output += output.replace("{verified}", u.is_verified)
+        output += output.replace("{media}", str(u.media_count))
+        output += output.replace("{private}", str(u.is_private))
+        output += output.replace("{verified}", str(u.is_verified))
         output += output.replace("{avatar}", u.avatar)
     else:
         output = f"{u.id} | {u.name} | @{u.username} | Private: "
