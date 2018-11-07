@@ -8,6 +8,10 @@ import sys
 _index_tweet_status = False
 _index_follow_status = False
 _index_user_status = False
+_is_near_def = False
+_is_location_def = False
+_near = {}
+_location = {}
 
 geolocator = Nominatim(user_agent="twint-1.2")
 
@@ -15,9 +19,18 @@ class RecycleObject(object):
     def write(self, junk): pass
     def flush(self): pass
 
-def getLocation(place):
+def getLocation(place, **options):
+    print("asking for " + place)
     location = geolocator.geocode(place)
     if location:
+        if options.get("near"):
+            global _near
+            _near = {"lat": location.latitude, "lon": location.longitude}
+            return True
+        elif options.get("location"):
+            global _location
+            _location = {"lat": location.latitude, "lon": location.longitude}
+            return True
         return {"lat": location.latitude, "lon": location.longitude}
     else:
         return {}
@@ -173,6 +186,7 @@ def hour(datetime):
 
 def Tweet(Tweet, config):
     global _index_tweet_status
+    global _is_near_def
     weekdays = {
             "Monday": 1,
             "Tuesday": 2,
@@ -230,7 +244,10 @@ def Tweet(Tweet, config):
                 }
             }
     if config.Near:
-        j_data["_source"].update({"geo_near": getLocation(config.Near)})
+        if not _is_near_def:
+            _is_near_def = getLocation(config.Near, near=True)
+        if _near:
+            j_data["_source"].update({"geo_near": _near})
     if Tweet.place:
         j_data["_source"].update({"geo_tweet": getLocation(Tweet.place)})
     actions.append(j_data)
@@ -267,6 +284,7 @@ def Follow(user, config):
 
 def UserProfile(user, config):
     global _index_user_status
+    global _is_location_def
     actions = []
 
     j_data = {
@@ -296,9 +314,10 @@ def UserProfile(user, config):
                 }
             }
     if config.Location:
-        _loc = getLocation(user.location)
-        if _loc:
-            j_data["_source"].update({"geo_user": _loc})
+        if not _is_location_def:
+            _is_location_def = getLocation(user.location, location=True)
+        if _location:
+            j_data["_source"].update({"geo_user": _location})
     actions.append(j_data)
 
     es = Elasticsearch(config.Elasticsearch)
