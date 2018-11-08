@@ -37,8 +37,6 @@ def check(args):
             error("Error", "Please specify an output file (Example: -o file.csv).")
         elif args.json:
             error("Error", "Please specify an output file (Example: -o file.json).")
-    if args.database is None:
-            error("Error", "Please specify database name.")
 
 def loadUserList(ul, _type):
     """ Concatenate users
