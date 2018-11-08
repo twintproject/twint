@@ -2,7 +2,7 @@ class Config:
     Username = None
     User_id = None
     Search = None
-    Geo = None
+    Geo = ""
     Location = False
     Near = None
     Lang = None
