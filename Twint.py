@@ -37,6 +37,8 @@ def check(args):
             error("Error", "Please specify an output file (Example: -o file.csv).")
         elif args.json:
             error("Error", "Please specify an output file (Example: -o file.json).")
+    if args.database is None:
+            error("Error", "Please specify database name.")
 
 def loadUserList(ul, _type):
     """ Concatenate users
@@ -77,6 +79,7 @@ def initialize(args):
     c.Limit = args.limit
     c.Count = args.count
     c.Stats = args.stats
+    c.Database = args.database
     c.To = args.to
     c.All = args.all
     c.Essid = args.essid
@@ -134,6 +137,7 @@ def options():
                     action="store_true")
     ap.add_argument("--stats", help="Show number of replies, retweets, and likes.",
                     action="store_true")
+    ap.add_argument("-db", "--database", help="Store Tweets in a sqlite3 database.")
     ap.add_argument("--to", help="Search Tweets to a user.")
     ap.add_argument("--all", help="Search all Tweets associated with a user.")
     ap.add_argument("--followers", help="Scrape a person's followers.", action="store_true")
