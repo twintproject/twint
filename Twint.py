@@ -29,14 +29,14 @@ def check(args):
         if args.userid:
             error("Contradicting Args",
                   "--userid and -u cannot be used together.")
+    else:
+        if args.search is None:
+            error("Error", "Please use at least -u or -s.")
     if args.output is None:
         if args.csv:
             error("Error", "Please specify an output file (Example: -o file.csv).")
         elif args.json:
             error("Error", "Please specify an output file (Example: -o file.json).")
-    if args.hostname:
-        if args.Database is None or args.DB_user is None or args.DB_pwd is None:
-            error("Error", "Please specify database name, user and password")
 
 def loadUserList(ul, _type):
     """ Concatenate users
