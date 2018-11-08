@@ -3,6 +3,7 @@ from setuptools import setup
 import io
 import os
 import sys
+import shutil
 
 # Package meta-data
 NAME = 'twint'
@@ -32,6 +33,10 @@ if not VERSION:
 else:
 	about['__version__'] = VERSION
 
+if not os.path.exists('bin'):
+    os.makedirs('bin')
+shutil.copyfile('Twint.py', 'bin/twint')
+
 setup(
 	name=NAME,
 	version=about['__version__'],
@@ -42,6 +47,7 @@ setup(
 	python_requires=REQUIRES_PYTHON,
 	url=URL,
 	packages=['twint', 'twint.storage'],
+	scripts=['bin/twint'],
 	install_requires=REQUIRED,
 	license='MIT',
 	classifiers=[
