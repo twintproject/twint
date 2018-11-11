@@ -82,11 +82,11 @@ async def Search(config, init):
         q += f" since:{config.Since}"
     if config.Until:
         q += f" until:{config.Until}"
-    if config.Fruit:
-        url += ' "myspace.com" OR "last.fm" OR'
-        url += ' "mail" OR "email" OR "gmail" OR "e-mail"'
-        # url += "%20OR%20%22phone%22%20OR%20%22call%20me%22%20OR%20%22text%20me%22"
-        # url += "%20OR%20%22keybase%22"
+    if config.Email:
+        q += ' "mail" OR "email" OR'
+        q += ' "gmail" OR "e-mail"'
+    if config.Phone:
+        q += ' "phone" OR "call me" OR "text me"'
     if config.Verified:
         q += " filter:verified"
     if config.To:

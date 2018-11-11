@@ -69,7 +69,8 @@ def initialize(args):
     c.Year = args.year
     c.Since = args.since
     c.Until = args.until
-    c.Fruit = args.fruit
+    c.Email = args.email
+    c.Phone = args.phone
     c.Verified = args.verified
     c.Store_csv = args.csv
     c.Store_json = args.json
@@ -122,7 +123,8 @@ def options():
     ap.add_argument("--year", help="Filter Tweets before specified year.")
     ap.add_argument("--since", help="Filter Tweets sent since date (Example: 2017-12-27).")
     ap.add_argument("--until", help="Filter Tweets sent until date (Example: 2017-12-27).")
-    ap.add_argument("--fruit", help="Display 'low-hanging-fruit' Tweets.", action="store_true")
+    ap.add_argument("--email", help="Filter Tweets that might have email addresses", action="store_true")
+    ap.add_argument("--phone", help="Filter Tweets that might have phone numbers", action="store_true")
     ap.add_argument("--verified", help="Display Tweets only from verified users (Use with -s).",
                     action="store_true")
     ap.add_argument("--csv", help="Write as .csv file.", action="store_true")
