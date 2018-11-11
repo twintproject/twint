@@ -62,7 +62,7 @@ A few simple examples to help you understand the basics:
 - `python3 Twint.py -u username --since 2015-12-20` - Collect Tweets that were tweeted since 2015-12-20.
 - `python3 Twint.py -u username -o file.txt` - Scrape Tweets and save to file.txt.
 - `python3 Twint.py -u username -o file.csv --csv` - Scrape Tweets and save as a csv file.
-- `python3 Twint.py -u username --fruit` - Show Tweets with low-hanging fruit.
+- `python3 Twint.py -u username --email --phone` - Show Tweets that might have phone numbers or email addresses.
 - `python3 Twint.py -s "Donald Trump" --verified` - Display Tweets by verified users that Tweeted about Donald Trump.
 - `python3 Twint.py -g="48.880048,2.385939,1km" -o file.csv --csv` - Scrape Tweets from a radius of 1km around a place in Paris and export them to a csv file.
 - `python3 Twint.py -u username -es localhost:9200` - Output Tweets to Elasticsearch
