@@ -25,29 +25,29 @@ Some of the benefits of using Twint vs Twitter API:
 ## Installing
 
 ### Stable version
-**Pip:**    
+**Pip:**
 ```bash
 pip3 install twint
-``` 
+```
 
-**Pipenv**:      
+**Pipenv**:
 ```bash
 pipenv install twint
 ```
 
 ### Development version
-**Git:**    
+**Git:**
 ```bash
 git clone https://github.com/twintproject/twint.git
 pip3 install -r requirements.txt
 ```
 
-**Pip:**        
+**Pip:**
 ```bash
 pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@origin/master#egg=twint
-```    
+```
 
-**Pipenv**:    
+**Pipenv**:
 ```bash
 pipenv install -e git+https://github.com/twintproject/twint.git#egg=twint
 ```
@@ -166,22 +166,6 @@ Twitter can shadow-ban accounts, which means that their tweets will not be avail
 > To get user info of users from a userlist
 
 `python Twint.py --userlist inputlist --user-full`
-
-#### Only tweets without user info
-
-> To get only tweets without user info
-
-`python Twint.py -u username --profile-full`  or `set c.User_info = False`
-
-`python Twint.py -u username`  or `set c.User_info = False`
-
-#### Tweets with user info works ONLY with a Database (currently)
-
-> To get tweets along with user info of users mentioned in tweet/replied to
-
-`python Twint.py -u username --user-info -db database.db`
-
-`python Twint.py -u username --profile-full --user-info -db database.db`
 
 ## Contact
 
