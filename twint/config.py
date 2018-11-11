@@ -12,7 +12,8 @@ class Config:
     Year = None
     Since = None
     Until = None
-    Fruit = False
+    Email = False
+    Phone = False
     Verified = False
     Store_csv = False
     Store_json = False
