@@ -46,7 +46,7 @@ def _output(obj, output, config, **extra):
         else:
             obj.username = obj.username.lower()
             for i in range(len(obj.mentions)):
-                obj.mentions[i] = obj.mentions[i]["screen_name"].lower()
+                obj.mentions[i] = obj.mentions[i].lower()
             for i in range(len(obj.hashtags)):
                 obj.hashtags[i] = obj.hashtags[i].lower()
     if config.Output != None:
@@ -86,51 +86,6 @@ async def checkData(tweet, location, config, conn):
     copyright = tweet.find("div", "StreamItemContent--withheld")
     if copyright is None and is_tweet(tweet):
         tweet = Tweet(tweet, location, config)
-
-    if config.Database is not None and config.User_info:
-        for user in tweet.mentions:
-            if db.get_user_id(conn, user["id"]) == -1 and user["id"] not in user_ids:
-                user_ids.add(user["id"])
-                usernames.append(user["screen_name"])
-        for user in tweet.tags:
-            if db.get_user_id(conn, user["id"]) == -1 and user["id"] not in user_ids:
-                user_ids.add(user["id"])
-                usernames.append(user["screen_name"])
-        for user in tweet.replies:
-            if db.get_user_id(conn, user["id"]) == -1 and user["id"] not in user_ids:
-                user_ids.add(user["id"])
-                usernames.append(user["screen_name"])
-
-    if config.Database is not None and config.User_info:
-        for user in usernames:
-            url = f"http://twitter.com/{user}?lang=en"
-            await get.User(url, config, conn)
-
-    if config.User_info:
-        for user in tweet.mentions:
-            try:
-                _duplicate_dict[user["screen_name"]]
-            except KeyError:
-                _duplicate_dict[user["screen_name"]] = True
-                _user = user["screen_name"]
-                url = f"http://twitter.com/{_user}?lang=en"
-                await get.User(url, config, conn)
-        for user in tweet.tags:
-            try:
-                _duplicate_dict[user["screen_name"]]
-            except KeyError:
-                _duplicate_dict[user["screen_name"]] = True
-                _user = user["screen_name"]
-                url = f"http://twitter.com/{_user}?lang=en"
-                await get.User(url, config, conn)
-        for user in tweet.replies:
-            try:
-                _duplicate_dict[user["screen_name"]]
-            except KeyError:
-                _duplicate_dict[user["screen_name"]] = True
-                _user = user["screen_name"]
-                url = f"http://twitter.com/{_user}?lang=en"
-                await get.User(url, config, conn)
 
     if datecheck(tweet.datestamp, config):
         output = format.Tweet(config, tweet)
