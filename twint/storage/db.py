@@ -1,6 +1,7 @@
 import sqlite3
 import sys
 import time
+import hashlib
 
 def Conn(database):
     if database:
@@ -40,8 +41,9 @@ def init(db):
                     verified integer not null,
                     profile_image_url text not null,
                     background_image text,
+                    hex_dig  text not null,
                     time_update integer not null,
-                    CONSTRAINT users_pk PRIMARY KEY (id)
+                    CONSTRAINT users_pk PRIMARY KEY (id, hex_dig)
                 );
             """
         cursor.execute(table_users)
@@ -181,37 +183,27 @@ def follow(conn, Username, Followers, User):
     except sqlite3.IntegrityError:
         pass
 
-def get_user_id(conn, id):
+def get_hash_id(conn, id):
     cursor = conn.cursor()
-    cursor.execute('SELECT id FROM users WHERE id = ? LIMIT 1', (id,))
+    cursor.execute('SELECT hex_dig FROM users WHERE id = ? LIMIT 1', (id,))
     resultset = cursor.fetchall()
     return resultset[0][0] if resultset else -1
 
-def user(conn, config,  User):
+def user(conn, config, User):
     try:
         time_ms = round(time.time()*1000)
         cursor = conn.cursor()
-        entry = (int(User.id),
-                User.id,
-                User.name,
-                User.username,
-                User.bio,
-                User.location,
-                User.url,
-                User.join_date,
-                User.join_time,
-                User.tweets,
-                User.following,
-                User.followers,
-                User.likes,
-                User.media_count,
-                User.is_private,
-                User.is_verified,
-                User.avatar,
-                User.background_image,
-                time_ms)
-        query = f"INSERT INTO users VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-        cursor.execute(query, entry)
+        user = [int(User.id), User.id, User.name, User.username, User.bio, User.location, User.url,User.join_date, User.join_time, User.tweets, User.following, User.followers, User.likes, User.media_count, User.is_private, User.is_verified, User.avatar, User.background_image]
+
+        hex_dig = hashlib.sha256(','.join(str(v) for v in user).encode()).hexdigest()
+        entry = tuple(user) + (hex_dig,time_ms,)
+        old_hash = get_hash_id(conn, User.id)
+
+        if old_hash == -1 or old_hash != hex_dig:
+            query = f"INSERT INTO users VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+            cursor.execute(query, entry)
+        else:
+            pass
 
         if config.Followers or config.Following:
             table = uTable(config.Followers)
