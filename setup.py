@@ -33,10 +33,6 @@ if not VERSION:
 else:
 	about['__version__'] = VERSION
 
-if not os.path.exists('bin'):
-    os.makedirs('bin')
-shutil.copyfile('Twint.py', 'bin/twint')
-
 setup(
 	name=NAME,
 	version=about['__version__'],
@@ -47,7 +43,11 @@ setup(
 	python_requires=REQUIRES_PYTHON,
 	url=URL,
 	packages=['twint', 'twint.storage'],
-	scripts=['bin/twint'],
+	entry_points={
+		'console_scripts':[
+			'twint = twint.twint:run_as_command',
+		],
+	},
 	install_requires=REQUIRED,
 	license='MIT',
 	classifiers=[

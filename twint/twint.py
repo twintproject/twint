@@ -251,7 +251,7 @@ def main():
     else:
         twint.run.Search(c)
 
-if __name__ == "__main__":
+def run_as_command():
     version = ".".join(str(v) for v in sys.version_info[:2])
     if float(version) < 3.6:
         print("[-] TWINT requires Python version 3.6+.")
