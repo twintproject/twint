@@ -29,14 +29,14 @@ def check(args):
         if args.userid:
             error("Contradicting Args",
                   "--userid and -u cannot be used together.")
+    else:
+        if args.search is None:
+            error("Error", "Please use at least -u or -s.")
     if args.output is None:
         if args.csv:
             error("Error", "Please specify an output file (Example: -o file.csv).")
         elif args.json:
             error("Error", "Please specify an output file (Example: -o file.json).")
-    if args.hostname:
-        if args.Database is None or args.DB_user is None or args.DB_pwd is None:
-            error("Error", "Please specify database name, user and password")
 
 def loadUserList(ul, _type):
     """ Concatenate users
@@ -69,7 +69,8 @@ def initialize(args):
     c.Year = args.year
     c.Since = args.since
     c.Until = args.until
-    c.Fruit = args.fruit
+    c.Email = args.email
+    c.Phone = args.phone
     c.Verified = args.verified
     c.Store_csv = args.csv
     c.Store_json = args.json
@@ -77,16 +78,12 @@ def initialize(args):
     c.Limit = args.limit
     c.Count = args.count
     c.Stats = args.stats
-    c.hostname = args.hostname
     c.Database = args.database
-    c.DB_user = args.DB_user
-    c.DB_pwd = args.DB_pwd
     c.To = args.to
     c.All = args.all
     c.Essid = args.essid
     c.Format = args.format
     c.User_full = args.user_full
-    c.User_info = args.user_info
     c.Profile_full = args.profile_full
     c.Store_pandas = args.store_pandas
     c.Pandas_type = args.pandas_type
@@ -126,7 +123,8 @@ def options():
     ap.add_argument("--year", help="Filter Tweets before specified year.")
     ap.add_argument("--since", help="Filter Tweets sent since date (Example: 2017-12-27).")
     ap.add_argument("--until", help="Filter Tweets sent until date (Example: 2017-12-27).")
-    ap.add_argument("--fruit", help="Display 'low-hanging-fruit' Tweets.", action="store_true")
+    ap.add_argument("--email", help="Filter Tweets that might have email addresses", action="store_true")
+    ap.add_argument("--phone", help="Filter Tweets that might have phone numbers", action="store_true")
     ap.add_argument("--verified", help="Display Tweets only from verified users (Use with -s).",
                     action="store_true")
     ap.add_argument("--csv", help="Write as .csv file.", action="store_true")
@@ -138,10 +136,7 @@ def options():
                     action="store_true")
     ap.add_argument("--stats", help="Show number of replies, retweets, and likes.",
                     action="store_true")
-    ap.add_argument("--hostname", help="Store the mysql database host")
-    ap.add_argument("-db", "--database", help="Store Tweets in a sqlite3  or mysql database.")
-    ap.add_argument("--DB_user", help="Store the mysql database user")
-    ap.add_argument("--DB_pwd", help="Store the mysql database pwd")
+    ap.add_argument("-db", "--database", help="Store Tweets in a sqlite3 database.")
     ap.add_argument("--to", help="Search Tweets to a user.")
     ap.add_argument("--all", help="Search all Tweets associated with a user.")
     ap.add_argument("--followers", help="Scrape a person's followers.", action="store_true")
@@ -161,7 +156,6 @@ def options():
     ap.add_argument("--user-full",
                     help="Collect all user information (Use with followers or following only).",
                     action="store_true")
-    ap.add_argument("--user-info", help="Scrape user's info in tweet", action="store_true")
     ap.add_argument("--profile-full",
                     help="Slow, but effective method of collecting a user's Tweets and RT.",
                     action="store_true")

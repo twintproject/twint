@@ -74,20 +74,11 @@ def createIndex(config, instance, **scope):
                             "day": {"type": "integer"},
                             "hour": {"type": "integer"},
                             "link": {"type": "text"},
-                            "gif_url": {"type": "text"},
-                            "gif_thumb": {"type": "text"},
-                            "video_url": {"type": "text"},
-                            "video_thumb": {"type": "text"},
-                            "is_reply_to": {"type": "long"},
-                            "has_parent_tweet": {"type": "long"},
                             "retweet": {"type": "text"},
                             "essid": {"type": "keyword"},
                             "nlikes": {"type": "integer"},
                             "nreplies": {"type": "integer"},
                             "nretweets": {"type": "integer"},
-                            "is_quote_status": {"type": "long"},
-                            "quote_id": {"type": "long"},
-                            "quote_id_str": {"type": "text"},
                             "quote_url": {"type": "text"},
                             "search": {"type": "text"},
                             "near": {"type": "text"},
@@ -223,28 +214,19 @@ def Tweet(Tweet, config):
                 "day": day,
                 "hour": hour(Tweet.datetime),
                 "link": Tweet.link,
-                "gif_url": Tweet.gif_url,
-                "gif_thumb": Tweet.gif_thumb,
-                "video_url": Tweet.video_url,
-                "video_thumb": Tweet.video_thumb,
-                "is_reply_to": Tweet.is_reply_to,
-                "has_parent_tweet": Tweet.has_parent_tweet,
                 "retweet": Tweet.retweet,
                 "essid": config.Essid,
                 "nlikes": int(Tweet.likes_count),
                 "nreplies": int(Tweet.replies_count),
                 "nretweets": int(Tweet.retweets_count),
-                "is_quote_status": Tweet.is_quote_status,
-                "quote_id": Tweet.quote_id,
-                "quote_id_str": Tweet.quote_id_str,
                 "quote_url": Tweet.quote_url,
                 "search": str(config.Search),
                 "near": config.Near
                 }
             }
-    if config.Near:
+    if config.Near or config.Geo:
         if not _is_near_def:
-            _is_near_def = getLocation(config.Near, near=True)
+            _is_near_def = getLocation(config.Near + config.Geo, near=True)
         if _near:
             j_data["_source"].update({"geo_near": _near})
     if Tweet.place:

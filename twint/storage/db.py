@@ -1,6 +1,7 @@
-from datetime import datetime
 import sqlite3
 import sys
+import time
+import hashlib
 
 def Conn(database):
     if database:
@@ -40,8 +41,9 @@ def init(db):
                     verified integer not null,
                     profile_image_url text not null,
                     background_image text,
-                    date_update text not null,
-                    CONSTRAINT users_pk PRIMARY KEY (id)
+                    hex_dig  text not null,
+                    time_update integer not null,
+                    CONSTRAINT users_pk PRIMARY KEY (id, hex_dig)
                 );
             """
         cursor.execute(table_users)
@@ -68,22 +70,12 @@ def init(db):
                     name text default '',
                     profile_image_url text,
                     link text,
-                    gif_url text,
-                    gif_thumb text,
-                    video_url text,
-                    video_thumb text,
-                    is_reply_to integer,
-                    has_parent_tweet integer,
-                    in_reply_to_screen_name text defualt '',
-                    in_reply_to_status_id integer,
-                    in_reply_to_status_id_str text default '',
-                    in_reply_to_user_id integer,
-                    in_reply_to_user_id_str text default '',
-                    is_quote_status integer,
-                    quote_id integer,
-                    quote_id_str text,
+                    mentions text,
+                    hashtags text,
+                    urls text,
+                    photos text,
                     quote_url text,
-                    date_update text not null,
+                    time_update integer not null,
                     PRIMARY KEY (id)
                 );
         """
@@ -100,78 +92,6 @@ def init(db):
                 );
         """
         cursor.execute(table_retweets)
-
-        table_mentions = """
-            CREATE TABLE IF NOT EXISTS
-                mentions(
-                    tweet_id integer not null,
-                    id integer not null,
-                    id_str text not null,
-                    screen_name text not null,
-                    CONSTRAINT mentions_pk PRIMARY KEY(tweet_id,id),
-                    CONSTRAINT tweet_id_fk FOREIGN KEY(tweet_id) REFERENCES tweets(id)
-                    CONSTRAINT user_id_fk FOREIGN KEY(id) REFERENCES users(id)
-                );
-        """
-        cursor.execute(table_mentions)
-
-        table_replies = """
-            CREATE TABLE IF NOT EXISTS
-                replies(
-                    tweet_id integer not null,
-                    id integer not null,
-                    id_str text not null,
-                    screen_name text not null,
-                    CONSTRAINT replies_pk PRIMARY KEY(tweet_id,id),
-                    CONSTRAINT tweet_id_fk FOREIGN KEY(tweet_id) REFERENCES tweets(id)
-                    CONSTRAINT user_id_fk FOREIGN KEY(id) REFERENCES users(id)
-                );
-        """
-        cursor.execute(table_replies)
-
-        table_tags = """
-            CREATE TABLE IF NOT EXISTS
-                tags(
-                    tweet_id integer not null,
-                    id integer not null,
-                    id_str text not null,
-                    screen_name text not null,
-                    CONSTRAINT tags_pk PRIMARY KEY(tweet_id, id),
-                    CONSTRAINT tweet_id_fk FOREIGN KEY(tweet_id) REFERENCES tweets(id),
-                    CONSTRAINT user_id_fk FOREIGN KEY(id) REFERENCES users(id)
-                );
-        """
-        cursor.execute(table_tags)
-
-        table_hashtags = """
-            CREATE TABLE IF NOT EXISTS
-                hashtags(
-                    tweet_id integer not null,
-                    tag_name text not null,
-                    CONSTRAINT tweet_id_fk FOREIGN KEY(tweet_id) REFERENCES tweets(id)
-                );
-        """
-        cursor.execute(table_hashtags)
-
-        table_urls = """
-            CREATE TABLE IF NOT EXISTS
-                urls(
-                    tweet_id integer not null,
-                    url text not null,
-                    CONSTRAINT urls_fk FOREIGN KEY(tweet_id) REFERENCES tweets(id)
-                );
-        """
-        cursor.execute(table_urls)
-
-        table_photos = """
-            CREATE TABLE IF NOT EXISTS
-                photos(
-                    tweet_id integer not null,
-                    url text not null,
-                    CONSTRAINT photos_fk FOREIGN KEY(tweet_id) REFERENCES tweets(id)
-                );
-        """
-        cursor.execute(table_photos)
 
         table_favorites =  """
             CREATE TABLE IF NOT EXISTS
@@ -213,7 +133,7 @@ def init(db):
             CREATE TABLE IF NOT EXISTS
                 followers_names (
                     user text not null,
-                    date_update text not null,
+                    time_update integer not null,
                     follower text not null,
                     PRIMARY KEY (user, follower)
                 );
@@ -224,7 +144,7 @@ def init(db):
             CREATE TABLE IF NOT EXISTS
                 following_names (
                     user text not null,
-                    date_update text not null,
+                    time_update integer not null,
                     follows text not null,
                     PRIMARY KEY (user, follows)
                 );
@@ -253,9 +173,9 @@ def uTable(Followers):
 
 def follow(conn, Username, Followers, User):
     try:
-        date_time = str(datetime.now())
+        time_ms = round(time.time()*1000)
         cursor = conn.cursor()
-        entry = (User, date_time, Username,)
+        entry = (User, time_ms, Username,)
         table = fTable(Followers)
         query = f"INSERT INTO {table} VALUES(?,?,?)"
         cursor.execute(query, entry)
@@ -263,31 +183,27 @@ def follow(conn, Username, Followers, User):
     except sqlite3.IntegrityError:
         pass
 
-def user(conn, config,  User):
+def get_hash_id(conn, id):
+    cursor = conn.cursor()
+    cursor.execute('SELECT hex_dig FROM users WHERE id = ? LIMIT 1', (id,))
+    resultset = cursor.fetchall()
+    return resultset[0][0] if resultset else -1
+
+def user(conn, config, User):
     try:
-        date_time = str(datetime.now())
+        time_ms = round(time.time()*1000)
         cursor = conn.cursor()
-        entry = (int(User.id),
-                User.id,
-                User.name,
-                User.username,
-                User.bio,
-                User.location,
-                User.url,
-                User.join_date,
-                User.join_time,
-                User.tweets,
-                User.following,
-                User.followers,
-                User.likes,
-                User.media_count,
-                User.is_private,
-                User.is_verified,
-                User.avatar,
-                User.background_image,
-                date_time)
-        query = f"INSERT INTO users VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-        cursor.execute(query, entry)
+        user = [int(User.id), User.id, User.name, User.username, User.bio, User.location, User.url,User.join_date, User.join_time, User.tweets, User.following, User.followers, User.likes, User.media_count, User.is_private, User.is_verified, User.avatar, User.background_image]
+
+        hex_dig = hashlib.sha256(','.join(str(v) for v in user).encode()).hexdigest()
+        entry = tuple(user) + (hex_dig,time_ms,)
+        old_hash = get_hash_id(conn, User.id)
+
+        if old_hash == -1 or old_hash != hex_dig:
+            query = f"INSERT INTO users VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+            cursor.execute(query, entry)
+        else:
+            pass
 
         if config.Followers or config.Following:
             table = uTable(config.Followers)
@@ -298,15 +214,9 @@ def user(conn, config,  User):
     except sqlite3.IntegrityError:
         pass
 
-def get_user_id(conn, id):
-    cursor = conn.cursor()
-    cursor.execute('SELECT id FROM users WHERE id = ? LIMIT 1', (id,))
-    resultset = cursor.fetchall()
-    return resultset[0][0] if resultset else -1
-
 def tweets(conn, Tweet, config):
     try:
-        date_time = str(datetime.now())
+        time_ms = round(time.time()*1000)
         cursor = conn.cursor()
         entry = (Tweet.id,
                     Tweet.id_str,
@@ -327,53 +237,13 @@ def tweets(conn, Tweet, config):
                     Tweet.name,
                     Tweet.profile_image_url,
                     Tweet.link,
-                    Tweet.gif_url,
-                    Tweet.gif_thumb,
-                    Tweet.video_url,
-                    Tweet.video_thumb,
-                    Tweet.is_reply_to,
-                    Tweet.has_parent_tweet,
-                    Tweet.in_reply_to_screen_name,
-                    Tweet.in_reply_to_status_id,
-                    Tweet.in_reply_to_status_id_str,
-                    Tweet.in_reply_to_user_id,
-                    Tweet.in_reply_to_user_id_str,
-                    Tweet.is_quote_status,
-                    Tweet.quote_id,
-                    Tweet.quote_id_str,
+                    ",".join(Tweet.mentions),
+                    ",".join(Tweet.hashtags),
+                    ",".join(Tweet.urls),
+                    ",".join(Tweet.photos),
                     Tweet.quote_url,
-                    date_time)
-        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
-
-        if len(Tweet.mentions) > 0:
-            query = 'INSERT INTO mentions VALUES(?, ?, ?, ?)'
-            for mention in Tweet.mentions:
-                cursor.execute(query, (Tweet.id, mention["id"], mention["id_str"], mention["screen_name"]))
-
-        if len(Tweet.replies) > 0:
-            query = 'INSERT INTO replies VALUES(?, ?, ?, ?)'
-            for reply in Tweet.replies:
-                cursor.execute(query, (Tweet.id, reply["id"], reply["id_str"], reply["screen_name"]))
-
-        if len(Tweet.tags) > 0:
-            query = 'INSERT INTO tags VALUES(?, ?, ?, ?)'
-            for tag in Tweet.tags:
-                cursor.execute(query, (Tweet.id, tag["id"], tag["id_str"], tag["screen_name"]))
-
-        if len(Tweet.hashtags) > 0:
-            query = 'INSERT OR IGNORE INTO hashtags (tweet_id, tag_name) VALUES(?,?)'
-            for tag in Tweet.hashtags:
-                cursor.execute(query, (Tweet.id, tag))
-
-        if len(Tweet.urls) > 0:
-            query = 'INSERT INTO urls VALUES(?, ?)'
-            for url in Tweet.urls:
-                cursor.execute(query, (Tweet.id, url))
-
-        if len(Tweet.photos) > 0:
-            query = 'INSERT INTO photos VALUES(?, ?)'
-            for photo in Tweet.photos:
-                cursor.execute(query, (Tweet.id, photo))
+                    time_ms)
+        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
 
         if config.Favorites:
             query = 'INSERT INTO favorites VALUES(?,?)'

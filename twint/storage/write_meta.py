@@ -11,8 +11,6 @@ def tweetData(t):
             "name": t.name,
             "place": t.place,
             "tweet": t.tweet,
-            "tags": t.tags,
-            "replies": t.replies,
             "mentions": t.mentions,
             "urls": t.urls,
             "photos": t.photos,
@@ -23,15 +21,7 @@ def tweetData(t):
             "hashtags": t.hashtags,
             "link": t.link,
             "retweet": t.retweet,
-            "gif_url": t.gif_url,
-            "gif_thumb": t.gif_thumb,
-            "video_url": t.video_url,
-            "video_thumb": t.video_thumb,
-            "is_quote_status": t.is_quote_status,
-            "quote_id": t.quote_id,
-            "quote_url": t.quote_url,
-            "is_reply_to": t.is_reply_to,
-            "has_parent_tweet": t.has_parent_tweet
+            "quote_url": t.quote_url
             }
     return data
 
@@ -48,8 +38,6 @@ def tweetFieldnames():
             "name",
             "place",
             "tweet",
-            "tags",
-            "replies",
             "mentions",
             "urls",
             "photos",
@@ -60,15 +48,7 @@ def tweetFieldnames():
             "hashtags",
             "link",
             "retweet",
-            "gif_url",
-            "gif_thumb",
-            "video_url",
-            "video_thumb",
-            "is_quote_status",
-            "quote_id",
-            "quote_url",
-            "is_reply_to",
-            "has_parent_tweet"
+            "quote_url"
             ]
     return fieldnames
 

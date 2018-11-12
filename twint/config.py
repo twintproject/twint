@@ -2,7 +2,7 @@ class Config:
     Username = None
     User_id = None
     Search = None
-    Geo = None
+    Geo = ""
     Location = False
     Near = None
     Lang = None
@@ -12,7 +12,8 @@ class Config:
     Year = None
     Since = None
     Until = None
-    Fruit = False
+    Email = False
+    Phone = False
     Verified = False
     Store_csv = False
     Store_json = False
@@ -33,7 +34,6 @@ class Config:
     Favorites = False
     TwitterSearch = False
     User_full = False
-    User_info = False
     Profile_full = False
     Store_object = False
     Store_pandas = False

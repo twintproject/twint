@@ -25,29 +25,29 @@ Some of the benefits of using Twint vs Twitter API:
 ## Installing
 
 ### Stable version
-**Pip:**    
+**Pip:**
 ```bash
 pip3 install twint
-``` 
+```
 
-**Pipenv**:      
+**Pipenv**:
 ```bash
 pipenv install twint
 ```
 
 ### Development version
-**Git:**    
+**Git:**
 ```bash
 git clone https://github.com/twintproject/twint.git
 pip3 install -r requirements.txt
 ```
 
-**Pip:**        
+**Pip:**
 ```bash
 pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@origin/master#egg=twint
-```    
+```
 
-**Pipenv**:    
+**Pipenv**:
 ```bash
 pipenv install -e git+https://github.com/twintproject/twint.git#egg=twint
 ```
@@ -62,7 +62,7 @@ A few simple examples to help you understand the basics:
 - `twint -u username --since 2015-12-20` - Collect Tweets that were tweeted since 2015-12-20.
 - `twint -u username -o file.txt` - Scrape Tweets and save to file.txt.
 - `twint -u username -o file.csv --csv` - Scrape Tweets and save as a csv file.
-- `twint -u username --fruit` - Show Tweets with low-hanging fruit.
+- `twint -u username --email --phone` - Show Tweets that might have phone numbers or email addresses.
 - `twint -s "Donald Trump" --verified` - Display Tweets by verified users that Tweeted about Donald Trump.
 - `twint -g="48.880048,2.385939,1km" -o file.csv --csv` - Scrape Tweets from a radius of 1km around a place in Paris and export them to a csv file.
 - `twint -u username -es localhost:9200` - Output Tweets to Elasticsearch
