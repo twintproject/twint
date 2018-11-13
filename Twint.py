@@ -22,7 +22,7 @@ def error(_error, message):
 def check(args):
     """ Error checking
     """
-    if args.username is not None:
+    if args.username is not None or args.userlist:
         if args.verified:
             error("Contradicting Args",
                   "Please use --verified in combination with -s.")
