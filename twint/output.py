@@ -99,9 +99,6 @@ async def checkData(tweet, location, config, conn):
         if config.Elasticsearch:
             elasticsearch.Tweet(tweet, config)
 
-        if config.Store_object:
-            tweets_object.append(tweet) #twint.tweet.tweet
-
         _output(tweet, output, config)
 
 async def Tweets(tweets, location, config, conn, url=''):
