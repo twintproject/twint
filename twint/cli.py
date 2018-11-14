@@ -11,7 +11,10 @@ Copyright (c) 2018 Cody Zacharias
 import sys
 import os
 import argparse
-import twint
+
+from . import run
+from . import config
+from . import storage
 
 def error(_error, message):
     """ Print errors to stdout
@@ -55,7 +58,7 @@ def loadUserList(ul, _type):
 def initialize(args):
     """ Set default values for config from args
     """
-    c = twint.Config()
+    c = config.Config()
     c.Username = args.username
     c.User_id = args.userid
     c.Search = args.search
@@ -193,7 +196,7 @@ def main():
     check(args)
 
     if args.pandas_clean:
-        twint.storage.panda.clean()
+        storage.panda.clean()
 
     c = initialize(args)
 
@@ -201,7 +204,7 @@ def main():
         c.Query = loadUserList(args.userlist, "search")
 
     if args.pandas_clean:
-        twint.storage.panda.clean()
+        storage.panda.clean()
 
     if args.favorites:
         if args.userlist:
@@ -209,47 +212,47 @@ def main():
             for _user in _userlist:
                 args.username = _user
                 c = initialize(args)
-                twint.run.Favorites(c)
+                run.Favorites(c)
         else:
-            twint.run.Favorites(c)
+            run.Favorites(c)
     elif args.following:
         if args.userlist:
             _userlist = loadUserList(args.userlist, "following")
             for _user in _userlist:
                 args.username = _user
                 c = initialize(args)
-                twint.run.Following(c)
+                run.Following(c)
         else:
-            twint.run.Following(c)
+            run.Following(c)
     elif args.followers:
         if args.userlist:
             _userlist = loadUserList(args.userlist, "followers")
             for _user in _userlist:
                 args.username = _user
                 c = initialize(args)
-                twint.run.Followers(c)
+                run.Followers(c)
         else:
-            twint.run.Followers(c)
+            run.Followers(c)
     elif args.retweets or args.profile_full:
         if args.userlist:
             _userlist = loadUserList(args.userlist, "profile")
             for _user in _userlist:
                 args.username = _user
                 c = initialize(args)
-                twint.run.Profile(c)
+                run.Profile(c)
         else:
-            twint.run.Profile(c)
+            run.Profile(c)
     elif args.user_full:
         if args.userlist:
             _userlist = loadUserList(args.userlist, "userlist")
             for _user in _userlist:
                 args.username = _user
                 c = initialize(args)
-                twint.run.Lookup(c)
+                run.Lookup(c)
         else:
-            twint.run.Lookup(c)
+            run.Lookup(c)
     else:
-        twint.run.Search(c)
+        run.Search(c)
 
 def run_as_command():
     version = ".".join(str(v) for v in sys.version_info[:2])
