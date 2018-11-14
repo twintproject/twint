@@ -3,7 +3,6 @@ from setuptools import setup
 import io
 import os
 import sys
-import shutil
 
 # Package meta-data
 NAME = 'twint'
@@ -45,7 +44,7 @@ setup(
 	packages=['twint', 'twint.storage'],
 	entry_points={
 		'console_scripts':[
-			'twint = twint.twint:run_as_command',
+			'twint = twint.cli:run_as_command',
 		],
 	},
 	install_requires=REQUIRED,

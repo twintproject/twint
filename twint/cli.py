@@ -108,7 +108,7 @@ def initialize(args):
 def options():
     """ Parse arguments
     """
-    ap = argparse.ArgumentParser(prog="Twint.py",
+    ap = argparse.ArgumentParser(prog="twint",
                                  usage="python3 %(prog)s [options]",
                                  description="TWINT - An Advanced Twitter Scraping Tool.")
     ap.add_argument("-u", "--username", help="User's Tweets you want to scrape.")
