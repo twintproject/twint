@@ -70,14 +70,11 @@ def _output(obj, output, config, **extra):
     if config.Elasticsearch:
         print("", end=".", flush=True)
     else:
-        if config.Store_object:
-            tweets_object.append(obj)
-        else:
-            if not config.Hide_output:
-                try:
-                    print(output)
-                except UnicodeEncodeError:
-                    print("unicode error [x] output._output")
+        if not config.Hide_output:
+            try:
+                print(output)
+            except UnicodeEncodeError:
+                print("unicode error [x] output._output")
 
 async def checkData(tweet, location, config, conn):
     usernames = []
@@ -96,11 +93,11 @@ async def checkData(tweet, location, config, conn):
         if config.Pandas:
             panda.update(tweet, config)
 
+        if config.Store_object:
+            tweets_object.append(tweet)
+
         if config.Elasticsearch:
             elasticsearch.Tweet(tweet, config)
-
-        if config.Store_object:
-            tweets_object.append(tweet) #twint.tweet.tweet
 
         _output(tweet, output, config)
 
