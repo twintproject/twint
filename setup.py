@@ -42,6 +42,11 @@ setup(
 	python_requires=REQUIRES_PYTHON,
 	url=URL,
 	packages=['twint', 'twint.storage'],
+	entry_points={
+		'console_scripts':[
+			'twint = twint.cli:run_as_command',
+		],
+	},
 	install_requires=REQUIRED,
 	license='MIT',
 	classifiers=[
