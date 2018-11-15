@@ -55,26 +55,26 @@ pipenv install -e git+https://github.com/twintproject/twint.git#egg=twint
 ## CLI Basic Examples and Combos
 A few simple examples to help you understand the basics:
 
-- `python3 Twint.py -u username` - Scrape all the Tweets from *user*'s timeline.
-- `python3 Twint.py -u username -s pineapple` - Scrape all Tweets from the *user*'s timeline containing _pineapple_.
-- `python3 Twint.py -s pineapple` - Collect every Tweet containing *pineapple* from everyone's Tweets.
-- `python3 Twint.py -u username --year 2014` - Collect Tweets that were tweeted **before** 2014.
-- `python3 Twint.py -u username --since 2015-12-20` - Collect Tweets that were tweeted since 2015-12-20.
-- `python3 Twint.py -u username -o file.txt` - Scrape Tweets and save to file.txt.
-- `python3 Twint.py -u username -o file.csv --csv` - Scrape Tweets and save as a csv file.
-- `python3 Twint.py -u username --email --phone` - Show Tweets that might have phone numbers or email addresses.
-- `python3 Twint.py -s "Donald Trump" --verified` - Display Tweets by verified users that Tweeted about Donald Trump.
-- `python3 Twint.py -g="48.880048,2.385939,1km" -o file.csv --csv` - Scrape Tweets from a radius of 1km around a place in Paris and export them to a csv file.
-- `python3 Twint.py -u username -es localhost:9200` - Output Tweets to Elasticsearch
-- `python3 Twint.py -u username -o file.json --json` - Scrape Tweets and save as a json file.
-- `python3 Twint.py -u username --database tweets.db` - Save Tweets to a SQLite database.
-- `python3 Twint.py -u username --followers` - Scrape a Twitter user's followers.
-- `python3 Twint.py -u username --following` - Scrape who a Twitter user follows.
-- `python3 Twint.py -u username --favorites` - Collect all the Tweets a user has favorited.
-- `python3 Twint.py -u username --following --user-full` - Collect full user information a person follows
-- `python3 Twint.py -u username --profile-full` - Use a slow, but effective method to gather Tweets from a user's profile (Gathers ~3200 Tweets, Including Retweets).
-- `python3 Twint.py -u username --retweets` - Use a quick method to gather the last 900 Tweets (that includes retweets) from a user's profile.
-- `python3 Twint.py -u username --resume 10940389583058` - Resume a search starting from the specified Tweet ID.
+- `twint -u username` - Scrape all the Tweets from *user*'s timeline.
+- `twint -u username -s pineapple` - Scrape all Tweets from the *user*'s timeline containing _pineapple_.
+- `twint -s pineapple` - Collect every Tweet containing *pineapple* from everyone's Tweets.
+- `twint -u username --year 2014` - Collect Tweets that were tweeted **before** 2014.
+- `twint -u username --since 2015-12-20` - Collect Tweets that were tweeted since 2015-12-20.
+- `twint -u username -o file.txt` - Scrape Tweets and save to file.txt.
+- `twint -u username -o file.csv --csv` - Scrape Tweets and save as a csv file.
+- `twint -u username --email --phone` - Show Tweets that might have phone numbers or email addresses.
+- `twint -s "Donald Trump" --verified` - Display Tweets by verified users that Tweeted about Donald Trump.
+- `twint -g="48.880048,2.385939,1km" -o file.csv --csv` - Scrape Tweets from a radius of 1km around a place in Paris and export them to a csv file.
+- `twint -u username -es localhost:9200` - Output Tweets to Elasticsearch
+- `twint -u username -o file.json --json` - Scrape Tweets and save as a json file.
+- `twint -u username --database tweets.db` - Save Tweets to a SQLite database.
+- `twint -u username --followers` - Scrape a Twitter user's followers.
+- `twint -u username --following` - Scrape who a Twitter user follows.
+- `twint -u username --favorites` - Collect all the Tweets a user has favorited.
+- `twint -u username --following --user-full` - Collect full user information a person follows
+- `twint -u username --profile-full` - Use a slow, but effective method to gather Tweets from a user's profile (Gathers ~3200 Tweets, Including Retweets).
+- `twint -u username --retweets` - Use a quick method to gather the last 900 Tweets (that includes retweets) from a user's profile.
+- `twint -u username --resume 10940389583058` - Resume a search starting from the specified Tweet ID.
 
 More detail about the commands and options are located in the [wiki](https://github.com/twintproject/twint/wiki/Commands)
 
@@ -147,25 +147,41 @@ Twitter can shadow-ban accounts, which means that their tweets will not be avail
 
 > To get only follower usernames/following usernames
 
-`python Twint.py -u username --followers`
+`twint -u username --followers`
 
-`python Twint.py -u username --following`
+`twint -u username --following`
 
 > To get user info of followers/following users
 
-`python Twint.py -u username --followers --user-full`
+`twint -u username --followers --user-full`
 
-`python Twint.py -u username --following --user-full`
+`twint -u username --following --user-full`
 
 #### userlist
 
 > To get only user info of user
 
-`python Twint.py -u username --user-full`
+`twint -u username --user-full`
 
 > To get user info of users from a userlist
 
-`python Twint.py --userlist inputlist --user-full`
+`twint --userlist inputlist --user-full`
+
+#### Only tweets without user info
+
+> To get only tweets without user info
+
+`twint -u username --profile-full`  or `set c.User_info = False`
+
+`twint -u username`  or `set c.User_info = False`
+
+#### Tweets with user info works ONLY with a Database (currently)
+
+> To get tweets along with user info of users mentioned in tweet/replied to
+
+`twint -u username --user-info -db database.db`
+
+`twint -u username --profile-full --user-info -db database.db`
 
 ## Contact
 
