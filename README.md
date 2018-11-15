@@ -134,10 +134,6 @@ We are developing a Twint Desktop App.
 ![4](https://i.imgur.com/DzcfIgL.png)
 
 ## FAQ
-> While scraping tweets and saving them to a database, I want also save users infos
-
-Pass `--user-info` to CLI, or specify `c.User_info = True` if you are using Twint as module.
-
 > I tried scraping tweets from a user, I know that they exist but I'm not getting them
 
 Twitter can shadow-ban accounts, which means that their tweets will not be available via search. To solve this, pass `--profile-full` if you are using Twint via CLI or, if are using Twint as module, add `config.Profile_full = True`. Please note that this process will be quite slow.
@@ -166,22 +162,6 @@ Twitter can shadow-ban accounts, which means that their tweets will not be avail
 > To get user info of users from a userlist
 
 `twint --userlist inputlist --user-full`
-
-#### Only tweets without user info
-
-> To get only tweets without user info
-
-`twint -u username --profile-full`  or `set c.User_info = False`
-
-`twint -u username`  or `set c.User_info = False`
-
-#### Tweets with user info works ONLY with a Database (currently)
-
-> To get tweets along with user info of users mentioned in tweet/replied to
-
-`twint -u username --user-info -db database.db`
-
-`twint -u username --profile-full --user-info -db database.db`
 
 ## Contact
 
