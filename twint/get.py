@@ -137,11 +137,10 @@ async def User(url, config, conn, user_id = False):
         response = await Request(url)
         soup = BeautifulSoup(response, "html.parser")
         await Users(soup, config, conn)
+        if user_id:
+            return int(inf(soup, "id"))
     except Exception as e:
         print(str(e) + " [x] get.User")
-
-    if user_id:
-        return int(inf(soup, "id"))
 
 def Limit(Limit, count):
     #loggin.info("[<] " + str(datetime.now()) + ':: get+Limit')
