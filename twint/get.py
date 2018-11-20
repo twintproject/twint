@@ -16,8 +16,8 @@ from .user import inf
 
 #import logging
 
-async def RequestUrl(config, init, headers = []):
-    #loggin.info("[<] " + str(datetime.now()) + ':: get+requestURL')
+
+def get_connector(config):
     _connector = None
     if config.Proxy_host is not None:
         if config.Proxy_host.lower() == "tor":
@@ -46,6 +46,13 @@ async def RequestUrl(config, init, headers = []):
         if config.Proxy_port or config.Proxy_type:
             print("Error: Please specify --proxy-host, --proxy-port, and --proxy-type")
             sys.exit(1)
+
+    return _connector
+
+
+async def RequestUrl(config, init, headers = []):
+    #loggin.info("[<] " + str(datetime.now()) + ':: get+requestURL')
+    _connector = get_connector(config)
 
     if config.Profile:
         if config.Profile_full:
@@ -133,15 +140,15 @@ async def Tweet(url, config, conn):
 
 async def User(url, config, conn, user_id = False):
     #loggin.info("[<] " + str(datetime.now()) + ':: get+User')
+    _connector = get_connector(config)
     try:
-        response = await Request(url)
+        response = await Request(url, connector=_connector)
         soup = BeautifulSoup(response, "html.parser")
         await Users(soup, config, conn)
+        if user_id:
+            return int(inf(soup, "id"))
     except Exception as e:
         print(str(e) + " [x] get.User")
-
-    if user_id:
-        return int(inf(soup, "id"))
 
 def Limit(Limit, count):
     #loggin.info("[<] " + str(datetime.now()) + ':: get+Limit')
