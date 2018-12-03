@@ -82,8 +82,8 @@ def createIndex(config, instance, **scope):
                             "quote_url": {"type": "text"},
                             "search": {"type": "text"},
                             "near": {"type": "text"},
-                            "geo_near": {"type": "geopoint"},
-                            "geo_tweet": {"type": "geopoint"}
+                            "geo_near": {"type": "geo_point"},
+                            "geo_tweet": {"type": "geo_point"}
                             }
                         }
                     },
@@ -136,7 +136,7 @@ def createIndex(config, instance, **scope):
                             "avatar": {"type": "text"},
                             "background_image": {"type": "text"},
                             "session": {"type": "keyword"},
-                            "geo_user": {"type": "geopoint"}
+                            "geo_user": {"type": "geo_point"}
                             }
                         }
                     },
