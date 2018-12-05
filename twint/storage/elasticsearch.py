@@ -226,13 +226,13 @@ def Tweet(Tweet, config):
             }
     if config.Near or config.Geo:
         if not _is_near_def:
-            _geo = ""
-            _near = ""
+            __geo = ""
+            __near = ""
             if config.Geo:
-                _geo = config.Geo
+                __geo = config.Geo
             if config.Near:
-                _near = config.Near
-            _is_near_def = getLocation(_near + _geo, near=True)
+                __near = config.Near
+            _is_near_def = getLocation(__near + __geo, near=True)
         if _near:
             j_data["_source"].update({"geo_near": _near})
     if Tweet.place:
