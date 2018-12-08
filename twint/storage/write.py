@@ -34,35 +34,45 @@ def createDirIfMissing(dirname):
 
 def Csv(obj, config):
     _obj_type = obj.__class__.__name__
-    if _obj_type == "str": _obj_type = "username"
-    Output_csv = {"tweet": config.Output.split(".")[0] + "/tweets.csv",
-                  "user": config.Output.split(".")[0] + "/users.csv",
-                  "username": config.Output.split(".")[0] + "/usernames.csv"}
+    base = config.Output
+
+    if _obj_type == "str":
+        _obj_type = "username"
+    Output_json = {"tweet": "/tweets.csv",
+                  "user": "/users.csv",
+                  "username": "/usernames.csv"}
 
     fieldnames, row = struct(obj, config.Custom[_obj_type], _obj_type)
 
-    createDirIfMissing(config.Output.split(".")[0])
+    if len(base.split('.')) == 1:
+        createDirIfMissing(base)
+        base += Output_json[_obj_type]
 
-    if not (os.path.exists(Output_csv[_obj_type])):
-        with open(Output_csv[_obj_type], "w", newline='', encoding="utf-8") as csv_file:
+    if not (os.path.exists(base)):
+        with open(base, "w", newline='', encoding="utf-8") as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             writer.writeheader()
 
-    with open(Output_csv[_obj_type], "a", newline='', encoding="utf-8") as csv_file:
+    with open(base, "a", newline='', encoding="utf-8") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writerow(row)
 
 def Json(obj, config):
     _obj_type = obj.__class__.__name__
-    if _obj_type == "str": _obj_type = "username"
-    Output_json = {"tweet": config.Output.split(".")[0] + "/tweets.json",
-                  "user": config.Output.split(".")[0] + "/users.json",
-                  "username": config.Output.split(".")[0] + "/usernames.json"}
+    base = config.Output
+
+    if _obj_type == "str":
+        _obj_type = "username"
+    Output_json = {"tweet": "/tweets.json",
+                  "user": "/users.json",
+                  "username": "/usernames.json"}
 
     null, data = struct(obj, config.Custom[_obj_type], _obj_type)
 
-    createDirIfMissing(config.Output.split(".")[0])
+    if len(base.split('.')) == 1:
+        createDirIfMissing(base)
+        base += Output_json[_obj_type]
 
-    with open(Output_json[_obj_type], "a", newline='', encoding="utf-8") as json_file:
+    with open(base, "a", newline='', encoding="utf-8") as json_file:
         json.dump(data, json_file, ensure_ascii=False)
         json_file.write("\n")
