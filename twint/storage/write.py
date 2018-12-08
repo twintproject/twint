@@ -3,6 +3,20 @@ import csv
 import json
 import os
 
+def outputExt(objType, fType):
+    if objType == "str":
+        objType = "username"
+    outExt = f"/{objType}s.{fType}"
+
+    return outExt
+
+def addExt(base, objType, fType):
+    if len(base.split('.')) == 1:
+        createDirIfMissing(base)
+        base += outputExt(objType, fType)
+
+    return base
+
 def Text(entry, f):
     print(entry, file=open(f, "a", encoding="utf-8"))
 
@@ -34,19 +48,9 @@ def createDirIfMissing(dirname):
 
 def Csv(obj, config):
     _obj_type = obj.__class__.__name__
-    base = config.Output
-
-    if _obj_type == "str":
-        _obj_type = "username"
-    Output_json = {"tweet": "/tweets.csv",
-                  "user": "/users.csv",
-                  "username": "/usernames.csv"}
-
     fieldnames, row = struct(obj, config.Custom[_obj_type], _obj_type)
 
-    if len(base.split('.')) == 1:
-        createDirIfMissing(base)
-        base += Output_json[_obj_type]
+    base = addExt(config.Output, _obj_type, "csv")
 
     if not (os.path.exists(base)):
         with open(base, "w", newline='', encoding="utf-8") as csv_file:
@@ -59,19 +63,9 @@ def Csv(obj, config):
 
 def Json(obj, config):
     _obj_type = obj.__class__.__name__
-    base = config.Output
-
-    if _obj_type == "str":
-        _obj_type = "username"
-    Output_json = {"tweet": "/tweets.json",
-                  "user": "/users.json",
-                  "username": "/usernames.json"}
-
     null, data = struct(obj, config.Custom[_obj_type], _obj_type)
 
-    if len(base.split('.')) == 1:
-        createDirIfMissing(base)
-        base += Output_json[_obj_type]
+    base = addExt(config.Output, _obj_type, "json")
 
     with open(base, "a", newline='', encoding="utf-8") as json_file:
         json.dump(data, json_file, ensure_ascii=False)
