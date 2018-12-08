@@ -43,12 +43,14 @@ def _output(obj, output, config, **extra):
             obj = obj.lower()
         elif str(type(obj)) == "<class 'twint.user.user'>":
             pass
-        else:
+        elif str(type(obj)) == "<class 'twint.tweet.tweet'>":
             obj.username = obj.username.lower()
             for i in range(len(obj.mentions)):
                 obj.mentions[i] = obj.mentions[i].lower()
             for i in range(len(obj.hashtags)):
                 obj.hashtags[i] = obj.hashtags[i].lower()
+        else:
+            obj = ""
     if config.Output != None:
         if config.Store_csv:
             try :
