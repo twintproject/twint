@@ -41,14 +41,17 @@ def _output(obj, output, config, **extra):
     if config.Lowercase:
         if isinstance(obj, str):
             obj = obj.lower()
-        elif str(type(obj)) == "<class 'twint.user.user'>":
+        elif obj.__class__.__name__ == "user":
             pass
-        else:
+        elif obj.__class__.__name__ == "tweet":
             obj.username = obj.username.lower()
             for i in range(len(obj.mentions)):
                 obj.mentions[i] = obj.mentions[i].lower()
             for i in range(len(obj.hashtags)):
                 obj.hashtags[i] = obj.hashtags[i].lower()
+        else:
+            print("[x] Hidden tweet found, account suspended due to violation of TOS")
+            return
     if config.Output != None:
         if config.Store_csv:
             try :
