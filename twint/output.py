@@ -6,11 +6,12 @@ from .storage import db, elasticsearch, write, panda
 
 #import logging
 
-_duplicate_dict = {}
 follow_object = {}
-
 tweets_object = []
 user_object = []
+
+author_list = {''}
+author_list.pop()
 
 _follow_list = []
 
@@ -45,6 +46,7 @@ def _output(obj, output, config, **extra):
             pass
         elif obj.__class__.__name__ == "tweet":
             obj.username = obj.username.lower()
+            author_list.update({obj.username})
             for i in range(len(obj.mentions)):
                 obj.mentions[i] = obj.mentions[i].lower()
             for i in range(len(obj.hashtags)):
