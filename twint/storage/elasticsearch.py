@@ -236,7 +236,9 @@ def Tweet(Tweet, config):
         if _near:
             j_data["_source"].update({"geo_near": _near})
     if Tweet.place:
-        j_data["_source"].update({"geo_tweet": getLocation(Tweet.place)})
+        _t_place = getLocation(Tweet.place)
+        if _t_place:
+            j_data["_source"].update({"geo_tweet": getLocation(Tweet.place)})
     actions.append(j_data)
 
     es = Elasticsearch(config.Elasticsearch)
