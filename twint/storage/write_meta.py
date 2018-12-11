@@ -21,7 +21,8 @@ def tweetData(t):
             "hashtags": t.hashtags,
             "link": t.link,
             "retweet": t.retweet,
-            "quote_url": t.quote_url
+            "quote_url": t.quote_url,
+            "video": t.video
             }
     return data
 
@@ -48,7 +49,8 @@ def tweetFieldnames():
             "hashtags",
             "link",
             "retweet",
-            "quote_url"
+            "quote_url",
+            "video"
             ]
     return fieldnames
 
