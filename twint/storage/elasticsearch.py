@@ -80,6 +80,7 @@ def createIndex(config, instance, **scope):
                             "nreplies": {"type": "integer"},
                             "nretweets": {"type": "integer"},
                             "quote_url": {"type": "text"},
+                            "video": {"type":"integer"},
                             "search": {"type": "text"},
                             "near": {"type": "text"},
                             "geo_near": {"type": "geo_point"},
@@ -220,6 +221,7 @@ def Tweet(Tweet, config):
                 "nreplies": int(Tweet.replies_count),
                 "nretweets": int(Tweet.retweets_count),
                 "quote_url": Tweet.quote_url,
+                "video": Tweet.video,
                 "search": str(config.Search),
                 "near": config.Near
                 }
