@@ -75,6 +75,7 @@ def init(db):
                     urls text,
                     photos text,
                     quote_url text,
+                    video integer,
                     time_update integer not null,
                     PRIMARY KEY (id)
                 );
@@ -242,8 +243,9 @@ def tweets(conn, Tweet, config):
                     ",".join(Tweet.urls),
                     ",".join(Tweet.photos),
                     Tweet.quote_url,
+                    Tweet.video,
                     time_ms)
-        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
+        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
 
         if config.Favorites:
             query = 'INSERT INTO favorites VALUES(?,?)'

@@ -82,6 +82,7 @@ def Tweet(tw, location, config):
     t.mentions = getMentions(tw)
     t.urls = [link.attrs["data-expanded-url"] for link in tw.find_all('a',{'class':'twitter-timeline-link'}) if link.has_attr("data-expanded-url")]
     t.photos = [photo_node.attrs['data-image-url'] for photo_node in tw.find_all("div", "AdaptiveMedia-photoContainer")]
+    t.video = 1 if tw.find_all("div", "AdaptiveMedia-video") != [] else 0
     t.tweet = getText(tw)
     t.location = location
     t.hashtags = [hashtag.text for hashtag in tw.find_all("a","twitter-hashtag")]
