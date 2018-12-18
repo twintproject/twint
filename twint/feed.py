@@ -11,8 +11,8 @@ def Follow(response):
     cursor = soup.find_all("div", "w-button-more")
     try:
         cursor = findall(r'cursor=(.*?)">', str(cursor))[0]
-    except Exception as e:
-        print(str(e) + " [x] feed.Follow")
+    except IndexError:
+        pass
 
     return follow, cursor
 
