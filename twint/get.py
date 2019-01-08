@@ -32,7 +32,7 @@ def get_connector(config):
                 _type = SocksVer.SOCKS5
             elif config.Proxy_type.lower() == "socks4":
                 _type = SocksVer.SOCKS4
-            elif config.Proxy_type.lower() == "http": #aiohttp no works with HTTPS proxy, only HTTP. Ref https://github.com/aio-libs/aiohttp/issues/845
+            elif config.Proxy_type.lower() == "http":
                 global httpproxy
                 httpproxy = "http://" + config.Proxy_host + ":" + str(config.Proxy_port)
                 return _connector
