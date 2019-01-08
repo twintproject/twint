@@ -16,6 +16,7 @@ from .user import inf
 
 #import logging
 
+httpproxy = None
 
 def get_connector(config):
     _connector = None
@@ -31,8 +32,12 @@ def get_connector(config):
                 _type = SocksVer.SOCKS5
             elif config.Proxy_type.lower() == "socks4":
                 _type = SocksVer.SOCKS4
+            elif config.Proxy_type.lower() == "http":
+                global httpproxy
+                httpproxy = "http://" + config.Proxy_host + ":" + str(config.Proxy_port)
+                return _connector
             else:
-                print("Error: Proxy types allowed are: socks5 and socks4.")
+                print("Error: Proxy types allowed are: http, socks5 and socks4. No https.")
                 sys.exit(1)
             _connector = SocksConnector(
                 socks_ver=_type,
@@ -109,7 +114,7 @@ async def Request(url, connector=None, params=[], headers=[]):
 async def Response(session, url, params=[]):
     #loggin.info("[<] " + str(datetime.now()) + ':: get+Response')
     with timeout(30):
-        async with session.get(url, ssl=False, params=params) as response:
+        async with session.get(url, ssl=False, params=params, proxy=httpproxy) as response:
             return await response.text()
 
 async def RandomUserAgent():
