@@ -125,7 +125,7 @@ class Twint:
         #if self.config.Username is not None:
         #    url = f"http://twitter.com/{self.config.Username}?lang=en"
         #    self.config.User_id = await get.User(url, self.config, self.conn, True)
-        # TODO: fix the bug
+        # TODO: keep this or not!?
 
         if self.config.TwitterSearch and self.config.Since and self.config.Until:
             _days = timedelta(days=int(self.config.Timedelta))
