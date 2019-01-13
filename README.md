@@ -165,4 +165,6 @@ Twitter can shadow-ban accounts, which means that their tweets will not be avail
 
 ## Contact
 
+Follow [@TWINTio](https://twitter.com/TWINTio) on Twitter to get the latest news and updates!
+
 If you have any questions, want to join in on discussions, or need extra help, you are welcome to join our OSINT focused [Slack server](https://join.slack.com/t/os-int/shared_invite/enQtNDI1MDA2OTg4MDg0LWUxYWNmMjI2MGFlMTZjZjhmOWY1ZTVhNmFiMDU2NzY1MzhiMDI2ZTZmYmEwY2MxY2YzMGFkZTY2MTcxZWI2ODM).
