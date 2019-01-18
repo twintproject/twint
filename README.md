@@ -2,7 +2,7 @@
 ![2](https://i.imgur.com/iaH3s7z.png)
 ![3](https://i.imgur.com/hVeCrqL.png)
 
-[![PyPI](https://img.shields.io/pypi/v/twint.svg)](https://pypi.org/project/twint/) [![Build Status](https://travis-ci.org/haccer/twint.svg?branch=master)](https://travis-ci.org/haccer/twint/) [![Python 3.5|3.6](https://img.shields.io/badge/Python-3.5%2F3.6-blue.svg)](https://www.python.org/download/releases/3.0/) [![GitHub license](https://img.shields.io/github/license/haccer/tweep.svg)](https://github.com/haccer/tweep/blob/master/LICENSE) ![](https://img.shields.io/twitter/follow/twintio.svg?label=Follow&style=social) 
+[![PyPI](https://img.shields.io/pypi/v/twint.svg)](https://pypi.org/project/twint/) [![Build Status](https://travis-ci.org/haccer/twint.svg?branch=master)](https://travis-ci.org/haccer/twint/) [![Python 3.5|3.6](https://img.shields.io/badge/Python-3.5%2F3.6-blue.svg)](https://www.python.org/download/releases/3.0/) [![GitHub license](https://img.shields.io/github/license/haccer/tweep.svg)](https://github.com/haccer/tweep/blob/master/LICENSE) ![](https://img.shields.io/twitter/follow/twintproject.svg?label=Follow&style=social) 
 
 >No authentication. No API. No limits.
 
@@ -165,6 +165,6 @@ Twitter can shadow-ban accounts, which means that their tweets will not be avail
 
 ## Contact
 
-Follow [@TWINTio](https://twitter.com/TWINTio) on Twitter to get the latest news and updates!
+Follow [@twintproject](https://twitter.com/twintproject) on Twitter to get the latest news and updates!
 
 If you have any questions, want to join in on discussions, or need extra help, you are welcome to join our OSINT focused [Slack server](https://join.slack.com/t/os-int/shared_invite/enQtNDI1MDA2OTg4MDg0LWUxYWNmMjI2MGFlMTZjZjhmOWY1ZTVhNmFiMDU2NzY1MzhiMDI2ZTZmYmEwY2MxY2YzMGFkZTY2MTcxZWI2ODM).
