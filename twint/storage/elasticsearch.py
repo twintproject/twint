@@ -20,7 +20,7 @@ class RecycleObject(object):
     def flush(self): pass
 
 def getLocation(place, **options):
-    location = geolocator.geocode(place)
+    location = geolocator.geocode(place,timeout=1000)
     if location:
         if options.get("near"):
             global _near
