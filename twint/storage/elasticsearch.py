@@ -254,13 +254,19 @@ def Follow(user, config):
     global _index_follow_status
     actions = []
 
+    if config.Following:
+        _user = config.Username
+        _follow = user
+    else:
+        _user = user
+        _follow = config.Username
     j_data = {
             "_index": config.Index_follow,
             "_type": config.Index_type,
-            "_id": user + "_" + config.Username + "_" + config.Essid,
+            "_id": _user + "_" + _follow + "_" + config.Essid,
             "_source": {
-                "user": user,
-                "follow": config.Username,
+                "user": _user,
+                "follow": _follow,
                 "essid": config.Essid
                 }
             }
