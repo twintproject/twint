@@ -173,7 +173,10 @@ def weekday(day):
     return weekdays[day]
 
 def hour(datetime):
-    return strftime("%H", localtime(datetime))
+    return strftime("%H", localtime(datetime / 1000.0))
+
+def getDay(datetime):
+    return strftime("%A", localtime(datetime / 1000.0))
 
 def Tweet(Tweet, config):
     global _index_tweet_status
@@ -187,7 +190,7 @@ def Tweet(Tweet, config):
             "Saturday": 6,
             "Sunday": 7,
             }
-    day = weekdays[strftime("%A", localtime(Tweet.datetime))]
+    day = weekdays[getDay(Tweet.datetime)]
 
     actions = []
 
