@@ -1,11 +1,9 @@
-from . import _logme
-
-logme = _logme._logger(__name__)
+import logging as logme
 mobile = "https://mobile.twitter.com"
 base = "https://twitter.com/i"
 
 async def Favorites(username, init):
-    logme.debug('Favorites')
+    logme.debug(__name__+':Favorites')
     url = f"{mobile}/{username}/favorites?lang=en"
 
     if init != -1:
@@ -14,7 +12,7 @@ async def Favorites(username, init):
     return url
 
 async def Followers(username, init):
-    logme.debug('Followers')
+    logme.debug(__name__+':Followers')
     url = f"{mobile}/{username}/followers?lang=en"
 
     if init != -1:
@@ -23,7 +21,7 @@ async def Followers(username, init):
     return url
 
 async def Following(username, init):
-    logme.debug('Following')
+    logme.debug(__name__+':Following')
     url = f"{mobile}/{username}/following?lang=en"
 
     if init != -1:
@@ -32,7 +30,7 @@ async def Following(username, init):
     return url
 
 async def MobileProfile(username, init):
-    logme.debug('MobileProfile')
+    logme.debug(__name__+':MobileProfile')
     url = f"{mobile}/{username}?lang=en"
 
     if init != -1:
@@ -41,7 +39,7 @@ async def MobileProfile(username, init):
     return url
 
 async def Profile(username, init):
-    logme.debug('Profile')
+    logme.debug(__name__+':Profile')
     url = f"{base}/profiles/show/{username}/timeline/tweets?include_"
     url += "available_features=1&lang=en&include_entities=1"
     url += "&include_new_items_bar=true"
@@ -52,7 +50,7 @@ async def Profile(username, init):
     return url
 
 async def Search(config, init):
-    logme.debug('Search')
+    logme.debug(__name__+':Search')
     url = f"{base}/search/timeline"
     params = [
         ('f', 'tweets'),

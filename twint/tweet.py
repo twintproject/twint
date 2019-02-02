@@ -1,9 +1,7 @@
 from time import strftime, localtime
 import json
 
-from . import _logme
-
-logme = _logme._logger(__name__)
+import logging as logme
 
 class tweet:
     """Define Tweet class
@@ -16,7 +14,7 @@ class tweet:
 def getMentions(tw):
     """Extract ment from tweet
     """
-    logme.debug('getMentions')
+    logme.debug(__name__+':getMentions')
     try:
         mentions = tw["data-mentions"].split(" ")
     except:
@@ -27,7 +25,7 @@ def getMentions(tw):
 def getQuoteURL(tw):
     """Extract quote from tweet
     """
-    logme.debug('getQuoteURL')
+    logme.debug(__name__+':getQuoteURL')
     base_twitter = "https://twitter.com"
     quote_url = ""
     try:
@@ -41,7 +39,7 @@ def getQuoteURL(tw):
 def getText(tw):
     """Replace some text
     """
-    logme.debug('getText')
+    logme.debug(__name__+':getText')
     text = tw.find("p", "tweet-text").text
     text = text.replace("\n", " ")
     text = text.replace("http", " http")
@@ -52,21 +50,21 @@ def getText(tw):
 def getStat(tw, _type):
     """Get stats about Tweet
     """
-    logme.debug('getStat')
+    logme.debug(__name__+':getStat')
     st = f"ProfileTweet-action--{_type} u-hiddenVisually"
     return tw.find("span", st).find("span")["data-tweet-stat-count"]
 
 def getRetweet(profile, username, user):
     """Get Retweet
     """
-    logme.debug('getRetweet')
+    logme.debug(__name__+':getRetweet')
     if profile and username.lower() != user.lower():
         return 1
 
 def Tweet(tw, location, config):
     """Create Tweet object
     """
-    logme.debug('Tweet')
+    logme.debug(__name__+':Tweet')
     t = tweet()
     t.id = int(tw["data-item-id"])
     t.id_str = tw["data-item-id"]
