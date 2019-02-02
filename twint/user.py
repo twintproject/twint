@@ -1,6 +1,4 @@
-from . import _logme
-
-logme = _logme._logger(__name__)
+import logging as logme
 
 class user:
     type = "user"
@@ -9,7 +7,7 @@ class user:
         pass
 
 def inf(ur, _type):
-    logme.debug('inf')
+    logme.debug(__name__+':inf')
     try:
         group = ur.find("div", "user-actions btn-group not-following")
         if group == None :
@@ -33,7 +31,7 @@ def inf(ur, _type):
     return ret
 
 def card(ur, _type):
-    logme.debug('card')
+    logme.debug(__name__+':card')
     if _type == "bio":
         try:
             ret = ur.find("p", "ProfileHeaderCard-bio u-dir").text.replace("\n", " ")
@@ -54,12 +52,12 @@ def card(ur, _type):
     return ret
 
 def join(ur):
-    logme.debug('join')
+    logme.debug(__name__+':join')
     jd = ur.find("span", "ProfileHeaderCard-joinDateText js-tooltip u-dir")["title"]
     return jd.split(" - ")
 
 def convertToInt(x):
-    logme.debug('contertToInt')
+    logme.debug(__name__+':contertToInt')
     multDict = {
         "k" : 1000,
         "m" : 1000000,
@@ -83,7 +81,7 @@ def convertToInt(x):
     return 0
 
 def stat(ur, _type):
-    logme.debug('stat')
+    logme.debug(__name__+':stat')
     _class = f"ProfileNav-item ProfileNav-item--{_type}"
     stat = ur.find("li", _class)
     try :
@@ -93,7 +91,7 @@ def stat(ur, _type):
     return r
 
 def media(ur):
-    logme.debug('media')
+    logme.debug(__name__+':media')
     try:
       media_count = ur.find("a", "PhotoRail-headingWithCount js-nav").text.strip().split(" ")[0]
       media_count = convertToInt(media_count)
@@ -103,7 +101,7 @@ def media(ur):
     return media_count
 
 def verified(ur):
-    logme.debug('verified')
+    logme.debug(__name__+':verified')
     try:
         is_verified = ur.find("span", "ProfileHeaderCard-badges").text
         if "Verified account" in is_verified:
@@ -116,7 +114,7 @@ def verified(ur):
     return is_verified
 
 def User(ur):
-    logme.debug('User')
+    logme.debug(__name__+':User')
     u = user()
     for img in ur.findAll("img", "Emoji Emoji--forText"):
         img.replaceWith(img["alt"])

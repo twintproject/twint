@@ -1,8 +1,6 @@
 import datetime
 
-from . import _logme
-
-logme = _logme._logger(__name__)
+import logging as logme
 
 class Datelock:
     _until = None
@@ -10,7 +8,7 @@ class Datelock:
     _since_def_user = None
 
 def Set(Until, Since):
-    logme.debug('Set')
+    logme.debug(__name__+':Set')
     d = Datelock()
 
     if Until:
