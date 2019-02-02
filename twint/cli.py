@@ -3,10 +3,10 @@
 Twint.py - Twitter Intelligence Tool (formerly known as Tweep).
 
 See wiki on Github for in-depth details.
-https://github.com/haccer/twint/wiki
+https://github.com/twintproject/twint/wiki
 
 Licensed under MIT License
-Copyright (c) 2018 Cody Zacharias
+Copyright (c) 2018 The Twint Project  
 '''
 import sys
 import os
