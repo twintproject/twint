@@ -1,9 +1,11 @@
 import logging
 
+LEVEL = logging.INFO
+
 class  _logger:
     def __init__(self, loggerName):
-        self._level = logging.DEBUG
-        self._output_fn = 'test.log'
+        self._level = LEVEL
+        self._output_fn = 'twint.log'
         self.logger = logging.getLogger(loggerName)
         self.logger.setLevel(self._level)
         self.formatter = logging.Formatter('%(levelname)s:%(asctime)s:%(name)s:%(message)s')
