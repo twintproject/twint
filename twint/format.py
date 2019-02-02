@@ -1,10 +1,8 @@
-from . import _logme
-
-logme = _logme._logger(__name__)
+import logging as logme
 
 def Tweet(config, t):
     if config.Format:
-        logme.debug('Tweet:Format')
+        logme.debug(__name__+':Tweet:Format')
         output = config.Format.replace("{id}", t.id_str)
         output = output.replace("{date}", t.datestamp)
         output = output.replace("{time}", t.timestamp)
@@ -21,7 +19,7 @@ def Tweet(config, t):
         output = output.replace("{is_retweet}", str(t.retweet))
         output = output.replace("{mentions}", str(t.mentions))
     else:
-        logme.debug('Tweet:notFormat')
+        logme.debug(__name__+':Tweet:notFormat')
         output = f"{t.id_str} {t.datestamp} {t.timestamp} {t.timezone} "
 
         if t.retweet == 1:
@@ -41,7 +39,7 @@ def Tweet(config, t):
 
 def User(_format, u):
     if _format:
-        logme.debug('User:Format')
+        logme.debug(__name__+':User:Format')
         output = _format.replace("{id}", u.id)
         output += output.replace("{name}", u.name)
         output += output.replace("{username}", u.username)
@@ -59,7 +57,7 @@ def User(_format, u):
         output += output.replace("{verified}", str(u.is_verified))
         output += output.replace("{avatar}", u.avatar)
     else:
-        logme.debug('User:notFormat')
+        logme.debug(__name__+':User:notFormat')
         output = f"{u.id} | {u.name} | @{u.username} | Private: "
         output += f"{u.is_private} | Verified: {u.is_verified} |"
         output += f" Bio: {u.bio} | Location: {u.location} | Url: "
