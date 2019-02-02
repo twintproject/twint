@@ -1,15 +1,18 @@
-from . import datelock, feed, get, output, verbose, storage
+import sys
 from asyncio import get_event_loop, TimeoutError
 from datetime import timedelta, datetime
-from .storage import db
-import sys
 
-#import logging
+from . import datelock, feed, get, output, verbose, storage
+from .storage import db
+from . import _logme
+
+logme = _logme._logger(__name__)
 
 class Twint:
     def __init__(self, config):
-        #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+__init__')
+        logme.debug('Twint:__init__')
         if config.Resume is not None and config.TwitterSearch:
+            logme.debug('Twint:__init__:Resume')
             self.init = f"TWEET-{config.Resume}-0"
         else:
             self.init = -1
@@ -23,19 +26,23 @@ class Twint:
         verbose.Elastic(config.Elasticsearch)
 
         if self.config.Store_object:
+            logme.debug('Twint:__init__:clean_follow_list')
             output.clean_follow_list()
 
         if self.config.Pandas_clean:
+            logme.debug('Twint:__init__:pandas_clean')
             storage.panda.clean()
 
         if not self.config.Timedelta:
             if (self.d._until - self.d._since).days > 30:
                 self.config.Timedelta = 30
+                logme.debug('Twint:__init__:timedelta_fixed')
             else:
+                logme.debug('Twint:__init__:timedelta_unfixed')
                 self.config.Timedelta = (self.d._until - self.d._since).days
 
     async def Feed(self):
-        #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+Feed')
+        logme.debug('Twint:Feed')
         consecutive_errors_count = 0
         while True:
             response = await get.RequestUrl(self.config, self.init, headers=[("User-Agent", self.user_agent)])
@@ -60,6 +67,7 @@ class Twint:
                 if self.config.Proxy_host.lower() == "tor":
                     print("[?] Timed out, changing Tor identity...")
                     if self.config.Tor_control_password is None:
+                        logme.critical('Twint:Feed:tor-password')
                         sys.stderr.write("Error: config.Tor_control_password must be set for proxy autorotation!\r\n")
                         sys.stderr.write("Info: What is it? See https://stem.torproject.org/faq.html#can-i-interact-with-tors-controller-interface-directly\r\n")
                         break
@@ -67,67 +75,73 @@ class Twint:
                         get.ForceNewTorIdentity(self.config)
                         continue
                 else:
+                    logme.critical('Twint:Feed:' + str(e))
                     print(str(e))
                     break
             except Exception as e:
+                logme.critical('Twint:Feed:noData' + str(e))
                 # Sometimes Twitter says there is no data. But it's a lie.
                 consecutive_errors_count += 1
                 if consecutive_errors_count < self.config.Retries_count:
-                    # Change disguise
                     self.user_agent = await get.RandomUserAgent()
                     continue
+                logme.critical('Twint:Feed:Tweets_known_error:' + str(e))
                 print(str(e) + " [x] run.Feed")
                 print("[!] if get this error but you know for sure that more tweets exist, please open an issue and we will investigate it!")
                 break
 
     async def follow(self):
-        #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+follow')
         await self.Feed()
         if self.config.User_full:
+            logme.debug('Twint:follow:userFull')
             self.count += await get.Multi(self.feed, self.config, self.conn)
         else:
+            logme.debug('Twint:follow:notUserFull')
             for user in self.feed:
                 self.count += 1
                 username = user.find("a")["name"]
                 await output.Username(username, self.config, self.conn)
 
     async def favorite(self):
-        #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+favorite')
+        logme.debug('Twint:favorite')
         await self.Feed()
         self.count += await get.Multi(self.feed, self.config, self.conn)
 
     async def profile(self):
-        #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+profile')
         await self.Feed()
         if self.config.Profile_full:
+            logme.debug('Twint:profileFull')
             self.count += await get.Multi(self.feed, self.config, self.conn)
         else:
+            logme.debug('Twint:notProfileFull')
             for tweet in self.feed:
                 self.count += 1
                 await output.Tweets(tweet, "", self.config, self.conn)
 
     async def tweets(self):
-        #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+tweets')
         await self.Feed()
         if self.config.Location:
+            logme.debug('Twint:tweets:location')
             self.count += await get.Multi(self.feed, self.config, self.conn)
         else:
+            logme.debug('Twint:tweets:notLocation')
             for tweet in self.feed:
                 self.count += 1
                 await output.Tweets(tweet, "", self.config, self.conn)
 
     async def main(self):
         self.user_agent = await get.RandomUserAgent()
-        #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+main')
         if self.config.User_id is not None:
+            logme.debug('Twint:main:user_id')
             self.config.Username = await get.Username(self.config.User_id)
 
-        #if self.config.Username is not None:
-        #    url = f"http://twitter.com/{self.config.Username}?lang=en"
-        #    self.config.User_id = await get.User(url, self.config, self.conn, True)
-        # TODO: keep this or not!?
+        if self.config.Username is not None:
+            logme.debug('Twint:main:username')
+            url = f"http://twitter.com/{self.config.Username}?lang=en"
+            self.config.User_id = await get.User(url, self.config, self.conn, True)
 
         if self.config.TwitterSearch and self.config.Since and self.config.Until:
+            logme.debug('Twint:main:search+since+until')
             _days = timedelta(days=int(self.config.Timedelta))
             while self.d._since < self.d._until:
                 self.config.Since = str(self.d._until - _days)
@@ -135,45 +149,52 @@ class Twint:
                 if len(self.feed) > 0:
                     await self.tweets()
                 else:
+                    logme.debug('Twint:main:gettingNewTweets')
                     self.d._until = self.d._until - _days
                     self.feed = [-1]
 
-                #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+main+CallingGetLimit1')
                 if get.Limit(self.config.Limit, self.count):
                     self.d._until = self.d._until - _days
                     self.feed = [-1]
         else:
+            logme.debug('Twint:main:not-search+since+until')
             while True:
                 if len(self.feed) > 0:
                     if self.config.Followers or self.config.Following:
+                        logme.debug('Twint:main:follow')
                         await self.follow()
                     elif self.config.Favorites:
+                        logme.debug('Twint:main:favorites')
                         await self.favorite()
                     elif self.config.Profile:
+                        logme.debug('Twint:main:profile')
                         await self.profile()
                     elif self.config.TwitterSearch:
+                        logme.debug('Twint:main:twitter-search')
                         await self.tweets()
                 else:
+                    logme.debug('Twint:main:no-more-tweets')
                     break
 
                 #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+main+CallingGetLimit2')
                 if get.Limit(self.config.Limit, self.count):
+                    logme.debug('Twint:main:reachedLimit')
                     break
 
         if self.config.Count:
             verbose.Count(self.count, self.config)
 
 def run(config):
-    #logging.info("[<] " + str(datetime.now()) + ':: run+run')
+    logme.debug('run')
     get_event_loop().run_until_complete(Twint(config).main())
 
 def Favorites(config):
-    #logging.info("[<] " + str(datetime.now()) + ':: run+Favorites')
+    logme.debug('Favorites')
     config.Favorites = True
     run(config)
 
 def Followers(config):
-    #logging.info("[<] " + str(datetime.now()) + ':: run+Followers')
+    logme.debug('Followers')
     output.clean_follow_list()
     config.Followers = True
     config.Following = False
@@ -186,7 +207,7 @@ def Followers(config):
         storage.panda.clean()
 
 def Following(config):
-    #logging.info("[<] " + str(datetime.now()) + ':: run+Following')
+    logme.debug('Following')
     output.clean_follow_list()
     config.Following = True
     config.Followers = False
@@ -199,17 +220,17 @@ def Following(config):
         storage.panda.clean()
 
 def Lookup(config):
-    #logging.info("[<] " + str(datetime.now()) + ':: run+Lookup')
+    logme.debug('Lookup')
     url = f"http://twitter.com/{config.Username}?lang=en"
     get_event_loop().run_until_complete(get.User(url, config, db.Conn(config.Database)))
 
 def Profile(config):
+    logme.debug('Profile')
     config.Profile = True
-    #logging.info("[<] " + str(datetime.now()) + ':: run+Profile')
     run(config)
 
 def Search(config):
-    #logging.info("[<] " + str(datetime.now()) + ':: run+Search')
+    logme.debug('Search')
     config.TwitterSearch = True
     config.Following = False
     config.Followers = False

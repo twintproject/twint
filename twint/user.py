@@ -1,3 +1,7 @@
+from . import _logme
+
+logme = _logme._logger(__name__)
+
 class user:
     type = "user"
 
@@ -5,6 +9,7 @@ class user:
         pass
 
 def inf(ur, _type):
+    logme.debug('inf')
     try:
         group = ur.find("div", "user-actions btn-group not-following")
         if group == None :
@@ -28,6 +33,7 @@ def inf(ur, _type):
     return ret
 
 def card(ur, _type):
+    logme.debug('card')
     if _type == "bio":
         try:
             ret = ur.find("p", "ProfileHeaderCard-bio u-dir").text.replace("\n", " ")
@@ -48,33 +54,36 @@ def card(ur, _type):
     return ret
 
 def join(ur):
+    logme.debug('join')
     jd = ur.find("span", "ProfileHeaderCard-joinDateText js-tooltip u-dir")["title"]
     return jd.split(" - ")
 
 def convertToInt(x):
+    logme.debug('contertToInt')
     multDict = {
         "k" : 1000,
         "m" : 1000000,
         "b" : 1000000000,
     }
-    try :
+    try:
         if ',' in x:
             x = x.replace(',', '')
         y = int(x)
         return y
-    except :
+    except:
         pass
 
-    try :
+    try:
         y = float(str(x)[:-1])
         y = y * multDict[str(x)[-1:].lower()]
         return int(y)
-    except :
+    except:
         pass
 
     return 0
 
 def stat(ur, _type):
+    logme.debug('stat')
     _class = f"ProfileNav-item ProfileNav-item--{_type}"
     stat = ur.find("li", _class)
     try :
@@ -84,6 +93,7 @@ def stat(ur, _type):
     return r
 
 def media(ur):
+    logme.debug('media')
     try:
       media_count = ur.find("a", "PhotoRail-headingWithCount js-nav").text.strip().split(" ")[0]
       media_count = convertToInt(media_count)
@@ -93,6 +103,7 @@ def media(ur):
     return media_count
 
 def verified(ur):
+    logme.debug('verified')
     try:
         is_verified = ur.find("span", "ProfileHeaderCard-badges").text
         if "Verified account" in is_verified:
@@ -105,6 +116,7 @@ def verified(ur):
     return is_verified
 
 def User(ur):
+    logme.debug('User')
     u = user()
     for img in ur.findAll("img", "Emoji Emoji--forText"):
         img.replaceWith(img["alt"])

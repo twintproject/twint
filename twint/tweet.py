@@ -1,7 +1,9 @@
 from time import strftime, localtime
 import json
-#from datetime import datetime
-#import logging
+
+from . import _logme
+
+logme = _logme._logger(__name__)
 
 class tweet:
     """Define Tweet class
@@ -12,9 +14,9 @@ class tweet:
         pass
 
 def getMentions(tw):
-    #logging.info("[<] " + str(datetime.now()) + ':: tweet+getMentions')
     """Extract ment from tweet
     """
+    logme.debug('getMentions')
     try:
         mentions = tw["data-mentions"].split(" ")
     except:
@@ -23,9 +25,9 @@ def getMentions(tw):
     return mentions
 
 def getQuoteURL(tw):
-    #logging.info("[<] " + str(datetime.now()) + ':: tweet+getQuoteInfo')
     """Extract quote from tweet
     """
+    logme.debug('getQuoteURL')
     base_twitter = "https://twitter.com"
     quote_url = ""
     try:
@@ -37,9 +39,9 @@ def getQuoteURL(tw):
     return quote_url
 
 def getText(tw):
-    #logging.info("[<] " + str(datetime.now()) + ':: tweet+getText')
     """Replace some text
     """
+    logme.debug('getText')
     text = tw.find("p", "tweet-text").text
     text = text.replace("\n", " ")
     text = text.replace("http", " http")
@@ -50,19 +52,21 @@ def getText(tw):
 def getStat(tw, _type):
     """Get stats about Tweet
     """
-    #logging.info("[<] " + str(datetime.now()) + ':: tweet+getStat')
+    logme.debug('getStat')
     st = f"ProfileTweet-action--{_type} u-hiddenVisually"
     return tw.find("span", st).find("span")["data-tweet-stat-count"]
 
 def getRetweet(profile, username, user):
-    #logging.info("[<] " + str(datetime.now()) + ':: tweet+getRetweet')
+    """Get Retweet
+    """
+    logme.debug('getRetweet')
     if profile and username.lower() != user.lower():
         return 1
 
 def Tweet(tw, location, config):
     """Create Tweet object
     """
-    ##logging.info("[<] " + str(datetime.now()) + ':: tweet+Tweet')
+    logme.debug('Tweet')
     t = tweet()
     t.id = int(tw["data-item-id"])
     t.id_str = tw["data-item-id"]
