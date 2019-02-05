@@ -19,6 +19,8 @@ class Twint:
         else:
             self.init = -1
 
+        self.max_position = 0
+        self.nomoretweets = False
         self.feed = [-1]
         self.count = 0
         self.user_agent = ""
@@ -64,6 +66,8 @@ class Twint:
                         self.feed, self.init = feed.profile(response)
                 elif self.config.TwitterSearch:
                     self.feed, self.init = feed.Json(response)
+                if self.max_position == self.init:
+                    self.nomoretweets = True
                 break
             except TimeoutError as e:
                 if self.config.Proxy_host.lower() == "tor":
@@ -161,7 +165,7 @@ class Twint:
         else:
             logme.debug(__name__+':Twint:main:not-search+since+until')
             while True:
-                if len(self.feed) > 0:
+                if not self.nomoretweets:
                     if self.config.Followers or self.config.Following:
                         logme.debug(__name__+':Twint:main:follow')
                         await self.follow()
