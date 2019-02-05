@@ -55,6 +55,8 @@ class Twint:
 
             self.feed = []
             try:
+                if self.init != -1:
+                    self.max_position = self.init
                 if self.config.Favorites:
                     self.feed, self.init = feed.Mobile(response)
                 elif self.config.Followers or self.config.Following:
