@@ -223,7 +223,7 @@ def Following(config):
 
 def Lookup(config):
     logme.debug(__name__+':Lookup')
-    url = f"http://twitter.com/{config.Username}?lang=en"
+    url = f"https://twitter.com/{config.Username}?lang=en"
     get_event_loop().run_until_complete(get.User(url, config, db.Conn(config.Database)))
 
 def Profile(config):
