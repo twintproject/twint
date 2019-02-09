@@ -129,7 +129,7 @@ async def Request(url, connector=None, params=[], headers=[]):
 async def Response(session, url, params=[]):
     logme.debug(__name__+':Response')
     with timeout(30):
-        async with session.get(url, ssl=False, params=params, proxy=httpproxy) as response:
+        async with session.get(url, ssl=True, params=params, proxy=httpproxy) as response:
             return await response.text()
 
 async def RandomUserAgent():
@@ -168,6 +168,7 @@ async def User(url, config, conn, user_id = False):
         soup = BeautifulSoup(response, "html.parser")
         if user_id:
             return int(inf(soup, "id"))
+        await Users(soup, config, conn)
     except Exception as e:
         logme.critical(__name__+':User:' + str(e))
         print(str(e) + " [x] get.User")
