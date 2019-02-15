@@ -84,7 +84,8 @@ def createIndex(config, instance, **scope):
                             "search": {"type": "text"},
                             "near": {"type": "text"},
                             "geo_near": {"type": "geo_point"},
-                            "geo_tweet": {"type": "geo_point"}
+                            "geo_tweet": {"type": "geo_point"},
+                            "photos": {"type": "text"}
                             }
                         }
                     },
@@ -226,6 +227,11 @@ def Tweet(Tweet, config):
                 "near": config.Near
                 }
             }
+    if Tweet.photos:
+        _photos = []
+        for photo in Tweet.photos:
+            _photos.append(photo)
+        j_data["_source"].update({"photos": _photos})
     if config.Near or config.Geo:
         if not _is_near_def:
             __geo = ""
