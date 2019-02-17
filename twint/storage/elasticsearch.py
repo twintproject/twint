@@ -232,6 +232,11 @@ def Tweet(Tweet, config):
         for photo in Tweet.photos:
             _photos.append(photo)
         j_data["_source"].update({"photos": _photos})
+    if Tweet.mentions:
+        _mentions = []
+        for mention in Tweet.mentions:
+            _mentions.append(mention)
+        j_data["_source"].update({"mentions": _mentions})
     if config.Near or config.Geo:
         if not _is_near_def:
             __geo = ""

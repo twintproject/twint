@@ -31,7 +31,8 @@ PUT twinttweets
           "near":  {"type": "text"},
           "geo_near": {"type": "geo_point"},
           "geo_tweet": {"type": "geo_point"},
-          "photos": {"type": "text"}
+          "photos": {"type": "text"},
+          "mentions": {"type": "text"}
       }
     }
   }
