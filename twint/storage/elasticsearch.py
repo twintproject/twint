@@ -55,7 +55,7 @@ def createIndex(config, instance, **scope):
     if scope.get("scope") == "tweet":
         tweets_body = {
                 "mappings": {
-                    "items": {
+                    config.Index_type: {
                         "properties": {
                             "id": {"type": "long"},
                             "conversation_id": {"type": "long"},
@@ -99,7 +99,7 @@ def createIndex(config, instance, **scope):
     elif scope.get("scope") == "follow":
         follow_body = {
                 "mappings": {
-                    "items": {
+                    config.Index_type: {
                         "properties": {
                             "user": {"type": "keyword"},
                             "follow": {"type": "keyword"},
@@ -117,7 +117,7 @@ def createIndex(config, instance, **scope):
     elif scope.get("scope") == "user":
         user_body = {
                 "mappings": {
-                    "items": {
+                    config.Index_type: {
                         "properties": {
                             "id": {"type": "keyword"},
                             "name": {"type": "keyword"},
