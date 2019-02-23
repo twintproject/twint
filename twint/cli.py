@@ -174,6 +174,8 @@ def options():
                     nargs="?", default="twintgraph")
     ap.add_argument("-iu", "--index-users", help="Custom Elasticsearch Index name for Users.",
                     nargs="?", default="twintuser")
+    ap.add_argument("-dt", "--doc-type", help="Custom Elasticsearch document type.",
+                    nargs="?", default="items")
     ap.add_argument("--debug",
                     help="Store information in debug logs", action="store_true")
     ap.add_argument("--resume", help="Resume from Tweet ID.")
