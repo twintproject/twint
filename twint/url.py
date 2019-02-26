@@ -1,6 +1,6 @@
 import logging as logme
-mobile = "https://mobile.twitter.com"
-base = "https://twitter.com/i"
+mobile = "http://mobile.twitter.com"
+base = "http://twitter.com/i"
 
 async def Favorites(username, init):
     logme.debug(__name__+':Favorites')
