@@ -63,3 +63,4 @@ class Config:
     Hide_output = False
     Get_replies = False
     Near = ""
+    Custom_query = ""
