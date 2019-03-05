@@ -101,6 +101,8 @@ async def Search(config, init):
         q += " filter:media"
     if config.Replies:
         q += " filter:replies"
+    if config.Custom_query:
+        q = config.Custom_query
 
     params.append(("q", q))
     return url, params
