@@ -106,6 +106,7 @@ def initialize(args):
     c.Proxy_type = args.proxy_type
     c.Retweets = args.retweets
     c.Get_replies = args.get_replies
+    c.Custom_query = args.custom_query
     return c
 
 def options():
@@ -187,6 +188,7 @@ def options():
     ap.add_argument("-pc", "--pandas-clean",
                     help="Automatically clean Pandas dataframe at every scrape.")
     ap.add_argument("--get-replies", help="All replies to the tweet.", action="store_true")
+    ap.add_argument("-cq", "--custom-query", help="Custom search query.")
     args = ap.parse_args()
 
     return args
