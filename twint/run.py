@@ -223,6 +223,9 @@ def Following(config):
 
 def Lookup(config):
     logme.debug(__name__+':Lookup')
+    if config.User_id is not None:
+            logme.debug(__name__+':Twint:Lookup:user_id')
+            config.Username = get_event_loop().run_until_complete(get.Username(config.User_id))
     url = f"https://twitter.com/{config.Username}?lang=en"
     get_event_loop().run_until_complete(get.User(url, config, db.Conn(config.Database)))
 
