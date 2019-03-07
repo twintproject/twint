@@ -24,18 +24,6 @@ Some of the benefits of using Twint vs Twitter API:
 
 ## Installing
 
-### Stable version
-**Pip:**
-```bash
-pip3 install twint
-```
-
-**Pipenv**:
-```bash
-pipenv install twint
-```
-
-### Development version
 **Git:**
 ```bash
 git clone https://github.com/twintproject/twint.git
