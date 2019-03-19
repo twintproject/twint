@@ -1,5 +1,5 @@
 import sys, os
-from asyncio import get_event_loop, TimeoutError
+from asyncio import get_event_loop, TimeoutError, ensure_future
 from datetime import timedelta, datetime
 
 from . import datelock, feed, get, output, verbose, storage
@@ -131,7 +131,16 @@ class Twint:
                 self.count += 1
                 await output.Tweets(tweet, "", self.config, self.conn)
 
-    async def main(self):
+    async def main(self, callback=None):
+
+        task = ensure_future(self.run())  # Might be changed to create_task in 3.7+.
+
+        if callback:
+            task.add_done_callback(callback)
+
+        await task
+
+    async def run(self):
         self.user_agent = await get.RandomUserAgent()
         if self.config.User_id is not None:
             logme.debug(__name__+':Twint:main:user_id')
@@ -186,9 +195,9 @@ class Twint:
         if self.config.Count:
             verbose.Count(self.count, self.config)
 
-def run(config):
+def run(config, callback=None):
     logme.debug(__name__+':run')
-    get_event_loop().run_until_complete(Twint(config).main())
+    get_event_loop().run_until_complete(Twint(config).main(callback))
 
 def Favorites(config):
     logme.debug(__name__+':Favorites')
@@ -234,11 +243,11 @@ def Profile(config):
     config.Profile = True
     run(config)
 
-def Search(config):
+def Search(config, callback=None):
     logme.debug(__name__+':Search')
     config.TwitterSearch = True
     config.Following = False
     config.Followers = False
-    run(config)
+    run(config, callback)
     if config.Pandas_au:
         storage.panda._autoget("tweet")
