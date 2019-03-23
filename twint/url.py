@@ -2,6 +2,13 @@ import logging as logme
 mobile = "http://mobile.twitter.com"
 base = "http://twitter.com/i"
 
+def _sanitizeQuery(base,params):
+    _serialQuery = ""
+    for p in params:
+        _serialQuery += p[0]+"="+p[1]+"&"
+    _serialQuery = base + "?" + _serialQuery[:-1].replace(":", "%3A").replace(" ", "%20")
+    return _serialQuery
+
 async def Favorites(username, init):
     logme.debug(__name__+':Favorites')
     url = f"{mobile}/{username}/favorites?lang=en"
@@ -105,4 +112,5 @@ async def Search(config, init):
         q = config.Custom_query
 
     params.append(("q", q))
-    return url, params
+    _serialQuery = _sanitizeQuery(url, params)
+    return url, params, _serialQuery

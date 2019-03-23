@@ -74,7 +74,7 @@ async def RequestUrl(config, init, headers = []):
             response = await Request(_url, connector=_connector, headers=headers)
     elif config.TwitterSearch:
         logme.debug(__name__+':RequestUrl:TwitterSearch')
-        _url, params = await url.Search(config, init)
+        _url, params, _serialQuery = await url.Search(config, init)
         response = await Request(_url, params=params, connector=_connector, headers=headers)
     else:
         if config.Following:
@@ -89,7 +89,7 @@ async def RequestUrl(config, init, headers = []):
         response = await MobileRequest(_url, connector=_connector)
 
     if config.Debug:
-        print(_url, file=open("twint-request_urls.log", "a", encoding="utf-8"))
+        print(_serialQuery, file=open("twint-request_urls.log", "a", encoding="utf-8"))
 
     return response
 
