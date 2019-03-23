@@ -202,6 +202,8 @@ def run(config, callback=None):
 def Favorites(config):
     logme.debug(__name__+':Favorites')
     config.Favorites = True
+    config.Following = False
+    config.Followers = False
     run(config)
 
 def Followers(config):
