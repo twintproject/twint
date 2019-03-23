@@ -62,6 +62,7 @@ def get_connector(config):
 async def RequestUrl(config, init, headers = []):
     logme.debug(__name__+':RequestUrl')
     _connector = get_connector(config)
+    _serialQuery = ""
 
     if config.Profile:
         if config.Profile_full:
@@ -72,6 +73,7 @@ async def RequestUrl(config, init, headers = []):
             logme.debug(__name__+':RequestUrl:notProfile_full')
             _url = await url.Profile(config.Username, init)
             response = await Request(_url, connector=_connector, headers=headers)
+        _serialQuery = _url
     elif config.TwitterSearch:
         logme.debug(__name__+':RequestUrl:TwitterSearch')
         _url, params, _serialQuery = await url.Search(config, init)
@@ -87,6 +89,7 @@ async def RequestUrl(config, init, headers = []):
             logme.debug(__name__+':RequestUrl:Favorites')
             _url = await url.Favorites(config.Username, init)
         response = await MobileRequest(_url, connector=_connector)
+        _serialQuery = _url
 
     if config.Debug:
         print(_serialQuery, file=open("twint-request_urls.log", "a", encoding="utf-8"))
