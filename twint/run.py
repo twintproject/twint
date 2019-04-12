@@ -204,6 +204,9 @@ def Favorites(config):
     config.Favorites = True
     config.Following = False
     config.Followers = False
+    config.Profile = False
+    config.Profile_full = False
+    config.TwitterSearch = False
     run(config)
 
 def Followers(config):
@@ -211,6 +214,10 @@ def Followers(config):
     output.clean_follow_list()
     config.Followers = True
     config.Following = False
+    config.Profile = False
+    config.Profile_full = False
+    config.Favorites = False
+    config.TwitterSearch = False
     run(config)
     if config.Pandas_au:
         storage.panda._autoget("followers")
@@ -224,6 +231,10 @@ def Following(config):
     output.clean_follow_list()
     config.Following = True
     config.Followers = False
+    config.Profile = False
+    config.Profile_full = False
+    config.Favorites = False
+    config.TwitterSearch = False
     run(config)
     if config.Pandas_au:
         storage.panda._autoget("following")
@@ -243,13 +254,21 @@ def Lookup(config):
 def Profile(config):
     logme.debug(__name__+':Profile')
     config.Profile = True
+    config.Profile_full = True
+    config.Favorites = False
+    config.Following = False
+    config.Followers = False
+    config.TwitterSearch = False
     run(config)
 
 def Search(config, callback=None):
     logme.debug(__name__+':Search')
     config.TwitterSearch = True
+    config.Favorites = False
     config.Following = False
     config.Followers = False
+    config.Profile = False
+    config.Profile_full = False
     run(config, callback)
     if config.Pandas_au:
         storage.panda._autoget("tweet")
