@@ -55,38 +55,36 @@ def createIndex(config, instance, **scope):
     if scope.get("scope") == "tweet":
         tweets_body = {
                 "mappings": {
-                    config.Index_type: {
-                        "properties": {
-                            "id": {"type": "long"},
-                            "conversation_id": {"type": "long"},
-                            "created_at": {"type": "long"},
-                            "date": {"type": "date", "format": "yyyy-MM-dd HH:mm:ss"},
-                            "timezone": {"type": "keyword"},
-                            "place": {"type": "keyword"},
-                            "location": {"type": "keyword"},
-                            "tweet": {"type": "text"},
-                            "hashtags": {"type": "keyword"},
-                            "user_id": {"type": "long"},
-                            "user_id_str": {"type": "keyword"},
-                            "username": {"type": "keyword"},
-                            "name": {"type": "text"},
-                            "profile_image_url": {"type": "text"},
-                            "day": {"type": "integer"},
-                            "hour": {"type": "integer"},
-                            "link": {"type": "text"},
-                            "retweet": {"type": "text"},
-                            "essid": {"type": "keyword"},
-                            "nlikes": {"type": "integer"},
-                            "nreplies": {"type": "integer"},
-                            "nretweets": {"type": "integer"},
-                            "quote_url": {"type": "text"},
-                            "video": {"type":"integer"},
-                            "search": {"type": "text"},
-                            "near": {"type": "text"},
-                            "geo_near": {"type": "geo_point"},
-                            "geo_tweet": {"type": "geo_point"},
-                            "photos": {"type": "text"}
-                            }
+                    "properties": {
+                        "id": {"type": "long"},
+                        "conversation_id": {"type": "long"},
+                        "created_at": {"type": "long"},
+                        "date": {"type": "date", "format": "yyyy-MM-dd HH:mm:ss"},
+                        "timezone": {"type": "keyword"},
+                        "place": {"type": "keyword"},
+                        "location": {"type": "keyword"},
+                        "tweet": {"type": "text"},
+                        "hashtags": {"type": "keyword"},
+                        "user_id": {"type": "long"},
+                        "user_id_str": {"type": "keyword"},
+                        "username": {"type": "keyword"},
+                        "name": {"type": "text"},
+                        "profile_image_url": {"type": "text"},
+                        "day": {"type": "integer"},
+                        "hour": {"type": "integer"},
+                        "link": {"type": "text"},
+                        "retweet": {"type": "text"},
+                        "essid": {"type": "keyword"},
+                        "nlikes": {"type": "integer"},
+                        "nreplies": {"type": "integer"},
+                        "nretweets": {"type": "integer"},
+                        "quote_url": {"type": "text"},
+                        "video": {"type":"integer"},
+                        "search": {"type": "text"},
+                        "near": {"type": "text"},
+                        "geo_near": {"type": "geo_point"},
+                        "geo_tweet": {"type": "geo_point"},
+                        "photos": {"type": "text"}
                         }
                     },
                     "settings": {
@@ -99,12 +97,10 @@ def createIndex(config, instance, **scope):
     elif scope.get("scope") == "follow":
         follow_body = {
                 "mappings": {
-                    config.Index_type: {
-                        "properties": {
-                            "user": {"type": "keyword"},
-                            "follow": {"type": "keyword"},
-                            "essid": {"type": "keyword"}
-                            }
+                    "properties": {
+                        "user": {"type": "keyword"},
+                        "follow": {"type": "keyword"},
+                        "essid": {"type": "keyword"}
                         }
                     },
                     "settings": {
@@ -117,29 +113,27 @@ def createIndex(config, instance, **scope):
     elif scope.get("scope") == "user":
         user_body = {
                 "mappings": {
-                    config.Index_type: {
-                        "properties": {
-                            "id": {"type": "keyword"},
-                            "name": {"type": "keyword"},
-                            "username": {"type": "keyword"},
-                            "bio": {"type": "text"},
-                            "location": {"type": "keyword"},
-                            "url": {"type": "text"},
-                            "join_datetime": {"type": "date", "format": "yyyy-MM-dd HH:mm:ss"},
-                            "join_date": {"type": "date", "format": "yyyy-MM-dd"},
-                            "join_time": {"type": "date", "format": "HH:mm:ss"},
-                            "tweets": {"type": "integer"},
-                            "following": {"type": "integer"},
-                            "followers": {"type": "integer"},
-                            "likes": {"type": "integer"},
-                            "media": {"type": "integer"},
-                            "private": {"type": "integer"},
-                            "verified": {"type": "integer"},
-                            "avatar": {"type": "text"},
-                            "background_image": {"type": "text"},
-                            "session": {"type": "keyword"},
-                            "geo_user": {"type": "geo_point"}
-                            }
+                    "properties": {
+                        "id": {"type": "keyword"},
+                        "name": {"type": "keyword"},
+                        "username": {"type": "keyword"},
+                        "bio": {"type": "text"},
+                        "location": {"type": "keyword"},
+                        "url": {"type": "text"},
+                        "join_datetime": {"type": "date", "format": "yyyy-MM-dd HH:mm:ss"},
+                        "join_date": {"type": "date", "format": "yyyy-MM-dd"},
+                        "join_time": {"type": "date", "format": "HH:mm:ss"},
+                        "tweets": {"type": "integer"},
+                        "following": {"type": "integer"},
+                        "followers": {"type": "integer"},
+                        "likes": {"type": "integer"},
+                        "media": {"type": "integer"},
+                        "private": {"type": "integer"},
+                        "verified": {"type": "integer"},
+                        "avatar": {"type": "text"},
+                        "background_image": {"type": "text"},
+                        "session": {"type": "keyword"},
+                        "geo_user": {"type": "geo_point"}
                         }
                     },
                     "settings": {
@@ -196,7 +190,6 @@ def Tweet(Tweet, config):
 
     j_data = {
             "_index": config.Index_tweets,
-            "_type": config.Index_type,
             "_id": str(Tweet.id) + "_raw_" + config.Essid,
             "_source": {
                 "id": str(Tweet.id),
@@ -273,7 +266,6 @@ def Follow(user, config):
         _follow = config.Username
     j_data = {
             "_index": config.Index_follow,
-            "_type": config.Index_type,
             "_id": _user + "_" + _follow + "_" + config.Essid,
             "_source": {
                 "user": _user,
@@ -297,7 +289,6 @@ def UserProfile(user, config):
 
     j_data = {
             "_index": config.Index_users,
-            "_type": config.Index_type,
             "_id": user.id + "_" + user.join_date + "_" + user.join_time + "_" + config.Essid,
             "_source": {
                 "id": user.id,
