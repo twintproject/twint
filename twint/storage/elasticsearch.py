@@ -121,8 +121,6 @@ def createIndex(config, instance, **scope):
                         "location": {"type": "keyword"},
                         "url": {"type": "text"},
                         "join_datetime": {"type": "date", "format": "yyyy-MM-dd HH:mm:ss"},
-                        "join_date": {"type": "date", "format": "yyyy-MM-dd"},
-                        "join_time": {"type": "date", "format": "HH:mm:ss"},
                         "tweets": {"type": "integer"},
                         "following": {"type": "integer"},
                         "followers": {"type": "integer"},
@@ -182,7 +180,7 @@ def Tweet(Tweet, config):
             "Saturday": 6,
             "Sunday": 7,
             }
-    day = weekdays[strftime("%A", localtime(Tweet.datetime))]
+    day = weekdays[strftime("%A", localtime(Tweet.datetime/1000))]
 
     actions = []
 
@@ -207,7 +205,7 @@ def Tweet(Tweet, config):
                 "name": Tweet.name,
                 "profile_image_url": Tweet.profile_image_url,
                 "day": day,
-                "hour": hour(Tweet.datetime),
+                "hour": hour(Tweet.datetime/1000),
                 "link": Tweet.link,
                 "retweet": Tweet.retweet,
                 "essid": config.Essid,
@@ -298,8 +296,6 @@ def UserProfile(user, config):
                 "location": user.location,
                 "url": user.url,
                 "join_datetime": user.join_date + " " + user.join_time,
-                "join_date": user.join_date,
-                "join_time": user.join_time,
                 "tweets": user.tweets,
                 "following": user.following,
                 "followers": user.followers,
