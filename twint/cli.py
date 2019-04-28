@@ -125,8 +125,10 @@ def options():
     ap.add_argument("-es", "--elasticsearch", help="Index to Elasticsearch.")
     ap.add_argument("-t", "--timedelta", help="Time interval for every request.")
     ap.add_argument("--year", help="Filter Tweets before specified year.")
-    ap.add_argument("--since", help="Filter Tweets sent since date (Example: 2017-12-27).")
-    ap.add_argument("--until", help="Filter Tweets sent until date (Example: 2017-12-27).")
+    ap.add_argument("--since", help="Filter Tweets sent since date (Example: 2017-12-27).",
+                    metavar="DATE")
+    ap.add_argument("--until", help="Filter Tweets sent until date (Example: 2017-12-27).",
+                    metavar="DATE")
     ap.add_argument("--email", help="Filter Tweets that might have email addresses", action="store_true")
     ap.add_argument("--phone", help="Filter Tweets that might have phone numbers", action="store_true")
     ap.add_argument("--verified", help="Display Tweets only from verified users (Use with -s).",
@@ -141,8 +143,8 @@ def options():
     ap.add_argument("--stats", help="Show number of replies, retweets, and likes.",
                     action="store_true")
     ap.add_argument("-db", "--database", help="Store Tweets in a sqlite3 database.")
-    ap.add_argument("--to", help="Search Tweets to a user.")
-    ap.add_argument("--all", help="Search all Tweets associated with a user.")
+    ap.add_argument("--to", help="Search Tweets to a user.", metavar="USERNAME")
+    ap.add_argument("--all", help="Search all Tweets associated with a user.", metavar="USERNAME")
     ap.add_argument("--followers", help="Scrape a person's followers.", action="store_true")
     ap.add_argument("--following", help="Scrape a person's follows", action="store_true")
     ap.add_argument("--favorites", help="Scrape Tweets a user has liked.", action="store_true")
@@ -177,7 +179,7 @@ def options():
                     nargs="?", default="twintuser")
     ap.add_argument("--debug",
                     help="Store information in debug logs", action="store_true")
-    ap.add_argument("--resume", help="Resume from Tweet ID.")
+    ap.add_argument("--resume", help="Resume from Tweet ID.", metavar="TWEET_ID")
     ap.add_argument("--videos", help="Display only Tweets with videos.", action="store_true")
     ap.add_argument("--images", help="Display only Tweets with images.", action="store_true")
     ap.add_argument("--media",
