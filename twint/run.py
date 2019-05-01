@@ -254,7 +254,6 @@ def Lookup(config):
 def Profile(config):
     logme.debug(__name__+':Profile')
     config.Profile = True
-    config.Profile_full = True
     config.Favorites = False
     config.Following = False
     config.Followers = False
