@@ -147,7 +147,7 @@ async def Tweets(tweets, location, config, conn, url=''):
         await checkData(tweets, location, config, conn)
     else:
         logme.debug(__name__+':Tweets:else')
-        if int(tweets["data-user-id"]) == config.User_id:
+        if int(tweets["data-user-id"]) == config.User_id or config.Retweets:
             await checkData(tweets, location, config, conn)
 
 async def Users(u, config, conn):
