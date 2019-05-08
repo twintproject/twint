@@ -9,7 +9,7 @@ class user:
 def inf(ur, _type):
     logme.debug(__name__+':inf')
     try:
-        group = ur.find("div", "user-actions btn-group not-following")
+        group = ur.find("div", "user-actions btn-group not-following ")
         if group == None :
             group = ur.find("div", "user-actions btn-group not-following protected")
     except Exception as e:
