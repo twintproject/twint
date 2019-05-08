@@ -161,7 +161,6 @@ async def Tweet(url, config, conn):
         await Tweets(tweets, location, config, conn, url)
     except Exception as e:
         logme.critical(__name__+':Tweet:' + str(e))
-        print(str(e) + " [x] get.Tweet")
 
 async def User(url, config, conn, user_id = False):
     logme.debug(__name__+':User')
@@ -174,7 +173,6 @@ async def User(url, config, conn, user_id = False):
         await Users(soup, config, conn)
     except Exception as e:
         logme.critical(__name__+':User:' + str(e))
-        print(str(e) + " [x] get.User")
 
 def Limit(Limit, count):
     logme.debug(__name__+':Limit')
