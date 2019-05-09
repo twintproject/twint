@@ -22,7 +22,8 @@ def tweetData(t):
             "link": t.link,
             "retweet": t.retweet,
             "quote_url": t.quote_url,
-            "video": t.video
+            "video": t.video,
+            "profile_image_url": t.profile_image_url
             }
     return data
 
@@ -50,7 +51,8 @@ def tweetFieldnames():
             "link",
             "retweet",
             "quote_url",
-            "video"
+            "video",
+            "profile_image_url"
             ]
     return fieldnames
 
