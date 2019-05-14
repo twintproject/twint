@@ -12,6 +12,7 @@ def Tweet(config, t):
         output = output.replace("{tweet}", t.tweet)
         output = output.replace("{location}", t.location)
         output = output.replace("{hashtags}", str(t.hashtags))
+        output = output.replace("{cashtags}", str(t.cashtags))
         output = output.replace("{replies}", t.replies_count)
         output = output.replace("{retweets}", t.retweets_count)
         output = output.replace("{likes}", t.likes_count)
@@ -30,6 +31,9 @@ def Tweet(config, t):
         if config.Show_hashtags:
             hashtags = ",".join(t.hashtags)
             output += f" {hashtags}"
+        if config.Show_cashtags:
+            cashtags = ",".join(t.cashtags)
+            output += f" {cashtags}"
         if config.Stats:
             output += f" | {t.replies_count} replies {t.retweets_count} retweets {t.likes_count} likes"
         if config.Location:

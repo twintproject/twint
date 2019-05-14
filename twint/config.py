@@ -19,6 +19,7 @@ class Config:
     Store_json = False
     Custom = {"tweet": None, "user": None, "username": None}
     Show_hashtags = False
+    Show_cashtags = False
     Limit = None
     Count = None
     Stats = False
