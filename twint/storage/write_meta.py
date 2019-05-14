@@ -49,7 +49,7 @@ def tweetFieldnames():
             "likes_count",
             "location",
             "hashtags",
-            "cashtags"
+            "cashtags",
             "link",
             "retweet",
             "quote_url",
