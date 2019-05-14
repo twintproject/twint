@@ -88,6 +88,7 @@ def Tweet(tw, location, config):
     t.tweet = getText(tw)
     t.location = location
     t.hashtags = [hashtag.text for hashtag in tw.find_all("a","twitter-hashtag")]
+    t.cashtags = [cashtag.text for cashtag in tw.find_all("a", "twitter-cashtag")]
     t.replies_count = getStat(tw, "reply")
     t.retweets_count = getStat(tw, "retweet")
     t.likes_count = getStat(tw, "favorite")

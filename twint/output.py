@@ -58,6 +58,8 @@ def _output(obj, output, config, **extra):
                 obj.mentions[i] = obj.mentions[i].lower()
             for i in range(len(obj.hashtags)):
                 obj.hashtags[i] = obj.hashtags[i].lower()
+            for i in range(len(obj.cashtags)):
+                obj.cashtags[i] = obj.cashtags[i].lower()
         else:
             logme.info('_output:Lowercase:hiddenTweetFound')
             print("[x] Hidden tweet found, account suspended due to violation of TOS")

@@ -12,6 +12,7 @@ PUT twinttweets
           "location": {"type": "keyword"},
           "tweet": {"type": "text"},
           "hashtags": {"type": "keyword"},
+          "cashtags": {"type": "keyword"},
           "user_id": {"type": "long"},
           "user_id_str": {"type": "keyword"},
           "username": {"type": "keyword"},
