@@ -70,6 +70,7 @@ def update(object, config):
             "location": Tweet.location,
             "tweet": Tweet.tweet,
             "hashtags": Tweet.hashtags,
+            "cashtags": Tweet.cashtags,
             "user_id": Tweet.user_id,
             "user_id_str": Tweet.user_id_str,
             "username": Tweet.username,

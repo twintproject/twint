@@ -78,6 +78,7 @@ def initialize(args):
     c.Store_csv = args.csv
     c.Store_json = args.json
     c.Show_hashtags = args.hashtags
+    c.Show_cashtags = args.cashtags
     c.Limit = args.limit
     c.Count = args.count
     c.Stats = args.stats
@@ -136,6 +137,7 @@ def options():
     ap.add_argument("--csv", help="Write as .csv file.", action="store_true")
     ap.add_argument("--json", help="Write as .json file", action="store_true")
     ap.add_argument("--hashtags", help="Output hashtags in seperate column.", action="store_true")
+    ap.add_argument("--cashtags", help="Output cashtags in seperate column.", action="store_true")
     ap.add_argument("--userid", help="Twitter user id.")
     ap.add_argument("--limit", help="Number of Tweets to pull (Increments of 20).")
     ap.add_argument("--count", help="Display number of Tweets scraped at the end of session.",
