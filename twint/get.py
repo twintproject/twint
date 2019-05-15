@@ -9,6 +9,7 @@ import concurrent.futures
 import random
 from json import loads
 from aiohttp_socks import SocksConnector, SocksVer
+from fake_useragent import UserAgent
 
 from . import url
 from .output import Tweets, Users
@@ -137,10 +138,8 @@ async def Response(session, url, params=[]):
 
 async def RandomUserAgent():
     logme.debug(__name__+':RandomUserAgent')
-    url = "https://fake-useragent.herokuapp.com/browsers/0.1.8"
-    r = await Request(url)
-    browsers = loads(r)['browsers']
-    return random.choice(browsers[random.choice(list(browsers))])
+    ua = UserAgent()
+    return ua.random
 
 async def Username(_id):
     logme.debug(__name__+':Username')
