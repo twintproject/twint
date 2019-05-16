@@ -90,7 +90,7 @@ def stat(ur, _type):
         r = stat.find("span", "ProfileNav-value")["data-count"]
     except AttributeError:
         r = "0"
-    return r
+    return int(r)
 
 def media(ur):
     logme.debug(__name__+':media')
