@@ -122,10 +122,16 @@ def update(object, config):
 
 
 def clean():
+    global Tweets_df
+    global Follow_df
+    global User_df
     _object_blocks["tweet"].clear()
     _object_blocks["following"].clear()
     _object_blocks["followers"].clear()
     _object_blocks["user"].clear()
+    Tweets_df = None
+    Follow_df = None
+    User_df = None
 
 def save(_filename, _dataframe, **options):
     if options.get("dataname"):
