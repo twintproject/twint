@@ -59,8 +59,8 @@ async def Profile(username, init):
 async def Search(config, init):
     logme.debug(__name__+':Search')
     url = f"{base}/search/timeline"
+    q = ""
     params = [
-        ('f', 'tweets'),
         ('vertical', 'default'),
         ('src', 'unkn'),
         ('include_available_features', '1'),
@@ -68,7 +68,8 @@ async def Search(config, init):
         ('max_position', str(init)),
         ('reset_error_state', 'false'),
     ]
-    q = ""
+    if not config.Popular_tweets:
+        params.append(('f', 'tweets'))
     if config.Lang:
         params.append(("l", config.Lang))
         params.append(("lang", "en"))
