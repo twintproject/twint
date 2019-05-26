@@ -64,3 +64,4 @@ class Config:
     Get_replies = False
     Near = ""
     Custom_query = ""
+    Popular_tweets = False
