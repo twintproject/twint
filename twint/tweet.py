@@ -18,7 +18,7 @@ def getMentions(tw):
     try:
         mentions = tw["data-mentions"].split(" ")
     except:
-        mentions = ""
+        mentions = []
 
     return mentions
 
