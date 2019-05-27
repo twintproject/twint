@@ -50,10 +50,16 @@ def _autoget(type):
 def update(object, config):
     global _type
 
-    try:
-        _type = ((object.type == "tweet")*"tweet" +
-                 (object.type == "user")*"user")
-    except AttributeError:
+    #try:
+    #    _type = ((object.__class__.__name__ == "tweet")*"tweet" +
+    #             (object.__class__.__name__ == "user")*"user")
+    #except AttributeError:
+    #    _type = config.Following*"following" + config.Followers*"followers"
+    if object.__class__.__name__ == "tweet":
+        _type = "tweet"
+    elif object.__class__.__name__ == "user":
+        _type = "user"
+    elif object.__class__.__name__ == "dict":
         _type = config.Following*"following" + config.Followers*"followers"
 
     if _type == "tweet":
