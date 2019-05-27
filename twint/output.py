@@ -79,7 +79,7 @@ def _output(obj, output, config, **extra):
             write.Text(output, config.Output)
             logme.debug(__name__+':_output:Text')
 
-    if config.Pandas and obj.type == "user":
+    if config.Pandas and obj.__class__.__name__ == "user":
         logme.debug(__name__+':_output:Pandas+user')
         panda.update(obj, config)
     if extra.get("follow_list"):
