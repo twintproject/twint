@@ -89,7 +89,6 @@ def initialize(args):
     c.Format = args.format
     c.User_full = args.user_full
     c.Profile_full = args.profile_full
-    c.Store_pandas = args.store_pandas
     c.Pandas_type = args.pandas_type
     c.Search_name = args.search_name
     c.Index_tweets = args.index_tweets
