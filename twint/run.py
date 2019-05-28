@@ -208,6 +208,8 @@ def Favorites(config):
     config.Profile_full = False
     config.TwitterSearch = False
     run(config)
+    if config.Pandas_au:
+        storage.panda._autoget("tweet")
 
 def Followers(config):
     logme.debug(__name__+':Followers')
@@ -250,6 +252,8 @@ def Lookup(config):
             config.Username = get_event_loop().run_until_complete(get.Username(config.User_id))
     url = f"https://twitter.com/{config.Username}?lang=en"
     get_event_loop().run_until_complete(get.User(url, config, db.Conn(config.Database)))
+    if config.Pandas_au:
+        storage.panda._autoget("user")
 
 def Profile(config):
     logme.debug(__name__+':Profile')
@@ -259,6 +263,8 @@ def Profile(config):
     config.Followers = False
     config.TwitterSearch = False
     run(config)
+    if config.Pandas_au:
+        storage.panda._autoget("tweet")
 
 def Search(config, callback=None):
     logme.debug(__name__+':Search')
