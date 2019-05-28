@@ -19,7 +19,9 @@ _follow_list = []
 def clean_follow_list():
     logme.debug(__name__+':clean_follow_list')
     global _follow_list
+    global follow_object
     _follow_list = []
+    follow_object = {}
 
 def datecheck(datestamp, config):
     logme.debug(__name__+':datecheck')
