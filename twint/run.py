@@ -225,7 +225,7 @@ def Followers(config):
         storage.panda._autoget("followers")
         if config.User_full:
             storage.panda._autoget("user")
-    if config.Pandas_clean:
+    if config.Pandas_clean and not config.Store_object:
         #storage.panda.clean()
         output.clean_follow_list()
 
@@ -243,7 +243,7 @@ def Following(config):
         storage.panda._autoget("following")
         if config.User_full:
             storage.panda._autoget("user")
-    if config.Pandas_clean:
+    if config.Pandas_clean and not config.Store_object:
         #storage.panda.clean()
         output.clean_follow_list()
 
