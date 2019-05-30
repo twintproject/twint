@@ -19,6 +19,9 @@ class Twint:
         else:
             self.init = -1
 
+        if config.Resume is not None and (config.Followers or config.Following):
+            self.init = config.Resume
+            
         self.feed = [-1]
         self.count = 0
         self.user_agent = ""
