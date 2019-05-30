@@ -244,7 +244,7 @@ async def Multi(feed, config, conn):
         # print(str(e) + " [x] get.Multi")
         # will return "'NoneType' object is not callable"
         # but still works
-        logme.critical(__name__+':Multi:' + str(e))
+        # logme.critical(__name__+':Multi:' + str(e))
         pass
 
     return count
