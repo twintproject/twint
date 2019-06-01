@@ -50,7 +50,7 @@ class Twint:
         if not os.path.exists(resumeFile):
             return -1
         with open(resumeFile, 'r') as rFile:
-            _init = rFile.readlines()[-1][:-1]
+            _init = rFile.readlines()[-1]
             return _init
 
     async def Feed(self):
@@ -74,7 +74,7 @@ class Twint:
                         self.feed, self.init = feed.profile(response)
                 elif self.config.TwitterSearch:
                     self.feed, self.init = feed.Json(response)
-                print(self.init+'\n', file=open(self.config.Resume, "w", encoding="utf-8"))
+                print(self.init, file=open(self.config.Resume, "w", encoding="utf-8"))
                 break
             except TimeoutError as e:
                 if self.config.Proxy_host.lower() == "tor":
