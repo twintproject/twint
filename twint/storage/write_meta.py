@@ -24,7 +24,7 @@ def tweetData(t):
             "retweet": t.retweet,
             "quote_url": t.quote_url,
             "video": t.video,
-            "profile_image_url": t.profile_image_url
+            "user_rt_id": t.user_rt_id
             }
     return data
 
@@ -54,7 +54,7 @@ def tweetFieldnames():
             "retweet",
             "quote_url",
             "video",
-            "profile_image_url"
+            "user_rt_id"
             ]
     return fieldnames
 
