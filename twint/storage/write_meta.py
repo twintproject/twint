@@ -23,9 +23,10 @@ def tweetData(t):
             "link": t.link,
             "retweet": t.retweet,
             "quote_url": t.quote_url,
-            "video": t.video,
-            "user_rt_id": t.user_rt_id
+            "video": t.video
             }
+    if t.retweet:
+        data.update({"user_rt_id": t.user_rt_id})
     return data
 
 def tweetFieldnames():
