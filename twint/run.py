@@ -15,12 +15,12 @@ class Twint:
         logme.debug(__name__+':Twint:__init__')
         if config.Resume is not None and config.TwitterSearch:
             logme.debug(__name__+':Twint:__init__:Resume')
-            self.init = f"TWEET-{config.Resume}-0"
+            self.init = f"{self.get_resume(config.Resume)}"
         else:
             self.init = -1
 
         if config.Resume is not None and (config.Followers or config.Following):
-            self.init = config.Resume
+            self.init = self.get_resume(config.Resume)
             
         self.feed = [-1]
         self.count = 0
@@ -46,6 +46,13 @@ class Twint:
                 logme.debug(__name__+':Twint:__init__:timedelta_unfixed')
                 self.config.Timedelta = (self.d._until - self.d._since).days
 
+    def get_resume(self, resumeFile):
+        if not os.path.exists(resumeFile):
+            return -1
+        with open(resumeFile, 'r') as rFile:
+            _init = rFile.readlines()[-1][:-1]
+            return _init
+
     async def Feed(self):
         logme.debug(__name__+':Twint:Feed')
         consecutive_errors_count = 0
@@ -67,6 +74,7 @@ class Twint:
                         self.feed, self.init = feed.profile(response)
                 elif self.config.TwitterSearch:
                     self.feed, self.init = feed.Json(response)
+                print(self.init+'\n', file=open(self.config.Resume, "w", encoding="utf-8"))
                 break
             except TimeoutError as e:
                 if self.config.Proxy_host.lower() == "tor":
