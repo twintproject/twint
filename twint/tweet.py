@@ -76,7 +76,6 @@ def Tweet(tw, location, config):
     t.user_id_str = tw["data-user-id"]
     t.username = tw["data-screen-name"]
     t.name = tw["data-name"]
-    t.profile_image_url = tw.find("img", "js-action-profile-avatar").get('src').replace("_bigger","")
     t.place = tw.find("a","js-geo-pivot-link").text.strip() if tw.find("a","js-geo-pivot-link") else None
     t.timezone = strftime("%Z", localtime())
     for img in tw.findAll("img", "Emoji Emoji--forText"):
@@ -94,5 +93,7 @@ def Tweet(tw, location, config):
     t.likes_count = getStat(tw, "favorite")
     t.link = f"https://twitter.com/{t.username}/status/{t.id}"
     t.retweet = getRetweet(config.Profile, t.username, config.Username)
+    if t.retweet:
+        t.user_rt_id = config.User_id
     t.quote_url = getQuoteURL(tw)
     return t
