@@ -96,4 +96,6 @@ def Tweet(tw, location, config):
     if t.retweet:
         t.user_rt_id = config.User_id
     t.quote_url = getQuoteURL(tw)
+    if config.Near:
+        t.near = config.Near
     return t
