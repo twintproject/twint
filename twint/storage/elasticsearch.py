@@ -85,7 +85,8 @@ def createIndex(config, instance, **scope):
                         "near": {"type": "text"},
                         "geo_near": {"type": "geo_point"},
                         "geo_tweet": {"type": "geo_point"},
-                        "photos": {"type": "text"}
+                        "photos": {"type": "text"},
+                        "user_rt_id": {"type": "integer"}
                         }
                     },
                     "settings": {
@@ -205,7 +206,6 @@ def Tweet(Tweet, config):
                 "user_id_str": Tweet.user_id_str,
                 "username": Tweet.username,
                 "name": Tweet.name,
-                "profile_image_url": Tweet.profile_image_url,
                 "day": day,
                 "hour": hour(Tweet.datetime/1000),
                 "link": Tweet.link,
@@ -220,6 +220,8 @@ def Tweet(Tweet, config):
                 "near": config.Near
                 }
             }
+    if Tweet.retweet:
+        j_data["_source"].udpate({"user_rt_id": Tweet.user_rt_id})
     if Tweet.photos:
         _photos = []
         for photo in Tweet.photos:
