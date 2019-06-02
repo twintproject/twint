@@ -27,6 +27,8 @@ def tweetData(t):
             }
     if t.retweet:
         data.update({"user_rt_id": t.user_rt_id})
+    if t.near:
+        data.update({"near": t.near})
     return data
 
 def tweetFieldnames():
@@ -55,7 +57,8 @@ def tweetFieldnames():
             "retweet",
             "quote_url",
             "video",
-            "user_rt_id"
+            "user_rt_id",
+            "near"
             ]
     return fieldnames
 
