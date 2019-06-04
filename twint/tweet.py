@@ -98,4 +98,6 @@ def Tweet(tw, location, config):
     t.quote_url = getQuoteURL(tw)
     if config.Near:
         t.near = config.Near
+    if config.Geo:
+        t.geo = config.Geo
     return t
