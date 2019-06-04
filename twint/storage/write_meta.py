@@ -27,8 +27,14 @@ def tweetData(t):
             }
     if t.retweet:
         data.update({"user_rt_id": t.user_rt_id})
-    if t.near:
+    try:
         data.update({"near": t.near})
+    except AttributeError:
+        pass
+    try:
+        data.update({"geo": t.geo})
+    except AttributeError:
+        pass
     return data
 
 def tweetFieldnames():
@@ -58,7 +64,8 @@ def tweetFieldnames():
             "quote_url",
             "video",
             "user_rt_id",
-            "near"
+            "near",
+            "geo"
             ]
     return fieldnames
 
