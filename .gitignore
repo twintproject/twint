@@ -107,3 +107,4 @@ ENV/
 # output
 *.csv
 *.json
+*.txt
