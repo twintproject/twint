@@ -81,7 +81,6 @@ def update(object, config):
             "user_id_str": Tweet.user_id_str,
             "username": Tweet.username,
             "name": Tweet.name,
-            "profile_image_url": Tweet.profile_image_url,
             "day": day,
             "hour": hour(Tweet.datetime),
             "link": Tweet.link,
