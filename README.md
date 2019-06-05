@@ -14,13 +14,27 @@ Twint also makes special queries to Twitter allowing you to also scrape a Twitte
 
 ## tl;dr Benefits
 Some of the benefits of using Twint vs Twitter API:
-- Can fetch almost __all__ Tweets (Twitter API limits to last 3200 Tweets only)
-- Fast initial setup
-- Can be used anonymously and without Twitter sign up
-- **No rate limitations**
+- Can fetch almost __all__ Tweets (Twitter API limits to last 3200 Tweets only);
+- Fast initial setup;
+- Can be used anonymously and without Twitter sign up;
+- **No rate limitations**.
+
+## Limits imposed by Twitter
+Twitter limits scrolls while browsing the user timeline. This means that with `.Profile` or with `.Favorites` you will be able to get ~3200 tweets.
 
 ## Requirements
-- Python 3.6
+- Python 3.6;
+- aiohttp;
+- aiodns;
+- beautifulsoup4;
+- cchardet;
+- elasticsearch;
+- pysocks;
+- pandas (>=0.23.0);
+- aiohttp_socks;
+- schedule;
+- geopy;
+- fake-useragent.
 
 ## Installing
 
@@ -58,11 +72,11 @@ A few simple examples to help you understand the basics:
 - `twint -u username --database tweets.db` - Save Tweets to a SQLite database.
 - `twint -u username --followers` - Scrape a Twitter user's followers.
 - `twint -u username --following` - Scrape who a Twitter user follows.
-- `twint -u username --favorites` - Collect all the Tweets a user has favorited.
+- `twint -u username --favorites` - Collect all the Tweets a user has favorited (gathers ~3200 tweet).
 - `twint -u username --following --user-full` - Collect full user information a person follows
 - `twint -u username --profile-full` - Use a slow, but effective method to gather Tweets from a user's profile (Gathers ~3200 Tweets, Including Retweets).
 - `twint -u username --retweets` - Use a quick method to gather the last 900 Tweets (that includes retweets) from a user's profile.
-- `twint -u username --resume 10940389583058` - Resume a search starting from the specified Tweet ID.
+- `twint -u username --resume resume_file.txt` - Resume a search starting from the last saved scroll-id.
 
 More detail about the commands and options are located in the [wiki](https://github.com/twintproject/twint/wiki/Commands)
 
@@ -102,11 +116,11 @@ twint.run.Search(c)
 ```
 
 ## Storing Options
-- Write to file
-- CSV
-- JSON
-- SQLite
-- Elasticsearch
+- Write to file;
+- CSV;
+- JSON;
+- SQLite;
+- Elasticsearch.
 
 ## Elasticsearch Setup
 
