@@ -90,6 +90,9 @@ class Twint:
                     print(str(e))
                     break
             except Exception as e:
+                if self.config.Profile or self.config.Favorites:
+                    print("[!] Twitter does not return more data, scrape stops here.")
+                    break
                 logme.critical(__name__+':Twint:Feed:noData' + str(e))
                 # Sometimes Twitter says there is no data. But it's a lie.
                 consecutive_errors_count += 1
