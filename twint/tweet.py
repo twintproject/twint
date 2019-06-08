@@ -61,7 +61,7 @@ def getRetweet(profile, username, user):
     if profile and username.lower() != user.lower():
         return 1
 
-def Tweet(tw, location, config):
+def Tweet(tw, config):
     """Create Tweet object
     """
     logme.debug(__name__+':Tweet')
@@ -76,7 +76,7 @@ def Tweet(tw, location, config):
     t.user_id_str = tw["data-user-id"]
     t.username = tw["data-screen-name"]
     t.name = tw["data-name"]
-    t.place = tw.find("a","js-geo-pivot-link").text.strip() if tw.find("a","js-geo-pivot-link") else None
+    t.place = tw.find("a","js-geo-pivot-link").text.strip() if tw.find("a","js-geo-pivot-link") else ""
     t.timezone = strftime("%Z", localtime())
     for img in tw.findAll("img", "Emoji Emoji--forText"):
         img.replaceWith(img["alt"])
@@ -85,7 +85,6 @@ def Tweet(tw, location, config):
     t.photos = [photo_node.attrs['data-image-url'] for photo_node in tw.find_all("div", "AdaptiveMedia-photoContainer")]
     t.video = 1 if tw.find_all("div", "AdaptiveMedia-video") != [] else 0
     t.tweet = getText(tw)
-    t.location = location
     t.hashtags = [hashtag.text for hashtag in tw.find_all("a","twitter-hashtag")]
     t.cashtags = [cashtag.text for cashtag in tw.find_all("a", "twitter-cashtag")]
     t.replies_count = getStat(tw, "reply")
