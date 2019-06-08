@@ -101,11 +101,11 @@ def _output(obj, output, config, **extra):
                 logme.critical(__name__+':_output:UnicodeEncodeError')
                 print("unicode error [x] output._output")
 
-async def checkData(tweet, location, config, conn):
+async def checkData(tweet, config, conn):
     logme.debug(__name__+':checkData')
     copyright = tweet.find("div", "StreamItemContent--withheld")
     if copyright is None and is_tweet(tweet):
-        tweet = Tweet(tweet, location, config)
+        tweet = Tweet(tweet, config)
 
         if not tweet.datestamp:
             logme.critical(__name__+':checkData:hiddenTweetFound')
@@ -135,24 +135,24 @@ async def checkData(tweet, location, config, conn):
     else:
         logme.critical(__name__+':checkData:copyrightedTweet')
 
-async def Tweets(tweets, location, config, conn, url=''):
+async def Tweets(tweets, config, conn, url=''):
     logme.debug(__name__+':Tweets')
     if (config.Profile_full or config.Location) and config.Get_replies:
         logme.debug(__name__+':Tweets:full+loc+replies')
         for tw in tweets:
-            await checkData(tw, location, config, conn)
+            await checkData(tw, config, conn)
     elif config.Favorites or config.Profile_full or config.Location:
         logme.debug(__name__+':Tweets:fav+full+loc')
         for tw in tweets:
             if tw['data-item-id'] == url.split('?')[0].split('/')[-1]:
-                await checkData(tw, location, config, conn)
+                await checkData(tw, config, conn)
     elif config.TwitterSearch:
         logme.debug(__name__+':Tweets:TwitterSearch')
-        await checkData(tweets, location, config, conn)
+        await checkData(tweets, config, conn)
     else:
         logme.debug(__name__+':Tweets:else')
         if int(tweets["data-user-id"]) == config.User_id or config.Retweets:
-            await checkData(tweets, location, config, conn)
+            await checkData(tweets, config, conn)
 
 async def Users(u, config, conn):
     logme.debug(__name__+':User')
