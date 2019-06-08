@@ -10,7 +10,6 @@ def Tweet(config, t):
         output = output.replace("{username}", t.username)
         output = output.replace("{timezone}", t.timezone)
         output = output.replace("{tweet}", t.tweet)
-        output = output.replace("{location}", t.location)
         output = output.replace("{hashtags}", str(t.hashtags))
         output = output.replace("{cashtags}", str(t.cashtags))
         output = output.replace("{replies}", t.replies_count)
@@ -36,8 +35,6 @@ def Tweet(config, t):
             output += f" {cashtags}"
         if config.Stats:
             output += f" | {t.replies_count} replies {t.retweets_count} retweets {t.likes_count} likes"
-        if config.Location:
-            output += f" | Location {t.location}"
 
     return output
 
