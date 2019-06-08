@@ -183,10 +183,8 @@ async def Tweet(url, config, conn):
     try:
         response = await Request(url)
         soup = BeautifulSoup(response, "html.parser")
-        location = soup.find("span", "ProfileHeaderCard-locationText u-dir").text
-        location = location[15:].replace("\n", " ")[:-10]
         tweets = soup.find_all("div", "tweet")
-        await Tweets(tweets, location, config, conn, url)
+        await Tweets(tweets, config, conn, url)
     except Exception as e:
         logme.critical(__name__+':Tweet:' + str(e))
 
