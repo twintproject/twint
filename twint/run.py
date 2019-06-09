@@ -130,7 +130,7 @@ class Twint:
             logme.debug(__name__+':Twint:notProfileFull')
             for tweet in self.feed:
                 self.count += 1
-                await output.Tweets(tweet, "", self.config, self.conn)
+                await output.Tweets(tweet, self.config, self.conn)
 
     async def tweets(self):
         await self.Feed()
@@ -141,7 +141,7 @@ class Twint:
             logme.debug(__name__+':Twint:tweets:notLocation')
             for tweet in self.feed:
                 self.count += 1
-                await output.Tweets(tweet, "", self.config, self.conn)
+                await output.Tweets(tweet, self.config, self.conn)
 
     async def main(self, callback=None):
 
