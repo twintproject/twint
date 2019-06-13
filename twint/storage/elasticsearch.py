@@ -198,7 +198,6 @@ def Tweet(Tweet, config):
                 "date": dt,
                 "timezone": Tweet.timezone,
                 "place": Tweet.place,
-                "location": Tweet.location,
                 "tweet": Tweet.tweet,
                 "hashtags": Tweet.hashtags,
                 "cashtags": Tweet.cashtags,
@@ -221,7 +220,7 @@ def Tweet(Tweet, config):
                 }
             }
     if Tweet.retweet:
-        j_data["_source"].udpate({"user_rt_id": Tweet.user_rt_id})
+        j_data["_source"].update({"user_rt_id": Tweet.user_rt_id})
     if Tweet.photos:
         _photos = []
         for photo in Tweet.photos:
@@ -249,7 +248,7 @@ def Tweet(Tweet, config):
             j_data["_source"].update({"geo_tweet": getLocation(Tweet.place)})
     actions.append(j_data)
 
-    es = Elasticsearch(config.Elasticsearch)
+    es = Elasticsearch(config.Elasticsearch, verify_certs=config.Skip_certs)
     if not _index_tweet_status:
         _index_tweet_status = createIndex(config, es, scope="tweet")
     with nostdout():
@@ -277,7 +276,7 @@ def Follow(user, config):
             }
     actions.append(j_data)
 
-    es = Elasticsearch(config.Elasticsearch)
+    es = Elasticsearch(config.Elasticsearch, verify_certs=config.Skip_certs)
     if not _index_follow_status:
         _index_follow_status = createIndex(config, es, scope="follow")
     with nostdout():
@@ -319,7 +318,7 @@ def UserProfile(user, config):
             j_data["_source"].update({"geo_user": _location})
     actions.append(j_data)
 
-    es = Elasticsearch(config.Elasticsearch)
+    es = Elasticsearch(config.Elasticsearch, verify_certs=config.Skip_certs)
     if not _index_user_status:
         _index_user_status = createIndex(config, es, scope="user")
     with nostdout():
