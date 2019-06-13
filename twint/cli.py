@@ -108,6 +108,7 @@ def initialize(args):
     c.Get_replies = args.get_replies
     c.Custom_query = args.custom_query
     c.Popular_tweets =  args.popular_tweets
+    c.Skip_certs = args.skip_certs
     return c
 
 def options():
@@ -192,6 +193,7 @@ def options():
     ap.add_argument("--get-replies", help="All replies to the tweet.", action="store_true")
     ap.add_argument("-cq", "--custom-query", help="Custom search query.")
     ap.add_argument("-pt", "--popular-tweets", help="Scrape popular tweets instead of recent ones.", action="store_true")
+    ap.add_argument("-sc", "--skip-certs", help="Skip certs verification, useful for SSC.", action="store_false")
     args = ap.parse_args()
 
     return args
