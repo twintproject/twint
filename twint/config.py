@@ -64,3 +64,4 @@ class Config:
     Near = ""
     Custom_query = ""
     Popular_tweets = False
+    Skip_certs = False
