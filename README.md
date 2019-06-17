@@ -129,7 +129,7 @@ Details on setting up Elasticsearch with Twint is located in the [wiki](https://
 ## Graph Visualization
 ![graph](https://i.imgur.com/EEJqB8n.png)
 
-[Graph](https://github.com/twintproject/twint/tree/master/graph) details are also located in the [wiki](https://github.com/twintproject/twint/wiki/Graph).
+[Graph](https://github.com/twintproject/twint/wiki/Graph) details are also located in the [wiki](https://github.com/twintproject/twint/wiki/Graph).
 
 We are developing a Twint Desktop App.
 
