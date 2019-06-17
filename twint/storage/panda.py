@@ -104,6 +104,7 @@ def update(object, config):
             "join_date": user.join_date,
             "join_time": user.join_time,
             "tweets": user.tweets,
+            "location": user.location,
             "following": user.following,
             "followers": user.followers,
             "likes": user.likes,
