@@ -91,14 +91,14 @@ def update(object, config):
             "search": str(config.Search),
             "near": config.Near
             }
-        if t.retweet:
-            _data.update({"user_rt_id": t.user_rt_id})
+        if Tweet.retweet:
+            _data.update({"user_rt_id": Tweet.user_rt_id})
         try:
-            _data.update({"near": t.near})
+            _data.update({"near": Tweet.near})
         except AttributeError:
             pass
         try:
-            _data.update({"geo": t.geo})
+            _data.update({"geo": Tweet.geo})
         except AttributeError:
             pass
         _object_blocks[_type].append(_data)
