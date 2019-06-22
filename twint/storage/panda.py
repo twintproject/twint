@@ -91,6 +91,16 @@ def update(object, config):
             "search": str(config.Search),
             "near": config.Near
             }
+        if t.retweet:
+            _data.update({"user_rt_id": t.user_rt_id})
+        try:
+            _data.update({"near": t.near})
+        except AttributeError:
+            pass
+        try:
+            _data.update({"geo": t.geo})
+        except AttributeError:
+            pass
         _object_blocks[_type].append(_data)
     elif _type == "user":
         user = object
