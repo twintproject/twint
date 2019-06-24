@@ -86,7 +86,8 @@ def createIndex(config, instance, **scope):
                         "geo_near": {"type": "geo_point"},
                         "geo_tweet": {"type": "geo_point"},
                         "photos": {"type": "text"},
-                        "user_rt_id": {"type": "integer"}
+                        "user_rt_id": {"type": "integer"},
+                        "mentions": {"type": "keyword"}
                         }
                     },
                     "settings": {
