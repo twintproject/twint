@@ -47,7 +47,7 @@ class Twint:
         if not os.path.exists(resumeFile):
             return -1
         with open(resumeFile, 'r') as rFile:
-            _init = rFile.readlines()[-1]
+            _init = rFile.readlines()[-1].strip('\n')
             return _init
 
     async def Feed(self):
