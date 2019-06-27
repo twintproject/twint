@@ -125,7 +125,10 @@ async def checkData(tweet, config, conn):
 
             if config.Store_object:
                 logme.debug(__name__+':checkData:Store_object')
-                tweets_object.append(tweet)
+                if hasattr(config.Store_object_tweets_list, 'append'):
+                    config.Store_object_tweets_list.append(tweet)
+                else:
+                    tweets_object.append(tweet)
 
             if config.Elasticsearch:
                 logme.debug(__name__+':checkData:Elasticsearch')
