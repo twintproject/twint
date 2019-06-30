@@ -46,7 +46,7 @@ pip3 install -r requirements.txt
 
 **Pip:**
 ```bash
-pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@origin/master#egg=twint
+pip3 install --user --upgrade -e git+https://github.com/twintproject/twint.git@origin/master#egg=twint
 ```
 
 **Pipenv**:
