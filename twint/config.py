@@ -37,6 +37,7 @@ class Config:
     User_full = False
     Profile_full = False
     Store_object = False
+    Store_object_tweets_list = None
     Pandas_type = None
     Pandas = False
     Index_tweets = "twinttweets"
