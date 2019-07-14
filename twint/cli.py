@@ -32,9 +32,15 @@ def check(args):
         if args.userid:
             error("Contradicting Args",
                   "--userid and -u cannot be used together.")
+        if args.all:
+            error("Contradicting Args",
+                  "--all and -u cannot be used together")
     elif args.search is None:
         if (args.geo or args.near) is None:
             error("Error", "Please use at least -u, -s, -g or --near.")
+    elif args.all and args.userid:
+        error("Contradicting Args",
+              "--all and --userid cannot be used together")
     if args.output is None:
         if args.csv:
             error("Error", "Please specify an output file (Example: -o file.csv).")
