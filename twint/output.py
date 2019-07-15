@@ -7,19 +7,19 @@ from .storage import db, elasticsearch, write, panda
 
 import logging as logme
 
-follow_object = []
+follows_object = []
 tweets_object = []
-user_object = []
+users_object = []
 
 author_list = {''}
 author_list.pop()
 
-_follow_object = {}
+_follows_object = {}
 
 def clean_follow_list():
     logme.debug(__name__+':clean_follow_list')
-    global _follow_object
-    _follow_object = {}
+    global _follows_object
+    _follows_object = {}
 
 def datecheck(datestamp, config):
     logme.debug(__name__+':datecheck')
@@ -151,7 +151,7 @@ async def Tweets(tweets, config, conn, url=''):
 
 async def Users(u, config, conn):
     logme.debug(__name__+':User')
-    global user_object
+    global users_object
 
     user = User(u)
     output = format.User(config.Format, user)
@@ -172,14 +172,14 @@ async def Users(u, config, conn):
 
     if config.Store_object:
         logme.debug(__name__+':User:Store_object')
-        user_object.append(user) # twint.user.user
+        users_object.append(user) # twint.user.user
 
     _output(user, output, config)
 
 async def Username(username, config, conn):
     logme.debug(__name__+':Username')
-    global _follow_object
-    global follow_object
+    global _follows_object
+    global follows_object
     follow_var = config.Following*"following" + config.Followers*"followers"
 
     if config.Database:
@@ -191,16 +191,16 @@ async def Username(username, config, conn):
         elasticsearch.Follow(username, config)
 
     if config.Store_object:
-        follow_object.append(username)
+        follows_object.append(username)
 
     if config.Pandas:
         logme.debug(__name__+':Username:object+pandas')
         try:
-            _ = _follow_object[config.Username][follow_var]
+            _ = _follows_object[config.Username][follow_var]
         except KeyError:
-            _follow_object.update({config.Username: {follow_var: []}})
-        _follow_object[config.Username][follow_var].append(username)
+            _follows_object.update({config.Username: {follow_var: []}})
+        _follows_object[config.Username][follow_var].append(username)
         if config.Pandas_au:
             logme.debug(__name__+':Username:object+pandas+au')
-            panda.update(_follow_object[config.Username], config)
+            panda.update(_follows_object[config.Username], config)
     _output(username, username, config)
