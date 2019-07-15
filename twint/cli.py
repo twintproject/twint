@@ -36,7 +36,7 @@ def check(args):
             error("Contradicting Args",
                   "--all and -u cannot be used together")
     elif args.search is None:
-        if (args.geo or args.near) is None:
+        if (args.geo or args.near) is None and not (args.all or args.userid):
             error("Error", "Please use at least -u, -s, -g or --near.")
     elif args.all and args.userid:
         error("Contradicting Args",
