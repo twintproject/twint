@@ -60,7 +60,6 @@ def init(db):
                     time text not null,
                     timezone text not null,
                     place text default '',
-                    location text not null,
                     replies_count integer,
                     likes_count integer,
                     retweets_count integer,
@@ -68,7 +67,6 @@ def init(db):
                     user_id_str text not null,
                     screen_name text not null,
                     name text default '',
-                    profile_image_url text,
                     link text,
                     mentions text,
                     hashtags text,
@@ -77,6 +75,8 @@ def init(db):
                     photos text,
                     quote_url text,
                     video integer,
+                    geo text,
+                    near text,
                     time_update integer not null,
                     PRIMARY KEY (id)
                 );
@@ -229,7 +229,6 @@ def tweets(conn, Tweet, config):
                     Tweet.timestamp,
                     Tweet.timezone,
                     Tweet.place,
-                    Tweet.location,
                     Tweet.replies_count,
                     Tweet.likes_count,
                     Tweet.retweets_count,
@@ -237,7 +236,6 @@ def tweets(conn, Tweet, config):
                     Tweet.user_id_str,
                     Tweet.username,
                     Tweet.name,
-                    Tweet.profile_image_url,
                     Tweet.link,
                     ",".join(Tweet.mentions),
                     ",".join(Tweet.hashtags),
@@ -246,6 +244,8 @@ def tweets(conn, Tweet, config):
                     ",".join(Tweet.photos),
                     Tweet.quote_url,
                     Tweet.video,
+                    Tweet.geo,
+                    Tweet.near,
                     time_ms)
         cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
 
@@ -253,7 +253,7 @@ def tweets(conn, Tweet, config):
             query = 'INSERT INTO favorites VALUES(?,?)'
             cursor.execute(query, (config.User_id, Tweet.id))
 
-        if Tweet.retweet == 1:
+        if Tweet.retweet:
             query = 'INSERT INTO retweets VALUES(?,?)'
             cursor.execute(query, (config.User_id, Tweet.id))
 
