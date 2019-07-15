@@ -7,9 +7,9 @@ from .storage import db, elasticsearch, write, panda
 
 import logging as logme
 
-follows_object = []
-tweets_object = []
-users_object = []
+follows_list = []
+tweets_list = []
+users_list = []
 
 author_list = {''}
 author_list.pop()
@@ -120,7 +120,7 @@ async def checkData(tweet, config, conn):
                 if hasattr(config.Store_object_tweets_list, 'append'):
                     config.Store_object_tweets_list.append(tweet)
                 else:
-                    tweets_object.append(tweet)
+                    tweets_list.append(tweet)
 
             if config.Elasticsearch:
                 logme.debug(__name__+':checkData:Elasticsearch')
@@ -151,7 +151,7 @@ async def Tweets(tweets, config, conn, url=''):
 
 async def Users(u, config, conn):
     logme.debug(__name__+':User')
-    global users_object
+    global users_list
 
     user = User(u)
     output = format.User(config.Format, user)
@@ -172,14 +172,14 @@ async def Users(u, config, conn):
 
     if config.Store_object:
         logme.debug(__name__+':User:Store_object')
-        users_object.append(user) # twint.user.user
+        users_list.append(user) # twint.user.user
 
     _output(user, output, config)
 
 async def Username(username, config, conn):
     logme.debug(__name__+':Username')
     global _follows_object
-    global follows_object
+    global follows_list
     follow_var = config.Following*"following" + config.Followers*"followers"
 
     if config.Database:
@@ -191,7 +191,7 @@ async def Username(username, config, conn):
         elasticsearch.Follow(username, config)
 
     if config.Store_object:
-        follows_object.append(username)
+        follows_list.append(username)
 
     if config.Pandas:
         logme.debug(__name__+':Username:object+pandas')
