@@ -14,12 +14,12 @@ user_object = []
 author_list = {''}
 author_list.pop()
 
-__follow_object = {}
+_follow_object = {}
 
 def clean_follow_list():
     logme.debug(__name__+':clean_follow_list')
-    global __follow_object
-    __follow_object = {}
+    global _follow_object
+    _follow_object = {}
 
 def datecheck(datestamp, config):
     logme.debug(__name__+':datecheck')
@@ -178,7 +178,7 @@ async def Users(u, config, conn):
 
 async def Username(username, config, conn):
     logme.debug(__name__+':Username')
-    global __follow_object
+    global _follow_object
     global follow_object
     follow_var = config.Following*"following" + config.Followers*"followers"
 
@@ -196,11 +196,11 @@ async def Username(username, config, conn):
     if config.Pandas:
         logme.debug(__name__+':Username:object+pandas')
         try:
-            _ = __follow_object[config.Username][follow_var]
+            _ = _follow_object[config.Username][follow_var]
         except KeyError:
-            __follow_object.update({config.Username: {follow_var: []}})
-        __follow_object[config.Username][follow_var].append(username)
+            _follow_object.update({config.Username: {follow_var: []}})
+        _follow_object[config.Username][follow_var].append(username)
         if config.Pandas_au:
             logme.debug(__name__+':Username:object+pandas+au')
-            panda.update(__follow_object[config.Username], config)
+            panda.update(_follow_object[config.Username], config)
     _output(username, username, config)
