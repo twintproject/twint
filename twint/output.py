@@ -132,11 +132,7 @@ async def checkData(tweet, config, conn):
 
 async def Tweets(tweets, config, conn, url=''):
     logme.debug(__name__+':Tweets')
-    if (config.Profile_full or config.Location) and config.Get_replies:
-        logme.debug(__name__+':Tweets:full+loc+replies')
-        for tw in tweets:
-            await checkData(tw, config, conn)
-    elif config.Favorites or config.Profile_full or config.Location:
+    if config.Favorites or config.Profile_full or config.Location:
         logme.debug(__name__+':Tweets:fav+full+loc')
         for tw in tweets:
             if tw['data-item-id'] == url.split('?')[0].split('/')[-1]:

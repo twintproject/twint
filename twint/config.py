@@ -61,7 +61,6 @@ class Config:
     Retweets = False
     Query = None
     Hide_output = False
-    Get_replies = False
     Near = ""
     Custom_query = ""
     Popular_tweets = False
