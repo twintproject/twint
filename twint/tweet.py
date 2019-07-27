@@ -94,6 +94,8 @@ def Tweet(tw, config):
     t.retweet = getRetweet(config.Profile, t.username, config.Username)
     if t.retweet:
         t.user_rt_id = config.User_id
+    else:
+        t.user_rt_id = 0
     t.quote_url = getQuoteURL(tw)
     t.near = config.Near if config.Near else ""
     t.geo = config.Geo if config.Geo else ""
