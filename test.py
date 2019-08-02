@@ -16,7 +16,8 @@ def test_db(c, run):
 
 def custom(c, run, _type):
     print("[+] Beginning custom {} test in {}".format(_type, str(run)))
-    c.Custom = ["id", "username"]
+    c.Custom['tweet'] = ["id", "username"]
+    c.Custom['user'] = ["id", "username"]
     run(c)
 
 def test_json(c, run):
