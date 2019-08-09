@@ -115,6 +115,7 @@ def initialize(args):
     c.Popular_tweets =  args.popular_tweets
     c.Skip_certs = args.skip_certs
     c.Hide_output = args.hide_output
+    c.Native_retweets = args.native_retweets
     return c
 
 def options():
@@ -200,6 +201,7 @@ def options():
     ap.add_argument("-pt", "--popular-tweets", help="Scrape popular tweets instead of recent ones.", action="store_true")
     ap.add_argument("-sc", "--skip-certs", help="Skip certs verification, useful for SSC.", action="store_false")
     ap.add_argument("-ho", "--hide-output", help="Hide output, no tweets will be displayed.", action="store_true")
+    ap.add_argument("-nr", "--native-retweets", help="Filter the results for retweets only.", action="store_true")
     args = ap.parse_args()
 
     return args

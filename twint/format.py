@@ -32,7 +32,7 @@ def Tweet(config, t):
         logme.debug(__name__+':Tweet:notFormat')
         output = f"{t.id_str} {t.datestamp} {t.timestamp} {t.timezone} "
 
-        if t.retweet == 1:
+        if t.retweet:
            output += "RT "
 
         output += f"<{t.username}> {t.tweet}"
