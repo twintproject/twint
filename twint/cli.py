@@ -114,6 +114,7 @@ def initialize(args):
     c.Custom_query = args.custom_query
     c.Popular_tweets =  args.popular_tweets
     c.Skip_certs = args.skip_certs
+    c.Hide_output = args.hide_output
     return c
 
 def options():
@@ -198,6 +199,7 @@ def options():
     ap.add_argument("-cq", "--custom-query", help="Custom search query.")
     ap.add_argument("-pt", "--popular-tweets", help="Scrape popular tweets instead of recent ones.", action="store_true")
     ap.add_argument("-sc", "--skip-certs", help="Skip certs verification, useful for SSC.", action="store_false")
+    ap.add_argument("-ho", "--hide-output", help="Hide output, no tweets will be displayed.", action="store_true")
     args = ap.parse_args()
 
     return args
