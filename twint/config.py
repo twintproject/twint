@@ -65,3 +65,4 @@ class Config:
     Custom_query = ""
     Popular_tweets = False
     Skip_certs = False
+    Native_retweets = False

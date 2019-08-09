@@ -109,6 +109,8 @@ async def Search(config, init):
         q += " filter:media"
     if config.Replies:
         q += " filter:replies"
+    if config.Native_retweets:
+        q += " filter:nativeretweets"
     if config.Custom_query:
         q = config.Custom_query
 
