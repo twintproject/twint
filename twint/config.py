@@ -66,7 +66,8 @@ class Config:
     Popular_tweets = False
     Skip_certs = False
     Native_retweets = False
-    c.Min_likes = 0
-    c.Min_retweets = 0
-    c.Min_replies = 0
-    c.Links = None
+    Min_likes = 0
+    Min_retweets = 0
+    Min_replies = 0
+    Links = None
+    Source = None
