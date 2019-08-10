@@ -71,3 +71,4 @@ class Config:
     Min_replies = 0
     Links = None
     Source = None
+    Members_list = None
