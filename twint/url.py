@@ -112,7 +112,7 @@ async def Search(config, init):
     if config.Native_retweets:
         q += " filter:nativeretweets"
     if config.Min_likes:
-        q += f" min_favs:{config.Min_likes}"
+        q += f" min_faves:{config.Min_likes}"
     if config.Min_retweets:
         q += f" min_retweets:{config.Min_retweets}"
     if config.Min_replies:
@@ -121,6 +121,8 @@ async def Search(config, init):
         q += " filter:links"
     elif config.Links == "exclude":
         q += " exclude:links"
+    if config.Source:
+        q += f" source:\"{config.Source}\""
     if config.Custom_query:
         q = config.Custom_query
 
