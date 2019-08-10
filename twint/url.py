@@ -111,6 +111,12 @@ async def Search(config, init):
         q += " filter:replies"
     if config.Native_retweets:
         q += " filter:nativeretweets"
+    if config.Min_likes:
+        q += f" min_favs:{config.Min_likes}"
+    if config.Min_retweets:
+        q += f" min_retweets:{config.Min_retweets}"
+    if config.Min_replies:
+        q += f" min_replies:{config.Min_replies}"
     if config.Custom_query:
         q = config.Custom_query
 
