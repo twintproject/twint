@@ -72,3 +72,4 @@ class Config:
     Links = None
     Source = None
     Members_list = None
+    Filter_retweets = False
