@@ -87,7 +87,8 @@ def createIndex(config, instance, **scope):
                         "geo_tweet": {"type": "geo_point"},
                         "photos": {"type": "text"},
                         "user_rt_id": {"type": "integer"},
-                        "mentions": {"type": "keyword"}
+                        "mentions": {"type": "keyword"},
+                        "source": {"type": "keyword"}
                         }
                     },
                     "settings": {
@@ -247,6 +248,8 @@ def Tweet(Tweet, config):
         _t_place = getLocation(Tweet.place)
         if _t_place:
             j_data["_source"].update({"geo_tweet": getLocation(Tweet.place)})
+    if Tweet.source:
+        j_data["_source"].update({"source": Tweet.Source})
     actions.append(j_data)
 
     es = Elasticsearch(config.Elasticsearch, verify_certs=config.Skip_certs)

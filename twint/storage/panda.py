@@ -89,18 +89,11 @@ def update(object, config):
             "nretweets": int(Tweet.retweets_count),
             "quote_url": Tweet.quote_url,
             "search": str(config.Search),
-            "near": config.Near
+            "near": Tweet.near,
+            "geo": Tweet.geo,
+            "source": Tweet.source,
+            "user_rt_id": Tweet.user_rt_id
             }
-        if Tweet.retweet:
-            _data.update({"user_rt_id": Tweet.user_rt_id})
-        try:
-            _data.update({"near": Tweet.near})
-        except AttributeError:
-            pass
-        try:
-            _data.update({"geo": Tweet.geo})
-        except AttributeError:
-            pass
         _object_blocks[_type].append(_data)
     elif _type == "user":
         user = object
