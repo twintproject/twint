@@ -77,6 +77,7 @@ def init(db):
                     video integer,
                     geo text,
                     near text,
+                    source text,
                     time_update integer not null,
                     PRIMARY KEY (id)
                 );
@@ -246,8 +247,9 @@ def tweets(conn, Tweet, config):
                     Tweet.video,
                     Tweet.geo,
                     Tweet.near,
+                    Tweet.source,
                     time_ms)
-        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
+        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
 
         if config.Favorites:
             query = 'INSERT INTO favorites VALUES(?,?)'

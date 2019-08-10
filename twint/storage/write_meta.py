@@ -22,18 +22,12 @@ def tweetData(t):
             "link": t.link,
             "retweet": t.retweet,
             "quote_url": t.quote_url,
-            "video": t.video
+            "video": t.video,
+            "user_rt_id": t.user_rt_id,
+            "near": t.near,
+            "geo": t.geo,
+            "source": t.source
             }
-    if t.retweet:
-        data.update({"user_rt_id": t.user_rt_id})
-    try:
-        data.update({"near": t.near})
-    except AttributeError:
-        pass
-    try:
-        data.update({"geo": t.geo})
-    except AttributeError:
-        pass
     return data
 
 def tweetFieldnames():
@@ -63,7 +57,8 @@ def tweetFieldnames():
             "video",
             "user_rt_id",
             "near",
-            "geo"
+            "geo",
+            "source"
             ]
     return fieldnames
 
