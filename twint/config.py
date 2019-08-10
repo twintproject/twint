@@ -69,3 +69,4 @@ class Config:
     c.Min_likes = 0
     c.Min_retweets = 0
     c.Min_replies = 0
+    c.Links = None

@@ -117,6 +117,10 @@ async def Search(config, init):
         q += f" min_retweets:{config.Min_retweets}"
     if config.Min_replies:
         q += f" min_replies:{config.Min_replies}"
+    if config.Links == "include":
+        q += " filter:links"
+    elif config.Links == "exclude":
+        q += " exclude:links"
     if config.Custom_query:
         q = config.Custom_query
 
