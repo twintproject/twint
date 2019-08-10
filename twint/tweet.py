@@ -100,4 +100,5 @@ def Tweet(tw, config):
     t.quote_url = getQuoteURL(tw)
     t.near = config.Near if config.Near else ""
     t.geo = config.Geo if config.Geo else ""
+    t.source = config.Source if config.Source else ""
     return t
