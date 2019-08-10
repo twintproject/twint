@@ -119,6 +119,7 @@ def initialize(args):
     c.Min_likes = args.min_likes
     c.Min_retweets = args.min_retweets
     c.Min_replies = args.min_replies
+    c.Links = args.links
     return c
 
 def options():
@@ -205,9 +206,11 @@ def options():
     ap.add_argument("-sc", "--skip-certs", help="Skip certs verification, useful for SSC.", action="store_false")
     ap.add_argument("-ho", "--hide-output", help="Hide output, no tweets will be displayed.", action="store_true")
     ap.add_argument("-nr", "--native-retweets", help="Filter the results for retweets only.", action="store_true")
-    ap.add_argument("--min-likes", help="Filter the tweets by minimum number of likes")
-    ap.add_argument("--min-retweets", help="Filter the tweets by minimum number of retweets")
-    ap.add_argument("--min-replies", help="Filter the tweets by minimum number of replies")
+    ap.add_argument("--min-likes", help="Filter the tweets by minimum number of likes.")
+    ap.add_argument("--min-retweets", help="Filter the tweets by minimum number of retweets.")
+    ap.add_argument("--min-replies", help="Filter the tweets by minimum number of replies.")
+    ap.add_argument("--links", help="Include or exclude tweets containing one o more links. If not specified"+
+                    " you will get both tweets that might contain links or not.")
     args = ap.parse_args()
 
     return args
