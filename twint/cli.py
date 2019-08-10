@@ -116,6 +116,9 @@ def initialize(args):
     c.Skip_certs = args.skip_certs
     c.Hide_output = args.hide_output
     c.Native_retweets = args.native_retweets
+    c.Min_likes = args.min_likes
+    c.Min_retweets = args.min_retweets
+    c.Min_replies = args.min_replies
     return c
 
 def options():
@@ -202,6 +205,9 @@ def options():
     ap.add_argument("-sc", "--skip-certs", help="Skip certs verification, useful for SSC.", action="store_false")
     ap.add_argument("-ho", "--hide-output", help="Hide output, no tweets will be displayed.", action="store_true")
     ap.add_argument("-nr", "--native-retweets", help="Filter the results for retweets only.", action="store_true")
+    ap.add_argument("--min-likes", help="Filter the tweets by minimum number of likes")
+    ap.add_argument("--min-retweets", help="Filter the tweets by minimum number of retweets")
+    ap.add_argument("--min-replies", help="Filter the tweets by minimum number of replies")
     args = ap.parse_args()
 
     return args
