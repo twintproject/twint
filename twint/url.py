@@ -123,6 +123,8 @@ async def Search(config, init):
         q += " exclude:links"
     if config.Source:
         q += f" source:\"{config.Source}\""
+    if config.Members_list:
+        q += f" list:{config.Members_list}"
     if config.Custom_query:
         q = config.Custom_query
 
