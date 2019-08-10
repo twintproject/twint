@@ -121,6 +121,7 @@ def initialize(args):
     c.Min_replies = args.min_replies
     c.Links = args.links
     c.Source = args.source
+    c.Members_list = args.members_list
     return c
 
 def options():
@@ -213,6 +214,7 @@ def options():
     ap.add_argument("--links", help="Include or exclude tweets containing one o more links. If not specified"+
                     " you will get both tweets that might contain links or not.")
     ap.add_argument("--source", help="Filter the tweets for specific source client.")
+    ap.add_argument("--members-list", help="Filter the tweets sent by users in a given list.")
     args = ap.parse_args()
 
     return args
