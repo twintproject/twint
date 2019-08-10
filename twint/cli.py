@@ -122,6 +122,7 @@ def initialize(args):
     c.Links = args.links
     c.Source = args.source
     c.Members_list = args.members_list
+    c.Filter_retweets = args.filter_retweets
     return c
 
 def options():
@@ -215,6 +216,7 @@ def options():
                     " you will get both tweets that might contain links or not.")
     ap.add_argument("--source", help="Filter the tweets for specific source client.")
     ap.add_argument("--members-list", help="Filter the tweets sent by users in a given list.")
+    ap.add_argument("-fr", "--filter-retweets", help="Exclude retweets from the results.", action="store_true")
     args = ap.parse_args()
 
     return args
