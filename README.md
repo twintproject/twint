@@ -172,9 +172,10 @@ Twitter can shadow-ban accounts, which means that their tweets will not be avail
 `twint --userlist inputlist --user-full`
 
 ## Featured Blog Posts:
-- https://pielco11.ovh/posts/twint-osint/
-- https://null-byte.wonderhowto.com/how-to/mine-twitter-for-targeted-information-with-twint-0193853/
-- https://towardsdatascience.com/analyzing-tweets-with-nlp-in-minutes-with-spark-optimus-and-twint-a0c96084995f
+- [How to use Twint as an OSINT tool](https://pielco11.ovh/posts/twint-osint/)
+- [Basic tutorial made by Null Byte](https://null-byte.wonderhowto.com/how-to/mine-twitter-for-targeted-information-with-twint-0193853/)
+- [Analyzing Tweets with NLP in minutes with Spark, Optimus and Twint](https://towardsdatascience.com/analyzing-tweets-with-nlp-in-minutes-with-spark-optimus-and-twint-a0c96084995f)
+- [Loading tweets into Kafka and Neo4j](https://markhneedham.com/blog/2019/05/29/loading-tweets-twint-kafka-neo4j/)
 
 ## Contact
 
