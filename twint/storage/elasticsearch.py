@@ -66,7 +66,6 @@ def createIndex(config, instance, **scope):
                         "tweet": {"type": "text"},
                         "hashtags": {"type": "keyword"},
                         "cashtags": {"type": "keyword"},
-                        "user_id": {"type": "long"},
                         "user_id_str": {"type": "keyword"},
                         "username": {"type": "keyword"},
                         "name": {"type": "text"},
@@ -86,9 +85,12 @@ def createIndex(config, instance, **scope):
                         "geo_near": {"type": "geo_point"},
                         "geo_tweet": {"type": "geo_point"},
                         "photos": {"type": "text"},
-                        "user_rt_id": {"type": "integer"},
+                        "user_rt_id": {"type": "keyword"},
                         "mentions": {"type": "keyword"},
-                        "source": {"type": "keyword"}
+                        "source": {"type": "keyword"},
+                        "user_rt": {"type": "keyword"},
+                        "retweet_id": {"type": "keyword"},
+                        "reply_to": {"type": "nested"}
                         }
                     },
                     "settings": {
@@ -203,7 +205,6 @@ def Tweet(Tweet, config):
                 "tweet": Tweet.tweet,
                 "hashtags": Tweet.hashtags,
                 "cashtags": Tweet.cashtags,
-                "user_id": Tweet.user_id,
                 "user_id_str": Tweet.user_id_str,
                 "username": Tweet.username,
                 "name": Tweet.name,
@@ -223,6 +224,10 @@ def Tweet(Tweet, config):
             }
     if Tweet.retweet:
         j_data["_source"].update({"user_rt_id": Tweet.user_rt_id})
+        j_data["_source"].update({"user_rt": Tweet.user_rt})
+        j_data["_source"].update({"retweet_id": Tweet.retweet_id})
+    if Tweet.reply_to:
+        j_data["_source"].update({"reply_to": Tweet.reply_to})
     if Tweet.photos:
         _photos = []
         for photo in Tweet.photos:
