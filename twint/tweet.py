@@ -54,12 +54,16 @@ def getStat(tw, _type):
     st = f"ProfileTweet-action--{_type} u-hiddenVisually"
     return tw.find("span", st).find("span")["data-tweet-stat-count"]
 
-def getRetweet(profile, username, user):
+def getRetweet(tw):
     """Get Retweet
     """
     logme.debug(__name__+':getRetweet')
-    if profile and username.lower() != user.lower():
-        return 1
+    _rt_object = tw.find('span', 'js-retweet-text')
+    if _rt_object:
+        _rt_id = _rt_object.find('a')['data-user-id']
+        _rt_username = _rt_object.find('a')['href'][1:]
+        return  _rt_id, _rt_username
+    return '', ''
 
 def Tweet(tw, config):
     """Create Tweet object
@@ -91,14 +95,12 @@ def Tweet(tw, config):
     t.retweets_count = getStat(tw, "retweet")
     t.likes_count = getStat(tw, "favorite")
     t.link = f"https://twitter.com/{t.username}/status/{t.id}"
-    t.retweet = getRetweet(config.Profile, t.username, config.Username)
-    if t.retweet or config.Native_retweets:
-        t.retweet = True
-        t.user_rt_id = config.User_id
-    else:
-        t.user_rt_id = 0
+    t.user_rt_id, t.user_rt = getRetweet(tw)
+    t.retweet = True if t.user_rt else False
+    t.retweet_id = tw['data-retweet-id'] if t.user_rt else ''
     t.quote_url = getQuoteURL(tw)
     t.near = config.Near if config.Near else ""
     t.geo = config.Geo if config.Geo else ""
     t.source = config.Source if config.Source else ""
+    t.reply_to = [{'user_id': t['id_str'], 'username': t['screen_name']} for t in json.loads(tw["data-reply-to-users-json"])]
     return t
