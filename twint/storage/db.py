@@ -88,13 +88,27 @@ def init(db):
             CREATE TABLE IF NOT EXISTS
                 retweets(
                     user_id integer not null,
+                    username text not null,
                     tweet_id integer not null,
+                    retweet_id integer not null,
                     CONSTRAINT retweets_pk PRIMARY KEY(user_id, tweet_id),
                     CONSTRAINT user_id_fk FOREIGN KEY(user_id) REFERENCES users(id),
                     CONSTRAINT tweet_id_fk FOREIGN KEY(tweet_id) REFERENCES tweets(id)
                 );
         """
         cursor.execute(table_retweets)
+    
+        table_reply_to = """
+            CREATE TABLE IF NOT EXISTS
+                replies(
+                    tweet_id integer not null,
+                    user_id integer not null,
+                    username text not null,
+                    CONSTRAINT replies_pk PRIMARY KEY (user_id, tweet_id),
+                    CONSTRAINT tweet_id_fk FOREIGN KEY (tweet_id) REFERENCES tweets(id)
+                );
+        """
+        cursor.execute(table_reply_to)
 
         table_favorites =  """
             CREATE TABLE IF NOT EXISTS
@@ -256,8 +270,13 @@ def tweets(conn, Tweet, config):
             cursor.execute(query, (config.User_id, Tweet.id))
 
         if Tweet.retweet:
-            query = 'INSERT INTO retweets VALUES(?,?)'
-            cursor.execute(query, (config.User_id, Tweet.id))
+            query = 'INSERT INTO retweets VALUES(?,?,?,?)'
+            cursor.execute(query, (int(Tweet.user_rt_id), Tweet.user_rt, Tweet.id, int(Tweet.retweet_id)))
+        
+        if Tweet.reply_to:
+            for reply in Tweet.reply_to:
+                query = 'INSERT INTO replies VALUES(?,?,?)'
+                cursor.execute(query, (Tweet.id, int(reply['user_id']), reply['username']))
 
         conn.commit()
     except sqlite3.IntegrityError:
