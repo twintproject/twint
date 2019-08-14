@@ -90,7 +90,14 @@ def createIndex(config, instance, **scope):
                         "source": {"type": "keyword"},
                         "user_rt": {"type": "keyword"},
                         "retweet_id": {"type": "keyword"},
-                        "reply_to": {"type": "nested"}
+                        "reply_to": {
+                            "type": "nested",
+                            "properties": {
+                                "user_id": {"type": "keyword"},
+                                "username": {"type": "keyword"}
+                            }
+                        },
+                        "retweet_date": {"type": "date", "format": "yyyy-MM-dd HH:mm:ss"},
                         }
                     },
                     "settings": {
@@ -226,6 +233,7 @@ def Tweet(Tweet, config):
         j_data["_source"].update({"user_rt_id": Tweet.user_rt_id})
         j_data["_source"].update({"user_rt": Tweet.user_rt})
         j_data["_source"].update({"retweet_id": Tweet.retweet_id})
+        j_data["_source"].update({"retweet_date": Tweet.retweet_date})
     if Tweet.reply_to:
         j_data["_source"].update({"reply_to": Tweet.reply_to})
     if Tweet.photos:
