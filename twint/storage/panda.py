@@ -95,7 +95,8 @@ def update(object, config):
             "user_rt_id": Tweet.user_rt_id,
             "user_rt": Tweet.user_rt,
             "retweet_id": Tweet.retweet_id,
-            "reply_to": Tweet.reply_to
+            "reply_to": Tweet.reply_to,
+            "retweet_date": Tweet.retweet_date
             }
         _object_blocks[_type].append(_data)
     elif _type == "user":

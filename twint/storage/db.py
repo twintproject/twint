@@ -3,6 +3,8 @@ import sys
 import time
 import hashlib
 
+from datetime import datetime
+
 def Conn(database):
     if database:
         print("[+] Inserting into Database: " + str(database))
@@ -91,6 +93,7 @@ def init(db):
                     username text not null,
                     tweet_id integer not null,
                     retweet_id integer not null,
+                    retweet_date integer not null,
                     CONSTRAINT retweets_pk PRIMARY KEY(user_id, tweet_id),
                     CONSTRAINT user_id_fk FOREIGN KEY(user_id) REFERENCES users(id),
                     CONSTRAINT tweet_id_fk FOREIGN KEY(tweet_id) REFERENCES tweets(id)
@@ -270,8 +273,9 @@ def tweets(conn, Tweet, config):
             cursor.execute(query, (config.User_id, Tweet.id))
 
         if Tweet.retweet:
-            query = 'INSERT INTO retweets VALUES(?,?,?,?)'
-            cursor.execute(query, (int(Tweet.user_rt_id), Tweet.user_rt, Tweet.id, int(Tweet.retweet_id)))
+            query = 'INSERT INTO retweets VALUES(?,?,?,?,?)'
+            _d = datetime.timestamp(datetime.strptime(Tweet.retweet_date, "%Y-%m-%d %H:%M:%S"))
+            cursor.execute(query, (int(Tweet.user_rt_id), Tweet.user_rt, Tweet.id, int(Tweet.retweet_id), _d))
         
         if Tweet.reply_to:
             for reply in Tweet.reply_to:
