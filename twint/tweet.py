@@ -1,4 +1,5 @@
 from time import strftime, localtime
+from datetime import datetime
 import json
 
 import logging as logme
@@ -98,6 +99,7 @@ def Tweet(tw, config):
     t.user_rt_id, t.user_rt = getRetweet(tw)
     t.retweet = True if t.user_rt else False
     t.retweet_id = tw['data-retweet-id'] if t.user_rt else ''
+    t.retweet_date = datetime.fromtimestamp(((t.id >> 22) + 1288834974657)/1000.0).strftime("%Y-%m-%d %H:%M:%S") if t.user_rt else ''
     t.quote_url = getQuoteURL(tw)
     t.near = config.Near if config.Near else ""
     t.geo = config.Geo if config.Geo else ""

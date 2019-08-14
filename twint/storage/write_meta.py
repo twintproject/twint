@@ -29,7 +29,8 @@ def tweetData(t):
             "user_rt_id": t.user_rt_id,
             "user_rt": t.user_rt,
             "retweet_id": t.retweet_id,
-            "reply_to": t.reply_to
+            "reply_to": t.reply_to,
+            "retweet_date": t.retweet_date
             }
     return data
 
@@ -64,7 +65,8 @@ def tweetFieldnames():
             "user_rt_id",
             "user_rt",
             "retweet_id",
-            "reply_to"
+            "reply_to",
+            "retweet_date"
             ]
     return fieldnames
 
