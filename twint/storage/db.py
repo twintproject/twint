@@ -21,7 +21,7 @@ def init(db):
     try:
         conn = sqlite3.connect(db)
         cursor = conn.cursor()
-
+        cursor.execute('PRAGMA journal_mode=wal')
         table_users = """
             CREATE TABLE IF NOT EXISTS
                 users(
