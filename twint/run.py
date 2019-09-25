@@ -36,12 +36,12 @@ class Twint:
             storage.panda.clean()
 
         if not self.config.Timedelta:
-            if (self.d._until - self.d._since).days > 30:
-                self.config.Timedelta = 30
+            if (self.d._until - self.d._since) > timedelta(days=30):
+                self.config.Timedelta = timedelta(days=30)
                 logme.debug(__name__+':Twint:__init__:timedelta_fixed')
             else:
                 logme.debug(__name__+':Twint:__init__:timedelta_unfixed')
-                self.config.Timedelta = (self.d._until - self.d._since).days
+                self.config.Timedelta = (self.d._until - self.d._since)
 
     def get_resume(self, resumeFile):
         if not os.path.exists(resumeFile):
@@ -166,7 +166,7 @@ class Twint:
 
         if self.config.TwitterSearch and self.config.Since and self.config.Until:
             logme.debug(__name__+':Twint:main:search+since+until')
-            _days = timedelta(days=int(self.config.Timedelta))
+            _days = self.config.Timedelta
             while self.d._since < self.d._until:
                 self.config.Since = str(self.d._until - _days)
                 self.config.Until = str(self.d._until)
