@@ -62,6 +62,13 @@ def loadUserList(ul, _type):
         return un[15:]
     return userlist
 
+
+def getTimeDelta(arg):
+    if arg:
+        return timedelta(days=int(arg))
+    return None
+
+
 def initialize(args):
     """ Set default values for config from args
     """
@@ -75,7 +82,7 @@ def initialize(args):
     c.Lang = args.lang
     c.Output = args.output
     c.Elasticsearch = args.elasticsearch
-    c.Timedelta = timedelta(days=args.timedelta)
+    c.Timedelta = getTimeDelta(args.timedelta)
     c.Year = args.year
     c.Since = args.since
     c.Until = args.until
