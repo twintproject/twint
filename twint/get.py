@@ -165,7 +165,7 @@ async def Response(session, url, params=[]):
 async def RandomUserAgent():
     logme.debug(__name__+':RandomUserAgent')
     try:
-        ua = UserAgent()
+        ua = UserAgent(verify_ssl=False, use_cache_server=False)
         return ua.random
     except:
         return random.choice(user_agent_list)
