@@ -42,7 +42,6 @@ def getText(tw):
     """
     logme.debug(__name__+':getText')
     text = tw.find("p", "tweet-text").text
-    text = text.replace("\n", " ")
     text = text.replace("http", " http")
     text = text.replace("pic.twitter", " pic.twitter")
 
