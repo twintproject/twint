@@ -67,7 +67,8 @@ A few simple examples to help you understand the basics:
 - `twint -u username -s pineapple` - Scrape all Tweets from the *user*'s timeline containing _pineapple_.
 - `twint -s pineapple` - Collect every Tweet containing *pineapple* from everyone's Tweets.
 - `twint -u username --year 2014` - Collect Tweets that were tweeted **before** 2014.
-- `twint -u username --since 2015-12-20` - Collect Tweets that were tweeted since 2015-12-20.
+- `twint -u username --since "2015-12-20 20:30:15"` - Collect Tweets that were tweeted since 2015-12-20 20:30:15.
+- `twint -u username --since 2015-12-20` - Collect Tweets that were tweeted since 2015-12-20 00:00:00.
 - `twint -u username -o file.txt` - Scrape Tweets and save to file.txt.
 - `twint -u username -o file.csv --csv` - Scrape Tweets and save as a csv file.
 - `twint -u username --email --phone` - Show Tweets that might have phone numbers or email addresses.
@@ -179,4 +180,4 @@ Twitter can shadow-ban accounts, which means that their tweets will not be avail
 
 ## Contact
 
-If you have any questions, want to discuss, or need extra help, you are welcome to join our Twint focused group at [OSINT Team](https://osint.team) (there is a specific Twint channel)
+If you have any question, want to join in discussions, or need extra help, you are welcome to join our Twint focused channel at [OSINT team](https://osint.team)

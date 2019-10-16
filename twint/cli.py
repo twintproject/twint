@@ -11,6 +11,7 @@ Copyright (c) 2018 The Twint Project
 import sys
 import os
 import argparse
+from datetime import timedelta
 
 from . import run
 from . import config
@@ -61,6 +62,13 @@ def loadUserList(ul, _type):
         return un[15:]
     return userlist
 
+
+def getTimeDelta(arg):
+    if arg:
+        return timedelta(days=int(arg))
+    return None
+
+
 def initialize(args):
     """ Set default values for config from args
     """
@@ -74,7 +82,7 @@ def initialize(args):
     c.Lang = args.lang
     c.Output = args.output
     c.Elasticsearch = args.elasticsearch
-    c.Timedelta = args.timedelta
+    c.Timedelta = getTimeDelta(args.timedelta)
     c.Year = args.year
     c.Since = args.since
     c.Until = args.until
@@ -141,9 +149,9 @@ def options():
     ap.add_argument("-es", "--elasticsearch", help="Index to Elasticsearch.")
     ap.add_argument("-t", "--timedelta", help="Time interval for every request.")
     ap.add_argument("--year", help="Filter Tweets before specified year.")
-    ap.add_argument("--since", help="Filter Tweets sent since date (Example: 2017-12-27).",
+    ap.add_argument("--since", help="Filter Tweets sent since date (Example: \"2017-12-27 20:30:15\" or 2017-12-27).",
                     metavar="DATE")
-    ap.add_argument("--until", help="Filter Tweets sent until date (Example: 2017-12-27).",
+    ap.add_argument("--until", help="Filter Tweets sent until date (Example: \"2017-12-27 20:30:15\" or 2017-12-27).",
                     metavar="DATE")
     ap.add_argument("--email", help="Filter Tweets that might have email addresses", action="store_true")
     ap.add_argument("--phone", help="Filter Tweets that might have phone numbers", action="store_true")

@@ -65,7 +65,7 @@ def main():
 
     for run in runs[2:]:
         if run == twint.run.Search:
-            c.Since = "2012-1-1"
+            c.Since = "2012-1-1 20:30:22"
             c.Until = "2017-1-1"
         else:
             c.Since = ""
