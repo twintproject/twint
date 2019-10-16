@@ -96,9 +96,8 @@ import twint
 
 # Configure
 c = twint.Config()
-c.Username = "noneprivacy"
-c.Search = "#osint"
-c.Format = "Tweet id: {id} | Tweet: {tweet}"
+c.Username = "now"
+c.Search = "fruit"
 
 # Run
 twint.run.Search(c)
