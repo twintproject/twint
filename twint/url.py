@@ -1,4 +1,5 @@
 import logging as logme
+import datetime
 mobile = "http://mobile.twitter.com"
 base = "http://twitter.com/i"
 
@@ -85,9 +86,9 @@ async def Search(config, init):
     if config.Year:
         q += f" until:{config.Year}-1-1"
     if config.Since:
-        q += f" since:{config.Since}"
+        q += " since:" + datetime.datetime.strptime(config.Since, "%Y-%m-%d %H:%M:%S").strftime('%s')
     if config.Until:
-        q += f" until:{config.Until}"
+        q += " until:" + datetime.datetime.strptime(config.Until, "%Y-%m-%d %H:%M:%S").strftime('%s')
     if config.Email:
         q += ' "mail" OR "email" OR'
         q += ' "gmail" OR "e-mail"'

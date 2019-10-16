@@ -64,7 +64,7 @@ def createIndex(config, instance, **scope):
                         "place": {"type": "keyword"},
                         "location": {"type": "keyword"},
                         "tweet": {"type": "text"},
-                        "hashtags": {"type": "keyword"},
+                        "hashtags": {"type": "keyword", "normalizer": "hashtag_normalizer"},
                         "cashtags": {"type": "keyword"},
                         "user_id_str": {"type": "keyword"},
                         "username": {"type": "keyword"},
@@ -98,10 +98,20 @@ def createIndex(config, instance, **scope):
                             }
                         },
                         "retweet_date": {"type": "date", "format": "yyyy-MM-dd HH:mm:ss"},
+                        "urls": {"type": "keyword"}
                         }
                     },
                     "settings": {
-                        "number_of_shards": 1
+                        "number_of_shards": 1,
+                        "analysis": {
+                            "normalizer": {
+                                "hashtag_normalizer": {
+                                    "type": "custom",
+                                    "char_filter": [],
+                                    "filter": ["lowercase", "asciifolding"]
+                                }
+                            }
+                        }
                     }
                 }
         with nostdout():
@@ -246,6 +256,11 @@ def Tweet(Tweet, config):
         for mention in Tweet.mentions:
             _mentions.append(mention)
         j_data["_source"].update({"mentions": _mentions})
+    if Tweet.urls:
+        _urls = []
+        for url in Tweet.urls:
+            _urls.append(url)
+        j_data["_source"].update({"urls": _urls})
     if config.Near or config.Geo:
         if not _is_near_def:
             __geo = ""
