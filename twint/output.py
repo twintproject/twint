@@ -21,14 +21,14 @@ def clean_follow_list():
     global _follows_object
     _follows_object = {}
 
-def datecheck(datestamp, config):
+def datecheck(datetimestamp, config):
     logme.debug(__name__+':datecheck')
     if config.Since and config.Until:
         logme.debug(__name__+':datecheck:dateRangeTrue')
-        d = int(datestamp.replace("-", ""))
-        s = int(config.Since.replace("-", ""))
+        d = int(datetime.strptime(datetimestamp, "%Y-%m-%d %H:%M:%S").strftime('%s'))
+        s = int(datetime.strptime(config.Since, "%Y-%m-%d %H:%M:%S").strftime('%s'))
         if d < s:
-            return False
+           return False
     logme.debug(__name__+':datecheck:dateRangeFalse')
     return True
 
@@ -104,7 +104,7 @@ async def checkData(tweet, config, conn):
             print("[x] Hidden tweet found, account suspended due to violation of TOS")
             return
 
-        if datecheck(tweet.datestamp, config):
+        if datecheck(tweet.datestamp + " " + tweet.timestamp, config):
             output = format.Tweet(config, tweet)
 
             if config.Database:
