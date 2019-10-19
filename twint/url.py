@@ -10,6 +10,12 @@ def _sanitizeQuery(base,params):
     _serialQuery = base + "?" + _serialQuery[:-1].replace(":", "%3A").replace(" ", "%20")
     return _serialQuery
 
+def _formatDate(date):
+    try:
+        return datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S").strftime('%s')
+    except ValueError:
+        return datetime.datetime.strptime(date, "%Y-%m-%d").strftime('%s')
+
 async def Favorites(username, init):
     logme.debug(__name__+':Favorites')
     url = f"{mobile}/{username}/favorites?lang=en"
@@ -86,9 +92,9 @@ async def Search(config, init):
     if config.Year:
         q += f" until:{config.Year}-1-1"
     if config.Since:
-        q += " since:" + datetime.datetime.strptime(config.Since, "%Y-%m-%d %H:%M:%S").strftime('%s')
+        q += f" since:{_formatDate(config.Since)}"
     if config.Until:
-        q += " until:" + datetime.datetime.strptime(config.Until, "%Y-%m-%d %H:%M:%S").strftime('%s')
+        q += f" until:{_formatDate(config.Until)}"
     if config.Email:
         q += ' "mail" OR "email" OR'
         q += ' "gmail" OR "e-mail"'
