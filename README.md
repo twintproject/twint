@@ -53,6 +53,12 @@ pip3 install twint
 or
 
 ```bash
+pip3 install --upgrade -e git+https://github.com/twintproject/twint.git@origin/master#egg=twint
+```
+
+If you want to install twint in your home directory:
+
+```bash
 pip3 install --user --upgrade -e git+https://github.com/twintproject/twint.git@origin/master#egg=twint
 ```
 
