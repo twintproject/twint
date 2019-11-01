@@ -38,18 +38,18 @@ def card(ur, _type):
         try:
             ret = ur.find("p", "ProfileHeaderCard-bio u-dir").text.replace("\n", " ")
         except:
-            ret = None
+            ret = ""
     elif _type == "location":
         try:
             ret = ur.find("span", "ProfileHeaderCard-locationText u-dir").text
             ret = ret[15:].replace("\n", " ")[:-10]
         except:
-            ret = None
+            ret = ""
     elif _type == "url":
         try:
             ret = ur.find("span", "ProfileHeaderCard-urlText u-dir").find("a")["title"]
         except:
-            ret = None
+            ret = ""
 
     return ret
 
@@ -87,20 +87,17 @@ def stat(ur, _type):
     _class = f"ProfileNav-item ProfileNav-item--{_type}"
     stat = ur.find("li", _class)
     try :
-        r = stat.find("span", "ProfileNav-value")["data-count"]
+        return int(stat.find("span", "ProfileNav-value")["data-count"])
     except AttributeError:
-        r = "0"
-    return int(r)
+        return 0
 
 def media(ur):
     logme.debug(__name__+':media')
     try:
-      media_count = ur.find("a", "PhotoRail-headingWithCount js-nav").text.strip().split(" ")[0]
-      media_count = convertToInt(media_count)
+        media_count = ur.find("a", "PhotoRail-headingWithCount js-nav").text.strip().split(" ")[0]
+        return convertToInt(media_count)
     except:
-      media_count = 0
-
-    return media_count
+        return 0
 
 def verified(ur):
     logme.debug(__name__+':verified')
