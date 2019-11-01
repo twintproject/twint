@@ -95,7 +95,7 @@ async def RequestUrl(config, init, headers = []):
         if config.Profile_full:
             logme.debug(__name__+':RequestUrl:Profile_full')
             _url = await url.MobileProfile(config.Username, init)
-            response = await MobileRequest(_url, connector=_connector)
+            response = await MobileRequest(_url, connector=_connector, headers=headers)
         else:
             logme.debug(__name__+':RequestUrl:notProfile_full')
             _url = await url.Profile(config.Username, init)
@@ -115,7 +115,7 @@ async def RequestUrl(config, init, headers = []):
         else:
             logme.debug(__name__+':RequestUrl:Favorites')
             _url = await url.Favorites(config.Username, init)
-        response = await MobileRequest(_url, connector=_connector)
+        response = await MobileRequest(_url, connector=_connector, headers=headers)
         _serialQuery = _url
 
     if config.Debug:
@@ -123,14 +123,14 @@ async def RequestUrl(config, init, headers = []):
 
     return response
 
-async def MobileRequest(url, **options):
+async def MobileRequest(url, headers,**options):
     connector = options.get("connector")
     if connector:
         logme.debug(__name__+':MobileRequest:Connector')
-        async with aiohttp.ClientSession(connector=connector) as session:
+        async with aiohttp.ClientSession(connector=connector, headers=headers) as session:
             return await Response(session, url)
     logme.debug(__name__+':MobileRequest:notConnector')
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(headers=headers) as session:
         return await Response(session, url)
 
 def ForceNewTorIdentity(config):
@@ -153,7 +153,7 @@ async def Request(url, connector=None, params=[], headers=[]):
         async with aiohttp.ClientSession(connector=connector, headers=headers) as session:
             return await Response(session, url, params)
     logme.debug(__name__+':Request:notConnector')
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(headers=headers) as session:
         return await Response(session, url, params)
 
 async def Response(session, url, params=[]):
