@@ -90,21 +90,20 @@ async def RequestUrl(config, init, headers = []):
     logme.debug(__name__+':RequestUrl')
     _connector = get_connector(config)
     _serialQuery = ""
+    params = []
+    _url = ""
 
     if config.Profile:
         if config.Profile_full:
             logme.debug(__name__+':RequestUrl:Profile_full')
             _url = await url.MobileProfile(config.Username, init)
-            response = await MobileRequest(_url, connector=_connector, headers=headers)
         else:
             logme.debug(__name__+':RequestUrl:notProfile_full')
             _url = await url.Profile(config.Username, init)
-            response = await Request(_url, connector=_connector, headers=headers)
         _serialQuery = _url
     elif config.TwitterSearch:
         logme.debug(__name__+':RequestUrl:TwitterSearch')
         _url, params, _serialQuery = await url.Search(config, init)
-        response = await Request(_url, params=params, connector=_connector, headers=headers)
     else:
         if config.Following:
             logme.debug(__name__+':RequestUrl:Following')
@@ -115,23 +114,14 @@ async def RequestUrl(config, init, headers = []):
         else:
             logme.debug(__name__+':RequestUrl:Favorites')
             _url = await url.Favorites(config.Username, init)
-        response = await MobileRequest(_url, connector=_connector, headers=headers)
         _serialQuery = _url
+
+    response = await Request(_url, params=params, connector=_connector, headers=headers)
 
     if config.Debug:
         print(_serialQuery, file=open("twint-request_urls.log", "a", encoding="utf-8"))
 
     return response
-
-async def MobileRequest(url, headers,**options):
-    connector = options.get("connector")
-    if connector:
-        logme.debug(__name__+':MobileRequest:Connector')
-        async with aiohttp.ClientSession(connector=connector, headers=headers) as session:
-            return await Response(session, url)
-    logme.debug(__name__+':MobileRequest:notConnector')
-    async with aiohttp.ClientSession(headers=headers) as session:
-        return await Response(session, url)
 
 def ForceNewTorIdentity(config):
     logme.debug(__name__+':ForceNewTorIdentity')
@@ -153,13 +143,13 @@ async def Request(url, connector=None, params=[], headers=[]):
         async with aiohttp.ClientSession(connector=connector, headers=headers) as session:
             return await Response(session, url, params)
     logme.debug(__name__+':Request:notConnector')
-    async with aiohttp.ClientSession(headers=headers) as session:
+    async with aiohttp.ClientSession(headers=headers, connector=None) as session:
         return await Response(session, url, params)
 
 async def Response(session, url, params=[]):
     logme.debug(__name__+':Response')
     with timeout(100):
-        async with session.get(url, ssl=False, params=params, proxy=httpproxy) as response:
+        async with session.get(url, ssl=True, params=params, proxy=httpproxy) as response:
             return await response.text()
 
 async def RandomUserAgent():
