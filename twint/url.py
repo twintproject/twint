@@ -1,7 +1,7 @@
 import logging as logme
 import datetime
-mobile = "http://mobile.twitter.com"
-base = "http://twitter.com/i"
+mobile = "https://mobile.twitter.com"
+base = "https://twitter.com/i"
 
 def _sanitizeQuery(base,params):
     _serialQuery = ""
