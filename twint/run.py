@@ -161,7 +161,7 @@ class Twint:
 
         if self.config.Username is not None:
             logme.debug(__name__+':Twint:main:username')
-            url = f"http://twitter.com/{self.config.Username}?lang=en"
+            url = f"https://twitter.com/{self.config.Username}?lang=en"
             self.config.User_id = await get.User(url, self.config, self.conn, True)
 
         if self.config.TwitterSearch and self.config.Since and self.config.Until:
