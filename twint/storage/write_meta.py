@@ -30,7 +30,8 @@ def tweetData(t):
             "user_rt": t.user_rt,
             "retweet_id": t.retweet_id,
             "reply_to": t.reply_to,
-            "retweet_date": t.retweet_date
+            "retweet_date": t.retweet_date,
+            "translation": t.translation
             }
     return data
 
