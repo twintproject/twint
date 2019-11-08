@@ -31,7 +31,7 @@ def tweetData(t):
             "retweet_id": t.retweet_id,
             "reply_to": t.reply_to,
             "retweet_date": t.retweet_date,
-            "translation": t.translation
+            "translate": t.translate
             }
     return data
 
@@ -67,7 +67,8 @@ def tweetFieldnames():
             "user_rt",
             "retweet_id",
             "reply_to",
-            "retweet_date"
+            "retweet_date",
+            "translate"
             ]
     return fieldnames
 
