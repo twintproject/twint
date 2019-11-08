@@ -131,6 +131,7 @@ def initialize(args):
     c.Source = args.source
     c.Members_list = args.members_list
     c.Filter_retweets = args.filter_retweets
+    c.Translate = args.translate
     return c
 
 def options():
