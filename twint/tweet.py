@@ -110,6 +110,8 @@ def Tweet(tw, config):
     t.source = config.Source if config.Source else ""
     t.reply_to = [{'user_id': t['id_str'], 'username': t['screen_name']} for t in json.loads(tw["data-reply-to-users-json"])]
     t.translate = ''
+    t.trans_src = ''
+    t.trans_dest = ''
     if config.Translate == True:
         try:
             ts = translator.translate(t.tweet)

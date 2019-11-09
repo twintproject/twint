@@ -28,10 +28,10 @@ def Tweet(config, t):
         output = output.replace("{near}", t.near)
         output = output.replace("{geo}", t.geo)
         output = output.replace("{mentions}", ",".join(t.mentions))
-        if config.Translate:
-            output = output.replace("{translate}", t.translate)
-            output = output.replace("{trans_src}", t.trans_src)
-            output = output.replace("{trans_dest}", t.trans_dest)
+        #if config.Translate:
+        output = output.replace("{translate}", t.translate)
+        output = output.replace("{trans_src}", t.trans_src)
+        output = output.replace("{trans_dest}", t.trans_dest)
     else:
         logme.debug(__name__+':Tweet:notFormat')
         output = f"{t.id_str} {t.datestamp} {t.timestamp} {t.timezone} "
