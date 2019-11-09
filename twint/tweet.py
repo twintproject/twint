@@ -114,6 +114,10 @@ def Tweet(tw, config):
         try:
             ts = translator.translate(t.tweet)
             t.translate = ts.text
+            t.trans_src = ts.src
+            t.trans_dest = ts.dest
         except:
             t.translate = ''
+            t.trans_src = ''
+            t.trans_dest = ''
     return t

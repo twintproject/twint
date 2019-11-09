@@ -17,6 +17,15 @@ def Conn(database):
 
     return conn
 
+# refs. 
+# - https://stackoverflow.com/questions/3850022/how-to-load-existing-db-file-to-memory-in-python-sqlite3
+# - 
+def Inmemory(database):
+    source = sqlite3.connect(database)
+    dest = sqlite3.connect(':memory:')
+    source.backup(dest)
+    return dest
+
 def init(db):
     try:
         conn = sqlite3.connect(db)
@@ -82,6 +91,8 @@ def init(db):
                     source text,
                     time_update integer not null,
                     translation text default '',
+                    trans_src text default '',
+                    trans_dest text default '',
                     PRIMARY KEY (id)
                 );
         """
@@ -267,8 +278,10 @@ def tweets(conn, Tweet, config):
                     Tweet.near,
                     Tweet.source,
                     time_ms,
-                    Tweet.translation)
-        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
+                    Tweet.translation,
+                    Tweet.trans_src,
+                    Tweet.trans_dest)
+        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
 
         if config.Favorites:
             query = 'INSERT INTO favorites VALUES(?,?)'
