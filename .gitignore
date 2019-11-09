@@ -2,7 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+tweets.db
 # C extensions
 *.so
 

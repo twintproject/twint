@@ -30,6 +30,8 @@ def Tweet(config, t):
         output = output.replace("{mentions}", ",".join(t.mentions))
         if config.Translate:
             output = output.replace("{translate}", t.translate)
+            output = output.replace("{trans_src}", t.trans_src)
+            output = output.replace("{trans_dest}", t.trans_dest)
     else:
         logme.debug(__name__+':Tweet:notFormat')
         output = f"{t.id_str} {t.datestamp} {t.timestamp} {t.timezone} "
@@ -48,7 +50,7 @@ def Tweet(config, t):
         if config.Stats:
             output += f" | {t.replies_count} replies {t.retweets_count} retweets {t.likes_count} likes"
         if config.Translate:
-            output += f" {t.translate}"
+            output += f" {t.translate} {t.trans_src} {t.trans_dest}"
     return output
 
 def User(_format, u):

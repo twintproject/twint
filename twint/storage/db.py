@@ -278,7 +278,7 @@ def tweets(conn, Tweet, config):
                     Tweet.near,
                     Tweet.source,
                     time_ms,
-                    Tweet.translation,
+                    Tweet.translate,
                     Tweet.trans_src,
                     Tweet.trans_dest)
         cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
