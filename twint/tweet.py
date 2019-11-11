@@ -115,11 +115,9 @@ def Tweet(tw, config):
     if config.Translate == True:
         try:
             ts = translator.translate(t.tweet)
-            t.translate = ts.text
-            t.trans_src = ts.src
-            t.trans_dest = ts.dest
-        except:
-            t.translate = ''
-            t.trans_src = ''
-            t.trans_dest = ''
+            t.translate = str(ts.text)
+            t.trans_src = str(ts.src)
+            t.trans_dest = str(ts.dest)
+        except Exception as e:
+            logme.debug(__name__+':Tweet:translator.translate')
     return t

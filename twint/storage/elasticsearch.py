@@ -98,7 +98,10 @@ def createIndex(config, instance, **scope):
                             }
                         },
                         "retweet_date": {"type": "date", "format": "yyyy-MM-dd HH:mm:ss"},
-                        "urls": {"type": "keyword"}
+                        "urls": {"type": "keyword"},
+                        "translation": {"type": "text"},
+                        "trans_src": {"type": "text"},
+                        "trans_dev": {"type": "text"},
                         }
                     },
                     "settings": {
@@ -278,6 +281,11 @@ def Tweet(Tweet, config):
             j_data["_source"].update({"geo_tweet": getLocation(Tweet.place)})
     if Tweet.source:
         j_data["_source"].update({"source": Tweet.Source})
+    if config.Translate:
+        j_data["_source"].update({"translation": Tweet.translation})        
+        j_data["_source"].update({"trans_src": Tweet.trans_src})
+        j_data["_source"].update({"trans_dest": Tweet.trans_dest})
+
     actions.append(j_data)
 
     es = Elasticsearch(config.Elasticsearch, verify_certs=config.Skip_certs)

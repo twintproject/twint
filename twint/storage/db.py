@@ -17,15 +17,6 @@ def Conn(database):
 
     return conn
 
-# refs. 
-# - https://stackoverflow.com/questions/3850022/how-to-load-existing-db-file-to-memory-in-python-sqlite3
-# - 
-def Inmemory(database):
-    source = sqlite3.connect(database)
-    dest = sqlite3.connect(':memory:')
-    source.backup(dest)
-    return dest
-
 def init(db):
     try:
         conn = sqlite3.connect(db)

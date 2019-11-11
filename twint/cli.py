@@ -132,6 +132,8 @@ def initialize(args):
     c.Members_list = args.members_list
     c.Filter_retweets = args.filter_retweets
     c.Translate = args.translate
+    c.TranslateSrc = args.trans_src
+    c.TranslateDest = args.trans_dest
     return c
 
 def options():
@@ -194,6 +196,11 @@ def options():
     ap.add_argument("--translate",
                     help="Get tweets translated by Google Translate.",
                     action="store_true")
+   ap.add_argument("--translate-src", help="Translate tweet to language (ISO2) lowercase if matching lamguage guess.",
+                    nargs="?", default="en")
+   ap.add_argument("--translate-dest", help="Translate tweet to language (ISO2) lowercase destination.",
+                    nargs="?", default="en")
+
     ap.add_argument("--store-pandas", help="Save Tweets in a DataFrame (Pandas) file.")
     ap.add_argument("--pandas-type",
                     help="Specify HDF5 or Pickle (HDF5 as default)", nargs="?", default="HDF5")
