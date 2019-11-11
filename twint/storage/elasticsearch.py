@@ -100,8 +100,8 @@ def createIndex(config, instance, **scope):
                         "retweet_date": {"type": "date", "format": "yyyy-MM-dd HH:mm:ss"},
                         "urls": {"type": "keyword"},
                         "translation": {"type": "text"},
-                        "trans_src": {"type": "text"},
-                        "trans_dev": {"type": "text"},
+                        "trans_src": {"type": "keyword"},
+                        "trans_dest": {"type": "keyword"},
                         }
                     },
                     "settings": {
