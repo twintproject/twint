@@ -1,6 +1,6 @@
 import sys, os
 from asyncio import get_event_loop, TimeoutError, ensure_future
-from datetime import timedelta, datetime
+from datetime import datetime
 
 from . import datelock, feed, get, output, verbose, storage
 from .storage import db
@@ -34,14 +34,6 @@ class Twint:
         if self.config.Pandas_clean:
             logme.debug(__name__+':Twint:__init__:pandas_clean')
             storage.panda.clean()
-
-        if not self.config.Timedelta:
-            if (self.d._until - self.d._since) > timedelta(days=30):
-                self.config.Timedelta = timedelta(days=30)
-                logme.debug(__name__+':Twint:__init__:timedelta_fixed')
-            else:
-                logme.debug(__name__+':Twint:__init__:timedelta_unfixed')
-                self.config.Timedelta = (self.d._until - self.d._since)
 
     def get_resume(self, resumeFile):
         if not os.path.exists(resumeFile):
@@ -166,20 +158,17 @@ class Twint:
 
         if self.config.TwitterSearch and self.config.Since and self.config.Until:
             logme.debug(__name__+':Twint:main:search+since+until')
-            _days = self.config.Timedelta
             while self.d._since < self.d._until:
-                self.config.Since = str(self.d._until - _days)
+                self.config.Since = str(self.d._since)
                 self.config.Until = str(self.d._until)
                 if len(self.feed) > 0:
                     await self.tweets()
                 else:
                     logme.debug(__name__+':Twint:main:gettingNewTweets')
-                    self.d._until = self.d._until - _days
-                    self.feed = [-1]
+                    break
 
                 if get.Limit(self.config.Limit, self.count):
-                    self.d._until = self.d._until - _days
-                    self.feed = [-1]
+                    break
         else:
             logme.debug(__name__+':Twint:main:not-search+since+until')
             while True:
