@@ -6,6 +6,9 @@ tweets.db
 # C extensions
 *.so
 
+config.ini
+twint/storage/mysql.py
+
 # Node Dependency directories
 node_modules/
 jspm_packages/
