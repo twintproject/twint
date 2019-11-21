@@ -81,7 +81,7 @@ def init(db):
                     near text,
                     source text,
                     time_update integer not null,
-                    translation text default '',
+                    `translate` text default '',
                     trans_src text default '',
                     trans_dest text default '',
                     PRIMARY KEY (id)

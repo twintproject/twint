@@ -99,7 +99,7 @@ def createIndex(config, instance, **scope):
                         },
                         "retweet_date": {"type": "date", "format": "yyyy-MM-dd HH:mm:ss"},
                         "urls": {"type": "keyword"},
-                        "translation": {"type": "text"},
+                        "translate": {"type": "text"},
                         "trans_src": {"type": "keyword"},
                         "trans_dest": {"type": "keyword"},
                         }
@@ -282,7 +282,7 @@ def Tweet(Tweet, config):
     if Tweet.source:
         j_data["_source"].update({"source": Tweet.Source})
     if config.Translate:
-        j_data["_source"].update({"translation": Tweet.translation})        
+        j_data["_source"].update({"translate": Tweet.translate})        
         j_data["_source"].update({"trans_src": Tweet.trans_src})
         j_data["_source"].update({"trans_dest": Tweet.trans_dest})
 

@@ -115,11 +115,11 @@ def Tweet(tw, config):
     if config.Translate == True:
         try:
             ts = translator.translate(text=t.tweet, dest=config.TranslateDest)
-            t.translate = str(ts.text)
-            t.trans_src = str(ts.src)
-            t.trans_dest = str(ts.dest)
+            t.translate = ts.text
+            t.trans_src = ts.src
+            t.trans_dest = ts.dest
         # ref. https://github.com/SuniTheFish/ChainTranslator/blob/master/ChainTranslator/__main__.py#L31
-        except ValueError:
+        except ValueError as e:
             # raise Exception("Invalid destination language: {}".format(config.TranslateDest))
-            logme.debug(__name__+':Tweet:translator.translate')
+            logme.debug(__name__+':Tweet:translator.translate:'+str(e))
     return t

@@ -74,5 +74,5 @@ class Config:
     Members_list = None
     Filter_retweets = False
     Translate = False
-    TranslationSrc = "en"
-    TranslationDest = "en"    
+    TranslateSrc = "en"
+    TranslateDest = "en"    
