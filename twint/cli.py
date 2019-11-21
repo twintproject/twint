@@ -17,8 +17,6 @@ from . import run
 from . import config
 from . import storage
 
-# from googletrans import LANGUAGES
-
 def error(_error, message):
     """ Print errors to stdout
     """
