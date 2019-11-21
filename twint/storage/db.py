@@ -81,6 +81,9 @@ def init(db):
                     near text,
                     source text,
                     time_update integer not null,
+                    `translate` text default '',
+                    trans_src text default '',
+                    trans_dest text default '',
                     PRIMARY KEY (id)
                 );
         """
@@ -265,8 +268,11 @@ def tweets(conn, Tweet, config):
                     Tweet.geo,
                     Tweet.near,
                     Tweet.source,
-                    time_ms)
-        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
+                    time_ms,
+                    Tweet.translate,
+                    Tweet.trans_src,
+                    Tweet.trans_dest)
+        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
 
         if config.Favorites:
             query = 'INSERT INTO favorites VALUES(?,?)'

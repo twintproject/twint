@@ -17,6 +17,8 @@ from . import run
 from . import config
 from . import storage
 
+# from googletrans import LANGUAGES
+
 def error(_error, message):
     """ Print errors to stdout
     """
@@ -131,6 +133,8 @@ def initialize(args):
     c.Source = args.source
     c.Members_list = args.members_list
     c.Filter_retweets = args.filter_retweets
+    c.Translate = args.translate
+    c.TranslateDest = args.translate_dest
     return c
 
 def options():
@@ -190,6 +194,11 @@ def options():
     ap.add_argument("--profile-full",
                     help="Slow, but effective method of collecting a user's Tweets and RT.",
                     action="store_true")
+    ap.add_argument("--translate",
+                    help="Get tweets translated by Google Translate.",
+                    action="store_true")
+    ap.add_argument("--translate-dest", help="Translate tweet to language (ISO2).",
+                    default="en")
     ap.add_argument("--store-pandas", help="Save Tweets in a DataFrame (Pandas) file.")
     ap.add_argument("--pandas-type",
                     help="Specify HDF5 or Pickle (HDF5 as default)", nargs="?", default="HDF5")

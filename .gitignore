@@ -2,9 +2,12 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+tweets.db
 # C extensions
 *.so
+
+config.ini
+twint/storage/mysql.py
 
 # Node Dependency directories
 node_modules/

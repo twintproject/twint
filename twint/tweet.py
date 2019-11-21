@@ -3,6 +3,11 @@ from datetime import datetime
 import json
 
 import logging as logme
+from googletrans import Translator
+
+# ref. 
+# - https://github.com/x0rzkov/py-googletrans#basic-usage
+translator = Translator()
 
 class tweet:
     """Define Tweet class
@@ -104,4 +109,17 @@ def Tweet(tw, config):
     t.geo = config.Geo if config.Geo else ""
     t.source = config.Source if config.Source else ""
     t.reply_to = [{'user_id': t['id_str'], 'username': t['screen_name']} for t in json.loads(tw["data-reply-to-users-json"])]
+    t.translate = ''
+    t.trans_src = ''
+    t.trans_dest = ''
+    if config.Translate == True:
+        try:
+            ts = translator.translate(text=t.tweet, dest=config.TranslateDest)
+            t.translate = ts.text
+            t.trans_src = ts.src
+            t.trans_dest = ts.dest
+        # ref. https://github.com/SuniTheFish/ChainTranslator/blob/master/ChainTranslator/__main__.py#L31
+        except ValueError as e:
+            # raise Exception("Invalid destination language: {}".format(config.TranslateDest))
+            logme.debug(__name__+':Tweet:translator.translate:'+str(e))
     return t

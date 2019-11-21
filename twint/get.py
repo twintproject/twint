@@ -148,7 +148,7 @@ async def Request(url, connector=None, params=[], headers=[]):
 
 async def Response(session, url, params=[]):
     logme.debug(__name__+':Response')
-    with timeout(100):
+    with timeout(120):
         async with session.get(url, ssl=True, params=params, proxy=httpproxy) as response:
             return await response.text()
 
