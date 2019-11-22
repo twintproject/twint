@@ -35,6 +35,7 @@ Twitter limits scrolls while browsing the user timeline. This means that with `.
 - schedule;
 - geopy;
 - fake-useragent.
+- py-googletrans
 
 ## Installing
 
@@ -172,9 +173,31 @@ Twitter can shadow-ban accounts, which means that their tweets will not be avail
 
 `twint --userlist inputlist --user-full`
 
+
+#### tweet translation
+
+> To get 100 english tweets and translate them to italian
+
+`twint -u noneprivacy --csv --output none.csv --lang en --translate --translate-dest it --limit 100`
+
+or
+
+```python
+import twint
+
+c = twint.Config()
+c.Username = "noneprivacy"
+c.Limit = 100
+c.Store_csv = True
+c.Output = "none.csv"
+c.Lang = "en"
+c.Translate = True
+c.TranslateDest = "it"
+twint.run.Search(c)
+```
+
 ## Featured Blog Posts:
 - [How to use Twint as an OSINT tool](https://pielco11.ovh/posts/twint-osint/)
-- [Hunting Threats On Twitter](https://www.trendmicro.com/vinfo/us/security/news/cybercrime-and-digital-threats/hunting-threats-on-twitter)
 - [Basic tutorial made by Null Byte](https://null-byte.wonderhowto.com/how-to/mine-twitter-for-targeted-information-with-twint-0193853/)
 - [Analyzing Tweets with NLP in minutes with Spark, Optimus and Twint](https://towardsdatascience.com/analyzing-tweets-with-nlp-in-minutes-with-spark-optimus-and-twint-a0c96084995f)
 - [Loading tweets into Kafka and Neo4j](https://markhneedham.com/blog/2019/05/29/loading-tweets-twint-kafka-neo4j/)
