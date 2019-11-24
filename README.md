@@ -35,7 +35,7 @@ Twitter limits scrolls while browsing the user timeline. This means that with `.
 - schedule;
 - geopy;
 - fake-useragent;
-- py-googletrans.
+- py-googletransx.
 
 ## Installing
 
@@ -198,7 +198,6 @@ twint.run.Search(c)
 
 Notes:
 - [Google translate has some quotas](https://cloud.google.com/translate/quotas)
-- There is a bug when tweet contains emojis
 
 ## Featured Blog Posts:
 - [How to use Twint as an OSINT tool](https://pielco11.ovh/posts/twint-osint/)
