@@ -34,8 +34,8 @@ Twitter limits scrolls while browsing the user timeline. This means that with `.
 - aiohttp_socks;
 - schedule;
 - geopy;
-- fake-useragent.
-- py-googletrans
+- fake-useragent;
+- py-googletrans.
 
 ## Installing
 
@@ -174,7 +174,7 @@ Twitter can shadow-ban accounts, which means that their tweets will not be avail
 `twint --userlist inputlist --user-full`
 
 
-#### tweet translation
+#### tweet translation (experimental)
 
 > To get 100 english tweets and translate them to italian
 
@@ -195,6 +195,10 @@ c.Translate = True
 c.TranslateDest = "it"
 twint.run.Search(c)
 ```
+
+Notes:
+- [Google translate has some quotas](https://cloud.google.com/translate/quotas)
+- There is a bug when tweet contains emojis
 
 ## Featured Blog Posts:
 - [How to use Twint as an OSINT tool](https://pielco11.ovh/posts/twint-osint/)

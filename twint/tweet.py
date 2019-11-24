@@ -3,7 +3,7 @@ from datetime import datetime
 import json
 
 import logging as logme
-from googletrans import Translator
+from googletransx import Translator
 
 # ref. 
 # - https://github.com/x0rzkov/py-googletrans#basic-usage
@@ -120,6 +120,6 @@ def Tweet(tw, config):
             t.trans_dest = ts.dest
         # ref. https://github.com/SuniTheFish/ChainTranslator/blob/master/ChainTranslator/__main__.py#L31
         except ValueError as e:
-            # raise Exception("Invalid destination language: {}".format(config.TranslateDest))
+            raise Exception("Invalid destination language: {} / Tweet: {}".format(config.TranslateDest, t.tweet))
             logme.debug(__name__+':Tweet:translator.translate:'+str(e))
     return t
