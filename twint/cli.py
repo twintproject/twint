@@ -200,8 +200,6 @@ def options():
     ap.add_argument("--store-pandas", help="Save Tweets in a DataFrame (Pandas) file.")
     ap.add_argument("--pandas-type",
                     help="Specify HDF5 or Pickle (HDF5 as default)", nargs="?", default="HDF5")
-    ap.add_argument("--search_name",
-                    help="Name for identify the search like -3dprinter stuff- only for mysql")
     ap.add_argument("-it", "--index-tweets",
                     help="Custom Elasticsearch Index name for Tweets.", nargs="?", default="twinttweets")
     ap.add_argument("-if", "--index-follow",
