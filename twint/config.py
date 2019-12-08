@@ -43,7 +43,6 @@ class Config:
     Index_tweets = "twinttweets"
     Index_follow = "twintgraph"
     Index_users = "twintuser"
-    Debug = False
     Retries_count = 10
     Resume = None
     Images = False
