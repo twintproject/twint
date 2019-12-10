@@ -1,5 +1,6 @@
-import logging as logme
 import datetime
+import logging as logme
+
 mobile = "https://mobile.twitter.com"
 base = "https://twitter.com/i"
 
@@ -12,9 +13,9 @@ def _sanitizeQuery(base,params):
 
 def _formatDate(date):
     try:
-        return datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S").strftime('%s')
+        return datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S").timestamp()
     except ValueError:
-        return datetime.datetime.strptime(date, "%Y-%m-%d").strftime('%s')
+        return datetime.datetime.strptime(date, "%Y-%m-%d").timestamp()
 
 async def Favorites(username, init):
     logme.debug(__name__+':Favorites')
