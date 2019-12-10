@@ -96,7 +96,6 @@ def initialize(args):
     c.User_full = args.user_full
     c.Profile_full = args.profile_full
     c.Pandas_type = args.pandas_type
-    c.Search_name = args.search_name
     c.Index_tweets = args.index_tweets
     c.Index_follow = args.index_follow
     c.Index_users = args.index_users
