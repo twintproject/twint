@@ -8,7 +8,6 @@ class Config:
     Lang = None
     Output = None
     Elasticsearch = None
-    Timedelta = None
     Year = None
     Since = None
     Until = None
