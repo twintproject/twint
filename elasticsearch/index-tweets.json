@@ -33,7 +33,10 @@ PUT twinttweets
           "geo_near": {"type": "geo_point"},
           "geo_tweet": {"type": "geo_point"},
           "photos": {"type": "text"},
-          "mentions": {"type": "text"}
+          "mentions": {"type": "text"},
+          "translation": {"type": "text"},          
+          "trans_src": {"type": "keyword"},
+          "trans_dev": {"type": "keyword"},
       }
     }
   }

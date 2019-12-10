@@ -9,3 +9,4 @@ aiohttp_socks
 schedule
 geopy
 fake-useragent
+googletransx
