@@ -14,7 +14,7 @@ def _sanitizeQuery(base,params):
 
 def _formatDate(date):
     if "win" in platform:
-        return f'\"{date}\"'
+        return f'\"{date.split()[0]}\"'
     try:
         return datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S").timestamp()
     except ValueError:
