@@ -1,4 +1,5 @@
 import datetime
+from sys import platform
 import logging as logme
 
 mobile = "https://mobile.twitter.com"
@@ -12,6 +13,8 @@ def _sanitizeQuery(base,params):
     return _serialQuery
 
 def _formatDate(date):
+    if "win" in platform:
+        return f'\"{date}\"'
     try:
         return datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S").timestamp()
     except ValueError:
