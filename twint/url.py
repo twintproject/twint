@@ -16,9 +16,9 @@ def _formatDate(date):
     if "win" in platform:
         return f'\"{date.split()[0]}\"'
     try:
-        return datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S").timestamp()
+        return int(datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S").timestamp())
     except ValueError:
-        return datetime.datetime.strptime(date, "%Y-%m-%d").timestamp()
+        return int(datetime.datetime.strptime(date, "%Y-%m-%d").timestamp())
 
 async def Favorites(username, init):
     logme.debug(__name__+':Favorites')
