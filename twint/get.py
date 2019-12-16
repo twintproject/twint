@@ -138,12 +138,8 @@ def ForceNewTorIdentity(config):
         sys.stderr.write('If you want to rotate Tor ports automatically - enable Tor control port\n')
 
 async def Request(url, connector=None, params=[], headers=[]):
-    if connector:
-        logme.debug(__name__+':Request:Connector')
-        async with aiohttp.ClientSession(connector=connector, headers=headers) as session:
-            return await Response(session, url, params)
-    logme.debug(__name__+':Request:notConnector')
-    async with aiohttp.ClientSession(headers=headers, connector=None) as session:
+    logme.debug(__name__+':Request:Connector')
+    async with aiohttp.ClientSession(connector=connector, headers=headers) as session:
         return await Response(session, url, params)
 
 async def Response(session, url, params=[]):
