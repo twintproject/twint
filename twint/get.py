@@ -155,8 +155,9 @@ async def Response(session, url, params=[]):
 async def RandomUserAgent():
     logme.debug(__name__+':RandomUserAgent')
     try:
-        ua = UserAgent(verify_ssl=False, use_cache_server=False)
-        return ua.random
+        #ua = UserAgent(verify_ssl=False, use_cache_server=False)
+        ua = "Mozilla/5.0 (Windows NT 6.4; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2225.0 Safari/537.36"
+        return ua
     except:
         return random.choice(user_agent_list)
 
