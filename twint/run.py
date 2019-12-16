@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, time
 from asyncio import get_event_loop, TimeoutError, ensure_future
 from datetime import datetime
 
@@ -57,8 +57,12 @@ class Twint:
             try:
                 if self.config.Favorites:
                     self.feed, self.init = feed.Mobile(response)
+                    if not self.count%40:
+                        time.sleep(5)
                 elif self.config.Followers or self.config.Following:
                     self.feed, self.init = feed.Follow(response)
+                    if not self.count%40:
+                        time.sleep(5)
                 elif self.config.Profile:
                     if self.config.Profile_full:
                         self.feed, self.init = feed.Mobile(response)
