@@ -148,12 +148,12 @@ async def Response(session, url, params=[]):
         async with session.get(url, ssl=True, params=params, proxy=httpproxy) as response:
             return await response.text()
 
-async def RandomUserAgent():
+async def RandomUserAgent(wa=None):
     logme.debug(__name__+':RandomUserAgent')
     try:
-        #ua = UserAgent(verify_ssl=False, use_cache_server=False)
-        ua = "Mozilla/5.0 (Windows NT 6.4; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2225.0 Safari/537.36"
-        return ua
+        if wa:
+            return "Mozilla/5.0 (Windows NT 6.4; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2225.0 Safari/537.36"
+        return UserAgent(verify_ssl=False, use_cache_server=False).random
     except:
         return random.choice(user_agent_list)
 
