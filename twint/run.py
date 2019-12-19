@@ -21,6 +21,8 @@ class Twint:
             
         self.feed = [-1]
         self.count = 0
+        self.consecutive_errors_count = 0
+        self.has_more_items = True
         self.user_agent = ""
         self.config = config
         self.conn = db.Conn(config.Database)
@@ -44,64 +46,66 @@ class Twint:
 
     async def Feed(self):
         logme.debug(__name__+':Twint:Feed')
-        consecutive_errors_count = 0
-        while True:
-            response = await get.RequestUrl(self.config, self.init, headers=[("User-Agent", self.user_agent)])
-            if self.config.Debug:
-                print(response, file=open("twint-last-request.log", "w", encoding="utf-8"))
+        
+        response = await get.RequestUrl(self.config, self.init, headers=[("User-Agent", self.user_agent)])
 
-            if self.config.Resume:
-                print(self.init, file=open(self.config.Resume, "w", encoding="utf-8"))
-                
-            self.feed = []
-            try:
-                if self.config.Favorites:
+        if self.config.Debug:
+            print(response, file=open("twint-last-request.log", "w", encoding="utf-8"))
+        if self.config.Resume:
+            print(self.init, file=open(self.config.Resume, "w", encoding="utf-8"))
+            
+        self.feed = []
+        try:
+            if self.config.Favorites:
+                self.feed, self.init = feed.Mobile(response)
+                if not self.count%40:
+                    time.sleep(5)
+            elif self.config.Followers or self.config.Following:
+                self.feed, self.init = feed.Follow(response)
+                if not self.count%40:
+                    time.sleep(5)
+            elif self.config.Profile:
+                if self.config.Profile_full:
                     self.feed, self.init = feed.Mobile(response)
-                    if not self.count%40:
-                        time.sleep(5)
-                elif self.config.Followers or self.config.Following:
-                    self.feed, self.init = feed.Follow(response)
-                    if not self.count%40:
-                        time.sleep(5)
-                elif self.config.Profile:
-                    if self.config.Profile_full:
-                        self.feed, self.init = feed.Mobile(response)
-                    else:
-                        self.feed, self.init = feed.profile(response)
-                elif self.config.TwitterSearch:
-                    self.feed, self.init = feed.Json(response)
-                break
-            except TimeoutError as e:
-                if self.config.Proxy_host.lower() == "tor":
-                    print("[?] Timed out, changing Tor identity...")
-                    if self.config.Tor_control_password is None:
-                        logme.critical(__name__+':Twint:Feed:tor-password')
-                        sys.stderr.write("Error: config.Tor_control_password must be set for proxy autorotation!\r\n")
-                        sys.stderr.write("Info: What is it? See https://stem.torproject.org/faq.html#can-i-interact-with-tors-controller-interface-directly\r\n")
-                        break
-                    else:
-                        get.ForceNewTorIdentity(self.config)
-                        continue
                 else:
-                    logme.critical(__name__+':Twint:Feed:' + str(e))
-                    print(str(e))
-                    break
-            except Exception as e:
-                if self.config.Profile or self.config.Favorites:
-                    print("[!] Twitter does not return more data, scrape stops here.")
-                    break
-                logme.critical(__name__+':Twint:Feed:noData' + str(e))
-                # Sometimes Twitter says there is no data. But it's a lie.
-                consecutive_errors_count += 1
-                if consecutive_errors_count < self.config.Retries_count:
-                    self.user_agent = await get.RandomUserAgent()
-                    continue
-                logme.critical(__name__+':Twint:Feed:Tweets_known_error:' + str(e))
-                print(str(e) + " [x] run.Feed")
-                print("[!] if get this error but you know for sure that more tweets exist, please open an issue and we will investigate it!")
-                break
+                    self.feed, self.init = feed.profile(response)
+            elif self.config.TwitterSearch:
+                self.feed, self.init, _has_more_items = feed.Json(response)
+                if (not self.feed) and self.has_more_items:
+                    await self.Feed()
+                self.has_more_items = _has_more_items
+            return
+        except TimeoutError as e:
+            if self.config.Proxy_host.lower() == "tor":
+                print("[?] Timed out, changing Tor identity...")
+                if self.config.Tor_control_password is None:
+                    logme.critical(__name__+':Twint:Feed:tor-password')
+                    sys.stderr.write("Error: config.Tor_control_password must be set for proxy autorotation!\r\n")
+                    sys.stderr.write("Info: What is it? See https://stem.torproject.org/faq.html#can-i-interact-with-tors-controller-interface-directly\r\n")
+                    exit(1)
+                else:
+                    get.ForceNewTorIdentity(self.config)
+                    await self.Feed()
+            else:
+                logme.critical(__name__+':Twint:Feed:' + str(e))
+                exit(str(e))
+        except Exception as e:
+            if self.config.Profile or self.config.Favorites:
+                exit("[!] Twitter does not return more data, scrape stops here.")
+            logme.critical(__name__+':Twint:Feed:noData' + str(e))
+            # Sometimes Twitter says there is no data. But it's a lie.
+            self.consecutive_errors_count += 1
+            if self.consecutive_errors_count < self.config.Retries_count:
+                self.user_agent = await get.RandomUserAgent()
+                time.sleep(5)
+                await self.Feed()
+            logme.critical(__name__+':Twint:Feed:Tweets_known_error:' + str(e))
+            exit(str(e) + " [x] run.Feed\n"+
+                "[!] if get this error but you know for sure that more tweets exist, please open an issue and we will investigate it!")
+            
 
     async def follow(self):
+        self.consecutive_errors_count = 0
         await self.Feed()
         if self.config.User_full:
             logme.debug(__name__+':Twint:follow:userFull')
@@ -114,11 +118,13 @@ class Twint:
                 await output.Username(username, self.config, self.conn)
 
     async def favorite(self):
+        self.consecutive_errors_count = 0
         logme.debug(__name__+':Twint:favorite')
         await self.Feed()
         self.count += await get.Multi(self.feed, self.config, self.conn)
 
     async def profile(self):
+        self.consecutive_errors_count = 0
         await self.Feed()
         if self.config.Profile_full:
             logme.debug(__name__+':Twint:profileFull')
@@ -130,6 +136,7 @@ class Twint:
                 await output.Tweets(tweet, self.config, self.conn)
 
     async def tweets(self):
+        self.consecutive_errors_count = 0
         await self.Feed()
         if self.config.Location:
             logme.debug(__name__+':Twint:tweets:location')
