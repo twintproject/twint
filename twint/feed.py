@@ -43,4 +43,4 @@ def Json(response):
     html = json_response["items_html"]
     soup = BeautifulSoup(html, "html.parser")
     feed = soup.find_all("div", "tweet")
-    return feed, json_response["min_position"]
+    return feed, json_response["min_position"], json_response["has_more_items"]
