@@ -96,7 +96,7 @@ class Twint:
             # Sometimes Twitter says there is no data. But it's a lie.
             self.consecutive_errors_count += 1
             if self.consecutive_errors_count < self.config.Retries_count:
-                self.user_agent = await get.RandomUserAgent()
+                self.user_agent = await get.RandomUserAgent(wa=True if self.config.TwitterSearch else False)
                 time.sleep(5)
                 await self.Feed()
             logme.critical(__name__+':Twint:Feed:Tweets_known_error:' + str(e))
