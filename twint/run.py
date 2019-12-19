@@ -94,7 +94,8 @@ class Twint:
                 exit(str(e))
         except Exception as e:
             if self.config.Profile or self.config.Favorites:
-                exit("[!] Twitter does not return more data, scrape stops here.")
+                print("[!] Twitter does not return more data, scrape stops here.")
+                return
             logme.critical(__name__+':Twint:Feed:noData' + str(e))
             # Sometimes Twitter says there is no data. But it's a lie.
             self.consecutive_errors_count += 1
@@ -103,8 +104,9 @@ class Twint:
                 time.sleep(5)
                 await self.Feed()
             logme.critical(__name__+':Twint:Feed:Tweets_known_error:' + str(e))
-            exit(str(e) + " [x] run.Feed\n"+
+            print(str(e) + " [x] run.Feed\n"+
                 "[!] if get this error but you know for sure that more tweets exist, please open an issue and we will investigate it!")
+            return
             
 
     async def follow(self):
