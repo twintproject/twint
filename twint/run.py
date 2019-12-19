@@ -23,6 +23,7 @@ class Twint:
         self.count = 0
         self.consecutive_errors_count = 0
         self.has_more_items = True
+        self._has_more_items = True
         self.user_agent = ""
         self.config = config
         self.conn = db.Conn(config.Database)
@@ -51,6 +52,8 @@ class Twint:
 
         if self.config.Debug:
             print(response, file=open("twint-last-request.log", "w", encoding="utf-8"))
+            print(f"had_more_items:{self._has_more_items};has_more_items:{self.has_more_items};init:{self.init};len_feed:{len(self.feed)}",
+                file=open("twint-requests-deep.csv", 'a'))
         if self.config.Resume:
             print(self.init, file=open(self.config.Resume, "w", encoding="utf-8"))
             
@@ -70,10 +73,10 @@ class Twint:
                 else:
                     self.feed, self.init = feed.profile(response)
             elif self.config.TwitterSearch:
-                self.feed, self.init, _has_more_items = feed.Json(response)
+                self.feed, self.init, self._has_more_items = feed.Json(response)
                 if (not self.feed) and self.has_more_items:
                     await self.Feed()
-                self.has_more_items = _has_more_items
+                self.has_more_items = self._has_more_items
             return
         except TimeoutError as e:
             if self.config.Proxy_host.lower() == "tor":
