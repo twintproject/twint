@@ -98,7 +98,7 @@ class Twint:
                 print("[!] if get this error but you know for sure that more tweets exist, please open an issue and we will investigate it!")
                 break
         if self.config.Resume:
-            print(str(self.init), file=open(self.config.Resume, "a", encoding="utf-8"))
+            print(self.init, file=open(self.config.Resume, "a", encoding="utf-8"))
 
     async def follow(self):
         await self.Feed()
