@@ -17,7 +17,7 @@ class Twint:
             logme.debug(__name__+':Twint:__init__:Resume')
             self.init = self.get_resume(config.Resume)
         else:
-            self.init = -1
+            self.init = '-1'
             
         self.feed = [-1]
         self.count = 0
@@ -37,7 +37,7 @@ class Twint:
 
     def get_resume(self, resumeFile):
         if not os.path.exists(resumeFile):
-            return -1
+            return '-1'
         with open(resumeFile, 'r') as rFile:
             _init = rFile.readlines()[-1].strip('\n')
             return _init
@@ -49,9 +49,6 @@ class Twint:
             response = await get.RequestUrl(self.config, self.init, headers=[("User-Agent", self.user_agent)])
             if self.config.Debug:
                 print(response, file=open("twint-last-request.log", "w", encoding="utf-8"))
-
-            if self.config.Resume:
-                print(self.init, file=open(self.config.Resume, "w", encoding="utf-8"))
                 
             self.feed = []
             try:
@@ -100,6 +97,8 @@ class Twint:
                 print(str(e) + " [x] run.Feed")
                 print("[!] if get this error but you know for sure that more tweets exist, please open an issue and we will investigate it!")
                 break
+        if self.config.Resume:
+            print(str(self.init), file=open(self.config.Resume, "a", encoding="utf-8"))
 
     async def follow(self):
         await self.Feed()
