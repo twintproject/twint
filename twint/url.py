@@ -24,7 +24,7 @@ async def Favorites(username, init):
     logme.debug(__name__+':Favorites')
     url = f"{mobile}/{username}/favorites?lang=en"
 
-    if init != -1:
+    if init != '-1':
         url += f"&max_id={init}"
 
     return url
@@ -33,7 +33,7 @@ async def Followers(username, init):
     logme.debug(__name__+':Followers')
     url = f"{mobile}/{username}/followers?lang=en"
 
-    if init != -1:
+    if init != '-1':
         url += f"&cursor={init}"
 
     return url
@@ -42,7 +42,7 @@ async def Following(username, init):
     logme.debug(__name__+':Following')
     url = f"{mobile}/{username}/following?lang=en"
 
-    if init != -1:
+    if init != '-1':
         url += f"&cursor={init}"
 
     return url
@@ -51,7 +51,7 @@ async def MobileProfile(username, init):
     logme.debug(__name__+':MobileProfile')
     url = f"{mobile}/{username}?lang=en"
 
-    if init != -1:
+    if init != '-1':
         url += f"&max_id={init}"
 
     return url
@@ -62,7 +62,7 @@ async def Profile(username, init):
     url += "available_features=1&lang=en&include_entities=1"
     url += "&include_new_items_bar=true"
 
-    if init != -1:
+    if init != '-1':
         url += f"&max_position={init}"
 
     return url
