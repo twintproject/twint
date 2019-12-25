@@ -46,12 +46,13 @@ class Twint:
         logme.debug(__name__+':Twint:Feed')
         consecutive_errors_count = 0
         while True:
-            response = await get.RequestUrl(self.config, self.init, headers=[("User-Agent", self.user_agent)])
-            if self.config.Debug:
-                print(response, file=open("twint-last-request.log", "w", encoding="utf-8"))
-                
-            self.feed = []
             try:
+                response = await get.RequestUrl(self.config, self.init, headers=[("User-Agent", self.user_agent)])
+                if self.config.Debug:
+                    print(response, file=open("twint-last-request.log", "w", encoding="utf-8"))
+                
+                self.feed = []
+                
                 if self.config.Favorites:
                     self.feed, self.init = feed.Mobile(response)
                     if not self.count%40:
@@ -69,7 +70,7 @@ class Twint:
                     self.feed, self.init = feed.Json(response)
                 break
             except TimeoutError as e:
-                if self.config.Proxy_host.lower() == "tor":
+                if self.config.Proxy_host != None and self.config.Proxy_host.lower() == "tor":
                     print("[?] Timed out, changing Tor identity...")
                     if self.config.Tor_control_password is None:
                         logme.critical(__name__+':Twint:Feed:tor-password')
