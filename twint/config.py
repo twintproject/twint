@@ -51,7 +51,7 @@ class Config:
     Pandas_clean = True
     Lowercase = True
     Pandas_au = True
-    Proxy_host = None
+    Proxy_host = ""
     Proxy_port = 0
     Proxy_type = None
     Tor_control_port = 9051
