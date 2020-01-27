@@ -48,7 +48,7 @@ user_agent_list = [
 def get_connector(config):
     logme.debug(__name__+':get_connector')
     _connector = None
-    if config.Proxy_host is not None:
+    if config.Proxy_host:
         if config.Proxy_host.lower() == "tor":
             _connector = SocksConnector(
                 socks_ver=SocksVer.SOCKS5,
