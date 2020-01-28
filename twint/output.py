@@ -25,8 +25,8 @@ def datecheck(datetimestamp, config):
     logme.debug(__name__+':datecheck')
     if config.Since and config.Until:
         logme.debug(__name__+':datecheck:dateRangeTrue')
-        d = int(datetime.strptime(datetimestamp, "%Y-%m-%d %H:%M:%S").strftime('%s'))
-        s = int(datetime.strptime(config.Since, "%Y-%m-%d %H:%M:%S").strftime('%s'))
+        d = int(datetime.strptime(datetimestamp, "%Y-%m-%d %H:%M:%S").strftime('%S'))
+        s = int(datetime.strptime(config.Since, "%Y-%m-%d %H:%M:%S").strftime('%S'))
         if d < s:
            return False
     logme.debug(__name__+':datecheck:dateRangeFalse')
