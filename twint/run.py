@@ -29,7 +29,7 @@ class Twint:
 
         if self.config.Store_object:
             logme.debug(__name__+':Twint:__init__:clean_follow_list')
-            output.clean_follow_list()
+            output._clean_follow_list()
 
         if self.config.Pandas_clean:
             logme.debug(__name__+':Twint:__init__:pandas_clean')
@@ -224,7 +224,6 @@ def Favorites(config):
 
 def Followers(config):
     logme.debug(__name__+':Followers')
-    output.clean_follow_list()
     config.Followers = True
     config.Following = False
     config.Profile = False
@@ -238,11 +237,10 @@ def Followers(config):
             storage.panda._autoget("user")
     if config.Pandas_clean and not config.Store_object:
         #storage.panda.clean()
-        output.clean_follow_list()
+        output._clean_follow_list()
 
 def Following(config):
     logme.debug(__name__+':Following')
-    output.clean_follow_list()
     config.Following = True
     config.Followers = False
     config.Profile = False
@@ -256,7 +254,7 @@ def Following(config):
             storage.panda._autoget("user")
     if config.Pandas_clean and not config.Store_object:
         #storage.panda.clean()
-        output.clean_follow_list()
+        output._clean_follow_list()
 
 def Lookup(config):
     logme.debug(__name__+':Lookup')
