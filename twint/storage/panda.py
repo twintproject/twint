@@ -26,25 +26,27 @@ weekdays = {
 
 _type = ""
 
-def _concat(df, type):
+def _concat(df, _type):
     if df is None:
-        df = pd.DataFrame(_object_blocks[type])
+        df = pd.DataFrame(_object_blocks[_type])
     else:
-        _df = pd.DataFrame(_object_blocks[type])
+        _df = pd.DataFrame(_object_blocks[_type])
         df = pd.concat([df, _df], sort=True)
     return df
 
-def _autoget(type):
+def _autoget(_type):
     global Tweets_df
     global Follow_df
     global User_df
 
-    if type == "tweet":
-        Tweets_df = _concat(Tweets_df, type)
-    if type == "followers" or type == "following":
-        Follow_df = _concat(Follow_df, type)
-    if type == "user":
-        User_df = _concat(User_df, type)
+    if _type == "tweet":
+        Tweets_df = _concat(Tweets_df, _type)
+    elif _type == "followers" or _type == "following":
+        Follow_df = _concat(Follow_df, _type)
+    elif _type == "user":
+        User_df = _concat(User_df, _type)
+    else:
+        error("[x] Wrong type of object passed")
 
 
 def update(object, config):
