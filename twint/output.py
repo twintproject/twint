@@ -14,12 +14,22 @@ users_list = []
 author_list = {''}
 author_list.pop()
 
+# used by Pandas
 _follows_object = {}
 
-def clean_follow_list():
+def _clean_follow_list():
     logme.debug(__name__+':clean_follow_list')
     global _follows_object
     _follows_object = {}
+
+def clean_lists():
+    logme.debug(__name__+':clean_lists')
+    global follows_list
+    global tweets_list
+    global users_list
+    follows_list = []
+    tweets_list = []
+    users_list = []
 
 def datecheck(datetimestamp, config):
     logme.debug(__name__+':datecheck')
@@ -79,9 +89,6 @@ def _output(obj, output, config, **extra):
             write.Text(output, config.Output)
             logme.debug(__name__+':_output:Text')
 
-    if config.Pandas and obj.__class__.__name__ == "user":
-        logme.debug(__name__+':_output:Pandas+user')
-        panda.update(obj, config)
     if config.Elasticsearch:
         logme.debug(__name__+':_output:Elasticsearch')
         print("", end=".", flush=True)
@@ -169,6 +176,10 @@ async def Users(u, config, conn):
     if config.Store_object:
         logme.debug(__name__+':User:Store_object')
         users_list.append(user) # twint.user.user
+    
+    if config.Pandas:
+        logme.debug(__name__+':User:Pandas+user')
+        panda.update(obj, config)
 
     _output(user, output, config)
 
