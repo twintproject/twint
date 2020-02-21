@@ -71,7 +71,10 @@ def User(_format, u):
         output = output.replace("{private}", str(u.is_private))
         output = output.replace("{verified}", str(u.is_verified))
         output = output.replace("{avatar}", u.avatar)
-        output = output.replace("{background_image}", u.background_image)
+        if u.background_image:
+            output = output.replace("{background_image}", u.background_image)
+        else:
+            output = output.replace("{background_image}", "")
     else:
         logme.debug(__name__+':User:notFormat')
         output = f"{u.id} | {u.name} | @{u.username} | Private: "
