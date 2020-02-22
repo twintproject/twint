@@ -59,15 +59,19 @@ def getStat(tw, _type):
     st = f"ProfileTweet-action--{_type} u-hiddenVisually"
     return tw.find("span", st).find("span")["data-tweet-stat-count"]
 
-def getRetweet(tw):
+def getRetweet(tw, _config):
     """Get Retweet
     """
     logme.debug(__name__+':getRetweet')
-    _rt_object = tw.find('span', 'js-retweet-text')
-    if _rt_object:
-        _rt_id = _rt_object.find('a')['data-user-id']
-        _rt_username = _rt_object.find('a')['href'][1:]
-        return  _rt_id, _rt_username
+    if _config.Profile:
+        if int(tw["data-user-id"]) != _config.User_id:
+            return _config.User_id, _config.Username
+    else:
+        _rt_object = tw.find('span', 'js-retweet-text')
+        if _rt_object:
+            _rt_id = _rt_object.find('a')['data-user-id']
+            _rt_username = _rt_object.find('a')['href'][1:]
+            return  _rt_id, _rt_username
     return '', ''
 
 def Tweet(tw, config):
@@ -100,10 +104,13 @@ def Tweet(tw, config):
     t.retweets_count = getStat(tw, "retweet")
     t.likes_count = getStat(tw, "favorite")
     t.link = f"https://twitter.com/{t.username}/status/{t.id}"
-    t.user_rt_id, t.user_rt = getRetweet(tw)
+    t.user_rt_id, t.user_rt = getRetweet(tw, config)
     t.retweet = True if t.user_rt else False
-    t.retweet_id = tw['data-retweet-id'] if t.user_rt else ''
-    t.retweet_date = datetime.fromtimestamp(((int(t.retweet_id) >> 22) + 1288834974657)/1000.0).strftime("%Y-%m-%d %H:%M:%S") if t.user_rt else ''
+    t.retweet_id = ''
+    t.retweet_date = ''
+    if not config.Profile:
+        t.retweet_id = tw['data-retweet-id'] if t.user_rt else ''
+        t.retweet_date = datetime.fromtimestamp(((int(t.retweet_id) >> 22) + 1288834974657)/1000.0).strftime("%Y-%m-%d %H:%M:%S") if t.user_rt else ''
     t.quote_url = getQuoteURL(tw)
     t.near = config.Near if config.Near else ""
     t.geo = config.Geo if config.Geo else ""
