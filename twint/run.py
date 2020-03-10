@@ -1,4 +1,4 @@
-import sys, os, time
+import sys, os, time, random, json
 from asyncio import get_event_loop, TimeoutError, ensure_future, new_event_loop, set_event_loop
 from datetime import datetime
 
@@ -45,6 +45,10 @@ class Twint:
     async def Feed(self):
         logme.debug(__name__+':Twint:Feed')
         consecutive_errors_count = 0
+        
+        if self.config.Rate_limit_info is not None and os.path.exists(self.config.Rate_limit_info):
+          os.remove(self.config.Rate_limit_info)
+          
         while True:
             response = await get.RequestUrl(self.config, self.init, headers=[("User-Agent", self.user_agent)])
             if self.config.Debug:
@@ -87,15 +91,31 @@ class Twint:
                 if self.config.Profile or self.config.Favorites:
                     print("[!] Twitter does not return more data, scrape stops here.")
                     break
-                logme.critical(__name__+':Twint:Feed:noData' + str(e))
-                # Sometimes Twitter says there is no data. But it's a lie.
+                # logme.critical(__name__+':Twint:Feed:noData:' + str(e))
+                # Sometimes Twitter says there is no data. But it's a lie, maybe because of rate limiting
                 consecutive_errors_count += 1
+
+                logme.critical('possible rate limit')
+
+                if self.config.Rate_limit_info is not None:
+                    rate_limit_info = {
+                      "possible": True,
+                      "consecutive_errors_count": consecutive_errors_count
+                    }
+
+                    print(json.dumps(rate_limit_info), file=open(self.config.Rate_limit_info, "w", encoding="utf-8"))
+
                 if consecutive_errors_count < self.config.Retries_count:
+                    if self.config.Rate_limit_pause is True:
+                        delay = random.randint(self.config.Rate_limit_pause_min, self.config.Rate_limit_pause_max)
+                        print('sleeping for {} secs'.format(delay))
+                        time.sleep(delay)
+
                     self.user_agent = await get.RandomUserAgent()
                     continue
+                      
                 logme.critical(__name__+':Twint:Feed:Tweets_known_error:' + str(e))
                 print(str(e) + " [x] run.Feed")
-                print("[!] if get this error but you know for sure that more tweets exist, please open an issue and we will investigate it!")
                 break
         if self.config.Resume:
             print(self.init, file=open(self.config.Resume, "a", encoding="utf-8"))
@@ -153,7 +173,6 @@ class Twint:
             self.user_agent = await get.RandomUserAgent(wa=True)
         else:
             self.user_agent = await get.RandomUserAgent()
-
         if self.config.User_id is not None:
             logme.debug(__name__+':Twint:main:user_id')
             self.config.Username = await get.Username(self.config.User_id)
