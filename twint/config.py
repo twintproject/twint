@@ -73,4 +73,8 @@ class Config:
     Filter_retweets = False
     Translate = False
     TranslateSrc = "en"
-    TranslateDest = "en"    
+    TranslateDest = "en" 
+    Rate_limit_info = None
+    Rate_limit_pause = True
+    Rate_limit_pause_min = 60
+    Rate_limit_pause_max = 120
