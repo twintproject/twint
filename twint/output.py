@@ -175,8 +175,19 @@ async def Users(u, config, conn):
 
     if config.Store_object:
         logme.debug(__name__+':User:Store_object')
-        users_list.append(user) # twint.user.user
-    
+
+        if config.Followers or config.Following:
+            if hasattr(config.Store_object_follow_list, 'append'):
+                config.Store_object_follow_list.append(user)
+            else:
+                users_list.append(user) # twint.user.user
+
+        # also populate using the previous method to avoid breaking changes
+        if hasattr(config.Store_object_users_list, 'append'):
+            config.Store_object_users_list.append(user)
+        else:
+            users_list.append(user) # twint.user.user
+
     if config.Pandas:
         logme.debug(__name__+':User:Pandas+user')
         panda.update(obj, config)
@@ -198,7 +209,10 @@ async def Username(username, config, conn):
         elasticsearch.Follow(username, config)
 
     if config.Store_object:
-        follows_list.append(username)
+        if hasattr(config.Store_object_follow_list, 'append'):
+            config.Store_object_follow_list.append(username)
+        else:
+            follows_list.append(username) # twint.user.user
 
     if config.Pandas:
         logme.debug(__name__+':Username:object+pandas')
