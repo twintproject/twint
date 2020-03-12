@@ -18,7 +18,7 @@ class Twint:
             self.init = self.get_resume(config.Resume)
         else:
             self.init = '-1'
-            
+
         self.feed = [-1]
         self.count = 0
         self.user_agent = ""
@@ -49,7 +49,7 @@ class Twint:
             response = await get.RequestUrl(self.config, self.init, headers=[("User-Agent", self.user_agent)])
             if self.config.Debug:
                 print(response, file=open("twint-last-request.log", "w", encoding="utf-8"))
-                
+
             self.feed = []
             try:
                 if self.config.Favorites:
@@ -258,13 +258,37 @@ def Following(config):
 
 def Lookup(config):
     logme.debug(__name__+':Lookup')
-    if config.User_id is not None:
+
+    try:
+        get_event_loop()
+    except RuntimeError as e:
+        if "no current event loop" in str(e):
+            set_event_loop(new_event_loop())
+        else:
+            logme.exception(__name__+':Lookup:Unexpected exception while handling an expected RuntimeError.')
+            raise
+    except Exception as e:
+        logme.exception(__name__+':Lookup:Unexpected exception occured while attempting to get or create a new event loop.')
+        raise
+
+    try:
+        if config.User_id is not None:
             logme.debug(__name__+':Twint:Lookup:user_id')
             config.Username = get_event_loop().run_until_complete(get.Username(config.User_id))
-    url = f"https://twitter.com/{config.Username}?lang=en"
-    get_event_loop().run_until_complete(get.User(url, config, db.Conn(config.Database)))
-    if config.Pandas_au:
-        storage.panda._autoget("user")
+
+        url = f"https://twitter.com/{config.Username}?lang=en"
+        get_event_loop().run_until_complete(get.User(url, config, db.Conn(config.Database)))
+
+        if config.Pandas_au:
+            storage.panda._autoget("user")
+    except RuntimeError as e:
+        if "no current event loop" in str(e):
+            logme.exception(__name__+':Lookup:Previous attempt to to create an event loop failed.')
+
+        raise
+    except Exception as e:
+        logme.exception(__name__+':Lookup:Unexpected exception occured.')
+        raise
 
 def Profile(config):
     logme.debug(__name__+':Profile')
