@@ -190,7 +190,7 @@ async def Users(u, config, conn):
 
     if config.Pandas:
         logme.debug(__name__+':User:Pandas+user')
-        panda.update(obj, config)
+        panda.update(user, config)
 
     _output(user, output, config)
 
