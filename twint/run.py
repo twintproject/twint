@@ -206,9 +206,19 @@ class Twint:
 
 def run(config, callback=None):
     logme.debug(__name__+':run')
-    loop = new_event_loop()
-    set_event_loop(loop)
-    loop.run_until_complete(Twint(config).main(callback))
+    try:
+        get_event_loop()
+    except RuntimeError as e:
+        if "no current event loop" in str(e):
+            set_event_loop(new_event_loop())
+        else:
+            logme.exception(__name__+':Lookup:Unexpected exception while handling an expected RuntimeError.')
+            raise
+    except Exception as e:
+        logme.exception(__name__+':Lookup:Unexpected exception occured while attempting to get or create a new event loop.')
+        raise
+
+    get_event_loop().run_until_complete(Twint(config).main(callback))
 
 def Favorites(config):
     logme.debug(__name__+':Favorites')
