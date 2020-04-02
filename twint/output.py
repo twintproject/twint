@@ -33,11 +33,17 @@ def clean_lists():
 
 def datecheck(datetimestamp, config):
     logme.debug(__name__+':datecheck')
-    if config.Since and config.Until:
-        logme.debug(__name__+':datecheck:dateRangeTrue')
+    if config.Since:
+        logme.debug(__name__+':datecheck:SinceTrue')
         d = int(datetime.strptime(datetimestamp, "%Y-%m-%d %H:%M:%S").timestamp())
         s = int(datetime.strptime(config.Since, "%Y-%m-%d %H:%M:%S").timestamp())
         if d < s:
+           return False
+    if config.Until:
+        logme.debug(__name__+':datecheck:UntilTrue')
+        d = int(datetime.strptime(datetimestamp, "%Y-%m-%d %H:%M:%S").timestamp())
+        s = int(datetime.strptime(config.Until, "%Y-%m-%d %H:%M:%S").timestamp())
+        if d > s:
            return False
     logme.debug(__name__+':datecheck:dateRangeFalse')
     return True
