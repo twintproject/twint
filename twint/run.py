@@ -1,3 +1,4 @@
+import random
 import sys, os, time
 from asyncio import get_event_loop, TimeoutError, ensure_future, new_event_loop, set_event_loop
 from datetime import datetime
@@ -55,11 +56,15 @@ class Twint:
                 if self.config.Favorites:
                     self.feed, self.init = feed.Mobile(response)
                     if not self.count%40:
-                        time.sleep(5)
+                        delay = random.randint(self.config.Min_delay, self.config.Max_delay)
+                        sys.stderr.write('sleeping for {} secs\n'.format(delay))
+                        time.sleep(delay)
                 elif self.config.Followers or self.config.Following:
                     self.feed, self.init = feed.Follow(response)
                     if not self.count%40:
-                        time.sleep(5)
+                        delay = random.randint(self.config.Min_delay, self.config.Max_delay)
+                        sys.stderr.write('sleeping for {} secs\n'.format(delay))
+                        time.sleep(delay)
                 elif self.config.Profile:
                     if self.config.Profile_full:
                         self.feed, self.init = feed.Mobile(response)
@@ -67,6 +72,10 @@ class Twint:
                         self.feed, self.init = feed.profile(response)
                 elif self.config.TwitterSearch:
                     self.feed, self.init = feed.Json(response)
+                    if self.config.Max_delay:
+                        delay = random.randint(self.config.Min_delay, self.config.Max_delay)
+                        sys.stderr.write('sleeping for {} secs\n'.format(delay))
+                        time.sleep(delay)
                 break
             except TimeoutError as e:
                 if self.config.Proxy_host.lower() == "tor":
@@ -91,11 +100,14 @@ class Twint:
                 # Sometimes Twitter says there is no data. But it's a lie.
                 consecutive_errors_count += 1
                 if consecutive_errors_count < self.config.Retries_count:
-                    self.user_agent = await get.RandomUserAgent()
+                    delay = round(self.config.Backoff_base ** consecutive_errors_count, 1)
+                    sys.stderr.write('sleeping for {} secs\n'.format(delay))
+                    time.sleep(delay)
+                    self.user_agent = await get.RandomUserAgent(wa=True)
                     continue
                 logme.critical(__name__+':Twint:Feed:Tweets_known_error:' + str(e))
-                print(str(e) + " [x] run.Feed")
-                print("[!] if get this error but you know for sure that more tweets exist, please open an issue and we will investigate it!")
+                sys.stderr.write(str(e) + " [x] run.Feed")
+                sys.stderr.write("[!] if get this error but you know for sure that more tweets exist, please open an issue and we will investigate it!")
                 break
         if self.config.Resume:
             print(self.init, file=open(self.config.Resume, "a", encoding="utf-8"))
