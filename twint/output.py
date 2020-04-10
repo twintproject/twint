@@ -188,12 +188,6 @@ async def Users(u, config, conn):
             else:
                 users_list.append(user) # twint.user.user
 
-        # also populate using the previous method to avoid breaking changes
-        if hasattr(config.Store_object_users_list, 'append'):
-            config.Store_object_users_list.append(user)
-        else:
-            users_list.append(user) # twint.user.user
-
     if config.Pandas:
         logme.debug(__name__+':User:Pandas+user')
         panda.update(user, config)
