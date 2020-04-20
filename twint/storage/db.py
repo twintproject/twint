@@ -9,8 +9,8 @@ def Conn(database):
     if database:
         print("[+] Inserting into Database: " + str(database))
         conn = init(database)
-        if isinstance(conn, str):
-            print(str)
+        if isinstance(conn, str): # error
+            print(conn)
             sys.exit(1)
     else:
         conn = ""
