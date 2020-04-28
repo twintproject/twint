@@ -46,8 +46,10 @@ def check(args):
             error("Error", "Please specify an output file (Example: -o file.csv).")
         elif args.json:
             error("Error", "Please specify an output file (Example: -o file.json).")
-    if args.Min_delay < 0 or args.Max_delay < 0:
-        error("Error", "Please provide a positive number for min_delay and max_delay")
+    if args.backoff_exponent <= 0:
+        error("Error", "Please specifiy a positive value for backoff_exponent")
+    if args.min_wait_time < 0:
+        error("Error", "Please specifiy a non negative value for min_wait_time")
 
 def loadUserList(ul, _type):
     """ Concatenate users
@@ -62,7 +64,6 @@ def loadUserList(ul, _type):
             un += "%20OR%20from%3A" + user
         return un[15:]
     return userlist
-
 
 def initialize(args):
     """ Set default values for config from args
@@ -126,9 +127,8 @@ def initialize(args):
     c.Filter_retweets = args.filter_retweets
     c.Translate = args.translate
     c.TranslateDest = args.translate_dest
-    c.Backoff_base = args.backoff_base
-    c.Min_delay = args.min_delay
-    c.Max_delay = args.max_delay
+    c.Backoff_exponent = args.backoff_exponent
+    c.Min_wait_time = args.min_wait_time
     return c
 
 def options():
@@ -225,9 +225,8 @@ def options():
     ap.add_argument("--source", help="Filter the tweets for specific source client.")
     ap.add_argument("--members-list", help="Filter the tweets sent by users in a given list.")
     ap.add_argument("-fr", "--filter-retweets", help="Exclude retweets from the results.", action="store_true")
-    ap.add_argument("--backoff-base", help="Specify a base for the exponential backoff in case of errors.",type=float, default=1.8)
-    ap.add_argument("--min-delay", help="Specify a minimum delay between certain requests.", type=int, default=3)
-    ap.add_argument("--max-delay", help="Specify a maximum delay between certain requests.", type=int, default=10)
+    ap.add_argument("--backoff-exponent", help="Specify a exponent for the polynomial backoff in case of errors.", type=float, default=3.0)
+    ap.add_argument("--min_wait_time", type=float, default=15, help="specifiy a minimum wait time in case of scraping limit error. This value will be adjusted by twint if the value provided does not satisfy the limits constraints")
     args = ap.parse_args()
     
     return args
