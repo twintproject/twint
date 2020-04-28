@@ -33,11 +33,17 @@ def clean_lists():
 
 def datecheck(datetimestamp, config):
     logme.debug(__name__+':datecheck')
-    if config.Since and config.Until:
-        logme.debug(__name__+':datecheck:dateRangeTrue')
+    if config.Since:
+        logme.debug(__name__+':datecheck:SinceTrue')
         d = int(datetime.strptime(datetimestamp, "%Y-%m-%d %H:%M:%S").timestamp())
         s = int(datetime.strptime(config.Since, "%Y-%m-%d %H:%M:%S").timestamp())
         if d < s:
+           return False
+    if config.Until:
+        logme.debug(__name__+':datecheck:UntilTrue')
+        d = int(datetime.strptime(datetimestamp, "%Y-%m-%d %H:%M:%S").timestamp())
+        s = int(datetime.strptime(config.Until, "%Y-%m-%d %H:%M:%S").timestamp())
+        if d > s:
            return False
     logme.debug(__name__+':datecheck:dateRangeFalse')
     return True
@@ -182,15 +188,9 @@ async def Users(u, config, conn):
             else:
                 users_list.append(user) # twint.user.user
 
-        # also populate using the previous method to avoid breaking changes
-        if hasattr(config.Store_object_users_list, 'append'):
-            config.Store_object_users_list.append(user)
-        else:
-            users_list.append(user) # twint.user.user
-
     if config.Pandas:
         logme.debug(__name__+':User:Pandas+user')
-        panda.update(obj, config)
+        panda.update(user, config)
 
     _output(user, output, config)
 
