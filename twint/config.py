@@ -75,3 +75,5 @@ class Config:
     Translate = False
     TranslateSrc = "en"
     TranslateDest = "en"
+    Backoff_exponent = 3.0
+    Min_wait_time = 0
