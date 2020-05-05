@@ -167,6 +167,8 @@ class Twint:
             logme.debug(__name__+':Twint:main:username')
             url = f"https://twitter.com/{self.config.Username}?lang=en"
             self.config.User_id = await get.User(url, self.config, self.conn, True)
+            if self.config.User_id is None:
+                raise ValueError("Cannot find twitter account with name = " + self.config.Username)
 
         if self.config.TwitterSearch and self.config.Since and self.config.Until:
             logme.debug(__name__+':Twint:main:search+since+until')
