@@ -54,12 +54,12 @@ pip3 install twint
 or
 
 ```bash
-pip3 install --user --upgrade -e git+https://github.com/twintproject/twint.git@origin/master#egg=twint
+pip3 install --user --upgrade git+https://github.com/twintproject/twint.git@origin/master#egg=twint
 ```
 
 **Pipenv**:
 ```bash
-pipenv install -e git+https://github.com/twintproject/twint.git#egg=twint
+pipenv install git+https://github.com/twintproject/twint.git#egg=twint
 ```
 
 ## CLI Basic Examples and Combos
