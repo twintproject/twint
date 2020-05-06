@@ -182,11 +182,10 @@ async def Users(u, config, conn):
     if config.Store_object:
         logme.debug(__name__+':User:Store_object')
 
-        if config.Followers or config.Following:
-            if hasattr(config.Store_object_follow_list, 'append'):
-                config.Store_object_follow_list.append(user)
-            else:
-                users_list.append(user) # twint.user.user
+        if hasattr(config.Store_object_follow_list, 'append'):
+            config.Store_object_follow_list.append(user)
+        else:
+            users_list.append(user) # twint.user.user
 
     if config.Pandas:
         logme.debug(__name__+':User:Pandas+user')
