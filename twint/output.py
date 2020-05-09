@@ -17,6 +17,12 @@ author_list.pop()
 # used by Pandas
 _follows_object = {}
 
+def _formatDateTime(datetimestamp):
+    try:
+        return int(datetime.strptime(datetimestamp, "%Y-%m-%d %H:%M:%S").timestamp())
+    except ValueError:
+        return int(datetime.strptime(datetimestamp, "%Y-%m-%d").timestamp())
+
 def _clean_follow_list():
     logme.debug(__name__+':clean_follow_list')
     global _follows_object
@@ -35,14 +41,18 @@ def datecheck(datetimestamp, config):
     logme.debug(__name__+':datecheck')
     if config.Since:
         logme.debug(__name__+':datecheck:SinceTrue')
-        d = int(datetime.strptime(datetimestamp, "%Y-%m-%d %H:%M:%S").timestamp())
-        s = int(datetime.strptime(config.Since, "%Y-%m-%d %H:%M:%S").timestamp())
+
+        d = _formatDateTime(datetimestamp)
+        s = _formatDateTime(config.Since)
+
         if d < s:
            return False
     if config.Until:
         logme.debug(__name__+':datecheck:UntilTrue')
-        d = int(datetime.strptime(datetimestamp, "%Y-%m-%d %H:%M:%S").timestamp())
-        s = int(datetime.strptime(config.Until, "%Y-%m-%d %H:%M:%S").timestamp())
+
+        d = _formatDateTime(datetimestamp)
+        s = _formatDateTime(config.Until)
+        
         if d > s:
            return False
     logme.debug(__name__+':datecheck:dateRangeFalse')
