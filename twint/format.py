@@ -16,6 +16,7 @@ def Tweet(config, t):
         output = output.replace("{photos}", ",".join(t.photos))
         output = output.replace("{video}", str(t.video))
         output = output.replace("{tweet}", t.tweet)
+        output = output.replace("{language}", t.lang)
         output = output.replace("{hashtags}", ",".join(t.hashtags))
         output = output.replace("{cashtags}", ",".join(t.cashtags))
         output = output.replace("{replies}", t.replies_count)
