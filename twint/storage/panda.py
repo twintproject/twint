@@ -76,6 +76,7 @@ def update(object, config):
             "timezone": Tweet.timezone,
             "place": Tweet.place,
             "tweet": Tweet.tweet,
+            "language": Tweet.lang,
             "hashtags": Tweet.hashtags,
             "cashtags": Tweet.cashtags,
             "user_id": Tweet.user_id,
