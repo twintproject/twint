@@ -96,7 +96,7 @@ def init(db):
                     username text not null,
                     tweet_id integer not null,
                     retweet_id integer not null,
-                    retweet_date integer not null,
+                    retweet_date integer,
                     CONSTRAINT retweets_pk PRIMARY KEY(user_id, tweet_id),
                     CONSTRAINT user_id_fk FOREIGN KEY(user_id) REFERENCES users(id),
                     CONSTRAINT tweet_id_fk FOREIGN KEY(tweet_id) REFERENCES tweets(id)
