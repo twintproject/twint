@@ -90,7 +90,7 @@ def Tweet(tw, config):
     t.username = tw["data-screen-name"]
     t.name = tw["data-name"]
     t.place = tw.find("a","js-geo-pivot-link").text.strip() if tw.find("a","js-geo-pivot-link") else ""
-    t.timezone = strftime("%Z", localtime())
+    t.timezone = strftime("%z", localtime())
     for img in tw.findAll("img", "Emoji Emoji--forText"):
         img.replaceWith(img["alt"])
     t.mentions = getMentions(tw)
