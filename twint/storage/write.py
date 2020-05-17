@@ -51,9 +51,9 @@ def Csv(obj, config):
     if _obj_type == "str":
         _obj_type = "username"
     fieldnames, row = struct(obj, config.Custom[_obj_type], _obj_type)
-    
+
     base = addExt(config.Output, _obj_type, "csv")
-    
+
     if not (os.path.exists(base)):
         with open(base, "w", newline='', encoding="utf-8") as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
@@ -71,6 +71,6 @@ def Json(obj, config):
 
     base = addExt(config.Output, _obj_type, "json")
 
-    with open(base, "a", newline='', encoding="utf-8") as json_file:
+    with open(base, "a", newline=',', encoding="utf-8") as json_file:
         json.dump(data, json_file, ensure_ascii=False)
         json_file.write("\n")
