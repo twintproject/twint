@@ -160,7 +160,7 @@ async def RandomUserAgent(wa=None):
 async def Username(_id):
     logme.debug(__name__+':Username')
     url = f"https://twitter.com/intent/user?user_id={_id}&lang=en"
-    r = await Request(url)
+    r = await Request(url, headers={"X-Requested-With": "XMLHttpRequest"})
     soup = BeautifulSoup(r, "html.parser")
 
     return soup.find("a", "fn url alternate-context")["href"].replace("/", "")
