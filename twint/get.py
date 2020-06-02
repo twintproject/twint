@@ -179,7 +179,7 @@ async def User(url, config, conn, user_id = False):
     logme.debug(__name__+':User')
     _connector = get_connector(config)
     try:
-        response = await Request(url, connector=_connector)
+        response = await Request(url, connector=_connector, headers={"X-Requested-With": "XMLHttpRequest"})
         soup = BeautifulSoup(response, "html.parser")
         if user_id:
             return int(inf(soup, "id"))
