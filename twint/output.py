@@ -194,6 +194,8 @@ async def Users(u, config, conn):
 
         if hasattr(config.Store_object_follow_list, 'append'):
             config.Store_object_follow_list.append(user)
+        elif hasattr(config.Store_object_users_list, 'append'):
+            config.Store_object_users_list.append(user)
         else:
             users_list.append(user) # twint.user.user
 
