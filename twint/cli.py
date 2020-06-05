@@ -112,6 +112,8 @@ def initialize(args):
     c.Proxy_host = args.proxy_host
     c.Proxy_port = args.proxy_port
     c.Proxy_type = args.proxy_type
+    c.Tor_control_port = args.tor_control_port
+    c.Tor_control_password = args.tor_control_password
     c.Retweets = args.retweets
     c.Custom_query = args.custom_query
     c.Popular_tweets =  args.popular_tweets
@@ -173,6 +175,8 @@ def options():
     ap.add_argument("--proxy-type", help="Socks5, HTTP, etc.")
     ap.add_argument("--proxy-host", help="Proxy hostname or IP.")
     ap.add_argument("--proxy-port", help="The port of the proxy server.")
+    ap.add_argument("--tor-control-port", help="If proxy-type is set to tor, this is the control port", default=9051)
+    ap.add_argument("--tor-control-password", help="If proxy-type is set to tor, this is the password for the control port", default="my_password")
     ap.add_argument("--essid",
                     help="Elasticsearch Session ID, use this to differentiate scraping sessions.",
                     nargs="?", default="")
