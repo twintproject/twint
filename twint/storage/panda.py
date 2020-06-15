@@ -41,12 +41,12 @@ def _autoget(_type):
 
     if _type == "tweet":
         Tweets_df = _concat(Tweets_df, _type)
-    elif _type == "followers" or _type == "following":
+    elif _type in ("followers", "following"):
         Follow_df = _concat(Follow_df, _type)
     elif _type == "user":
         User_df = _concat(User_df, _type)
     else:
-        error("[x] Wrong type of object passed")
+        raise ValueError("[x] Wrong type of object passed")
 
 
 def update(object, config):
