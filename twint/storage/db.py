@@ -56,6 +56,7 @@ def init(db):
                     id integer not null,
                     id_str text not null,
                     tweet text default '',
+                    language text default '',
                     conversation_id text not null,
                     created_at integer not null,
                     date text not null,
@@ -244,6 +245,7 @@ def tweets(conn, Tweet, config):
         entry = (Tweet.id,
                     Tweet.id_str,
                     Tweet.tweet,
+                    Tweet.language,
                     Tweet.conversation_id,
                     Tweet.datetime,
                     Tweet.datestamp,
@@ -272,7 +274,7 @@ def tweets(conn, Tweet, config):
                     Tweet.translate,
                     Tweet.trans_src,
                     Tweet.trans_dest)
-        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
+        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
 
         if config.Favorites:
             query = 'INSERT INTO favorites VALUES(?,?)'
