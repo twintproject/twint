@@ -98,6 +98,7 @@ def Tweet(tw, config):
     t.photos = [photo_node.attrs['data-image-url'] for photo_node in tw.find_all("div", "AdaptiveMedia-photoContainer")]
     t.video = 1 if tw.find_all("div", "AdaptiveMedia-video") != [] else 0
     t.tweet = getText(tw)
+    t.lang = tw.find('p', 'tweet-text')['lang']
     t.hashtags = [hashtag.text for hashtag in tw.find_all("a","twitter-hashtag")]
     t.cashtags = [cashtag.text for cashtag in tw.find_all("a", "twitter-cashtag")]
     t.replies_count = getStat(tw, "reply")
