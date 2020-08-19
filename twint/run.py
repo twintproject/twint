@@ -6,6 +6,8 @@ from .storage import db
 
 import logging as logme
 
+import time
+
 class Twint:
     def __init__(self, config):
         logme.debug(__name__+':Twint:__init__')
@@ -348,7 +350,7 @@ def Lookup(config):
             logme.debug(__name__+':Twint:Lookup:user_id')
             config.Username = get_event_loop().run_until_complete(get.Username(config.User_id))
 
-        url = f"https://twitter.com/{config.Username}?lang=en"
+        url = f"https://mobile.twitter.com/{config.Username}?prefetchTimestamp=" + str(int(time.time() * 1000))
         get_event_loop().run_until_complete(get.User(url, config, db.Conn(config.Database)))
 
         if config.Pandas_au:
