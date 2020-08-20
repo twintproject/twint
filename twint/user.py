@@ -89,10 +89,13 @@ def convertToInt(x):
 
 def stat(ur, _type):
     logme.debug(__name__+':stat')
-    _class = f"ProfileNav-item ProfileNav-item--{_type}"
-    stat = ur.find("li", _class)
+    stats = ur.find('table', 'profile-stats')
+    stat_dict = {}
+    for stat in stats.find_all('td', 'stat'):
+        statnum, statlabel = stat.text.replace('\n', '').replace(',', '').split(' ')[:2]
+        stat_dict[statlabel.lower()] = int(statnum.replace(',', ''))
     try :
-        return int(stat.find("span", "ProfileNav-value")["data-count"])
+        return stat_dict[_type]
     except AttributeError:
         return 0
 
