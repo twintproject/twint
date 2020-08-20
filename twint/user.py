@@ -133,13 +133,13 @@ def User(ur):
     u.url = card(ur, "url")
     u.join_date = join(ur)[1]
     u.join_time = join(ur)[0]
-    u.tweets = stat(ur, "tweets is-active")
+    u.tweets = stat(ur, "tweets")
     u.following = stat(ur, "following")
     u.followers = stat(ur, "followers")
-    u.likes = stat(ur, "favorites")
-    u.media_count = media(ur)
+    u.likes = ""  # stat(ur, "favorites")
+    u.media_count = ""  # media(ur)
     u.is_private = inf(ur, "private")
     u.is_verified = verified(ur)
-    u.avatar = ur.find("img", "ProfileAvatar-image")["src"]
-    u.background_image = ur.find('div',{'class':'ProfileCanopy-headerBg'}).find('img').get('src')
+    u.avatar = ur.find("img", {"alt": u.name})["src"]
+    #u.background_image = ur.find('div',{'class':'ProfileCanopy-headerBg'}).find('img').get('src')
     return u
