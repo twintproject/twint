@@ -110,8 +110,8 @@ def media(ur):
 def verified(ur):
     logme.debug(__name__+':verified')
     try:
-        is_verified = ur.find("span", "ProfileHeaderCard-badges").text
-        if "Verified account" in is_verified:
+        is_verified = ur.find("img", {"alt": "Verified Account"})['alt']
+        if "Verified Account" in is_verified:
             is_verified = 1
         else:
             is_verified = 0
