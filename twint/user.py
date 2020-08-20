@@ -36,18 +36,17 @@ def card(ur, _type):
     logme.debug(__name__+':card')
     if _type == "bio":
         try:
-            ret = ur.find("p", "ProfileHeaderCard-bio u-dir").text.replace("\n", " ")
+            ret = ur.find("div", "bio").text.replace("\n", " ").strip()
         except:
             ret = ""
     elif _type == "location":
         try:
-            ret = ur.find("span", "ProfileHeaderCard-locationText u-dir").text
-            ret = ret[15:].replace("\n", " ")[:-10]
+            ret = ur.find("div", "location").text
         except:
             ret = ""
     elif _type == "url":
         try:
-            ret = ur.find("span", "ProfileHeaderCard-urlText u-dir").find("a")["title"]
+            ret = ur.find("link")["href"]
         except:
             ret = ""
 
