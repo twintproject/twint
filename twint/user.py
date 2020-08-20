@@ -9,7 +9,7 @@ class user:
 def inf(ur, _type):
     logme.debug(__name__+':inf')
     try:
-        group = ur.find("div", "user-actions btn-group not-following ")
+        group = ur.find("div", "profile")
         if group == None:
             group = ur.find("div", "user-actions btn-group not-following")
         if group == None:
@@ -18,14 +18,17 @@ def inf(ur, _type):
         print("Error: " + str(e))
 
     if _type == "id":
-        ret = group["data-user-id"]
+        screen_name = group.find("span", "screen-name").text
+        ret = ur.find("a", {"data-screenname": screen_name})
+        ret = ret.get('data-mentioned-user-id') if ret is not None else None
+        ret = "" if ret is None else ret
     elif _type == "name":
-        ret = group["data-name"]
+        ret = group.find("div", "fullname").text.split('\n')[0]
     elif _type == "username":
-        ret = group["data-screen-name"]
+        ret = group.find("span", "screen-name").text
     elif _type == "private":
-        ret = group["data-protected"]
-        if ret == 'true':
+        ret = group.find("div","protected")
+        if ret:
             ret = 1
         else:
             ret = 0
