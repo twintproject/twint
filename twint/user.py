@@ -53,9 +53,12 @@ def card(ur, _type):
     return ret
 
 def join(ur):
-    logme.debug(__name__+':join')
-    jd = ur.find("span", "ProfileHeaderCard-joinDateText js-tooltip u-dir")["title"]
-    return jd.split(" - ")
+    try:
+        logme.debug(__name__+':join')
+        jd = ur.find("span", "ProfileHeaderCard-joinDateText js-tooltip u-dir")["title"]
+        return jd.split(" - ")
+    except:
+        return ["", ""]
 
 def convertToInt(x):
     logme.debug(__name__+':contertToInt')
