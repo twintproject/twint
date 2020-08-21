@@ -104,7 +104,7 @@ def init(db):
                 );
         """
         cursor.execute(table_retweets)
-    
+
         table_reply_to = """
             CREATE TABLE IF NOT EXISTS
                 replies(
@@ -245,7 +245,7 @@ def tweets(conn, Tweet, config):
         entry = (Tweet.id,
                     Tweet.id_str,
                     Tweet.tweet,
-                    Tweet.language,
+                    Tweet.lang,
                     Tweet.conversation_id,
                     Tweet.datetime,
                     Tweet.datestamp,
@@ -284,7 +284,7 @@ def tweets(conn, Tweet, config):
             query = 'INSERT INTO retweets VALUES(?,?,?,?,?)'
             _d = datetime.timestamp(datetime.strptime(Tweet.retweet_date, "%Y-%m-%d %H:%M:%S"))
             cursor.execute(query, (int(Tweet.user_rt_id), Tweet.user_rt, Tweet.id, int(Tweet.retweet_id), _d))
-        
+
         if Tweet.reply_to:
             for reply in Tweet.reply_to:
                 query = 'INSERT INTO replies VALUES(?,?,?)'
