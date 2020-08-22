@@ -107,6 +107,10 @@ def update(object, config):
         _object_blocks[_type].append(_data)
     elif _type == "user":
         user = object
+        try:
+            background_image = user.background_image
+        except:
+            background_image = ""
         _data = {
             "id": user.id,
             "name": user.name,
@@ -125,7 +129,7 @@ def update(object, config):
             "private": user.is_private,
             "verified": user.is_verified,
             "avatar": user.avatar,
-            "background_image": user.background_image,
+            "background_image": background_image,
             }
         _object_blocks[_type].append(_data)
     elif _type == "followers" or _type == "following":
