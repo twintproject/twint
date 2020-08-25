@@ -2,8 +2,9 @@ from time import strftime, localtime
 from datetime import datetime
 import json
 
-import logging as logme
 from googletransx import Translator
+import logging
+logme = logging.getLogger('twint')
 
 # ref. 
 # - https://github.com/x0rzkov/py-googletrans#basic-usage

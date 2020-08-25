@@ -20,11 +20,11 @@ _levels = {
 
 _level = os.getenv('TWINT_DEBUG', 'info')
 _logLevel = _levels[_level]
+logger = logging.getLogger('twint')
+logger.setLevel(_logLevel)
 
-if _level == "debug":
-    logger = logging.getLogger()
+if _level == 'debug':
     _output_fn = 'twint.log'
-    logger.setLevel(_logLevel)
     formatter = logging.Formatter('%(levelname)s:%(asctime)s:%(name)s:%(message)s')
     fileHandler = logging.FileHandler(_output_fn)
     fileHandler.setLevel(_logLevel)

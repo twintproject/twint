@@ -15,7 +15,8 @@ from . import url
 from .output import Tweets, Users
 from .user import inf
 
-import logging as logme
+import logging
+logme = logging.getLogger('twint')
 
 httpproxy = None
 

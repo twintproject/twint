@@ -4,7 +4,8 @@ from asyncio import get_event_loop, TimeoutError, ensure_future, new_event_loop,
 from . import datelock, feed, get, output, verbose, storage
 from .storage import db
 
-import logging as logme
+import logging
+logme = logging.getLogger('twint')
 
 import time
 
@@ -260,7 +261,7 @@ class Twint:
                     logme.debug(__name__+':Twint:main:no-more-tweets')
                     break
 
-                #logging.info("[<] " + str(datetime.now()) + ':: run+Twint+main+CallingGetLimit2')
+                #logme.info("[<] " + str(datetime.now()) + ':: run+Twint+main+CallingGetLimit2')
                 if get.Limit(self.config.Limit, self.count):
                     logme.debug(__name__+':Twint:main:reachedLimit')
                     break

@@ -2,7 +2,8 @@ from bs4 import BeautifulSoup
 from re import findall
 from json import loads
 
-import logging as logme
+import logging
+logme = logging.getLogger('twint')
 
 def Follow(response):
     logme.debug(__name__+':Follow')
