@@ -75,6 +75,8 @@ def getRetweet(tw, _config):
     return '', ''
 
 def getThumbnail(tw):
+    """Get Thumbnail
+    """
     divs = tw.find_all("div","PlayableMedia-player")
     thumb = ""
     for div in divs:
