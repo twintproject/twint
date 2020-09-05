@@ -81,6 +81,7 @@ def createIndex(config, instance, **scope):
                         "nretweets": {"type": "integer"},
                         "quote_url": {"type": "text"},
                         "video": {"type":"integer"},
+                        "thumbnail": {"type":"text"},
                         "search": {"type": "text"},
                         "near": {"type": "text"},
                         "geo_near": {"type": "geo_point"},
@@ -256,6 +257,8 @@ def Tweet(Tweet, config):
         for photo in Tweet.photos:
             _photos.append(photo)
         j_data["_source"].update({"photos": _photos})
+    if Tweet.thumbnail:
+        j_data["_source"].update({"thumbnail": Tweet.thumbnail})
     if Tweet.mentions:
         _mentions = []
         for mention in Tweet.mentions:

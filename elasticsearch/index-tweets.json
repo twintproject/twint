@@ -28,6 +28,7 @@ PUT twinttweets
           "nretweets": {"type": "integer"},
           "quote_url": {"type": "text"},
           "video": {"type": "integer"},
+          "thumbnail": {"type": "text"},
           "search": {"type": "text"},
           "near":  {"type": "text"},
           "geo_near": {"type": "geo_point"},

@@ -74,6 +74,16 @@ def getRetweet(tw, _config):
             return  _rt_id, _rt_username
     return '', ''
 
+def getThumbnail(tw):
+    """Get Thumbnail
+    """
+    divs = tw.find_all("div","PlayableMedia-player")
+    thumb = ""
+    for div in divs:
+        thumb = div.attrs["style"].split("url('")[-1]
+    thumb = thumb.replace("')","")
+    return thumb
+
 def Tweet(tw, config):
     """Create Tweet object
     """
@@ -97,6 +107,7 @@ def Tweet(tw, config):
     t.urls = [link.attrs["data-expanded-url"] for link in tw.find_all('a',{'class':'twitter-timeline-link'}) if link.has_attr("data-expanded-url")]
     t.photos = [photo_node.attrs['data-image-url'] for photo_node in tw.find_all("div", "AdaptiveMedia-photoContainer")]
     t.video = 1 if tw.find_all("div", "AdaptiveMedia-video") != [] else 0
+    t.thumbnail = getThumbnail(tw)
     t.tweet = getText(tw)
     t.lang = tw.find('p', 'tweet-text')['lang']
     t.hashtags = [hashtag.text for hashtag in tw.find_all("a","twitter-hashtag")]
