@@ -51,7 +51,6 @@ def get_connector(config):
     if config.Proxy_host:
         if config.Proxy_host.lower() == "tor":
             _connector = ProxyConnector(
-                socks_ver=ProxyType.SOCKS5,
                 host='127.0.0.1',
                 port=9050,
                 rdns=True)
@@ -69,7 +68,7 @@ def get_connector(config):
                 print("Error: Proxy types allowed are: http, socks5 and socks4. No https.")
                 sys.exit(1)
             _connector = ProxyConnector(
-                socks_ver=_type,
+                proxy_type=_type,
                 host=config.Proxy_host,
                 port=config.Proxy_port,
                 rdns=True)
