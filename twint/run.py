@@ -205,6 +205,8 @@ class Twint:
                 tweet_dict['tweet'] = tweet.find("div", {"class": "tweet-text"}).find("div", {"class": "dir-ltr"}).text
                 date_str = tweet.find("td", {"class": "timestamp"}).find("a").text
 
+                tweet_dict["avatar"] = tweet.find("td", {"class": "avatar"}).find("img")["src"]
+
                 if len(date_str) <= 3 and (date_str[-1] == "m" or date_str[-1] == "h"):  # 25m 1h
                     dateu = str(datetime.date.today())
                     tweet_dict['date'] = dateu
