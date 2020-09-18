@@ -75,7 +75,7 @@ class Twint:
                     else:
                         self.feed, self.init = feed.profile(response)
                 elif self.config.TwitterSearch:
-                    self.feed, self.init = feed.Json(response)
+                    self.feed, self.init = feed.MobileSearch(response)
                 break
             except TimeoutError as e:
                 if self.config.Proxy_host.lower() == "tor":
@@ -192,14 +192,50 @@ class Twint:
 
     async def tweets(self):
         await self.Feed()
-        if self.config.Location:
-            logme.debug(__name__+':Twint:tweets:location')
-            self.count += await get.Multi(self.feed, self.config, self.conn)
-        else:
-            logme.debug(__name__+':Twint:tweets:notLocation')
-            for tweet in self.feed:
-                self.count += 1
-                await output.Tweets(tweet, self.config, self.conn)
+        search_tweet_list = []
+        for tweet in self.feed:
+            tweet_dict = {}
+            self.count += 1
+            try:
+                tweet_dict['data-item-id'] = tweet.find("div", {"class": "tweet-text"})['data-id']
+                t_url = tweet.find("span", {"class": "metadata"}).find("a")["href"]
+                tweet_dict['data-conversation-id'] = t_url.split('?')[0].split('/')[-1]
+                tweet_dict['username'] = tweet.find("div", {"class": "username"}).text.replace('\n', '').replace(' ',
+                                                                                                                 '')
+                tweet_dict['tweet'] = tweet.find("div", {"class": "tweet-text"}).find("div", {"class": "dir-ltr"}).text
+                date_str = tweet.find("td", {"class": "timestamp"}).find("a").text
+
+                if len(date_str) <= 3 and (date_str[-1] == "m" or date_str[-1] == "h"):  # 25m 1h
+                    dateu = str(datetime.date.today())
+                    tweet_dict['date'] = dateu
+                elif ',' in date_str:  # Aug 21, 2019
+                    sp = date_str.replace(',', '').split(' ')
+                    date_str_formatted = sp[1] + ' ' + sp[0] + ' ' + sp[2]
+                    dateu = datetime.datetime.strptime(date_str_formatted, "%d %b %Y").strftime("%Y-%m-%d")
+                    tweet_dict['date'] = dateu
+                elif len(date_str.split(' ')) == 3:  # 28 Jun 19
+                    sp = date_str.split(' ')
+                    if len(sp[2]) == 2:
+                        sp[2] = '20' + sp[2]
+                    date_str_formatted = sp[0] + ' ' + sp[1] + ' ' + sp[2]
+                    dateu = datetime.datetime.strptime(date_str_formatted, "%d %b %Y").strftime("%Y-%m-%d")
+                    tweet_dict['date'] = dateu
+                else:  # Aug 21
+                    sp = date_str.split(' ')
+                    date_str_formatted = sp[1] + ' ' + sp[0] + ' ' + str(datetime.date.today().year)
+                    dateu = datetime.datetime.strptime(date_str_formatted, "%d %b %Y").strftime("%Y-%m-%d")
+                    tweet_dict['date'] = dateu
+
+                search_tweet_list.append(tweet_dict)
+
+            except Exception as e:
+                logme.critical(__name__ + ':Twint:favorite:search_field_lack')
+                print("shit: ", date_str, " ", str(e))
+
+        try:
+            self.config.search_tweet_list += search_tweet_list
+        except AttributeError:
+            self.config.search_tweet_list = search_tweet_list
 
     async def main(self, callback=None):
 
