@@ -3,6 +3,7 @@ from asyncio import get_event_loop, TimeoutError, ensure_future, new_event_loop,
 
 from . import datelock, feed, get, output, verbose, storage
 from .storage import db
+from datetime import date
 
 import logging as logme
 
@@ -164,7 +165,12 @@ class Twint:
                     tweet_dict['date'] = dateu
                 else:  # Aug 21
                     sp = date_str.split(' ')
-                    date_str_formatted = sp[1] + ' ' + sp[0] + ' ' + str(datetime.date.today().year)
+                    dt = datetime.datetime.strptime(date_str, "%b %d").date()
+                    if dt.month < date.today().month or (dt.month == date.today().month and dt.day < dt.today().month):
+                        year = date.today().year
+                    else:
+                        year = date.today().year - 1
+                    date_str_formatted = sp[1] + ' ' + sp[0] + ' ' + str(year)
                     dateu = datetime.datetime.strptime(date_str_formatted, "%d %b %Y").strftime("%Y-%m-%d")
                     tweet_dict['date'] = dateu
 
