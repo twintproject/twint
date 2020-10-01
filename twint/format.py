@@ -1,6 +1,8 @@
+#importing logging module:
 import logging as logme
-
+#adding tweet functions
 def Tweet(config, t):
+    #formatting
     if config.Format:
         logme.debug(__name__+':Tweet:Format')
         output = config.Format.replace("{id}", t.id_str)
@@ -39,6 +41,7 @@ def Tweet(config, t):
 
         if t.retweet:
            output += "RT "
+        #giving output
 
         output += f"<{t.username}> {t.tweet}"
 
@@ -53,9 +56,10 @@ def Tweet(config, t):
         if config.Translate:
             output += f" {t.translate} {t.trans_src} {t.trans_dest}"
     return output
-
+#formatting user
 def User(_format, u):
     if _format:
+        #formatting and replacing
         logme.debug(__name__+':User:Format')
         output = _format.replace("{id}", str(u.id))
         output = output.replace("{name}", u.name)
@@ -74,6 +78,7 @@ def User(_format, u):
         output = output.replace("{verified}", str(u.is_verified))
         output = output.replace("{avatar}", u.avatar)
         if u.background_image:
+         #adding if else statements.
             output = output.replace("{background_image}", u.background_image)
         else:
             output = output.replace("{background_image}", "")
@@ -86,5 +91,5 @@ def User(_format, u):
         output += f"| Tweets: {u.tweets} | Following: {u.following}"
         output += f" | Followers: {u.followers} | Likes: {u.likes} "
         output += f"| Media: {u.media_count} | Avatar: {u.avatar}"
-
+    #returning output
     return output
