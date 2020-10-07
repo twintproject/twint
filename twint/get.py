@@ -103,6 +103,7 @@ async def RequestUrl(config, init, headers = []):
     elif config.TwitterSearch:
         logme.debug(__name__+':RequestUrl:TwitterSearch')
         _url, params, _serialQuery = await url.Search(config, init)
+        headers = {"X-Requested-With": "XMLHttpRequest"}
     else:
         if config.Following:
             logme.debug(__name__+':RequestUrl:Following')

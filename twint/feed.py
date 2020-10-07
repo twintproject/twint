@@ -56,3 +56,12 @@ def Json(response):
     soup = BeautifulSoup(html, "html.parser")
     feed = soup.find_all("div", "tweet")
     return feed, json_response["min_position"]
+
+def MobileSearch(response):
+
+    logme.debug(__name__ + ':MobileSearch')
+    soup = BeautifulSoup(response, "html.parser")
+    tweets = soup.find_all("table", "tweet")
+    max_id = str(soup.find_all("div", "w-button-more")[0]).split('''href="/search''')[1].split('>')[0]
+
+    return tweets, max_id
