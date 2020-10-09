@@ -4,7 +4,7 @@ import json
 
 import logging as logme
 from googletransx import Translator
-
+from .regex import  castag_pattern
 # ref. 
 # - https://github.com/x0rzkov/py-googletrans#basic-usage
 translator = Translator()
@@ -211,7 +211,7 @@ def Tweet(tw, config):
     except KeyError:
         t.hashtags = []
     # don't know what this is
-    # t.cashtags = [cashtag.text for cashtag in tw.find_all("a", "twitter-cashtag")]
+    t.cashtags = [cashtag for cashtag in castag_pattern.findall(tw['full_text'])]
     t.replies_count = tw['reply_count']
     t.retweets_count = tw['retweet_count']
     t.likes_count = tw['favorite_count']
