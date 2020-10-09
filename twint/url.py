@@ -1,16 +1,20 @@
 import datetime
 from sys import platform
 import logging as logme
+from urllib.parse import urlencode
+from urllib.parse import quote
 
 mobile = "https://mobile.twitter.com"
-base = "https://twitter.com/i"
+# base = "https://twitter.com/i"
+base = "https://api.twitter.com/2/search/adaptive.json"
 
-def _sanitizeQuery(base,params):
+
+def _sanitizeQuery(_url, params):
     _serialQuery = ""
-    for p in params:
-        _serialQuery += p[0]+"="+p[1]+"&"
-    _serialQuery = base + "?" + _serialQuery[:-1].replace(":", "%3A").replace(" ", "%20")
+    _serialQuery = urlencode(params, quote_via=quote)
+    _serialQuery = _url + "?" + _serialQuery
     return _serialQuery
+
 
 def _formatDate(date):
     if "win" in platform:
@@ -20,8 +24,9 @@ def _formatDate(date):
     except ValueError:
         return int(datetime.datetime.strptime(date, "%Y-%m-%d").timestamp())
 
+
 async def Favorites(username, init):
-    logme.debug(__name__+':Favorites')
+    logme.debug(__name__ + ':Favorites')
     url = f"{mobile}/{username}/favorites?lang=en"
 
     if init != '-1':
@@ -29,8 +34,9 @@ async def Favorites(username, init):
 
     return url
 
+
 async def Followers(username, init):
-    logme.debug(__name__+':Followers')
+    logme.debug(__name__ + ':Followers')
     url = f"{mobile}/{username}/followers?lang=en"
 
     if init != '-1':
@@ -38,8 +44,9 @@ async def Followers(username, init):
 
     return url
 
+
 async def Following(username, init):
-    logme.debug(__name__+':Following')
+    logme.debug(__name__ + ':Following')
     url = f"{mobile}/{username}/following?lang=en"
 
     if init != '-1':
@@ -47,8 +54,9 @@ async def Following(username, init):
 
     return url
 
+
 async def MobileProfile(username, init):
-    logme.debug(__name__+':MobileProfile')
+    logme.debug(__name__ + ':MobileProfile')
     url = f"{mobile}/{username}?lang=en"
 
     if init != '-1':
@@ -56,8 +64,9 @@ async def MobileProfile(username, init):
 
     return url
 
+
 async def Profile(username, init):
-    logme.debug(__name__+':Profile')
+    logme.debug(__name__ + ':Profile')
     url = f"{base}/profiles/show/{username}/timeline/tweets?include_"
     url += "available_features=1&lang=en&include_entities=1"
     url += "&include_new_items_bar=true"
@@ -67,17 +76,38 @@ async def Profile(username, init):
 
     return url
 
+
 async def Search(config, init):
-    logme.debug(__name__+':Search')
-    url = f"{base}/search/timeline"
+    logme.debug(__name__ + ':Search')
+    url = base
+    tweet_count = 100
     q = ""
     params = [
-        ('vertical', 'default'),
-        ('src', 'unkn'),
-        ('include_available_features', '1'),
-        ('include_entities', '1'),
-        ('max_position', str(init)),
-        ('reset_error_state', 'false'),
+        # ('include_blocking', '1'),
+        # ('include_blocked_by', '1'),
+        # ('include_followed_by', '1'),
+        # ('include_want_retweets', '1'),
+        # ('include_mute_edge', '1'),
+        # ('include_can_dm', '1'),
+        ('include_can_media_tag', '1'),
+        # ('skip_status', '1'),
+        # ('include_cards', '1'),
+        ('include_ext_alt_text', 'true'),
+        ('include_quote_count', 'true'),
+        ('include_reply_count', '1'),
+        ('tweet_mode', 'extended'),
+        ('include_entities', 'true'),
+        ('include_user_entities', 'true'),
+        ('include_ext_media_availability', 'true'),
+        ('send_error_codes', 'true'),
+        ('simple_quoted_tweet', 'true'),
+        ('count', tweet_count),
+        # ('query_source', 'typed_query'),
+        # ('pc', '1'),
+        ('cursor', str(init)),
+        ('spelling_corrections', '1'),
+        ('ext', 'mediaStats%2ChighlightedLabel'),
+        ('tweet_search_mode', 'live'),  # this can be handled better, maybe take an argument and set it then
     ]
     if not config.Popular_tweets:
         params.append(('f', 'tweets'))
@@ -92,7 +122,8 @@ async def Search(config, init):
         config.Geo = config.Geo.replace(" ", "")
         q += f" geocode:{config.Geo}"
     if config.Search:
-        q += f" {config.Search}"
+
+        q += f"{config.Search}"
     if config.Year:
         q += f" until:{config.Year}-1-1"
     if config.Since:
@@ -120,6 +151,7 @@ async def Search(config, init):
         q += " filter:media"
     if config.Replies:
         q += " filter:replies"
+    # although this filter can still be used, but I found it broken in my preliminary testing, needs more testing
     if config.Native_retweets:
         q += " filter:nativeretweets"
     if config.Min_likes:
@@ -144,3 +176,43 @@ async def Search(config, init):
     params.append(("q", q))
     _serialQuery = _sanitizeQuery(url, params)
     return url, params, _serialQuery
+
+
+# maybe dont need this
+async def SearchProfile(config, init=None):
+    logme.debug(__name__ + ':SearchProfile')
+    _url = 'https://api.twitter.com/2/timeline/profile/{}.json?'
+    q = ""
+    params = [
+        ('include_profile_interstitial_type', '1'),
+        ('include_blocking', '1'),
+        ('include_blocked_by', '1'),
+        ('include_followed_by', '1'),
+        ('include_want_retweets', '1'),
+        ('include_mute_edge', '1'),
+        ('include_can_dm', '1'),
+        ('include_can_media_tag', '1'),
+        ('skip_status', '1'),
+        ('cards_platform', 'Web - 12'),
+        ('include_cards', '1'),
+        ('include_ext_alt_text', 'true'),
+        ('include_quote_count', 'true'),
+        ('include_reply_count', '1'),
+        ('tweet_mode', 'extended'),
+        ('include_entities', 'true'),
+        ('include_user_entities', 'true'),
+        ('include_ext_media_color', 'true'),
+        ('include_ext_media_availability', 'true'),
+        ('send_error_codes', 'true'),
+        ('simple_quoted_tweet', 'true'),
+        ('include_tweet_replies', 'false'),
+        ('count', '50'),
+        ('userId', '1934388686'),
+        ('ext', 'mediaStats,ChighlightedLabel'),
+    ]
+
+    if init:
+        params.append(('cursor', init))
+    _serialQuery = _sanitizeQuery(_url, params)
+    return _url, params, _serialQuery
+    pass
