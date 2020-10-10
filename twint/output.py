@@ -22,7 +22,10 @@ def _formatDateTime(datetimestamp):
     try:
         return int(datetime.strptime(datetimestamp, "%Y-%m-%d %H:%M:%S").timestamp())
     except ValueError:
-        return int(datetime.strptime(datetimestamp, "%Y-%m-%d").timestamp())
+        try:
+            return int(datetime.strptime(datetimestamp, "%d-%m-%Y %H:%M:%S").timestamp())
+        except ValueError:
+            return int(datetime.strptime(datetimestamp, "%Y-%m-%d").timestamp())
 
 
 def _clean_follow_list():
