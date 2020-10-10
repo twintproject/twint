@@ -66,13 +66,13 @@ def update(object, config):
 
     if _type == "tweet":
         Tweet = object
-        datetime_native = datetime.datetime.strptime(Tweet.datetime, Tweet_formats['datetime'])
-        day = weekdays[strftime("%A", localtime(datetime_native/1000))]
+        datetime_ms = datetime.datetime.strptime(Tweet.datetime, Tweet_formats['datetime']).timestamp() * 1000
+        day = weekdays[strftime("%A", localtime(datetime_ms/1000))]
         dt = f"{object.datestamp} {object.timestamp}"
         _data = {
             "id": str(Tweet.id),
             "conversation_id": Tweet.conversation_id,
-            "created_at": datetime_native,
+            "created_at": datetime_ms,
             "date": dt,
             "timezone": Tweet.timezone,
             "place": Tweet.place,
@@ -85,7 +85,7 @@ def update(object, config):
             "username": Tweet.username,
             "name": Tweet.name,
             "day": day,
-            "hour": hour(datetime_native/1000),
+            "hour": hour(datetime_ms/1000),
             "link": Tweet.link,
             "urls": Tweet.urls,
             "photos": Tweet.photos,
