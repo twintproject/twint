@@ -158,6 +158,10 @@ def getRetweet(tw, _config):
 #     return t
 
 
+Tweet_formats = {
+    'datetime': '%d-%m-%Y %H:%M:%S %Z'
+}
+
 def Tweet(tw, config):
     """Create Tweet object
     """
@@ -171,7 +175,7 @@ def Tweet(tw, config):
     _dt = tw['created_at']
     _dt = datetime.strptime(_dt, '%a %b %d %H:%M:%S %z %Y')
     _dt = utc_to_local(_dt)
-    t.datetime = str(_dt.strftime('%d-%m-%Y %H:%M:%S %Z'))
+    t.datetime = str(_dt.strftime(Tweet_formats['datetime']))
     # date is of the format year,
     t.datestamp = _dt.strftime('%d-%m-%Y')
     t.timestamp = _dt.strftime('%H:%M:%S')
