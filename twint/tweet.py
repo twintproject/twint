@@ -158,7 +158,9 @@ def getRetweet(tw, _config):
 
 
 Tweet_formats = {
-    'datetime': '%d-%m-%Y %H:%M:%S %Z'
+    'datetime': '%Y-%m-%d %H:%M:%S %Z',
+    'datestamp': '%Y-%m-%d',
+    'timestamp': '%H:%M:%S'
 }
 
 def Tweet(tw, config):
@@ -176,8 +178,8 @@ def Tweet(tw, config):
     _dt = utc_to_local(_dt)
     t.datetime = str(_dt.strftime(Tweet_formats['datetime']))
     # date is of the format year,
-    t.datestamp = _dt.strftime('%d-%m-%Y')
-    t.timestamp = _dt.strftime('%H:%M:%S')
+    t.datestamp = _dt.strftime(Tweet_formats['datestamp'])
+    t.timestamp = _dt.strftime(Tweet_formats['timestamp'])
     t.user_id = int(tw["user_id_str"])
     t.user_id_str = tw["user_id_str"]
     t.username = tw["user_data"]['screen_name']
