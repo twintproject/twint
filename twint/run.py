@@ -210,7 +210,7 @@ class Twint:
         await self.Feed()
         if self.config.Profile_full:
             logme.debug(__name__ + ':Twint:profileFull')
-            self.count += await get.Multi(self.feed, self.config, self.conn)
+            self.count += await get.Multi(self.feed, self.config, self.conn) # TODO: won't be needed anymore, change it
         else:
             logme.debug(__name__ + ':Twint:notProfileFull')
             for tweet in self.feed:

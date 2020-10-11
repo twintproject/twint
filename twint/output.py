@@ -163,7 +163,7 @@ async def checkData(tweet, config, conn):
 
 
 async def Tweets(tweets, config, conn, url=''):
-    logme.debug(__name__ + ':Tweets')
+    logme.debug(__name__ + ':Tweets')  # TODO: not reqd by --profile-full, remove in future
     if config.Favorites or config.Profile_full or config.Location:
         logme.debug(__name__ + ':Tweets:fav+full+loc')
         for tw in tweets:

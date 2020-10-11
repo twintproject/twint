@@ -22,7 +22,7 @@ def Follow(response):
 
     return follow, cursor
 
-
+# TODO: this won't be used by --profile-full anymore. if it isn't used anywhere else, perhaps remove this in future
 def Mobile(response):
     logme.debug(__name__ + ':Mobile')
     soup = BeautifulSoup(response, "html.parser")
