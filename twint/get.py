@@ -225,8 +225,12 @@ async def User(username, config, conn, bearer_token, guest_token, user_id=False)
         response = await Request(_url, headers=_headers)
         j_r = loads(response)
         if user_id:
-            _id = j_r['data']['user']['rest_id']
-            return _id
+            try:
+                _id = j_r['data']['user']['rest_id']
+                return _id
+            except KeyError as e:
+                logme.critical(__name__ + ':User:' + str(e))
+                return
         await Users(j_r, config, conn)
     except Exception as e:
         logme.critical(__name__ + ':User:' + str(e))

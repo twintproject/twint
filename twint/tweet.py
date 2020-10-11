@@ -4,7 +4,6 @@ import json
 
 import logging as logme
 from googletransx import Translator
-
 # ref. 
 # - https://github.com/x0rzkov/py-googletrans#basic-usage
 translator = Translator()
@@ -158,6 +157,12 @@ def getRetweet(tw, _config):
 #     return t
 
 
+Tweet_formats = {
+    'datetime': '%Y-%m-%d %H:%M:%S %Z',
+    'datestamp': '%Y-%m-%d',
+    'timestamp': '%H:%M:%S'
+}
+
 def Tweet(tw, config):
     """Create Tweet object
     """
@@ -171,10 +176,10 @@ def Tweet(tw, config):
     _dt = tw['created_at']
     _dt = datetime.strptime(_dt, '%a %b %d %H:%M:%S %z %Y')
     _dt = utc_to_local(_dt)
-    t.datetime = str(_dt.strftime('%d-%m-%Y %H:%M:%S %Z'))
+    t.datetime = str(_dt.strftime(Tweet_formats['datetime']))
     # date is of the format year,
-    t.datestamp = _dt.strftime('%d-%m-%Y')
-    t.timestamp = _dt.strftime('%H:%M:%S')
+    t.datestamp = _dt.strftime(Tweet_formats['datestamp'])
+    t.timestamp = _dt.strftime(Tweet_formats['timestamp'])
     t.user_id = int(tw["user_id_str"])
     t.user_id_str = tw["user_id_str"]
     t.username = tw["user_data"]['screen_name']
@@ -211,7 +216,7 @@ def Tweet(tw, config):
     except KeyError:
         t.hashtags = []
     # don't know what this is
-    # t.cashtags = [cashtag.text for cashtag in tw.find_all("a", "twitter-cashtag")]
+    t.cashtags = [cashtag['text'] for cashtag in tw['entities']['symbols']]
     t.replies_count = tw['reply_count']
     t.retweets_count = tw['retweet_count']
     t.likes_count = tw['favorite_count']
