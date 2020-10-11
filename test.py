@@ -55,8 +55,8 @@ def main():
     f.User_full = True
 
     runs = [
-        twint.run.Search,  # this works
         twint.run.Profile,  # this doesn't
+        twint.run.Search,  # this works
         twint.run.Following,
         twint.run.Followers,
         twint.run.Favorites,
@@ -66,11 +66,7 @@ def main():
 
     # Something breaks if we don't split these up
 
-    for run in runs[:2]:
-        for test in tests:
-            test(f, run)
-
-    for run in runs[2:]:
+    for run in runs[:3]:
         if run == twint.run.Search:
             c.Since = "2012-1-1 20:30:22"
             c.Until = "2017-1-1"
@@ -80,6 +76,10 @@ def main():
 
         for test in tests:
             test(c, run)
+
+    for run in runs[3:]:
+        for test in tests:
+            test(f, run)
 
     files = ["test_twint.db", "test_twint.json", "test_twint.csv"]
     for _file in files:

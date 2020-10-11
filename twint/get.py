@@ -105,27 +105,21 @@ def get_connector(config):
     return _connector
 
 
-async def RequestUrl(config, init, headers=[]):
+async def RequestUrl(config, init):
     logme.debug(__name__ + ':RequestUrl')
     _connector = get_connector(config)
     _serialQuery = ""
     params = []
     _url = ""
-    _headers = {}
+    _headers = [("authorization", config.Bearer_token), ("x-guest-token", config.Guest_token)]
 
     # TODO : do this later
     if config.Profile:
-        if config.Profile_full:
-            logme.debug(__name__ + ':RequestUrl:Profile_full')
-            _url = await url.MobileProfile(config.Username, init)
-        else:
-            logme.debug(__name__ + ':RequestUrl:notProfile_full')
-            _url = await url.Profile(config.Username, init)
-        _serialQuery = _url
+        logme.debug(__name__ + ':RequestUrl:Profile')
+        _url, params, _serialQuery = url.SearchProfile(config, init)
     elif config.TwitterSearch:
         logme.debug(__name__ + ':RequestUrl:TwitterSearch')
         _url, params, _serialQuery = await url.Search(config, init)
-        _headers = [("authorization", config.Bearer_token), ("x-guest-token", config.Guest_token)]
     else:
         if config.Following:
             logme.debug(__name__ + ':RequestUrl:Following')

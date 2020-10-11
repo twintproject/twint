@@ -8,6 +8,7 @@ class User:
     def __init__(self):
         pass
 
+
 User_formats = {
     'join_date': '%Y-%m-%d',
     'join_time': '%H:%M:%S %Z'

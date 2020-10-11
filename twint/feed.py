@@ -1,8 +1,13 @@
+import time
+from datetime import datetime
+
 from bs4 import BeautifulSoup
 from re import findall
 from json import loads
 
 import logging as logme
+
+from .tweet import utc_to_local, Tweet_formats
 
 
 class NoMoreTweetsException(Exception):
@@ -21,6 +26,7 @@ def Follow(response):
         logme.critical(__name__ + ':Follow:IndexError')
 
     return follow, cursor
+
 
 # TODO: this won't be used by --profile-full anymore. if it isn't used anywhere else, perhaps remove this in future
 def Mobile(response):
@@ -48,14 +54,15 @@ def MobileFav(response):
     return tweets, max_id
 
 
-def profile(response):
-    logme.debug(__name__ + ':profile')
-    json_response = loads(response)
-    html = json_response["items_html"]
-    soup = BeautifulSoup(html, "html.parser")
-    feed = soup.find_all("div", "tweet")
-
-    return feed, feed[-1]["data-item-id"]
+def _get_cursor(response):
+    try:
+        next_cursor = response['timeline']['instructions'][0]['addEntries']['entries'][-1]['content'][
+            'operation']['cursor']['value']
+    except KeyError:
+        # this is needed because after the first request location of cursor is changed
+        next_cursor = response['timeline']['instructions'][-1]['replaceEntry']['entry']['content']['operation'][
+            'cursor']['value']
+    return next_cursor
 
 
 def Json(response):
@@ -67,44 +74,38 @@ def Json(response):
     return feed, json_response["min_position"]
 
 
-def search_v2(response):
-    # TODO need to implement this
+def parse_tweets(config, response):
+    logme.debug(__name__ + ':parse_tweets')
     response = loads(response)
     if len(response['globalObjects']['tweets']) == 0:
-        msg = 'No more data. finished scraping!!'
+        msg = 'No more data!'
         raise NoMoreTweetsException(msg)
-
-    # need to modify things at the function call end
-    # timeline = response['timeline']['instructions'][0]['addEntries']['entries']
     feed = []
-    feed_set = set()
-    # here we need to remove the quoted and `to-reply` tweets from the list as they may or may not contain the
-    # for _id in response['globalObjects']['tweets']:
-    #     if 'quoted_status_id_str' in response['globalObjects']['tweets'][_id] or \
-    #             response['globalObjects']['tweets'][_id]['in_reply_to_status_id_str']:
-    #         try:
-    #             feed_set.add(response['globalObjects']['tweets'][_id]['quoted_status_id_str'])
-    #         except KeyError:
-    #             feed_set.add(response['globalObjects']['tweets'][_id]['in_reply_to_status_id_str'])
-    # i = 1
-    # for _id in response['globalObjects']['tweets']:
-    #     if _id not in feed_set:
-    #         temp_obj = response['globalObjects']['tweets'][_id]
-    #         temp_obj['user_data'] = response['globalObjects']['users'][temp_obj['user_id_str']]
-    #         feed.append(temp_obj)
     for timeline_entry in response['timeline']['instructions'][0]['addEntries']['entries']:
         # this will handle the cases when the timeline entry is a tweet
-        if timeline_entry['entryId'].find('sq-I-t-') == 0:
+        if (config.TwitterSearch and timeline_entry['entryId'].find('sq-I-t-') == 0) \
+                or (config.Profile and timeline_entry['entryId'].find('tweet-') == 0):
             _id = timeline_entry['content']['item']['content']['tweet']['id']
-            temp_obj = response['globalObjects']['tweets'][_id]
-            temp_obj['user_data'] = response['globalObjects']['users'][temp_obj['user_id_str']]
-            feed.append(temp_obj)
+            try:
+                temp_obj = response['globalObjects']['tweets'][_id]
+            except KeyError:
+                logme.info('encountered a deleted tweet with id {}'.format(_id))
 
-    try:
-        next_cursor = response['timeline']['instructions'][0]['addEntries']['entries'][-1]['content'][
-            'operation']['cursor']['value']
-    except KeyError:
-        # this is needed because after the first request location of cursor is changed
-        next_cursor = response['timeline']['instructions'][-1]['replaceEntry']['entry']['content']['operation'][
-            'cursor']['value']
+                config.deleted.append(_id)
+                continue
+            temp_obj['user_data'] = response['globalObjects']['users'][temp_obj['user_id_str']]
+            if 'retweeted_status_id_str' in temp_obj:
+                rt_id = temp_obj['retweeted_status_id_str']
+                _dt = response['globalObjects']['tweets'][rt_id]['created_at']
+                _dt = datetime.strptime(_dt, '%a %b %d %H:%M:%S %z %Y')
+                _dt = utc_to_local(_dt)
+                _dt = str(_dt.strftime(Tweet_formats['datetime']))
+                temp_obj['retweet_data'] = {
+                    'user_rt_id': response['globalObjects']['tweets'][rt_id]['user_id_str'],
+                    'user_rt': response['globalObjects']['tweets'][rt_id]['full_text'],
+                    'retweet_id': rt_id,
+                    'retweet_date': _dt,
+                }
+            feed.append(temp_obj)
+    next_cursor = _get_cursor(response)
     return feed, next_cursor
