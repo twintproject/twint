@@ -123,7 +123,7 @@ async def Search(config, init):
         q += f" geocode:{config.Geo}"
     if config.Search:
 
-        q += f"{config.Search}"
+        q += f" {config.Search}"
     if config.Year:
         q += f" until:{config.Year}-1-1"
     if config.Since:
@@ -173,17 +173,19 @@ async def Search(config, init):
     if config.Custom_query:
         q = config.Custom_query
 
+    q = q.strip()
     params.append(("q", q))
     _serialQuery = _sanitizeQuery(url, params)
     return url, params, _serialQuery
 
 
-# maybe dont need this
+# This will be used for --profile-full instead of the mobibe version.
 async def SearchProfile(config, init=None):
     logme.debug(__name__ + ':SearchProfile')
     _url = 'https://api.twitter.com/2/timeline/profile/{}.json?'
     q = ""
     params = [
+        # some of the fields are not required, need to test which ones aren't required
         ('include_profile_interstitial_type', '1'),
         ('include_blocking', '1'),
         ('include_blocked_by', '1'),
@@ -207,7 +209,7 @@ async def SearchProfile(config, init=None):
         ('simple_quoted_tweet', 'true'),
         ('include_tweet_replies', 'false'),
         ('count', '50'),
-        ('userId', '1934388686'),
+        ('userId', config.User_id),
         ('ext', 'mediaStats,ChighlightedLabel'),
     ]
 
