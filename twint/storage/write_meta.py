@@ -35,7 +35,7 @@ def tweetData(t):
             "retweet_date": t.retweet_date,
             "translate": t.translate,
             "trans_src": t.trans_src,
-            "trans_dest": t.trans_dest
+            "trans_dest": t.trans_dest,
             }
     return data
 

@@ -22,9 +22,10 @@ class Twint:
             logme.debug(__name__ + ':Twint:__init__:Resume')
             self.init = self.get_resume(config.Resume)
         else:
-            self.init = '-1'
+            self.init = -1
 
-        self.feed = [-1]
+        config.deleted = []
+        self.feed: list = [-1]
         self.count = 0
         self.user_agent = ""
         self.config = config
@@ -58,11 +59,11 @@ class Twint:
         while True:
             # this will receive a JSON string, parse it into a `dict` and do the required stuff
             try:
-                response = await get.RequestUrl(self.config, self.init, headers=[("User-Agent", self.user_agent)])
+                response = await get.RequestUrl(self.config, self.init)
             except TokenExpiryException as e:
                 logme.debug(__name__ + 'Twint:Feed:' + str(e))
                 self.token.refresh()
-                response = await get.RequestUrl(self.config, self.init, headers=[("User-Agent", self.user_agent)])
+                response = await get.RequestUrl(self.config, self.init)
 
             if self.config.Debug:
                 print(response, file=open("twint-last-request.log", "w", encoding="utf-8"))
@@ -73,7 +74,7 @@ class Twint:
                     self.feed, self.init = feed.MobileFav(response)
                     favorite_err_cnt = 0
                     if len(self.feed) == 0 and len(self.init) == 0:
-                        while ((len(self.feed) == 0 or len(self.init) == 0) and favorite_err_cnt < 5):
+                        while (len(self.feed) == 0 or len(self.init) == 0) and favorite_err_cnt < 5:
                             self.user_agent = await get.RandomUserAgent(wa=False)
                             response = await get.RequestUrl(self.config, self.init,
                                                             headers=[("User-Agent", self.user_agent)])
@@ -88,26 +89,24 @@ class Twint:
                     self.feed, self.init = feed.Follow(response)
                     if not self.count % 40:
                         time.sleep(5)
-                elif self.config.Profile:
-                    if self.config.Profile_full:
-                        self.feed, self.init = feed.Mobile(response)
-                    else:
-                        self.feed, self.init = feed.profile(response)
-                elif self.config.TwitterSearch:
+                elif self.config.Profile or self.config.TwitterSearch:
                     try:
-                        self.feed, self.init = feed.search_v2(response)
+                        self.feed, self.init = feed.parse_tweets(self.config, response)
                     except NoMoreTweetsException as e:
                         logme.debug(__name__ + ':Twint:Feed:' + str(e))
-                        print(e, 'is it though? because sometimes twitter lie.')
+                        print('[!] ' + str(e) + ' Scraping will stop now.')
+                        print('found {} deleted tweets in this search.'.format(len(self.config.deleted)))
+                        break
                 break
             except TimeoutError as e:
                 if self.config.Proxy_host.lower() == "tor":
                     print("[?] Timed out, changing Tor identity...")
                     if self.config.Tor_control_password is None:
                         logme.critical(__name__ + ':Twint:Feed:tor-password')
-                        sys.stderr.write("Error: config.Tor_control_password must be set for proxy autorotation!\r\n")
+                        sys.stderr.write("Error: config.Tor_control_password must be set for proxy auto-rotation!\r\n")
                         sys.stderr.write(
-                            "Info: What is it? See https://stem.torproject.org/faq.html#can-i-interact-with-tors-controller-interface-directly\r\n")
+                            "Info: What is it? See https://stem.torproject.org/faq.html#can-i-interact-with-tors"
+                            "-controller-interface-directly\r\n")
                         break
                     else:
                         get.ForceNewTorIdentity(self.config)
@@ -140,7 +139,8 @@ class Twint:
                 logme.critical(__name__ + ':Twint:Feed:Tweets_known_error:' + str(e))
                 sys.stderr.write(str(e) + " [x] run.Feed")
                 sys.stderr.write(
-                    "[!] if get this error but you know for sure that more tweets exist, please open an issue and we will investigate it!")
+                    "[!] if you get this error but you know for sure that more tweets exist, please open an issue and "
+                    "we will investigate it!")
                 break
         if self.config.Resume:
             print(self.init, file=open(self.config.Resume, "a", encoding="utf-8"))
@@ -208,14 +208,10 @@ class Twint:
 
     async def profile(self):
         await self.Feed()
-        if self.config.Profile_full:
-            logme.debug(__name__ + ':Twint:profileFull')
-            self.count += await get.Multi(self.feed, self.config, self.conn)
-        else:
-            logme.debug(__name__ + ':Twint:notProfileFull')
-            for tweet in self.feed:
-                self.count += 1
-                await output.Tweets(tweet, self.config, self.conn)
+        logme.debug(__name__ + ':Twint:profile')
+        for tweet in self.feed:
+            self.count += 1
+            await output.Tweets(tweet, self.config, self.conn)
 
     async def tweets(self):
         await self.Feed()
@@ -325,7 +321,6 @@ def Favorites(config):
     config.Following = False
     config.Followers = False
     config.Profile = False
-    config.Profile_full = False
     config.TwitterSearch = False
     run(config)
     if config.Pandas_au:
@@ -337,7 +332,6 @@ def Followers(config):
     config.Followers = True
     config.Following = False
     config.Profile = False
-    config.Profile_full = False
     config.Favorites = False
     config.TwitterSearch = False
     run(config)
@@ -355,7 +349,6 @@ def Following(config):
     config.Following = True
     config.Followers = False
     config.Profile = False
-    config.Profile_full = False
     config.Favorites = False
     config.TwitterSearch = False
     run(config)
@@ -423,7 +416,6 @@ def Search(config, callback=None):
     config.Following = False
     config.Followers = False
     config.Profile = False
-    config.Profile_full = False
     run(config, callback)
     if config.Pandas_au:
         storage.panda._autoget("tweet")

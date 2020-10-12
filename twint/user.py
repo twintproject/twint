@@ -9,6 +9,12 @@ class User:
         pass
 
 
+User_formats = {
+    'join_date': '%Y-%m-%d',
+    'join_time': '%H:%M:%S %Z'
+}
+
+
 # ur object must be a json from the endpoint https://api.twitter.com/graphql
 def User(ur):
     logme.debug(__name__ + ':User')
@@ -27,8 +33,8 @@ def User(ur):
     _dt = ur['data']['user']['rest_id']['legacy']['created_at']
     _dt = datetime.datetime.strptime(_dt, '%a %b %d %H:%M:%S %z %Y')
     # date is of the format year,
-    _usr.join_date = _dt.strftime('%d-%m-%Y')
-    _usr.join_time = _dt.strftime('%H:%M:%S %Z')
+    _usr.join_date = _dt.strftime(User_formats['join_date'])
+    _usr.join_time = _dt.strftime(User_formats['join_time'])
 
     # :type `int`
     _usr.tweets = int(ur['data']['user']['rest_id']['legacy']['statuses_count'])
