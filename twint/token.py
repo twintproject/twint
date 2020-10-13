@@ -73,7 +73,7 @@ class Token:
                     self.config.Guest_token = str(match.group(1))
                     return 1  # success
                 else:
-                    logme.warning(__name__ + 'could not get the Guest Token in HTML. Hold Up!')
+                    logme.info(__name__ + ':could not get the Guest Token in HTML. Hold Up!')
                     self._get_new_session('tor')
                     continue
             if attempt < self._retries:
