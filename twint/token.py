@@ -72,6 +72,10 @@ class Token:
                     logme.debug(__name__ + f":Found guest token in HTML: {match.group(1)}")
                     self.config.Guest_token = str(match.group(1))
                     return 1  # success
+                else:
+                    logme.warning(__name__ + 'could not get the Guest Token in HTML. Hold Up!')
+                    self._get_new_session('tor')
+                    continue
             if attempt < self._retries:
                 # TODO : might wanna tweak this back-off timer
                 sleep_time = 2.0 * 2 ** attempt
@@ -79,7 +83,7 @@ class Token:
                 time.sleep(sleep_time)
             else:
                 msg = f'{self._retries + 1} requests to {self.url} failed, giving up.'
-                logme.fatal(__name__ + + ":" + msg)
+                logme.fatal(__name__ + ":" + msg)
                 self.config.Guest_token = None
                 return 0  # failure
 
