@@ -257,9 +257,9 @@ class Twint:
         # TODO : will need to modify it to work with the new endpoints
         if self.config.TwitterSearch and self.config.Since and self.config.Until:
             logme.debug(__name__ + ':Twint:main:search+since+until')
-            while self.d._since < self.d._until:
-                self.config.Since = str(self.d._since)
-                self.config.Until = str(self.d._until)
+            while self.d.since < self.d.until:
+                self.config.Since = datetime.datetime.strftime(self.d.since, "%Y-%m-%d %H:%M:%S")
+                self.config.Until = datetime.datetime.strftime(self.d.until, "%Y-%m-%d %H:%M:%S")
                 if len(self.feed) > 0:
                     await self.tweets()
                 else:
