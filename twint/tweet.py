@@ -51,15 +51,16 @@ def getQuoteURL(tw):
     return quote_url
 
 
-# def getText(tw):
-#     """Replace some text
-#     """
-#     logme.debug(__name__ + ':getText')
-#     text = tw.find("p", "tweet-text").text
-#     text = text.replace("http", " http")
-#     text = text.replace("pic.twitter", " pic.twitter")
-#
-#     return text
+def getText(tw):
+    """Replace some text
+    """
+    logme.debug(__name__ + ':getText')
+    text = tw['full_text']
+    text = text.replace("http", " http")
+    text = text.replace("pic.twitter", " pic.twitter")
+    text = text.replace("\n", " ")
+
+    return text
 
 
 def getStat(tw, _type):
@@ -209,7 +210,7 @@ def Tweet(tw, config):
         t.thumbnail = tw['extended_entities']['media'][0]['media_url_https']
     except KeyError:
         t.thumbnail = ''
-    t.tweet = tw['full_text']
+    t.tweet = getText(tw)
     t.lang = tw['lang']
     try:
         t.hashtags = [hashtag['text'] for hashtag in tw['entities']['hashtags']]
