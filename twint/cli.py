@@ -87,6 +87,7 @@ def initialize(args):
     c.Phone = args.phone
     c.Verified = args.verified
     c.Store_csv = args.csv
+    c.Tabs = args.tabs
     c.Store_json = args.json
     c.Show_hashtags = args.hashtags
     c.Show_cashtags = args.cashtags
@@ -159,6 +160,7 @@ def options():
     ap.add_argument("--verified", help="Display Tweets only from verified users (Use with -s).",
                     action="store_true")
     ap.add_argument("--csv", help="Write as .csv file.", action="store_true")
+    ap.add_argument("--tabs", help="Separate CSV fields with tab characters, not commas.", action="store_true")
     ap.add_argument("--json", help="Write as .json file", action="store_true")
     ap.add_argument("--hashtags", help="Output hashtags in seperate column.", action="store_true")
     ap.add_argument("--cashtags", help="Output cashtags in seperate column.", action="store_true")
