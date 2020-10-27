@@ -193,9 +193,6 @@ def weekday(day):
 
     return weekdays[day]
 
-def hour(datetime):
-    return datetime.strptime(datetime, "%Y-%m-%d %H:%M:%S %Z").hour
-
 def Tweet(Tweet, config):
     global _index_tweet_status
     global _is_near_def
