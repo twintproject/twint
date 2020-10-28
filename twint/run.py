@@ -248,9 +248,7 @@ class Twint:
         if self.config.Username is not None and self.config.User_id is None:
             logme.debug(__name__ + ':Twint:main:username')
 
-            self.config.User_id = await get.User(self.config.Username, self.config, self.conn,
-                                                 self.config.Bearer_token,
-                                                 self.config.Guest_token, True)
+            self.config.User_id = await get.User(self.config.Username, self.config, self.conn, True)
             if self.config.User_id is None:
                 raise ValueError("Cannot find twitter account with name = " + self.config.Username)
 
@@ -268,6 +266,8 @@ class Twint:
 
                 if get.Limit(self.config.Limit, self.count):
                     break
+        elif self.config.Lookup:
+            await self.Lookup()
         else:
             logme.debug(__name__ + ':Twint:main:not-search+since+until')
             while True:
@@ -295,6 +295,20 @@ class Twint:
 
         if self.config.Count:
             verbose.Count(self.count, self.config)
+
+    async def Lookup(self):
+        logme.debug(__name__ + ':Twint:Lookup')
+
+        try:
+            if self.config.User_id is not None and self.config.Username is None:
+                logme.debug(__name__ + ':Twint:Lookup:user_id')
+                self.config.Username = await get.Username(self.config.User_id, self.config.Bearer_token,
+                                                          self.config.Guest_token)
+            await get.User(self.config.Username, self.config, db.Conn(self.config.Database))
+
+        except Exception as e:
+            logme.exception(__name__ + ':Twint:Lookup:Unexpected exception occurred.')
+            raise
 
 
 def run(config, callback=None):
@@ -363,38 +377,15 @@ def Following(config):
 
 def Lookup(config):
     logme.debug(__name__ + ':Lookup')
-
-    try:
-        get_event_loop()
-    except RuntimeError as e:
-        if "no current event loop" in str(e):
-            set_event_loop(new_event_loop())
-        else:
-            logme.exception(__name__ + ':Lookup:Unexpected exception while handling an expected RuntimeError.')
-            raise
-    except Exception as e:
-        logme.exception(
-            __name__ + ':Lookup:Unexpected exception occured while attempting to get or create a new event loop.')
-        raise
-
-    try:
-        if config.User_id is not None:
-            logme.debug(__name__ + ':Twint:Lookup:user_id')
-            config.Username = get_event_loop().run_until_complete(get.Username(config.User_id))
-
-        url = f"https://mobile.twitter.com/{config.Username}?prefetchTimestamp=" + str(int(time.time() * 1000))
-        get_event_loop().run_until_complete(get.User(url, config, db.Conn(config.Database)))
-
-        if config.Pandas_au:
-            storage.panda._autoget("user")
-    except RuntimeError as e:
-        if "no current event loop" in str(e):
-            logme.exception(__name__ + ':Lookup:Previous attempt to to create an event loop failed.')
-
-        raise
-    except Exception as e:
-        logme.exception(__name__ + ':Lookup:Unexpected exception occured.')
-        raise
+    config.Profile = False
+    config.Lookup = True
+    config.Favorites = False
+    config.FOllowing = False
+    config.Followers = False
+    config.TwitterSearch = False
+    run(config)
+    if config.Pandas_au:
+        storage.panda._autoget("user")
 
 
 def Profile(config):

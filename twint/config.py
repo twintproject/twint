@@ -6,6 +6,7 @@ class Config:
     Username: Optional[str] = None
     User_id: Optional[str] = None
     Search: Optional[str] = None
+    Lookup: bool = False
     Geo: str = ""
     Location: bool = False
     Near: str = None
