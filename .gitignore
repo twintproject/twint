@@ -111,3 +111,5 @@ ENV/
 *.csv
 *.json
 *.txt
+
+test_twint.py
