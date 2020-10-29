@@ -105,27 +105,21 @@ def get_connector(config):
     return _connector
 
 
-async def RequestUrl(config, init, headers=[]):
+async def RequestUrl(config, init):
     logme.debug(__name__ + ':RequestUrl')
     _connector = get_connector(config)
     _serialQuery = ""
     params = []
     _url = ""
-    _headers = {}
+    _headers = [("authorization", config.Bearer_token), ("x-guest-token", config.Guest_token)]
 
     # TODO : do this later
     if config.Profile:
-        if config.Profile_full:
-            logme.debug(__name__ + ':RequestUrl:Profile_full')
-            _url = await url.MobileProfile(config.Username, init)
-        else:
-            logme.debug(__name__ + ':RequestUrl:notProfile_full')
-            _url = await url.Profile(config.Username, init)
-        _serialQuery = _url
+        logme.debug(__name__ + ':RequestUrl:Profile')
+        _url, params, _serialQuery = url.SearchProfile(config, init)
     elif config.TwitterSearch:
         logme.debug(__name__ + ':RequestUrl:TwitterSearch')
         _url, params, _serialQuery = await url.Search(config, init)
-        _headers = [("authorization", config.Bearer_token), ("x-guest-token", config.Guest_token)]
     else:
         if config.Following:
             logme.debug(__name__ + ':RequestUrl:Following')
@@ -212,21 +206,25 @@ async def Tweet(url, config, conn):
         logme.critical(__name__ + ':Tweet:' + str(e))
 
 
-async def User(username, config, conn, bearer_token, guest_token, user_id=False):
+async def User(username, config, conn, user_id=False):
     logme.debug(__name__ + ':User')
     _dct = {'screen_name': username, 'withHighlightedLabel': False}
     _url = 'https://api.twitter.com/graphql/jMaTS-_Ea8vh9rpKggJbCQ/UserByScreenName?variables={}'\
         .format(dict_to_url(_dct))
     _headers = {
-        'authorization': bearer_token,
-        'x-guest-token': guest_token,
+        'authorization': config.Bearer_token,
+        'x-guest-token': config.Guest_token,
     }
     try:
         response = await Request(_url, headers=_headers)
         j_r = loads(response)
         if user_id:
-            _id = j_r['data']['user']['rest_id']
-            return _id
+            try:
+                _id = j_r['data']['user']['rest_id']
+                return _id
+            except KeyError as e:
+                logme.critical(__name__ + ':User:' + str(e))
+                return
         await Users(j_r, config, conn)
     except Exception as e:
         logme.critical(__name__ + ':User:' + str(e))
