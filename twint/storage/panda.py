@@ -1,6 +1,5 @@
 import datetime, pandas as pd, warnings
 from time import strftime, localtime
-from .elasticsearch import hour
 from twint.tweet import Tweet_formats
 
 Tweets_df = None
@@ -85,7 +84,7 @@ def update(object, config):
             "username": Tweet.username,
             "name": Tweet.name,
             "day": day,
-            "hour": hour(datetime_ms/1000),
+            "hour": datetime.strptime("%H", localtime(datetime_ms/1000)),
             "link": Tweet.link,
             "urls": Tweet.urls,
             "photos": Tweet.photos,
