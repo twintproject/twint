@@ -5,7 +5,6 @@ from urllib.parse import urlencode
 from urllib.parse import quote
 
 mobile = "https://mobile.twitter.com"
-# base = "https://twitter.com/i"
 base = "https://api.twitter.com/2/search/adaptive.json"
 
 
@@ -65,18 +64,6 @@ async def MobileProfile(username, init):
     return url
 
 
-async def Profile(username, init):
-    logme.debug(__name__ + ':Profile')
-    url = f"{base}/profiles/show/{username}/timeline/tweets?include_"
-    url += "available_features=1&lang=en&include_entities=1"
-    url += "&include_new_items_bar=true"
-
-    if init != '-1':
-        url += f"&max_position={init}"
-
-    return url
-
-
 async def Search(config, init):
     logme.debug(__name__ + ':Search')
     url = base
@@ -123,7 +110,7 @@ async def Search(config, init):
         q += f" geocode:{config.Geo}"
     if config.Search:
 
-        q += f"{config.Search}"
+        q += f" {config.Search}"
     if config.Year:
         q += f" until:{config.Year}-1-1"
     if config.Since:
@@ -173,17 +160,18 @@ async def Search(config, init):
     if config.Custom_query:
         q = config.Custom_query
 
+    q = q.strip()
     params.append(("q", q))
     _serialQuery = _sanitizeQuery(url, params)
     return url, params, _serialQuery
 
 
-# maybe dont need this
-async def SearchProfile(config, init=None):
+def SearchProfile(config, init=None):
     logme.debug(__name__ + ':SearchProfile')
-    _url = 'https://api.twitter.com/2/timeline/profile/{}.json?'
-    q = ""
+    _url = 'https://api.twitter.com/2/timeline/profile/{user_id}.json'.format(user_id=config.User_id)
+    tweet_count = 100
     params = [
+        # some of the fields are not required, need to test which ones aren't required
         ('include_profile_interstitial_type', '1'),
         ('include_blocking', '1'),
         ('include_blocked_by', '1'),
@@ -205,14 +193,12 @@ async def SearchProfile(config, init=None):
         ('include_ext_media_availability', 'true'),
         ('send_error_codes', 'true'),
         ('simple_quoted_tweet', 'true'),
-        ('include_tweet_replies', 'false'),
-        ('count', '50'),
-        ('userId', '1934388686'),
-        ('ext', 'mediaStats,ChighlightedLabel'),
+        ('include_tweet_replies', 'true'),
+        ('count', tweet_count),
+        ('ext', 'mediaStats%2ChighlightedLabel'),
     ]
 
-    if init:
-        params.append(('cursor', init))
+    if type(init) == str:
+        params.append(('cursor', str(init)))
     _serialQuery = _sanitizeQuery(_url, params)
     return _url, params, _serialQuery
-    pass

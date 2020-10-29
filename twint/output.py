@@ -88,13 +88,13 @@ def _output(obj, output, config, **extra):
             logme.debug(__name__ + ':_output:Lowercase:tweet')
             obj.username = obj.username.lower()
             author_list.update({obj.username})
-            for i in range(len(obj.mentions)):
-                obj.mentions[i] = obj.mentions[i].lower()
+            for dct in obj.mentions:
+                for key, val in dct.items():
+                    dct[key] = val.lower()
             for i in range(len(obj.hashtags)):
                 obj.hashtags[i] = obj.hashtags[i].lower()
-            # TODO : dont know what cashtags are, <also modify in tweet.py>
-            # for i in range(len(obj.cashtags)):
-            #     obj.cashtags[i] = obj.cashtags[i].lower()
+            for i in range(len(obj.cashtags)):
+                obj.cashtags[i] = obj.cashtags[i].lower()
         else:
             logme.info('_output:Lowercase:hiddenTweetFound')
             print("[x] Hidden tweet found, account suspended due to violation of TOS")
@@ -128,49 +128,40 @@ def _output(obj, output, config, **extra):
 
 async def checkData(tweet, config, conn):
     logme.debug(__name__ + ':checkData')
-
     tweet = Tweet(tweet, config)
-
     if not tweet.datestamp:
         logme.critical(__name__ + ':checkData:hiddenTweetFound')
         print("[x] Hidden tweet found, account suspended due to violation of TOS")
         return
-
     if datecheck(tweet.datestamp + " " + tweet.timestamp, config):
         output = format.Tweet(config, tweet)
-
         if config.Database:
             logme.debug(__name__ + ':checkData:Database')
             db.tweets(conn, tweet, config)
-
         if config.Pandas:
             logme.debug(__name__ + ':checkData:Pandas')
             panda.update(tweet, config)
-
         if config.Store_object:
             logme.debug(__name__ + ':checkData:Store_object')
             if hasattr(config.Store_object_tweets_list, 'append'):
                 config.Store_object_tweets_list.append(tweet)
             else:
                 tweets_list.append(tweet)
-
         if config.Elasticsearch:
             logme.debug(__name__ + ':checkData:Elasticsearch')
             elasticsearch.Tweet(tweet, config)
-
         _output(tweet, output, config)
     # else:
     #     logme.critical(__name__+':checkData:copyrightedTweet')
 
 
-async def Tweets(tweets, config, conn, url=''):
+async def Tweets(tweets, config, conn):
     logme.debug(__name__ + ':Tweets')
-    if config.Favorites or config.Profile_full or config.Location:
+    if config.Favorites or config.Location:
         logme.debug(__name__ + ':Tweets:fav+full+loc')
         for tw in tweets:
-            if tw['data-item-id'] == url.split('?')[0].split('/')[-1]:
-                await checkData(tw, config, conn)
-    elif config.TwitterSearch:
+            await checkData(tw, config, conn)
+    elif config.TwitterSearch or config.Profile:
         logme.debug(__name__ + ':Tweets:TwitterSearch')
         await checkData(tweets, config, conn)
     else:

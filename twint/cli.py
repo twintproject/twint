@@ -16,11 +16,13 @@ from . import run
 from . import config
 from . import storage
 
+
 def error(_error, message):
     """ Print errors to stdout
     """
     print("[-] {}: {}".format(_error, message))
     sys.exit(0)
+
 
 def check(args):
     """ Error checking
@@ -34,7 +36,12 @@ def check(args):
                   "--userid and -u cannot be used together.")
         if args.all:
             error("Contradicting Args",
-                  "--all and -u cannot be used together")
+                  "--all and -u cannot be used together.")
+    elif args.search and args.timeline:
+        error("Contradicting Args",
+              "--s and --tl cannot be used together.")
+    elif args.timeline and not args.username:
+        error("Error", "-tl cannot be used without -u.")
     elif args.search is None:
         if args.custom_query is not None:
             pass
@@ -53,6 +60,7 @@ def check(args):
     if args.min_wait_time < 0:
         error("Error", "Please specifiy a non negative value for min_wait_time")
 
+
 def loadUserList(ul, _type):
     """ Concatenate users
     """
@@ -66,6 +74,7 @@ def loadUserList(ul, _type):
             un += "%20OR%20from%3A" + user
         return un[15:]
     return userlist
+
 
 def initialize(args):
     """ Set default values for config from args
@@ -100,7 +109,7 @@ def initialize(args):
     c.Essid = args.essid
     c.Format = args.format
     c.User_full = args.user_full
-    c.Profile_full = args.profile_full
+    # c.Profile_full = args.profile_full
     c.Pandas_type = args.pandas_type
     c.Index_tweets = args.index_tweets
     c.Index_follow = args.index_follow
@@ -119,7 +128,7 @@ def initialize(args):
     c.Tor_control_password = args.tor_control_password
     c.Retweets = args.retweets
     c.Custom_query = args.custom_query
-    c.Popular_tweets =  args.popular_tweets
+    c.Popular_tweets = args.popular_tweets
     c.Skip_certs = args.skip_certs
     c.Hide_output = args.hide_output
     c.Native_retweets = args.native_retweets
@@ -135,6 +144,7 @@ def initialize(args):
     c.Backoff_exponent = args.backoff_exponent
     c.Min_wait_time = args.min_wait_time
     return c
+
 
 def options():
     """ Parse arguments
@@ -180,7 +190,9 @@ def options():
     ap.add_argument("--proxy-host", help="Proxy hostname or IP.")
     ap.add_argument("--proxy-port", help="The port of the proxy server.")
     ap.add_argument("--tor-control-port", help="If proxy-host is set to tor, this is the control port", default=9051)
-    ap.add_argument("--tor-control-password", help="If proxy-host is set to tor, this is the password for the control port", default="my_password")
+    ap.add_argument("--tor-control-password",
+                    help="If proxy-host is set to tor, this is the password for the control port",
+                    default="my_password")
     ap.add_argument("--essid",
                     help="Elasticsearch Session ID, use this to differentiate scraping sessions.",
                     nargs="?", default="")
@@ -192,9 +204,16 @@ def options():
     ap.add_argument("--user-full",
                     help="Collect all user information (Use with followers or following only).",
                     action="store_true")
-    ap.add_argument("--profile-full",
-                    help="Slow, but effective method of collecting a user's Tweets and RT.",
-                    action="store_true")
+    # I am removing this this feature for the time being, because it is no longer required, default method will do this
+    # ap.add_argument("--profile-full",
+    #                 help="Slow, but effective method of collecting a user's Tweets and RT.",
+    #                 action="store_true")
+    ap.add_argument(
+        "-tl",
+        "--timeline",
+        help="Collects every tweet from a User's Timeline. (Tweets, RTs & Replies)",
+        action="store_true",
+    )
     ap.add_argument("--translate",
                     help="Get tweets translated by Google Translate.",
                     action="store_true")
@@ -221,23 +240,27 @@ def options():
     ap.add_argument("-pc", "--pandas-clean",
                     help="Automatically clean Pandas dataframe at every scrape.")
     ap.add_argument("-cq", "--custom-query", help="Custom search query.")
-    ap.add_argument("-pt", "--popular-tweets", help="Scrape popular tweets instead of recent ones.", action="store_true")
+    ap.add_argument("-pt", "--popular-tweets", help="Scrape popular tweets instead of recent ones.",
+                    action="store_true")
     ap.add_argument("-sc", "--skip-certs", help="Skip certs verification, useful for SSC.", action="store_false")
     ap.add_argument("-ho", "--hide-output", help="Hide output, no tweets will be displayed.", action="store_true")
     ap.add_argument("-nr", "--native-retweets", help="Filter the results for retweets only.", action="store_true")
     ap.add_argument("--min-likes", help="Filter the tweets by minimum number of likes.")
     ap.add_argument("--min-retweets", help="Filter the tweets by minimum number of retweets.")
     ap.add_argument("--min-replies", help="Filter the tweets by minimum number of replies.")
-    ap.add_argument("--links", help="Include or exclude tweets containing one o more links. If not specified"+
-                    " you will get both tweets that might contain links or not.")
+    ap.add_argument("--links", help="Include or exclude tweets containing one o more links. If not specified" +
+                                    " you will get both tweets that might contain links or not.")
     ap.add_argument("--source", help="Filter the tweets for specific source client.")
     ap.add_argument("--members-list", help="Filter the tweets sent by users in a given list.")
     ap.add_argument("-fr", "--filter-retweets", help="Exclude retweets from the results.", action="store_true")
-    ap.add_argument("--backoff-exponent", help="Specify a exponent for the polynomial backoff in case of errors.", type=float, default=3.0)
-    ap.add_argument("--min-wait-time", type=float, default=15, help="specifiy a minimum wait time in case of scraping limit error. This value will be adjusted by twint if the value provided does not satisfy the limits constraints")
+    ap.add_argument("--backoff-exponent", help="Specify a exponent for the polynomial backoff in case of errors.",
+                    type=float, default=3.0)
+    ap.add_argument("--min-wait-time", type=float, default=15,
+                    help="specifiy a minimum wait time in case of scraping limit error. This value will be adjusted by twint if the value provided does not satisfy the limits constraints")
     args = ap.parse_args()
-    
+
     return args
+
 
 def main():
     """ Main
@@ -283,7 +306,7 @@ def main():
                 run.Followers(c)
         else:
             run.Followers(c)
-    elif args.retweets or args.profile_full:
+    elif args.retweets:  # or args.profile_full:
         if args.userlist:
             _userlist = loadUserList(args.userlist, "profile")
             for _user in _userlist:
@@ -301,8 +324,11 @@ def main():
                 run.Lookup(c)
         else:
             run.Lookup(c)
+    elif args.timeline:
+        run.Profile(c)
     else:
         run.Search(c)
+
 
 def run_as_command():
     version = ".".join(str(v) for v in sys.version_info[:2])
@@ -311,6 +337,7 @@ def run_as_command():
         sys.exit(0)
 
     main()
+
 
 if __name__ == '__main__':
     main()

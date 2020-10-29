@@ -6,6 +6,7 @@ class Config:
     Username: Optional[str] = None
     User_id: Optional[str] = None
     Search: Optional[str] = None
+    Lookup: bool = False
     Geo: str = ""
     Location: bool = False
     Near: str = None
@@ -38,7 +39,7 @@ class Config:
     Favorites: bool = False
     TwitterSearch: bool = False
     User_full: bool = False
-    Profile_full: bool = False
+    # Profile_full: bool = False
     Store_object: bool = False
     Store_object_tweets_list: list = None
     Store_object_users_list: list = None
@@ -83,3 +84,4 @@ class Config:
     Min_wait_time: int = 0
     Bearer_token: str = None
     Guest_token: str = None
+    deleted: list = None
