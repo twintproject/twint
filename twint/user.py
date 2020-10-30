@@ -48,7 +48,9 @@ def User(ur):
     _usr.is_private = ur['data']['user']['legacy']['protected']
     _usr.is_verified = ur['data']['user']['legacy']['verified']
     _usr.avatar = ur['data']['user']['legacy']['profile_image_url_https']
-    _usr.background_image = ur['data']['user']['legacy']['profile_banner_url']
+    _usr.background_image = ""
+    if 'profile_banner_url' in ur['data']['user']['legacy']:
+        _usr.background_image = ur['data']['user']['legacy']['profile_banner_url']
     # TODO : future implementation
     # legacy_extended_profile is also available in some cases which can be used to get DOB of user
     return _usr
