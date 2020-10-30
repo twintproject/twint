@@ -84,7 +84,7 @@ def update(object, config):
             "username": Tweet.username,
             "name": Tweet.name,
             "day": day,
-            "hour": datetime.strptime("%H", localtime(datetime_ms/1000)),
+            "hour": strftime("%H", localtime(datetime_ms/1000)),
             "link": Tweet.link,
             "urls": Tweet.urls,
             "photos": Tweet.photos,
