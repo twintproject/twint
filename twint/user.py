@@ -28,7 +28,9 @@ def User(ur):
     _usr.username = ur['data']['user']['legacy']['screen_name']
     _usr.bio = ur['data']['user']['legacy']['description']
     _usr.location = ur['data']['user']['legacy']['location']
-    _usr.url = ur['data']['user']['legacy']['url']
+    _usr.url = ""
+    if 'url' in ur['data']['user']['legacy']:
+        _usr.url = ur['data']['user']['legacy']['url']
     # parsing date to user-friendly format
     _dt = ur['data']['user']['legacy']['created_at']
     _dt = datetime.datetime.strptime(_dt, '%a %b %d %H:%M:%S %z %Y')
