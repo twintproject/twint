@@ -83,9 +83,20 @@ def parse_tweets(config, response):
     feed = []
     for timeline_entry in response['timeline']['instructions'][0]['addEntries']['entries']:
         # this will handle the cases when the timeline entry is a tweet
-        if (config.TwitterSearch and timeline_entry['entryId'].find('sq-I-t-') == 0) \
-                or (config.Profile and timeline_entry['entryId'].find('tweet-') == 0):
-            _id = timeline_entry['content']['item']['content']['tweet']['id']
+        if (config.TwitterSearch or config.Profile) and (timeline_entry['entryId'].startswith('sq-I-t-') or
+                                                         timeline_entry['entryId'].startswith('tweet-')):
+            if 'tweet' in timeline_entry['content']['item']['content']:
+                _id = timeline_entry['content']['item']['content']['tweet']['id']
+                # skip the ads
+                if 'promotedMetadata' in timeline_entry['content']['item']['content']['tweet']:
+                    continue
+            elif 'tombstone' in timeline_entry['content']['item']['content'] and 'tweet' in \
+                    timeline_entry['content']['item']['content']['tombstone']:
+                _id = timeline_entry['content']['item']['content']['tombstone']['tweet']['id']
+            else:
+                _id = None
+            if _id is None:
+                raise ValueError('Unable to find ID of tweet in timeline.')
             try:
                 temp_obj = response['globalObjects']['tweets'][_id]
             except KeyError:

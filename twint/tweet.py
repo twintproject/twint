@@ -61,6 +61,18 @@ def _get_reply_to(tw):
     return reply_to
 
 
+def getText(tw):
+    """Replace some text
+    """
+    logme.debug(__name__ + ':getText')
+    text = tw['full_text']
+    text = text.replace("http", " http")
+    text = text.replace("pic.twitter", " pic.twitter")
+    text = text.replace("\n", " ")
+
+    return text
+
+
 def Tweet(tw, config):
     """Create Tweet object
     """
@@ -103,7 +115,7 @@ def Tweet(tw, config):
         t.thumbnail = tw['extended_entities']['media'][0]['media_url_https']
     except KeyError:
         t.thumbnail = ''
-    t.tweet = tw['full_text']
+    t.tweet = getText(tw)
     t.lang = tw['lang']
     try:
         t.hashtags = [hashtag['text'] for hashtag in tw['entities']['hashtags']]
@@ -131,10 +143,10 @@ def Tweet(tw, config):
         t.user_rt = ''
         t.user_rt_id = ''
     try:
-        t.quote_url = tw['quoted_status_permalink']['expanded'] if tw['is_quote_status'] else ''
+        t.quote_url = tw['quoted_status_permalink']['expanded'] if 'is_quote_status' in tw and tw['is_quote_status'] else ''
     except KeyError:
-        # means that the quoted tweet have been deleted
-        t.quote_url = 0
+        # quoted tweets which have been deleted will have this string in the output/csv instead of being empty
+        t.quote_url = "<quoted_tweet_deleted>"
     t.near = config.Near if config.Near else ""
     t.geo = config.Geo if config.Geo else ""
     t.source = config.Source if config.Source else ""

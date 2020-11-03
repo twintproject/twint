@@ -206,14 +206,14 @@ async def Tweet(url, config, conn):
         logme.critical(__name__ + ':Tweet:' + str(e))
 
 
-async def User(username, config, conn, bearer_token, guest_token, user_id=False):
+async def User(username, config, conn, user_id=False):
     logme.debug(__name__ + ':User')
     _dct = {'screen_name': username, 'withHighlightedLabel': False}
     _url = 'https://api.twitter.com/graphql/jMaTS-_Ea8vh9rpKggJbCQ/UserByScreenName?variables={}'\
         .format(dict_to_url(_dct))
     _headers = {
-        'authorization': bearer_token,
-        'x-guest-token': guest_token,
+        'authorization': config.Bearer_token,
+        'x-guest-token': config.Guest_token,
     }
     try:
         response = await Request(_url, headers=_headers)
