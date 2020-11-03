@@ -19,7 +19,7 @@ class Token:
     def __init__(self, config):
         self._session = None
         self.config = config
-        self._retries = 5
+        self._retries = 10
         self._timeout = 10
         self.url = 'https://twitter.com'
         self._get_new_session()
@@ -28,7 +28,10 @@ class Token:
     def _get_new_session(self, session_type=None):
         if self._session is not None:
             logme.debug(__name__ + ':closing old session to create a new one')
-            self._session.close()
+            try:
+                self._session.close()
+            except AttributeError:
+                pass
         if session_type == 'tor' or self.config.Tor_guest:
             logme.info(__name__ + ':[TOR SESSION] Creating new TOR Session. Please give it a couple of seconds...')
             print('[TOR SESSION] Creating new TOR Session. Please give it a couple of seconds...')
@@ -54,9 +57,10 @@ class Token:
                             logme.debug(__name__ + f":IP: {f.send(Request('GET', 'https://ident.me').prepare()).text}")
                     with self._session as f:
                         res = f.send(twitter_request).text
+
                 else:
                     res = requests.get(self.url, timeout=self._timeout).text
-            except (CellTimeoutError, TimeoutError) as exc:
+            except (CellTimeoutError, TimeoutError, requests.exceptions.ConnectTimeout) as exc:
                 if attempt < self._retries:
                     self._get_new_session('tor')
                     retrying = ', retrying'

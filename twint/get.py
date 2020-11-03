@@ -183,7 +183,7 @@ async def RandomUserAgent(wa=None):
 
 async def Username(_id, bearer_token, guest_token):
     logme.debug(__name__ + ':Username')
-    _dct = {'userId': _id, 'withHighlightedLabel': False}
+    _dct = {'userId': str(_id), 'withHighlightedLabel': False}
     _url = "https://api.twitter.com/graphql/B9FuNQVmyx32rdbIPEZKag/UserByRestId?variables={}".format(dict_to_url(_dct))
     _headers = {
         'authorization': bearer_token,
@@ -191,6 +191,8 @@ async def Username(_id, bearer_token, guest_token):
     }
     r = await Request(_url, headers=_headers)
     j_r = loads(r)
+    if 'errors' in j_r:
+        raise ValueError(j_r['errors'][0]['message'])
     username = j_r['data']['user']['legacy']['screen_name']
     return username
 
