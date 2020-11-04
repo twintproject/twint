@@ -76,6 +76,7 @@ def init(db):
                     cashtags text,
                     urls text,
                     photos text,
+                    thumbnail text,
                     quote_url text,
                     video integer,
                     geo text,
@@ -265,6 +266,7 @@ def tweets(conn, Tweet, config):
                     ",".join(Tweet.cashtags),
                     ",".join(Tweet.urls),
                     ",".join(Tweet.photos),
+                    Tweet.thumbnail,
                     Tweet.quote_url,
                     Tweet.video,
                     Tweet.geo,
@@ -274,7 +276,7 @@ def tweets(conn, Tweet, config):
                     Tweet.translate,
                     Tweet.trans_src,
                     Tweet.trans_dest)
-        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
+        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
 
         if config.Favorites:
             query = 'INSERT INTO favorites VALUES(?,?)'

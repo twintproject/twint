@@ -1,7 +1,6 @@
+import datetime, pandas as pd, warnings
 from time import strftime, localtime
-import pandas as pd
-import warnings
-from .elasticsearch import hour
+from twint.tweet import Tweet_formats
 
 Tweets_df = None
 Follow_df = None
@@ -66,12 +65,13 @@ def update(object, config):
 
     if _type == "tweet":
         Tweet = object
-        day = weekdays[strftime("%A", localtime(Tweet.datetime/1000))]
+        datetime_ms = datetime.datetime.strptime(Tweet.datetime, Tweet_formats['datetime']).timestamp() * 1000
+        day = weekdays[strftime("%A", localtime(datetime_ms/1000))]
         dt = f"{object.datestamp} {object.timestamp}"
         _data = {
             "id": str(Tweet.id),
             "conversation_id": Tweet.conversation_id,
-            "created_at": Tweet.datetime,
+            "created_at": datetime_ms,
             "date": dt,
             "timezone": Tweet.timezone,
             "place": Tweet.place,
@@ -84,8 +84,12 @@ def update(object, config):
             "username": Tweet.username,
             "name": Tweet.name,
             "day": day,
-            "hour": hour(Tweet.datetime/1000),
+            "hour": strftime("%H", localtime(datetime_ms/1000)),
             "link": Tweet.link,
+            "urls": Tweet.urls,
+            "photos": Tweet.photos,
+            "video": Tweet.video,
+            "thumbnail": Tweet.thumbnail,
             "retweet": Tweet.retweet,
             "nlikes": int(Tweet.likes_count),
             "nreplies": int(Tweet.replies_count),

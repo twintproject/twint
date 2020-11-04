@@ -16,6 +16,7 @@ def Tweet(config, t):
         output = output.replace("{urls}", ",".join(t.urls))
         output = output.replace("{photos}", ",".join(t.photos))
         output = output.replace("{video}", str(t.video))
+        output = output.replace("{thumbnail}", t.thumbnail)
         output = output.replace("{tweet}", t.tweet)
         output = output.replace("{language}", t.lang)
         output = output.replace("{hashtags}", ",".join(t.hashtags))
@@ -37,8 +38,9 @@ def Tweet(config, t):
         logme.debug(__name__+':Tweet:notFormat')
         output = f"{t.id_str} {t.datestamp} {t.timestamp} {t.timezone} "
 
-        if t.retweet:
-           output += "RT "
+        # TODO: someone who is familiar with this code, needs to take a look at what this is <also see tweet.py>
+        # if t.retweet:
+        #    output += "RT "
 
         output += f"<{t.username}> {t.tweet}"
 

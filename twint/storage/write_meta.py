@@ -24,6 +24,7 @@ def tweetData(t):
             "retweet": t.retweet,
             "quote_url": t.quote_url,
             "video": t.video,
+            "thumbnail": t.thumbnail,
             "near": t.near,
             "geo": t.geo,
             "source": t.source,
@@ -34,7 +35,7 @@ def tweetData(t):
             "retweet_date": t.retweet_date,
             "translate": t.translate,
             "trans_src": t.trans_src,
-            "trans_dest": t.trans_dest
+            "trans_dest": t.trans_dest,
             }
     return data
 
@@ -64,6 +65,7 @@ def tweetFieldnames():
             "retweet",
             "quote_url",
             "video",
+            "thumbnail",
             "near",
             "geo",
             "source",

@@ -28,6 +28,7 @@ Twitter limits scrolls while browsing the user timeline. This means that with `.
 - aiodns;
 - beautifulsoup4;
 - cchardet;
+- dataclasses
 - elasticsearch;
 - pysocks;
 - pandas (>=0.23.0);
@@ -41,7 +42,7 @@ Twitter limits scrolls while browsing the user timeline. This means that with `.
 
 **Git:**
 ```bash
-git clone https://github.com/twintproject/twint.git
+git clone --depth=1 https://github.com/twintproject/twint.git
 cd twint
 pip3 install . -r requirements.txt
 ```
@@ -65,7 +66,7 @@ pipenv install git+https://github.com/twintproject/twint.git#egg=twint
 ## CLI Basic Examples and Combos
 A few simple examples to help you understand the basics:
 
-- `twint -u username` - Scrape all the Tweets from *user*'s timeline.
+- `twint -u username` - Scrape all the Tweets of a *user* (doesn't include **retweets** but includes **replies**).
 - `twint -u username -s pineapple` - Scrape all Tweets from the *user*'s timeline containing _pineapple_.
 - `twint -s pineapple` - Collect every Tweet containing *pineapple* from everyone's Tweets.
 - `twint -u username --year 2014` - Collect Tweets that were tweeted **before** 2014.
@@ -83,7 +84,7 @@ A few simple examples to help you understand the basics:
 - `twint -u username --following` - Scrape who a Twitter user follows.
 - `twint -u username --favorites` - Collect all the Tweets a user has favorited (gathers ~3200 tweet).
 - `twint -u username --following --user-full` - Collect full user information a person follows
-- `twint -u username --profile-full` - Use a slow, but effective method to gather Tweets from a user's profile (Gathers ~3200 Tweets, Including Retweets).
+- `twint -u username --timeline` - Use an effective method to gather Tweets from a user's profile (Gathers ~3200 Tweets, including **retweets** & **replies**).
 - `twint -u username --retweets` - Use a quick method to gather the last 900 Tweets (that includes retweets) from a user's profile.
 - `twint -u username --resume resume_file.txt` - Resume a search starting from the last saved scroll-id.
 
