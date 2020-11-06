@@ -69,10 +69,10 @@ def loadUserList(ul, _type):
     else:
         userlist = ul.split(",")
     if _type == "search":
-        un = ""
-        for user in userlist:
-            un += "%20OR%20from%3A" + user
-        return un[15:]
+        un = userlist[0]
+        for user in userlist[1:]:
+            un += " OR from:" + user
+        return un
     return userlist
 
 
