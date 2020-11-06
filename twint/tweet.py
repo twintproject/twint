@@ -39,7 +39,7 @@ def _get_mentions(tw):
                 'name': _mention['name'],
                 'id': _mention['id_str'],
             } for _mention in tw['entities']['user_mentions']
-            if tw['display_text_range'][0] < _mention['indices'][0]
+            if tw['display_text_range'][0] <= _mention['indices'][0]
         ]
     except KeyError:
         mentions = []
