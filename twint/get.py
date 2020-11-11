@@ -261,7 +261,7 @@ async def Multi(feed, config, conn):
 
                 if config.User_full:
                     logme.debug(__name__ + ':Multi:user-full-Run')
-                    futures.append(loop.run_in_executor(executor, await User(url,
+                    futures.append(loop.run_in_executor(executor, await User(username,
                                                                              config, conn)))
                 else:
                     logme.debug(__name__ + ':Multi:notUser-full-Run')
