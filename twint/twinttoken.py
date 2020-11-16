@@ -9,13 +9,13 @@ class TokenExpiryException(Exception):
     def __init__(self, msg):
         super().__init__(msg)
 
-        
+
 class RefreshTokenException(Exception):
     def __init__(self, msg):
         super().__init__(msg)
-        
 
-class Token:
+
+class TwintToken:
     def __init__(self, config):
         self._session = requests.Session()
         self.config = config
