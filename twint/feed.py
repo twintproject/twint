@@ -21,7 +21,7 @@ def Follow(response):
     follow = soup.find_all("td", "info fifty screenname")
     cursor = soup.find_all("div", "w-button-more")
     try:
-        cursor = findall(r'cursor=(.*?)">', str(cursor))[0]
+        cursor = findall(r'cursor=(.*?)">', str(cursor))
     except IndexError:
         logme.critical(__name__ + ':Follow:IndexError')
 
@@ -35,7 +35,7 @@ def Mobile(response):
     tweets = soup.find_all("span", "metadata")
     max_id = soup.find_all("div", "w-button-more")
     try:
-        max_id = findall(r'max_id=(.*?)">', str(max_id))[0]
+        max_id = findall(r'max_id=(.*?)">', str(max_id))
     except Exception as e:
         logme.critical(__name__ + ':Mobile:' + str(e))
 

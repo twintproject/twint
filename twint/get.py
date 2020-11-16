@@ -207,7 +207,7 @@ async def Tweet(url, config, conn):
 
 
 async def User(username, config, conn, user_id=False):
-    logme.debug(__name__ + ':User')
+    logme.debug(__name__ + ':User0')
     _dct = {'screen_name': username, 'withHighlightedLabel': False}
     _url = 'https://api.twitter.com/graphql/jMaTS-_Ea8vh9rpKggJbCQ/UserByScreenName?variables={}'\
         .format(dict_to_url(_dct))
@@ -223,11 +223,11 @@ async def User(username, config, conn, user_id=False):
                 _id = j_r['data']['user']['rest_id']
                 return _id
             except KeyError as e:
-                logme.critical(__name__ + ':User:' + str(e))
+                logme.critical(__name__ + ':User1:' + str(e))
                 return
         await Users(j_r, config, conn)
     except Exception as e:
-        logme.critical(__name__ + ':User:' + str(e))
+        logme.critical(__name__ + ':User2:' + str(e))
         raise
 
 
