@@ -14,7 +14,7 @@ from urllib.parse import quote
 
 from . import url
 from .output import Tweets, Users
-from .token import TokenExpiryException
+from .twinttoken import TokenExpiryException
 
 import logging as logme
 
