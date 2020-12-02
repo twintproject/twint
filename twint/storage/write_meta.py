@@ -1,6 +1,6 @@
 def tweetData(t):
     data = {
-            "id": int(t.id),
+            "id": str(t.id),
             "conversation_id": t.conversation_id,
             "created_at": t.datetime,
             "date": t.datestamp,
