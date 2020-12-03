@@ -147,7 +147,7 @@ We are developing a Twint Desktop App.
 ## FAQ
 > I tried scraping tweets from a user, I know that they exist but I'm not getting them
 
-Twitter can shadow-ban accounts, which means that their tweets will not be available via search. To solve this, pass `--profile-full` if you are using Twint via CLI or, if are using Twint as module, add `config.Profile_full = True`. Please note that this process will be quite slow.
+Twitter can shadow-ban accounts, which means that their tweets will not be available via search. To solve this, pass `--timeline` if you are using Twint via CLI or, if are using Twint as module, add `config.Profile_full = True`. Please note that this process will be quite slow.
 ## More Examples
 
 #### Followers/Following
