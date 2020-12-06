@@ -61,6 +61,7 @@ class Config:
     Proxy_host: str = ""
     Proxy_port: int = 0
     Proxy_type: object = None
+    Tor_guest: bool = False  # this will be used by the token.py to check if it needs to get the guest token using tor
     Tor_control_port: int = 9051
     Tor_control_password: str = None
     Retweets: bool = False

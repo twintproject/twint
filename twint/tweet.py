@@ -39,7 +39,7 @@ def _get_mentions(tw):
                 'name': _mention['name'],
                 'id': _mention['id_str'],
             } for _mention in tw['entities']['user_mentions']
-            if tw['display_text_range'][0] < _mention['indices'][0]
+            if tw['display_text_range'][0] <= _mention['indices'][0]
         ]
     except KeyError:
         mentions = []
@@ -143,10 +143,10 @@ def Tweet(tw, config):
         t.user_rt = ''
         t.user_rt_id = ''
     try:
-        t.quote_url = tw['quoted_status_permalink']['expanded'] if tw['is_quote_status'] else ''
+        t.quote_url = tw['quoted_status_permalink']['expanded'] if 'is_quote_status' in tw and tw['is_quote_status'] else ''
     except KeyError:
-        # means that the quoted tweet have been deleted
-        t.quote_url = 0
+        # quoted tweets which have been deleted will have this string in the output/csv instead of being empty
+        t.quote_url = "<quoted_tweet_deleted>"
     t.near = config.Near if config.Near else ""
     t.geo = config.Geo if config.Geo else ""
     t.source = config.Source if config.Source else ""
