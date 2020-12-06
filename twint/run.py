@@ -32,8 +32,10 @@ class Twint:
         self.config.Bearer_token = bearer
         # TODO might have to make some adjustments for it to work with multi-treading
         # USAGE : to get a new guest token simply do `self.token.refresh()`
-        self.token = token.Token(config)
-        self.token.refresh()
+        if not 'token' in self.__dict__:
+            self.token = token.Token(config)
+        if not self.config.Guest_token:
+            self.token.refresh()
         self.conn = db.Conn(config.Database)
         self.d = datelock.Set(self.config.Until, self.config.Since)
         verbose.Elastic(config.Elasticsearch)
@@ -94,8 +96,9 @@ class Twint:
                         self.feed, self.init = feed.parse_tweets(self.config, response)
                     except NoMoreTweetsException as e:
                         logme.debug(__name__ + ':Twint:Feed:' + str(e))
-                        print('[!] ' + str(e) + ' Scraping will stop now.')
-                        print('found {} deleted tweets in this search.'.format(len(self.config.deleted)))
+                        if not self.config.Hide_output:
+                            print('[!] ' + str(e) + ' Scraping will stop now.')
+                            print('found {} deleted tweets in this search.'.format(len(self.config.deleted)))
                         break
                 break
             except TimeoutError as e:
@@ -117,7 +120,8 @@ class Twint:
                     break
             except Exception as e:
                 if self.config.Profile or self.config.Favorites:
-                    print("[!] Twitter does not return more data, scrape stops here.")
+                    if not self.config.Hide_output:
+                        print("[!] Twitter does not return more data, scrape stops here.")
                     break
 
                 logme.critical(__name__ + ':Twint:Feed:noData' + str(e))
@@ -311,7 +315,7 @@ class Twint:
             raise
 
 
-def run(config, callback=None):
+def run(config, callback=None, twint_class=None):
     logme.debug(__name__ + ':run')
     try:
         get_event_loop()
@@ -325,8 +329,10 @@ def run(config, callback=None):
         logme.exception(
             __name__ + ':run:Unexpected exception occurred while attempting to get or create a new event loop.')
         raise
-
-    get_event_loop().run_until_complete(Twint(config).main(callback))
+    if not twint_class:
+        twint_class = Twint(config)
+    get_event_loop().run_until_complete(twint_class.main(callback))
+    return twint_class
 
 
 def Favorites(config):
@@ -388,16 +394,22 @@ def Lookup(config):
         storage.panda._autoget("user")
 
 
-def Profile(config):
+def Profile(config, twint_class=None):
     logme.debug(__name__ + ':Profile')
     config.Profile = True
     config.Favorites = False
     config.Following = False
     config.Followers = False
     config.TwitterSearch = False
-    run(config)
+    if not twint_class:
+        twint_class = run(config)
+    else:
+        twint_class = run(config, twint_class=twint_class)
+
     if config.Pandas_au:
         storage.panda._autoget("tweet")
+
+    return twint_class
 
 
 def Search(config, callback=None):

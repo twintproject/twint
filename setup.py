@@ -14,9 +14,10 @@ VERSION = None
 
 # Packages required
 REQUIRED = [
-    'aiohttp', 'aiodns', 'beautifulsoup4', 'cchardet', 'dataclasses',
-    'elasticsearch', 'pysocks', 'pandas', 'aiohttp_socks',
-    'schedule', 'geopy', 'fake-useragent', 'googletransx'
+    'aiodns', 'aiohttp', 'aiohttp_socks', 'beautifulsoup4', 'cchardet',
+    'dataclasses; python_version < "3.7.0"', 'elasticsearch',
+    'fake-useragent', 'geopy', 'googletransx', 'pandas', 'pysocks',
+    'requests[socks]', 'schedule', 'torpy[requests]',
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))

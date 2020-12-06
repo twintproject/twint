@@ -1,4 +1,5 @@
 import logging as logme
+import json
 
 def Tweet(config, t):
     if config.Format:
@@ -20,16 +21,16 @@ def Tweet(config, t):
         output = output.replace("{language}", t.lang)
         output = output.replace("{hashtags}", ",".join(t.hashtags))
         output = output.replace("{cashtags}", ",".join(t.cashtags))
-        output = output.replace("{replies}", t.replies_count)
-        output = output.replace("{retweets}", t.retweets_count)
-        output = output.replace("{likes}", t.likes_count)
+        output = output.replace("{replies}", str(t.replies_count))
+        output = output.replace("{retweets}", str(t.retweets_count))
+        output = output.replace("{likes}", str(t.likes_count))
         output = output.replace("{link}", t.link)
         output = output.replace("{is_retweet}", str(t.retweet))
         output = output.replace("{user_rt_id}", str(t.user_rt_id))
         output = output.replace("{quote_url}", t.quote_url)
         output = output.replace("{near}", t.near)
         output = output.replace("{geo}", t.geo)
-        output = output.replace("{mentions}", ",".join(t.mentions))
+        output = output.replace("{mentions}", ",".join([json.dumps(mention) for mention in t.mentions]))
         output = output.replace("{translate}", t.translate)
         output = output.replace("{trans_src}", t.trans_src)
         output = output.replace("{trans_dest}", t.trans_dest)
