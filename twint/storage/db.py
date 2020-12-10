@@ -6,6 +6,12 @@ import hashlib
 from datetime import datetime
 
 def Conn(database):
+    """
+    Return a connection to the database.
+
+    Args:
+        database :
+    """
     if database:
         print("[+] Inserting into Database: " + str(database))
         conn = init(database)
@@ -18,6 +24,12 @@ def Conn(database):
     return conn
 
 def init(db):
+    """
+    Initialize database.
+
+    Args:
+        db :
+    """
     try:
         conn = sqlite3.connect(db)
         cursor = conn.cursor()
@@ -181,6 +193,12 @@ def init(db):
         return str(e)
 
 def fTable(Followers):
+    """
+    Fetch a table of followers.
+
+    Args:
+        Followers :
+    """
     if Followers:
         table = "followers_names"
     else:
@@ -189,6 +207,12 @@ def fTable(Followers):
     return table
 
 def uTable(Followers):
+    """
+    Return a table of followers.
+
+    Args:
+        Followers :
+    """
     if Followers:
         table = "followers"
     else:
@@ -197,6 +221,15 @@ def uTable(Followers):
     return table
 
 def follow(conn, Username, Followers, User):
+    """
+    Record a user's followers.
+
+    Args:
+        conn :
+        Username :
+        Followers :
+        User :
+    """
     try:
         time_ms = round(time.time()*1000)
         cursor = conn.cursor()
@@ -209,12 +242,27 @@ def follow(conn, Username, Followers, User):
         pass
 
 def get_hash_id(conn, id):
+    """
+    Get the hash of a user
+
+    Args:
+        conn :
+        id :
+    """
     cursor = conn.cursor()
     cursor.execute('SELECT hex_dig FROM users WHERE id = ? LIMIT 1', (id,))
     resultset = cursor.fetchall()
     return resultset[0][0] if resultset else -1
 
 def user(conn, config, User):
+    """
+    Insert user information.
+
+    Args:
+        conn :
+        config :
+        User :
+    """
     try:
         time_ms = round(time.time()*1000)
         cursor = conn.cursor()
@@ -240,6 +288,14 @@ def user(conn, config, User):
         pass
 
 def tweets(conn, Tweet, config):
+    """
+    Insert tweets and related data
+
+    Args:
+        conn :
+        Tweet :
+        config :
+    """
     try:
         time_ms = round(time.time()*1000)
         cursor = conn.cursor()

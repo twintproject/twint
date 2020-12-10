@@ -1,4 +1,10 @@
 def tweetData(t):
+    """
+    Returns a dictionary of parsed Tweet data.
+
+    Args:
+        t :
+    """
     data = {
             "id": int(t.id),
             "conversation_id": t.conversation_id,
@@ -40,6 +46,9 @@ def tweetData(t):
     return data
 
 def tweetFieldnames():
+    """
+    Parse TweetFieldnames.
+    """
     fieldnames = [
             "id",
             "conversation_id",
@@ -81,6 +90,12 @@ def tweetFieldnames():
     return fieldnames
 
 def userData(u):
+    """
+    Returns a dict of user data.
+
+    Args:
+        u :
+    """
     data = {
             "id": int(u.id),
             "name": u.name,
@@ -103,6 +118,9 @@ def userData(u):
     return data
 
 def userFieldnames():
+    """
+    Returns a list of valid user fields.
+    """
     fieldnames = [
             "id",
             "name",
@@ -125,6 +143,12 @@ def userFieldnames():
     return fieldnames
 
 def usernameData(u):
+    """
+    Return username data.
+
+    Args:
+        u :
+    """
     return {"username": u}
 
 def usernameFieldnames():
@@ -141,6 +165,12 @@ def Data(obj, _type):
     return ret
 
 def Fieldnames(_type):
+    """
+    returns a list of field names
+
+    Args:
+        _type :
+    """
     if _type == "user":
         ret = userFieldnames()
     elif _type == "username":
