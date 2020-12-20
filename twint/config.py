@@ -3,6 +3,7 @@ from typing import Optional
 
 @dataclass
 class Config:
+    Worker_ID: Optional[str] = None
     Username: Optional[str] = None
     User_id: Optional[str] = None
     Search: Optional[str] = None
@@ -13,6 +14,9 @@ class Config:
     Lang: Optional[str] = None
     Output: Optional[str] = None
     Elasticsearch: object = None
+    Elasticsearch_cert: Optional[str] = None
+    Elasticsearch_user: Optional[str] = None
+    Elasticsearch_pass: Optional[str] = None
     Year: Optional[int] = None
     Since: Optional[str] = None
     Until: Optional[str] = None

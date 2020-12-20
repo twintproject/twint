@@ -193,6 +193,22 @@ def weekday(day):
 
     return weekdays[day]
 
+def ElasticsearchConnect(config):
+    if config.Elasticsearch_cert:
+        return Elasticsearch(
+            config.Elasticsearch, verify_certs=config.Skip_certs,
+            scheme="https",
+            ca_certs=config.Elasticsearch_cert,
+            http_auth=(config.Elasticsearch_user, config.Elasticsearch_pass)
+        )
+    elif config.Elasticsearch_user:
+        return Elasticsearch(
+            config.Elasticsearch, verify_certs=config.Skip_certs,
+            http_auth=(config.Elasticsearch_user, config.Elasticsearch_pass)
+        )
+    else:
+        return Elasticsearch(config.Elasticsearch, verify_certs=config.Skip_certs)
+
 def Tweet(Tweet, config):
     global _index_tweet_status
     global _is_near_def
@@ -212,6 +228,7 @@ def Tweet(Tweet, config):
             "_id": str(Tweet.id) + "_raw_" + config.Essid,
             "_source": {
                 "id": str(Tweet.id),
+                "worker_id": config.Worker_ID,
                 "conversation_id": Tweet.conversation_id,
                 "created_at": Tweet.datetime,
                 "date": dt,
@@ -286,7 +303,7 @@ def Tweet(Tweet, config):
 
     actions.append(j_data)
 
-    es = Elasticsearch(config.Elasticsearch, verify_certs=config.Skip_certs)
+    es = ElasticsearchConnect(config)
     if not _index_tweet_status:
         _index_tweet_status = createIndex(config, es, scope="tweet")
     with nostdout():
@@ -307,6 +324,7 @@ def Follow(user, config):
             "_index": config.Index_follow,
             "_id": _user + "_" + _follow + "_" + config.Essid,
             "_source": {
+                "worker_id": config.Worker_ID,
                 "user": _user,
                 "follow": _follow,
                 "essid": config.Essid
