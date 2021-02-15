@@ -24,11 +24,16 @@ def User(ur):
         raise KeyError(msg)
     _usr = user()
     _usr.id = ur['data']['user']['rest_id']
-    _usr.name = ur['data']['user']['legacy']['name']
-    _usr.username = ur['data']['user']['legacy']['screen_name']
-    _usr.bio = ur['data']['user']['legacy']['description']
-    _usr.location = ur['data']['user']['legacy']['location']
-    _usr.url = ur['data']['user']['legacy']['url']
+
+    legacy_props = {
+        'name': 'name',
+        'screen_name': 'username',
+        'description': 'bio',
+        'location': 'location',
+        'url': 'url'}
+    for prop, user_prop in legacy_props.items():
+        _usr.__dict__[user_prop] = ur['data']['user']['legacy'].get(prop, None)
+
     # parsing date to user-friendly format
     _dt = ur['data']['user']['legacy']['created_at']
     _dt = datetime.datetime.strptime(_dt, '%a %b %d %H:%M:%S %z %Y')
@@ -48,5 +53,6 @@ def User(ur):
     _usr.avatar = ur['data']['user']['legacy']['profile_image_url_https']
     _usr.background_image = ur['data']['user']['legacy']['profile_banner_url']
     # TODO : future implementation
-    # legacy_extended_profile is also available in some cases which can be used to get DOB of user
+    # legacy_extended_profile is also available in some cases which can be
+    # used to get DOB of user
     return _usr
