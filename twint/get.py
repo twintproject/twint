@@ -211,12 +211,13 @@ async def User(username, config, conn, user_id=False):
     _dct = {'screen_name': username, 'withHighlightedLabel': False}
     _url = 'https://api.twitter.com/graphql/jMaTS-_Ea8vh9rpKggJbCQ/UserByScreenName?variables={}'\
         .format(dict_to_url(_dct))
+    _connector = get_connector(config)
     _headers = {
         'authorization': config.Bearer_token,
         'x-guest-token': config.Guest_token,
     }
     try:
-        response = await Request(_url, headers=_headers)
+        response = await Request(_url, connector=_connector, headers=_headers)
         j_r = loads(response)
         if user_id:
             try:
