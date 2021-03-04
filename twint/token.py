@@ -14,7 +14,6 @@ class RefreshTokenException(Exception):
     def __init__(self, msg):
         super().__init__(msg)
         
-
 class Token:
     def __init__(self, config):
         self._session = requests.Session()
