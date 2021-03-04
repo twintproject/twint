@@ -71,8 +71,8 @@ def get_connector(config):
     if config.Proxy_host:
         if config.Proxy_host.lower() == "tor":
             _connector = ProxyConnector(
-                host='127.0.0.1',
-                port=9050,
+                host=config.Tor_ip,
+                port=config.Tor_port,
                 rdns=True)
         elif config.Proxy_port and config.Proxy_type:
             if config.Proxy_type.lower() == "socks5":
@@ -143,7 +143,8 @@ async def RequestUrl(config, init):
 def ForceNewTorIdentity(config):
     logme.debug(__name__ + ':ForceNewTorIdentity')
     try:
-        tor_c = socket.create_connection(('127.0.0.1', config.Tor_control_port))
+        tor_c = socket.create_connection(
+            (config.Tor_ip, config.Tor_control_port))
         tor_c.send('AUTHENTICATE "{}"\r\nSIGNAL NEWNYM\r\n'.format(config.Tor_control_password).encode())
         response = tor_c.recv(1024)
         if response != b'250 OK\r\n250 OK\r\n':
