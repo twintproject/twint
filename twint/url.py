@@ -1,8 +1,10 @@
 import datetime
+import logging
 from sys import platform
-import logging as logme
 from urllib.parse import urlencode
 from urllib.parse import quote
+
+logme = logging.getLogger('twint')
 
 mobile = "https://mobile.twitter.com"
 base = "https://api.twitter.com/2/search/adaptive.json"

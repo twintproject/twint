@@ -1,8 +1,11 @@
 from time import strftime, localtime
 from datetime import datetime, timezone
+import logging
 
-import logging as logme
 from googletransx import Translator
+
+logme = logging.getLogger('twint')
+
 # ref. 
 # - https://github.com/x0rzkov/py-googletrans#basic-usage
 translator = Translator()

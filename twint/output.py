@@ -5,7 +5,8 @@ from .tweet import Tweet
 from .user import User
 from .storage import db, elasticsearch, write, panda
 
-import logging as logme
+import logging
+logme = logging.getLogger('twint')
 
 follows_list = []
 tweets_list = []

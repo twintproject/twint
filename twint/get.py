@@ -16,7 +16,8 @@ from . import url
 from .output import Tweets, Users
 from .token import TokenExpiryException
 
-import logging as logme
+import logging
+logme = logging.getLogger('twint')
 
 httpproxy = None
 

@@ -1,4 +1,5 @@
-import logging as logme
+import logging
+logme = logging.getLogger('twint')
 
 def Tweet(config, t):
     if config.Format:

@@ -7,7 +7,8 @@ from . import token
 from .storage import db
 from .feed import NoMoreTweetsException
 
-import logging as logme
+import logging
+logme = logging.getLogger('twint')
 
 import time
 
@@ -288,7 +289,7 @@ class Twint:
                     logme.debug(__name__ + ':Twint:main:no-more-tweets')
                     break
 
-                # logging.info("[<] " + str(datetime.now()) + ':: run+Twint+main+CallingGetLimit2')
+                # logme.info("[<] " + str(datetime.now()) + ':: run+Twint+main+CallingGetLimit2')
                 if get.Limit(self.config.Limit, self.count):
                     logme.debug(__name__ + ':Twint:main:reachedLimit')
                     break

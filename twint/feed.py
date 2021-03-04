@@ -5,7 +5,8 @@ from bs4 import BeautifulSoup
 from re import findall
 from json import loads
 
-import logging as logme
+import logging
+logme = logging.getLogger('twint')
 
 from .tweet import utc_to_local, Tweet_formats
 

@@ -1,5 +1,7 @@
 import datetime
-import logging as logme
+import logging
+
+logme = logging.getLogger('twint')
 
 
 class user:
