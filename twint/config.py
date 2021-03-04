@@ -39,7 +39,7 @@ class Config:
     Favorites: bool = False
     TwitterSearch: bool = False
     User_full: bool = False
-    # Profile_full: bool = False
+    Profile_full: bool = False
     Store_object: bool = False
     Store_object_tweets_list: list = None
     Store_object_users_list: list = None
