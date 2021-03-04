@@ -21,7 +21,7 @@ def Follow(response):
     follow = soup.find_all("td", "info fifty screenname")
     cursor = soup.find_all("div", "w-button-more")
     try:
-        cursor = findall(r'cursor=(.*?)">', str(cursor))[0]
+        cursor = findall(r'cursor=(.*?)">', str(cursor))
     except IndexError:
         logme.critical(__name__ + ':Follow:IndexError')
 
