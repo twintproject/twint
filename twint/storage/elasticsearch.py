@@ -342,8 +342,8 @@ def UserProfile(user, config):
                 "followers": user.followers,
                 "likes": user.likes,
                 "media": user.media_count,
-                "private": user.is_private,
-                "verified": user.is_verified,
+                "private": int(user.is_private),
+                "verified": int(user.is_verified),
                 "avatar": user.avatar,
                 "background_image": user.background_image,
                 "session": config.Essid
