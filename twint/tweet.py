@@ -8,13 +8,19 @@ from googletransx import Translator
 translator = Translator()
 
 
-class tweet:
+class Tweet:
     """Define Tweet class
     """
     type = "tweet"
 
     def __init__(self):
         pass
+
+    def __str__(self):
+        return f"{self.__dict__}"
+
+    def __repr__(self):
+        return f"{self.__dict__}"
 
 
 def utc_to_local(utc_dt):
@@ -73,11 +79,11 @@ def getText(tw):
     return text
 
 
-def Tweet(tw, config):
+def extractTweet(tw, config):
     """Create Tweet object
     """
     logme.debug(__name__ + ':Tweet')
-    t = tweet()
+    t = Tweet()
     t.id = int(tw['id_str'])
     t.id_str = tw["id_str"]
     t.conversation_id = tw["conversation_id_str"]

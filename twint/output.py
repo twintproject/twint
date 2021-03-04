@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from . import format, get
-from .tweet import Tweet
+from .tweet import extractTweet
 from .user import User
 from .storage import db, elasticsearch, write, panda
 
@@ -128,7 +128,7 @@ def _output(obj, output, config, **extra):
 
 async def checkData(tweet, config, conn):
     logme.debug(__name__ + ':checkData')
-    tweet = Tweet(tweet, config)
+    tweet = extractTweet(tweet, config)
     if not tweet.datestamp:
         logme.critical(__name__ + ':checkData:hiddenTweetFound')
         print("[x] Hidden tweet found, account suspended due to violation of TOS")
