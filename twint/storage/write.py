@@ -4,6 +4,13 @@ import json
 import os
 
 def outputExt(objType, fType):
+    """
+    return file extension
+
+    Args:
+        objType :
+        fType :
+    """
     if objType == "str":
         objType = "username"
     outExt = f"/{objType}s.{fType}"
@@ -11,6 +18,14 @@ def outputExt(objType, fType):
     return outExt
 
 def addExt(base, objType, fType):
+    """
+    Add extension to base.
+
+    Args:
+        base :
+        objType :
+        fType :
+    """
     if len(base.split('.')) == 1:
         createDirIfMissing(base)
         base += outputExt(objType, fType)
@@ -18,9 +33,22 @@ def addExt(base, objType, fType):
     return base
 
 def Text(entry, f):
+    """
+    Write entry to file f
+
+    Args:
+        entry :
+        f :
+    """
     print(entry.replace('\n', ' '), file=open(f, "a", encoding="utf-8"))
 
 def Type(config):
+    """
+    Determine the type of the user.
+
+    Args:
+        config :
+    """
     if config.User_full:
         _type = "user"
     elif config.Followers or config.Following:
@@ -43,10 +71,23 @@ def struct(obj, custom, _type):
     return fieldnames, row
 
 def createDirIfMissing(dirname):
+    """
+    Creates a directory if it doesn t exist.
+
+    Args:
+        dirname :
+    """
     if not os.path.exists(dirname):
         os.makedirs(dirname)
 
 def Csv(obj, config):
+    """
+    Export an object to CSV.
+
+    Args:
+        obj :
+        config :
+    """
     _obj_type = obj.__class__.__name__
     if _obj_type == "str":
         _obj_type = "username"
@@ -65,6 +106,13 @@ def Csv(obj, config):
         writer.writerow(row)
 
 def Json(obj, config):
+    """
+    wirtes JSON representation of an object to file
+
+    Args:
+        obj :
+        config :
+    """
     _obj_type = obj.__class__.__name__
     if _obj_type == "str":
         _obj_type = "username"
