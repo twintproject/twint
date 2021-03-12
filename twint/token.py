@@ -20,9 +20,23 @@ class Token:
         self._session = requests.Session()
         self._session.headers.update({'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101 Firefox/78.0'})
         self.config = config
+        self.proxies = self._set_proxies()
         self._retries = 5
         self._timeout = 10
         self.url = 'https://twitter.com'
+
+    def _set_proxies(self) -> dict:
+        if not self.config.get('Proxy_host'):
+            logme.debug(f"No proxy host in config")
+            return {}
+        if not self.config.get('Proxy_port'):
+            logme.debug(f"No proxy port in config")
+            return {}
+        if not self.config.get('Proxy_type'):
+            logme.debug(f"No proxy type in config")
+            return {}
+        self.proxies = {
+            str(self.config.get('Proxy_type')): f"{self.config.get('Proxy_host')}:{self.config.get('Proxy_port')}"}
 
     def _request(self):
         for attempt in range(self._retries + 1):
@@ -30,7 +44,16 @@ class Token:
             req = self._session.prepare_request(requests.Request('GET', self.url))
             logme.debug(f'Retrieving {req.url}')
             try:
-                r = self._session.send(req, allow_redirects=True, timeout=self._timeout)
+                if self.proxies:
+                    r = self._session.send(
+                        req,
+                        allow_redirects=True,
+                        timeout=self._timeout,
+                        proxies=self.proxies,
+                        verify=False
+                    )
+                else:
+                    r = self._session.send(req, allow_redirects=True, timeout=self._timeout)
             except requests.exceptions.RequestException as exc:
                 if attempt < self._retries:
                     retrying = ', retrying'
