@@ -67,7 +67,15 @@ pipenv install git+https://github.com/twintproject/twint.git#egg=twint
 
 **Added**: Dockerfile
 
-Noticed a lot of people are having issues installing (including me). Please use the Dockerfile temporarily while I look into them. 
+Noticed a lot of people are having issues installing (including me). Please use the Dockerfile temporarily while I look into them.
+
+**Docker file usage**
+```bash
+wget https://raw.githubusercontent.com/twintproject/twint/master/Dockerfile
+docker build -t twintproject/twint:latest .
+# using the --rm flag will purge the container after executing the command!
+docker run -ti --rm twintproject/twint:latest twint -h
+```
 
 ## CLI Basic Examples and Combos
 A few simple examples to help you understand the basics:
