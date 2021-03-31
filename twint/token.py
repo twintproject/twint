@@ -26,13 +26,13 @@ class Token:
         self.url = 'https://twitter.com'
 
     def _get_proxies(self) -> dict:
-        if not self.config.get('Proxy_host'):
+        if not self.config.Proxy_host:
             logme.debug(f"No proxy host in config")
             return {}
-        if not self.config.get('Proxy_port'):
+        if not self.config.Proxy_port:
             logme.debug(f"No proxy port in config")
             return {}
-        if not self.config.get('Proxy_type'):
+        if not self.config.Proxy_type:
             logme.debug(f"No proxy type in config")
             return {}
         return {
