@@ -36,7 +36,7 @@ class Token:
             logme.debug(f"No proxy type in config")
             return {}
         return {
-            str(self.config.get('Proxy_type')): f"{self.config.get('Proxy_host')}:{self.config.get('Proxy_port')}"
+            str(self.config.Proxy_type): f"{self.config.Proxy_host}:{self.config.Proxy_port}"
         }
 
     def _request(self):
