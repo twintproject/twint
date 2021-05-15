@@ -23,30 +23,38 @@ def User(ur):
         logme.fatal(msg)
         raise KeyError(msg)
     _usr = user()
-    _usr.id = ur['data']['user']['rest_id']
-    _usr.name = ur['data']['user']['legacy']['name']
-    _usr.username = ur['data']['user']['legacy']['screen_name']
-    _usr.bio = ur['data']['user']['legacy']['description']
-    _usr.location = ur['data']['user']['legacy']['location']
-    _usr.url = ur['data']['user']['legacy']['url']
-    # parsing date to user-friendly format
-    _dt = ur['data']['user']['legacy']['created_at']
-    _dt = datetime.datetime.strptime(_dt, '%a %b %d %H:%M:%S %z %Y')
-    # date is of the format year,
-    _usr.join_date = _dt.strftime(User_formats['join_date'])
-    _usr.join_time = _dt.strftime(User_formats['join_time'])
+    user_json = ur['data']['user']
+    _usr.id = user_json['rest_id']
 
-    # :type `int`
-    _usr.tweets = int(ur['data']['user']['legacy']['statuses_count'])
-    _usr.following = int(ur['data']['user']['legacy']['friends_count'])
-    _usr.followers = int(ur['data']['user']['legacy']['followers_count'])
-    _usr.likes = int(ur['data']['user']['legacy']['favourites_count'])
-    _usr.media_count = int(ur['data']['user']['legacy']['media_count'])
+    if 'legacy' in user_json.keys():
+        legacy_json = user_json['legacy']
+        _usr.name = legacy_json['name']
+        _usr.username = legacy_json['screen_name']
+        _usr.bio = legacy_json['description'] if 'description' in legacy_json.keys() else None
+        _usr.location = legacy_json['location'] if 'location' in legacy_json.keys() else None
+        _usr.url = legacy_json['url'] if 'url' in legacy_json.keys() else None
+        # parsing date to user-friendly format
+        _dt = legacy_json['created_at']
+        _dt = datetime.datetime.strptime(_dt, '%a %b %d %H:%M:%S %z %Y')
+        # date is of the format year,
+        _usr.join_date = _dt.strftime(User_formats['join_date'])
+        _usr.join_time = _dt.strftime(User_formats['join_time'])
 
-    _usr.is_private = ur['data']['user']['legacy']['protected']
-    _usr.is_verified = ur['data']['user']['legacy']['verified']
-    _usr.avatar = ur['data']['user']['legacy']['profile_image_url_https']
-    _usr.background_image = ur['data']['user']['legacy']['profile_banner_url']
+        # :type `int`
+        _usr.tweets = int(legacy_json['statuses_count'])
+        _usr.following = int(legacy_json['friends_count'])
+        _usr.followers = int(legacy_json['followers_count'])
+        _usr.likes = int(legacy_json['favourites_count'])
+        _usr.media_count = int(legacy_json['media_count']) if 'media_count' in legacy_json.keys() else None
+        _usr.listed_count = int(legacy_json['listed_count']) if 'listed_count' in legacy_json.keys() else None
+
+        _usr.is_private = legacy_json['protected']
+        _usr.is_verified = legacy_json['verified']
+        _usr.avatar = legacy_json['profile_image_url_https']
+        _usr.background_image = legacy_json[
+            'profile_banner_url'] if 'profile_banner_url' in legacy_json.keys() else None
+        _usr.entities = legacy_json['entities'] if 'entities' in legacy_json.keys() else None
+
     # TODO : future implementation
     # legacy_extended_profile is also available in some cases which can be used to get DOB of user
     return _usr
