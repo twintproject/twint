@@ -19,6 +19,7 @@ class user:
     is_private = None
     avatar = None
     background_image = None
+    listed_count = None
 
     def __init__(self):
         pass
@@ -60,6 +61,7 @@ def User(ur):
         _usr.followers = int(ur['data']['user']['legacy'].get('followers_count', 0))
         _usr.likes = int(ur['data']['user']['legacy'].get('favourites_count', 0))
         _usr.media_count = int(ur['data']['user']['legacy'].get('media_count', 0))
+        _usr.listed_count = int(ur['data']['user']['legacy'].get('listed_count', 0))
 
         _usr.is_private = ur['data']['user']['legacy'].get('protected')
         _usr.is_verified = ur['data']['user']['legacy'].get('verified')
