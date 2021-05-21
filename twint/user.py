@@ -20,6 +20,7 @@ class user:
     avatar = None
     background_image = None
     listed_count = None
+    entities = []
 
     def __init__(self):
         pass
@@ -67,6 +68,8 @@ def User(ur):
         _usr.is_verified = ur['data']['user']['legacy'].get('verified')
         _usr.avatar = ur['data']['user']['legacy'].get('profile_image_url_https', '')
         _usr.background_image = ur['data']['user']['legacy'].get('profile_banner_url')
+        _usr.entities = ur['data']['user']['legacy'].get('entities')
+
     # TODO : future implementation
     # legacy_extended_profile is also available in some cases which can be used to get DOB of user
     return _usr
