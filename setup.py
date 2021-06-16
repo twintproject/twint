@@ -16,7 +16,7 @@ VERSION = None
 REQUIRED = [
     'aiohttp', 'aiodns', 'beautifulsoup4', 'cchardet', 'dataclasses',
     'elasticsearch', 'pysocks', 'pandas', 'aiohttp_socks',
-    'schedule', 'geopy', 'fake-useragent', 'googletransx'
+    'schedule', 'geopy', 'fake-useragent', 'googletrans'
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))

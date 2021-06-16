@@ -36,7 +36,7 @@ Twitter limits scrolls while browsing the user timeline. This means that with `.
 - schedule;
 - geopy;
 - fake-useragent;
-- py-googletransx.
+- py-googletrans.
 
 ## Installing
 
