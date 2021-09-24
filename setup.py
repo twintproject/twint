@@ -2,6 +2,7 @@
 from setuptools import setup
 import io
 import os
+import sys
 
 # Package meta-data
 NAME = 'twint'
@@ -14,10 +15,12 @@ VERSION = None
 
 # Packages required
 REQUIRED = [
-    'aiohttp', 'aiodns', 'beautifulsoup4', 'cchardet', 'dataclasses',
+    'aiohttp', 'aiodns', 'beautifulsoup4', 'cchardet',
     'elasticsearch', 'pysocks', 'pandas', 'aiohttp_socks',
     'schedule', 'geopy', 'fake-useragent', 'googletransx'
 ]
+if sys.version_info.major >= 3 and sys.version_info.minor < 7:
+    REQUIRED.append("dataclasses")
 
 here = os.path.abspath(os.path.dirname(__file__))
 
