@@ -67,6 +67,16 @@ pipenv install git+https://github.com/twintproject/twint.git#egg=twint
 
 **Added**: Dockerfile
 
+## Docker usage:
+
+```
+git clone --depth=1 https://github.com/twintproject/twint.git && \
+cd twint && \
+docker build -t twint . && \
+docker run -it twint sh -c 'twint -u jack --search Twitter'
+```
+
+
 Noticed a lot of people are having issues installing (including me). Please use the Dockerfile temporarily while I look into them. 
 
 ## CLI Basic Examples and Combos
