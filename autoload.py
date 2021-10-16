@@ -8,7 +8,7 @@ import os
 TWT_FILE_NAME = 'cibc.json'
 TWT_LIMIT_RESULT = 1000
 TWT_SINCE_RESULT = "2019-01-01"
-TWT_SEARCH_FOR = 'cibc'
+TWT_SEARCH_FOR = '@cibc'
 TWT_HIDE_OUTPUT = True
 
 def jobsone():
