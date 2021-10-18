@@ -11,6 +11,7 @@ TWT_SINCE_RESULT = "2019-01-01"
 TWT_SEARCH_FOR = '@rbc'
 TWT_HIDE_OUTPUT = True
 
+
 def jobsone():
 	'''First search.
 
