@@ -140,9 +140,8 @@ def jobsfour():
 	jobsthree('bmo.json', '@BMO')
 	jobsthree('national.json', '@nationalbank')
 	jobsthree('rbc.json', '@RBC')
-
-	#jobsthree('td.json', '@TD_Canada')
-	#jobsthree('scotia.json', '@scotiabank')
+	jobsthree('td.json', '@TD_Canada')
+	jobsthree('scotia.json', '@scotiabank')
 
 	print("Going to sleep")
 
