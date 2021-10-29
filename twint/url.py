@@ -109,8 +109,9 @@ async def Search(config, init):
         config.Geo = config.Geo.replace(" ", "")
         q += f" geocode:{config.Geo}"
     if config.Search:
-
-        q += f" {config.Search} lang:{config.Lang}"
+        q += f" {config.Search}
+    if config.Lang:
+        q += f" lang:{config.Lang}"
     if config.Year:
         q += f" until:{config.Year}-1-1"
     if config.Since:
