@@ -51,8 +51,8 @@ def _get_reply_to(tw):
         reply_to = [
             {
                 'screen_name': _mention['screen_name'],
-                'name': _mention['name'],
-                'id': _mention['id_str'],
+                'username': _mention['name'],
+                'user_id': _mention['id_str'],
             } for _mention in tw['entities']['user_mentions']
             if tw['display_text_range'][0] > _mention['indices'][1]
         ]
