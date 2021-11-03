@@ -63,11 +63,17 @@ pip3 install --user --upgrade git+https://github.com/twintproject/twint.git@orig
 pipenv install git+https://github.com/twintproject/twint.git#egg=twint
 ```
 
-### March 2, 2021 Update
+### Docker
 
-**Added**: Dockerfile
+##### Build
+```bash
+docker build . -t twint
+```
 
-Noticed a lot of people are having issues installing (including me). Please use the Dockerfile temporarily while I look into them. 
+##### Run
+```bash
+docker run --rm -it -v "$PWD:/root/output"  twint -u PROFILE --user-full --json -o output/PROFILE.json
+```
 
 ## CLI Basic Examples and Combos
 A few simple examples to help you understand the basics:
