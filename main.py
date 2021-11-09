@@ -69,7 +69,7 @@ def gcp_AppendToFilesJSON():
         _gcp_CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], bucket)
         SearchNewerTweets(f['localfilepath'], f['search'])
         #_gcp_CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], bucket)
-        result = f['bucketfilepath'] + ' ' + f['localfilepath'] + ' ' + f['localfilepath'] + ' ' + f['bucketfilepath']
+        result = f['bucketfilepath'] + ' ' + f['localfilepath'] + " " + f['localfilepath'] + ' ' + f['localfilepath'] + ' ' + f['bucketfilepath']
     
     return result #'200'
 
