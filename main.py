@@ -8,9 +8,12 @@ import twint
 import pandas
 import flask
 
+from google.cloud import storage
+
 from shutil import copyfile
 from datetime import datetime
 import json
+import os
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
@@ -22,15 +25,6 @@ def TweetSearch():
     '''
     
     '''
-
-    fileinfo = {'filepath' : 'tmpdata/src/cibc.json', 'search': 'cibc'}
-    files = []
-    files.append(fileinfo)
-
-    for f in files:
-        _CopyFileFromBucket(f['filepath'], '')
-        SearchNewerTweets('tmpdata/dst/cibc.json', f['search'])
-        _CopyFileToBucket(f['filepath'], '')    
 
     c = twint.Config()
     c.Search = "airtransat"
@@ -56,40 +50,37 @@ Approach:
 '''
 
 
-@app.route("/er", methods=["GET"])
+@app.route("/update", methods=["GET"])
 def AppendToFilesJSON():
-
-    fileinfo = {'filepath' : 'tmpdata/src/cibc.json', 'search': 'cibc'}
-
-    '''
+    bucket_dir = os.path.join('tmpdata', 'src')
+    local_dir = os.path.join('tmpdata', 'dst')
+    fileinfo = {'bucketfilepath' : os.path.join(bucket_dir, 'cibc.json'), 'localfilepath' : os.path.join(local_dir, 'cibc.json'), 'search': 'cibc'}
     files = []
     files.append(fileinfo)
 
     for f in files:
-        _CopyFileFromBucket(f['filepath'], '')
-        _CopyFileToBucket(f['filepath'], '')
+        _CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], '')
+        SearchNewerTweets(f['localfilepath'], f['search'])
+        _CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], '') 
 
-    '''
-    return 200
+    return '200'
 
-def _CopyFileFromBucket(srcfilepath, bucket):
-    dst = 'tmpdata/dst/cibc.json'
-    copyfile(srcfilepath, dst)
+def _CopyFileFromBucket(srcfilepath, destfilepath, bucket):
+    #TODO: error handling (log when file does not exist; but continue)
+    copyfile(srcfilepath, destfilepath)
     return 0
 
-def _CopyFileToBucket(dstfilepath, bucket):
-    srcfilepath = 'tmpdata/dst/cibc.json'
-    dst = dstfilepath
-    dst='tmpdata/src/cibc2.json'
-    #dst='tmpdata/src/'
-    copyfile(srcfilepath, dst)
+def _CopyFileToBucket(srcfilepath, destfilepath, bucket):
+    #TODO: error handling (log when file does not exist; but continue)
+    copyfile(srcfilepath, destfilepath)
     return 0
 
 def SearchNewerTweets(filename_str, search_str):
-	'''Subsequent search.
+	'''Searches for new tweets after the latest tweet present in the file.
 
-	Since only a limited number of tweets are returned (seemingly random in number),
-	subsequent jobs are required to get the full set of results.
+    Since TWINT returns a limited and undefined number of tweets, there 
+    is no guarantee that this results in a full file. Hence this would
+    need to be run consistently and frequently to build histor.
     TODO: logic to ensure all tweets are obtained... (not worth it - only start from 'now'; history requires manual work)
 	'''
 
