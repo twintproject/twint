@@ -49,6 +49,8 @@ Approach:
 - copy files from local to bucket
 '''
 
+
+@app.route("/append", methods=["GET"])
 def _AppendToFilesJSON():
 
     fileinfo = {'filepath' : 'tempdata/src/cibc.json', 'search': 'cibc'}
@@ -57,12 +59,18 @@ def _AppendToFilesJSON():
 
     for f in files:
         _CopyFileFromBucket(f['filepath'], '')
-
+        _CopyFileToBucket(f['filepath'], '')
 
 
     return 0
 
 def _CopyFileFromBucket(srcfilepath, bucket):
     dst = 'tempdata/dst/cibc.json'
+    copyfile(srcfilepath, dst)
+    return 0
+
+def _CopyFileToBucket(dstfilepath, bucket):
+    srcfilepath = 'tempdata/dst/cibc.json'
+    dst = dstfilepath
     copyfile(srcfilepath, dst)
     return 0
