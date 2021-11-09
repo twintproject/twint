@@ -1,4 +1,4 @@
-aiohttp
+aiohttp==3.7.0
 aiodns
 beautifulsoup4
 cchardet
@@ -11,5 +11,3 @@ schedule
 geopy
 fake-useragent
 googletransx
-Flask==2.0.1
-google-cloud-storage
