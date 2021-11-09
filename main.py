@@ -62,12 +62,13 @@ def gcp_AppendToFilesJSON():
     bucketName = 'industrious-eye-330414.appspot.com'
     bucket = storage_client.get_bucket(bucketName)
 
+    '''
     for f in files:
         #TODO: prevent copying if file already exists in /tmp
         _gcp_CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], bucket)
         SearchNewerTweets(f['localfilepath'], f['search'])
         _gcp_CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], bucket) 
-
+    '''
 
     return '200'
 
