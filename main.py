@@ -66,7 +66,7 @@ def gcp_AppendToFilesJSON():
         #TODO: prevent copying if file already exists in /tmp
         _gcp_CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], bucket)
         SearchNewerTweets(f['localfilepath'], f['search'])
-        #_gcp_CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], bucket) 
+        _gcp_CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], bucket) 
     
     return '200'
 
