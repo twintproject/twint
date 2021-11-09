@@ -32,12 +32,6 @@ def TweetSearch():
     
     return tweets
 
-if __name__ == "__main__":
-    # Used when running locally only. When deploying to Google App
-    # Engine, a webserver process such as Gunicorn will serve the app. This
-    # can be configured by adding an `entrypoint` to app.yaml.
-    
-    app.run(host="localhost", port=8080, debug=True)
 
 ''' 
 Approach:
@@ -77,3 +71,11 @@ def _CopyFileToBucket(dstfilepath, bucket):
     dst='tempdata/src/cibc2.json'
     copyfile(srcfilepath, dst)
     return 0
+
+
+if __name__ == "__main__":
+    # Used when running locally only. When deploying to Google App
+    # Engine, a webserver process such as Gunicorn will serve the app. This
+    # can be configured by adding an `entrypoint` to app.yaml.
+    
+    app.run(host="localhost", port=8080, debug=True)
