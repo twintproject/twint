@@ -49,21 +49,56 @@ Approach:
 - copy files from local to bucket
 '''
 
+@app.route("/updategcp", methods=["GET"])
+def gcp_AppendToFilesJSON():
+    bucket_dir = os.path.join('')
+    local_dir = os.path.join('/tmp')
+
+    fileinfo = {'bucketfilepath' : os.path.join(bucket_dir, 'cibc.json'), 'localfilepath' : os.path.join(local_dir, 'cibc.json'), 'search': 'cibc'}
+    files = []
+    files.append(fileinfo)
+
+    storage_client = storage.Client()
+    bucketName = 'industrious-eye-330414.appspot.com'
+    bucket = storage_client.get_bucket(bucketName)
+
+    for f in files:
+        #TODO: prevent copying if file already exists in /tmp
+        _gcp_CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], bucket)
+        SearchNewerTweets(f['localfilepath'], f['search'])
+        _gcp_CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], bucket) 
+
+
+    return '200'
 
 @app.route("/update", methods=["GET"])
 def AppendToFilesJSON():
     bucket_dir = os.path.join('tmpdata', 'src')
     local_dir = os.path.join('tmpdata', 'dst')
+
     fileinfo = {'bucketfilepath' : os.path.join(bucket_dir, 'cibc.json'), 'localfilepath' : os.path.join(local_dir, 'cibc.json'), 'search': 'cibc'}
     files = []
     files.append(fileinfo)
 
     for f in files:
+        #TODO: prevent copying if file already exists in /tmp
         _CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], '')
         SearchNewerTweets(f['localfilepath'], f['search'])
         _CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], '') 
 
     return '200'
+
+def _gcp_CopyFileFromBucket(srcfilepath, destfilepath, bucket):
+    #TODO: error handling (log when file does not exist; but continue)
+    blob = bucket.blob(srcfilepath)
+    blob.download_to_filename(destfilepath)
+    return 0
+
+def _gcp_CopyFileToBucket(srcfilepath, destfilepath, bucket):
+    #TODO: error handling (log when file does not exist; but continue)
+    blob = bucket.blob(srcfilepath)
+    blob.upload_from_filename(destfilepath)
+    return 0
 
 def _CopyFileFromBucket(srcfilepath, destfilepath, bucket):
     #TODO: error handling (log when file does not exist; but continue)
