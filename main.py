@@ -15,7 +15,7 @@ from shutil import copyfile
 app = flask.Flask(__name__)
 
 # Available at http://127.0.0.1:8080/ when using Development Docker image and VS Code
-@app.route("/", methods=["GET"])
+@app.route("/tmp", methods=["GET"])
 def TweetSearch():
     '''
     
@@ -50,10 +50,12 @@ Approach:
 '''
 
 
-@app.route("/append", methods=["GET"])
+@app.route("/", methods=["GET"])
 def _AppendToFilesJSON():
 
     fileinfo = {'filepath' : 'tempdata/src/cibc.json', 'search': 'cibc'}
+
+    '''
     files = []
     files.append(fileinfo)
 
@@ -61,8 +63,8 @@ def _AppendToFilesJSON():
         _CopyFileFromBucket(f['filepath'], '')
         _CopyFileToBucket(f['filepath'], '')
 
-
-    return 0
+    '''
+    return 200
 
 def _CopyFileFromBucket(srcfilepath, bucket):
     dst = 'tempdata/dst/cibc.json'
@@ -72,5 +74,6 @@ def _CopyFileFromBucket(srcfilepath, bucket):
 def _CopyFileToBucket(dstfilepath, bucket):
     srcfilepath = 'tempdata/dst/cibc.json'
     dst = dstfilepath
+    dst='tempdata/src/cibc2.json'
     copyfile(srcfilepath, dst)
     return 0
