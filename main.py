@@ -5,14 +5,20 @@ TODO: Maybe can specify a file name instead of relying on 'main.py'?
 '''
 
 import twint
+import pandas
 
 def TweetSearch():
     c = twint.Config()
-    c.Search = "CIBC"
+    c.Search = "airtransat"
     c.Limit = 2
+    c.Hide_output = True
+    c.Pandas = True
     twint.run.Search(c)
     
-    return 200
+    df = twint.storage.panda.Tweets_df
+    tweets = str(df.sample(5)['tweet'])
+    
+    return tweets
 
 
 
