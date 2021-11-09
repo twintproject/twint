@@ -65,7 +65,7 @@ def gcp_AppendToFilesJSON():
     for f in files:
         #TODO: prevent copying if file already exists in /tmp
         _gcp_CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], bucket)
-        #SearchNewerTweets(f['localfilepath'], f['search'])
+        SearchNewerTweets(f['localfilepath'], f['search'])
         #_gcp_CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], bucket) 
     
     return '200'
@@ -95,8 +95,8 @@ def _gcp_CopyFileFromBucket(srcfilepath, destfilepath, bucket):
 
 def _gcp_CopyFileToBucket(srcfilepath, destfilepath, bucket):
     #TODO: error handling (log when file does not exist; but continue)
-    blob = bucket.blob(srcfilepath)
-    blob.upload_from_filename(destfilepath)
+    blob = bucket.blob(destfilepath)
+    blob.upload_from_filename(srcfilepath)
     return 0
 
 def _CopyFileFromBucket(srcfilepath, destfilepath, bucket):
