@@ -51,7 +51,7 @@ Approach:
 
 
 @app.route("/", methods=["GET"])
-def _AppendToFilesJSON():
+def AppendToFilesJSON():
 
     fileinfo = {'filepath' : 'tempdata/src/cibc.json', 'search': 'cibc'}
 
