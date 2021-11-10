@@ -12,6 +12,14 @@ files:
     search: RBC
   - filename: td.json
     search: TD_Canada
+  - filename: laurentian.json
+    search: laurentian_b
+  - filename: laurentienne.json
+    search: BLaurentienne
+  - filename: desjardins.json
+    search: DesjardinsCoop
+  - filename: desjardinsgroup.json
+    search: DesjardinsGroup
   - filename: transat.json
     search: airtransat
   - filename: ac.json
