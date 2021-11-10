@@ -65,7 +65,7 @@ TODO: Set custom entrypoint (gunicorn, nginx)- some incomplete info: https://sta
 @app.route("/configgcp", methods=["GET"])
 def gcp_TestConfig():
     result = ParseFilesFromConfig(ReadConfigFileGCP())
-    return result
+    return str(result)
 
 @app.route("/updategcp", methods=["GET"])
 def gcp_AppendToFilesJSON():
