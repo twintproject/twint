@@ -67,7 +67,7 @@ def gcp_AppendToFilesJSON():
 
     result = ""
 
-    myfiles = [f for f in listdir('/tmp')]
+    myfiles = [f for f in listdir(local_dir)]
     result = result + ' Files in tmp folder before: '
     for f in myfiles:
         result = result + '\n' + f
