@@ -15,6 +15,8 @@ from datetime import datetime
 import json
 import os
 
+from os import listdir
+
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
 app = flask.Flask(__name__)
@@ -65,8 +67,7 @@ def gcp_AppendToFilesJSON():
 
     result = ""
 
-    from os import listdir
-    myfiles = [f for f in listdir(local_dir)]
+    myfiles = [f for f in listdir('/tmp')]
     for f in myfiles:
         result = result + '/n' + f
 
@@ -79,9 +80,7 @@ def gcp_AppendToFilesJSON():
         result = f['bucketfilepath'] + ' ' + f['localfilepath'] + " " + f['localfilepath'] + ' ' + f['localfilepath'] + ' ' + f['bucketfilepath']
     
     #result = result + '--' + str(latest_tweet_in_file(os.path.join(local_dir, 'cibc.json')))
-    for f in myfiles:
-        result = result + '/n' + f
-        
+
     return result #'200'
 
 @app.route("/update", methods=["GET"])
