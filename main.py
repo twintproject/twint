@@ -155,7 +155,7 @@ def SearchNewerTweets(filename_str, search_str):
 	#c.Until = str(earliest_tweet_in_file())
 	c.Since = str(latest_tweet_in_file(filename_str))
 	# set limit on total tweets
-	c.Limit = 1000 
+	c.Limit = 2000 
 	# no idea, but makes the csv format properly
 	#c.Store_csv = True
 	# format of the csv
