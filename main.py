@@ -72,16 +72,12 @@ def gcp_AppendToFilesJSON():
     for f in myfiles:
         result = result + '\n' + f
 
-    #myfiles = [f for f in listdir('/tmp')]
-    #for f in myfiles:
-     #   result = result + '\n' + f
-
     result = result + ' Looped files and folders: '
 
     for f in files:
         #TODO: prevent copying if file already exists in /tmp
         _gcp_CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], bucket)
-        #SearchNewerTweets(f['localfilepath'], f['search']) # This does not work; results in error. I thought this worked a few times, but I guess not. THIS IS DISASTROUS AS THIS IS THE TWINT functionality.
+        SearchNewerTweets(f['localfilepath'], f['search']) # This does not work; results in error. I thought this worked a few times, but I guess not. THIS IS DISASTROUS AS THIS IS THE TWINT functionality.
         _gcp_CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], bucket)
         #_gcp_CopyFileToBucket(f['localfilepath'], 'cibc_updated.json', bucket)
         result = result + f['bucketfilepath'] + ' ' + f['localfilepath'] + " " + f['localfilepath'] + ' ' + f['localfilepath'] + ' ' + f['bucketfilepath']
@@ -151,7 +147,7 @@ def SearchNewerTweets(filename_str, search_str):
 	#c.Until = str(earliest_tweet_in_file())
 	c.Since = str(latest_tweet_in_file(filename_str))
 	# set limit on total tweets
-	#c.Limit = TWT_LIMIT_RESULT
+	c.Limit = 1000
 	# no idea, but makes the csv format properly
 	#c.Store_csv = True
 	# format of the csv
