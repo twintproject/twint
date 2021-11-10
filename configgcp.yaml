@@ -12,3 +12,23 @@ files:
     search: RBC
   - filename: td.json
     search: TD_Canada
+  - filename: transat.json
+    search: airtransat
+  - filename: ac.json
+    search: AirCanada
+  - filename: rouge.json
+    search: AirCanadaRouge
+  - filename: acvac.json
+    search: AirCanadaVac
+  - filename: westjet.json
+    search: WestJet
+  - filename: swoop.json
+    search: FlySwoop
+  - filename: sunwingv.json
+    search: SunwingVacay
+  - filename: sunwing.json
+    search: sunwing
+  - filename: flair.json
+    search: FlairAirlines
+  - filename: owg.json
+    search: owgvoyages
