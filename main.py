@@ -196,9 +196,10 @@ def _EarliestLatestTweetDateInFile(filename_str):
     Note that a second is subtracted/added to this time.
     '''
     #TODO: not optimized
+    #TODO: not sure of time zones are dealt with properly
     tweetsmetad = []
     latest_tweet_dt = datetime(1990, 5, 17) # arbitraty, but Twitter did not exist at this date
-    earliest_tweet_dt = datetime.now(timezone.utc)
+    earliest_tweet_dt = datetime.now()
     if os.path.isfile(filename_str): #only read file if it exists
         for line in open(filename_str, 'r', encoding="utf8"):
             tweetsmetad.append(json.loads(line))
