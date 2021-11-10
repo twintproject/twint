@@ -27,7 +27,7 @@ app = flask.Flask(__name__)
 @app.route("/", methods=["GET"])
 def TweetSearch():
     '''
-    
+    Basic example using Google Cloud, Flask, Twint
     '''
 
     c = twint.Config()
@@ -43,18 +43,9 @@ def TweetSearch():
     return tweets
 
 
-''' 
-Approach:
-- Get List of files and search terms
--- either hard coded or from config file
-- Copy files from bucket to local
-- Get latest tweet datetime
-- TWINT search with JSON file and 'from' datetime
-- copy files from local to bucket
-
-TODO: config file to specify which files to read (filename, searchterm)
+'''
 TODO: randomize list of files
-TODO: Add one ms to the 'search from' datetime
+TODO: Optimize memory usage: 1 file for TWINT uses ~300MB or so; 6 use too much for F2 (now trying F4)
 TODO: return a meaningful '200' message? Now it says it fails; and it indeed shows an error/timeout; but it does update results file
 TODO: Set custom entrypoint (gunicorn, nginx)- some incomplete info: https://stackoverflow.com/questions/67463034/google-app-engine-using-custom-entry-point-with-python
 '''
@@ -67,6 +58,7 @@ def gcp_TestConfig():
     '''
     result = ParseFilesFromConfig(ReadConfigFileGCP())
     return str(result)
+
 
 @app.route("/updategcp", methods=["GET"])
 def gcp_AppendToFilesJSON():
@@ -84,7 +76,6 @@ def gcp_AppendToFilesJSON():
     bucketName = 'industrious-eye-330414.appspot.com'
     bucket = storage_client.get_bucket(bucketName)
 
-    result = ""
 
     for f in files:
         #TODO: prevent copying if file already exists in /tmp
@@ -94,7 +85,8 @@ def gcp_AppendToFilesJSON():
         _gcp_CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], bucket)
         #TODO: logging: completed adding tweets to file xyz
     
-    return '200' #result #'200'
+    return '200' # has to be a string
+
 
 @app.route("/update", methods=["GET"])
 def AppendToFilesJSON():
@@ -118,6 +110,7 @@ def AppendToFilesJSON():
         _CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], '') 
 
     return '200'
+
 
 def _gcp_CopyFileFromBucket(srcfilepath, destfilepath, bucket):
     #TODO: error handling (log when file does not exist; but continue)
@@ -202,6 +195,11 @@ def latest_tweet_in_file(filename_str):
 #################################################
 #################################################
 def ReadConfigFileGCP():
+    '''
+    Reads the config file from Google Storage
+
+    Returns the contents as a Python dictionary.
+    '''
     CONFIG_FILE = 'configgcp.yaml'
 
     #TODO: use GCP credentials; would allow for local testing
@@ -220,6 +218,8 @@ def ReadConfigFileGCP():
 
 def ReadConfigFileLocal():
     ''' 
+    Reads the config file from local storage
+
     Returns a dict with the contents of config file
     '''
     CONFIG_FILE = 'configgcp.yaml'
