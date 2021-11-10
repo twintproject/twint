@@ -102,7 +102,8 @@ def AppendToFilesJSON():
     for f in files:
         #TODO: prevent copying if file already exists in /tmp
         _CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], '')
-        SearchNewerTweets(f['localfilepath'], f['search'])
+        #SearchNewerTweets(f['localfilepath'], f['search'])
+        SearchNewerTweetsDebug(f['localfilepath'], f['search'])
         _CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], '') 
 
     return '200'
@@ -129,6 +130,14 @@ def _CopyFileToBucket(srcfilepath, destfilepath, bucket):
     copyfile(srcfilepath, destfilepath)
     return 0
 
+def SearchNewerTweetsDebug(filename_str, search_str):
+    c = twint.Config()
+    c.Search = "airtransat"
+    c.Limit = 2
+    c.Hide_output = True
+    c.Pandas = True
+    twint.run.Search(c)
+
 def SearchNewerTweets(filename_str, search_str):
 	'''Searches for new tweets after the latest tweet present in the file.
 
@@ -152,17 +161,14 @@ def SearchNewerTweets(filename_str, search_str):
 	#c.Store_csv = True
 	# format of the csv
 	#c.Custom = ["date", "time", "username", "tweet", "link", "likes", "retweets", "replies", "mentions", "hashtags"]
-	
-    #c.Store_json = True
-	
-    # change the name of the output file
-	#c.Output = filename_str
-    
+	c.Store_json = True
+	# change the name of the output file
+	c.Output = filename_str
 	c.Hide_output = True
 	twint.run.Search(c)
 
 def latest_tweet_in_file(filename_str):
-	'''Find earliest tweet captured in file.
+	'''Find latest tweet captured in file.
 	'''
 	#CONCERN: not optimized, no error catching
 	tweetsmetad = []
