@@ -147,14 +147,17 @@ def SearchNewerTweets(filename_str, search_str):
 	#c.Until = str(earliest_tweet_in_file())
 	c.Since = str(latest_tweet_in_file(filename_str))
 	# set limit on total tweets
-	c.Limit = 1000
+	c.Limit = 1000 
 	# no idea, but makes the csv format properly
 	#c.Store_csv = True
 	# format of the csv
 	#c.Custom = ["date", "time", "username", "tweet", "link", "likes", "retweets", "replies", "mentions", "hashtags"]
-	c.Store_json = True
-	# change the name of the output file
-	c.Output = filename_str
+	
+    #c.Store_json = True
+	
+    # change the name of the output file
+	#c.Output = filename_str
+    
 	c.Hide_output = True
 	twint.run.Search(c)
 
