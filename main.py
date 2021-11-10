@@ -65,6 +65,11 @@ def gcp_AppendToFilesJSON():
 
     result = ""
 
+    from os import listdir
+    myfiles = [f for f in listdir(local_dir)]
+    for f in myfiles:
+        result = result + '/n' + f
+
     for f in files:
         #TODO: prevent copying if file already exists in /tmp
         _gcp_CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], bucket)
@@ -74,7 +79,9 @@ def gcp_AppendToFilesJSON():
         result = f['bucketfilepath'] + ' ' + f['localfilepath'] + " " + f['localfilepath'] + ' ' + f['localfilepath'] + ' ' + f['bucketfilepath']
     
     #result = result + '--' + str(latest_tweet_in_file(os.path.join(local_dir, 'cibc.json')))
-
+    for f in myfiles:
+        result = result + '/n' + f
+        
     return result #'200'
 
 @app.route("/update", methods=["GET"])
