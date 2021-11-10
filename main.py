@@ -76,6 +76,9 @@ def gcp_AppendToFilesJSON():
     files = []
     files.append(fileinfo)
 
+    #TODO: remove files logic above
+    files = ParseFilesFromConfig(ReadConfigFileGCP())
+
     #TODO: use GCP credentials; would allow for local testing
     storage_client = storage.Client()
     bucketName = 'industrious-eye-330414.appspot.com'
