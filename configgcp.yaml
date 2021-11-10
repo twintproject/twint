@@ -22,6 +22,7 @@ files:
     search: DesjardinsGroup
   - filename: transat.json
     search: airtransat
+    historyfill: Yes
   - filename: ac.json
     search: AirCanada
   - filename: rouge.json

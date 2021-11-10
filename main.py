@@ -82,6 +82,8 @@ def gcp_AppendToFilesJSON():
         #TODO: logging: adding tweets to file xyz
         _gcp_CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], bucket)
         SearchNewerTweets(f['localfilepath'], f['search'])
+        if f.get('historyfill', False):
+            SearchEarlierTweets(f['localfilepath'], f['search'])
         _gcp_CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], bucket)
         #TODO: logging: completed adding tweets to file xyz
     
@@ -278,6 +280,7 @@ def ParseFilesFromConfig(configdict):
     for f in filesinfo:
         f['bucketfilepath'] = os.path.join(bucket_dir, f.get('filename', 'nothing found in config file'))
         f['localfilepath'] = os.path.join(local_dir, f.get('filename', 'nothing found in config file'))
+        f['historyfill'] = f.get('historyfill', False)
 
     return filesinfo
 
