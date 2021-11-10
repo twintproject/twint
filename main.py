@@ -82,8 +82,8 @@ def gcp_AppendToFilesJSON():
         #TODO: prevent copying if file already exists in /tmp
         _gcp_CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], bucket)
         #SearchNewerTweets(f['localfilepath'], f['search'])
-        #_gcp_CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], bucket)
-        _gcp_CopyFileToBucket(f['localfilepath'], 'cibc_updated.json', bucket)
+        _gcp_CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], bucket)
+        #_gcp_CopyFileToBucket(f['localfilepath'], 'cibc_updated.json', bucket)
         result = result + f['bucketfilepath'] + ' ' + f['localfilepath'] + " " + f['localfilepath'] + ' ' + f['localfilepath'] + ' ' + f['bucketfilepath']
     
     myfiles = [f for f in listdir(local_dir)]
