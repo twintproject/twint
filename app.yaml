@@ -1,1 +1,2 @@
 runtime: python39
+instance_class: F2 # Costs more than F1..
