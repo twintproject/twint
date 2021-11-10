@@ -58,6 +58,7 @@ def gcp_AppendToFilesJSON():
     files = []
     files.append(fileinfo)
 
+    #TODO: use GCP credentials; would allow for local testing
     storage_client = storage.Client()
     bucketName = 'industrious-eye-330414.appspot.com'
     bucket = storage_client.get_bucket(bucketName)
@@ -72,7 +73,7 @@ def gcp_AppendToFilesJSON():
         #_gcp_CopyFileToBucket(f['localfilepath'], 'cibc_updated.json', bucket)
         result = f['bucketfilepath'] + ' ' + f['localfilepath'] + " " + f['localfilepath'] + ' ' + f['localfilepath'] + ' ' + f['bucketfilepath']
     
-    result = result + '--' + str(latest_tweet_in_file(f['localfilepath']))
+    result = result + '--' + str(latest_tweet_in_file(os.path.join(local_dir, 'cibc.json')))
 
     return result #'200'
 
