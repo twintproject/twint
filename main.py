@@ -55,10 +55,7 @@ Approach:
 TODO: config file to specify which files to read (filename, searchterm)
 TODO: randomize list of files
 TODO: Add one ms to the 'search from' datetime
-TODO: probably wrap SearchNewerTweets in error handling to prevent stopping on search error?
 TODO: return a meaningful '200' message? Now it says it fails; and it indeed shows an error/timeout; but it does update results file
-TODO: GCP-AppEngine-Source Code/(AppEngine>Versions>Debug drop down at right) debugger: shows logs. Logs have error using too much memory. Use different F instance, to be set in app.yaml.
-TODO: Reduce memory footprint (does the latest tweet logic use too much? Or is it in TWINT; or is it justified given the dependencies.)
 TODO: Set custom entrypoint (gunicorn, nginx)- some incomplete info: https://stackoverflow.com/questions/67463034/google-app-engine-using-custom-entry-point-with-python
 '''
 
@@ -69,6 +66,7 @@ def gcp_TestConfig():
 
 @app.route("/updategcp", methods=["GET"])
 def gcp_AppendToFilesJSON():
+    '''    
     bucket_dir = os.path.join('')
     local_dir = os.path.join('/tmp')
 
@@ -76,6 +74,7 @@ def gcp_AppendToFilesJSON():
     files = []
     files.append(fileinfo)
 
+    '''
     #TODO: remove files logic above
     files = ParseFilesFromConfig(ReadConfigFileGCP())
 
@@ -97,9 +96,7 @@ def gcp_AppendToFilesJSON():
         #TODO: prevent copying if file already exists in /tmp
         #TODO: logging: adding tweets to file xyz
         _gcp_CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], bucket)
-        SearchNewerTweets(f['localfilepath'], f['search']) # This does not work; results in error. I thought this worked a few times, but I guess not. THIS IS DISASTROUS AS THIS IS THE TWINT functionality.
-        # BUT it DOES sometimes work. It added some tweets late last night. Is it just being blocked by Twitter for too frequent searches?
-        #SearchNewerTweetsDebug(f['localfilepath'], f['search'])
+        SearchNewerTweets(f['localfilepath'], f['search'])
         _gcp_CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], bucket)
         #TODO: logging: completed adding tweets to file xyz
         #result = result + f['bucketfilepath'] + ' ' + f['localfilepath'] + " " + f['localfilepath'] + ' ' + f['localfilepath'] + ' ' + f['bucketfilepath']
@@ -132,7 +129,10 @@ def AppendToFilesJSON():
 def _gcp_CopyFileFromBucket(srcfilepath, destfilepath, bucket):
     #TODO: error handling (log when file does not exist; but continue)
     blob = bucket.blob(srcfilepath)
-    blob.download_to_filename(destfilepath)
+
+    if blob.exists():
+        blob.download_to_filename(destfilepath)
+
     return 0
 
 def _gcp_CopyFileToBucket(srcfilepath, destfilepath, bucket):
@@ -150,14 +150,6 @@ def _CopyFileToBucket(srcfilepath, destfilepath, bucket):
     #TODO: error handling (log when file does not exist; but continue)
     copyfile(srcfilepath, destfilepath)
     return 0
-
-def SearchNewerTweetsDebug(filename_str, search_str):
-    c = twint.Config()
-    c.Search = "airtransat"
-    c.Limit = 2
-    c.Hide_output = True
-    c.Pandas = True
-    twint.run.Search(c)
 
 def SearchNewerTweets(filename_str, search_str):
 	'''Searches for new tweets after the latest tweet present in the file.
@@ -188,22 +180,22 @@ def SearchNewerTweets(filename_str, search_str):
 	c.Hide_output = True
 	twint.run.Search(c)
 
+
 def latest_tweet_in_file(filename_str):
-	'''Find latest tweet captured in file.
-	'''
-	#CONCERN: not optimized, no error catching
-	tweetsmetad = []
-	#latest_tweet_dt = datetime.now()
-	#print("---Starting ", filename_str)
-	latest_tweet_dt = datetime(1990, 5, 17) # arbitraty, but Twitter did not exist at this date
-	for line in open(filename_str, 'r', encoding="utf8"): # without this encoding french characters don't show right; also causes errors for others
-		tweetsmetad.append(json.loads(line))
-		if datetime.strptime(tweetsmetad[-1]['created_at'], '%Y-%m-%d %H:%M:%S %Z')>latest_tweet_dt:
-			latest_tweet_dt = datetime.strptime(tweetsmetad[-1]['created_at'], '%Y-%m-%d %H:%M:%S %Z')
-	#print("...Teets in file before search: ", len(tweetsmetad))
-	return(latest_tweet_dt)
+    #TODO: not optimized, no error catchin
+    tweetsmetad = []
+    latest_tweet_dt = datetime(1990, 5, 17) # arbitraty, but Twitter did not exist at this date
+    for line in open(filename_str, 'r', encoding="utf8"):
+        tweetsmetad.append(json.loads(line))
+        if datetime.strptime(tweetsmetad[-1]['created_at'], '%Y-%m-%d %H:%M:%S %Z')>latest_tweet_dt:
+            latest_tweet_dt = datetime.strptime(tweetsmetad[-1]['created_at'], '%Y-%m-%d %H:%M:%S %Z')
 
+    # adding 1 second (microseconds not captured at source) to avoid duplicates
+    latest_tweet_dt = latest_tweet_dt + datetime.timedelta(0, 1, 0)
 
+    return latest_tweet_dt
+
+    
 #################################################
 #################################################
 ## Logic for Configuration file
@@ -217,6 +209,7 @@ def ReadConfigFileGCP():
     bucketName = 'industrious-eye-330414.appspot.com'
     bucket = storage_client.get_bucket(bucketName)
     
+    # TODO: Confirm file exists; or log error    
     blob = bucket.blob(CONFIG_FILE)
     data = blob.download_as_string(client=None)
 
@@ -237,8 +230,6 @@ def ReadConfigFileLocal():
 
     return configdict
 
-
-
 def ParseFilesFromConfig(configdict):
     '''
     Read file information from configgcp file
@@ -257,8 +248,8 @@ def ParseFilesFromConfig(configdict):
     filesinfo = configdict.get('files', ['no files'])
 
     for f in filesinfo:
-        f['bucketfilepath'] = os.path.join(bucket_dir, f.get('filename'))
-        f['localfilepath'] = os.path.join(local_dir, f.get('filename'))
+        f['bucketfilepath'] = os.path.join(bucket_dir, f.get('filename', 'nothing found in config file'))
+        f['localfilepath'] = os.path.join(local_dir, f.get('filename', 'nothing found in config file'))
 
     return filesinfo
 

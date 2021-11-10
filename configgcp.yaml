@@ -2,3 +2,5 @@ version: 1
 files:
   - filename: cibc.json
     search: cibc
+  - filename: bmo.json
+    search: BMO    
