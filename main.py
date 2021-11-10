@@ -90,7 +90,7 @@ def gcp_AppendToFilesJSON():
     result = result + ' Files in tmp folder after: '
     for f in myfiles:
         result = result + '\n' + f
-    #result = result + '--' + str(latest_tweet_in_file(os.path.join(local_dir, 'cibc.json')))
+    result = result + '--' + str(latest_tweet_in_file(os.path.join(local_dir, 'cibc.json')))
 
     return result #'200'
 
