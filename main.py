@@ -17,6 +17,9 @@ import os
 
 from os import listdir
 
+from .erik import ReadConfigFileGCP
+from .erik import ParseFilesFromConfig 
+
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
 app = flask.Flask(__name__)
@@ -49,7 +52,21 @@ Approach:
 - Get latest tweet datetime
 - TWINT search with JSON file and 'from' datetime
 - copy files from local to bucket
+
+TODO: config file to specify which files to read (filename, searchterm)
+TODO: randomize list of files
+TODO: Add one ms to the 'search from' datetime
+TODO: probably wrap SearchNewerTweets in error handling to prevent stopping on search error?
+TODO: return a meaningful '200' message? Now it says it fails; and it indeed shows an error/timeout; but it does update results file
+TODO: GCP-AppEngine-Source Code/(AppEngine>Versions>Debug drop down at right) debugger: shows logs. Logs have error using too much memory. Use different F instance, to be set in app.yaml.
+TODO: Reduce memory footprint (does the latest tweet logic use too much? Or is it in TWINT; or is it justified given the dependencies.)
+TODO: Set custom entrypoint (gunicorn, nginx)- some incomplete info: https://stackoverflow.com/questions/67463034/google-app-engine-using-custom-entry-point-with-python
 '''
+
+@app.route("/configgcp", methods=["GET"])
+def gcp_TestConfig():
+    result = ParseFilesFromConfig(ReadConfigFileGCP())
+    return result
 
 @app.route("/updategcp", methods=["GET"])
 def gcp_AppendToFilesJSON():
@@ -67,30 +84,31 @@ def gcp_AppendToFilesJSON():
 
     result = ""
 
-    myfiles = [f for f in listdir(local_dir)]
-    result = result + ' Files in tmp folder before: '
-    for f in myfiles:
-        result = result + '\n' + f
+    #myfiles = [f for f in listdir(local_dir)]
+    #result = result + ' Files in tmp folder before: '
+    #for f in myfiles:
+    #    result = result + '\n' + f
 
-    result = result + ' Looped files and folders: '
+    #result = result + ' Looped files and folders: '
 
     for f in files:
         #TODO: prevent copying if file already exists in /tmp
+        #TODO: logging: adding tweets to file xyz
         _gcp_CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], bucket)
         SearchNewerTweets(f['localfilepath'], f['search']) # This does not work; results in error. I thought this worked a few times, but I guess not. THIS IS DISASTROUS AS THIS IS THE TWINT functionality.
         # BUT it DOES sometimes work. It added some tweets late last night. Is it just being blocked by Twitter for too frequent searches?
         #SearchNewerTweetsDebug(f['localfilepath'], f['search'])
         _gcp_CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], bucket)
-        #_gcp_CopyFileToBucket(f['localfilepath'], 'cibc_updated.json', bucket)
-        result = result + f['bucketfilepath'] + ' ' + f['localfilepath'] + " " + f['localfilepath'] + ' ' + f['localfilepath'] + ' ' + f['bucketfilepath']
+        #TODO: logging: completed adding tweets to file xyz
+        #result = result + f['bucketfilepath'] + ' ' + f['localfilepath'] + " " + f['localfilepath'] + ' ' + f['localfilepath'] + ' ' + f['bucketfilepath']
     
-    myfiles = [f for f in listdir(local_dir)]
-    result = result + ' Files in tmp folder after: '
-    for f in myfiles:
-        result = result + '\n' + f
-    result = result + '--' + str(latest_tweet_in_file(os.path.join(local_dir, 'cibc.json')))
+    #myfiles = [f for f in listdir(local_dir)]
+    #result = result + ' Files in tmp folder after: '
+    #for f in myfiles:
+    #    result = result + '\n' + f
+    #result = result + '--' + str(latest_tweet_in_file(os.path.join(local_dir, 'cibc.json')))
 
-    return result #'200'
+    return '200' #result #'200'
 
 @app.route("/update", methods=["GET"])
 def AppendToFilesJSON():
