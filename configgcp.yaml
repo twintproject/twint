@@ -3,4 +3,12 @@ files:
   - filename: cibc.json
     search: cibc
   - filename: bmo.json
-    search: BMO    
+    search: BMO
+  - filename: scotia.json
+    search: scotiabank
+  - filename: national.json
+    search: nationalbank
+  - filename: rbc.json
+    search: RBC
+  - filename: td.json
+    search: TD_Canada
