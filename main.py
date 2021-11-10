@@ -248,7 +248,14 @@ def ParseFilesFromConfig(configdict):
 
     This function is indepenent of location of config file (cloud, local etc.)
     '''
+    bucket_dir = os.path.join('')
+    local_dir = os.path.join('/tmp')
+    
     filesinfo = configdict.get('files', ['no files'])
+
+    for f in filesinfo:
+        f['bucketfilepath'] = os.path.join(bucket_dir, f.get('filename'))
+        f['localfilepath'] = os.path.join(local_dir, f.get('filename'))
 
     return filesinfo
 
