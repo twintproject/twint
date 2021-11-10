@@ -185,10 +185,11 @@ def latest_tweet_in_file(filename_str):
     #TODO: not optimized, no error catching
     tweetsmetad = []
     latest_tweet_dt = datetime(1990, 5, 17) # arbitraty, but Twitter did not exist at this date
-    for line in open(filename_str, 'r', encoding="utf8"):
-        tweetsmetad.append(json.loads(line))
-        if datetime.strptime(tweetsmetad[-1]['created_at'], '%Y-%m-%d %H:%M:%S %Z')>latest_tweet_dt:
-            latest_tweet_dt = datetime.strptime(tweetsmetad[-1]['created_at'], '%Y-%m-%d %H:%M:%S %Z')
+    if os.path.isfile(filename_str): #only read file if it exists
+        for line in open(filename_str, 'r', encoding="utf8"):
+            tweetsmetad.append(json.loads(line))
+            if datetime.strptime(tweetsmetad[-1]['created_at'], '%Y-%m-%d %H:%M:%S %Z')>latest_tweet_dt:
+                latest_tweet_dt = datetime.strptime(tweetsmetad[-1]['created_at'], '%Y-%m-%d %H:%M:%S %Z')
 
     # adding 1 second (microseconds not captured at source) to avoid duplicates
     latest_tweet_dt = latest_tweet_dt + timedelta(0, 1, 0)
