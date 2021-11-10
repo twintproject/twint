@@ -11,7 +11,7 @@ import flask
 from google.cloud import storage
 
 from shutil import copyfile
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 import yaml
 import os
@@ -182,7 +182,7 @@ def SearchNewerTweets(filename_str, search_str):
 
 
 def latest_tweet_in_file(filename_str):
-    #TODO: not optimized, no error catchin
+    #TODO: not optimized, no error catching
     tweetsmetad = []
     latest_tweet_dt = datetime(1990, 5, 17) # arbitraty, but Twitter did not exist at this date
     for line in open(filename_str, 'r', encoding="utf8"):
@@ -191,7 +191,7 @@ def latest_tweet_in_file(filename_str):
             latest_tweet_dt = datetime.strptime(tweetsmetad[-1]['created_at'], '%Y-%m-%d %H:%M:%S %Z')
 
     # adding 1 second (microseconds not captured at source) to avoid duplicates
-    latest_tweet_dt = latest_tweet_dt + datetime.timedelta(0, 1, 0)
+    latest_tweet_dt = latest_tweet_dt + timedelta(0, 1, 0)
 
     return latest_tweet_dt
 
