@@ -79,6 +79,9 @@ def gcp_AppendToFilesJSON():
         #_gcp_CopyFileToBucket(f['localfilepath'], 'cibc_updated.json', bucket)
         result = f['bucketfilepath'] + ' ' + f['localfilepath'] + " " + f['localfilepath'] + ' ' + f['localfilepath'] + ' ' + f['bucketfilepath']
     
+    myfiles = [f for f in listdir('/tmp')]
+    for f in myfiles:
+        result = result + '\n' + f
     #result = result + '--' + str(latest_tweet_in_file(os.path.join(local_dir, 'cibc.json')))
 
     return result #'200'
