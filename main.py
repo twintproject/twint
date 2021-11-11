@@ -44,9 +44,8 @@ def TweetSearch():
 
 
 '''
-TODO: randomize list of files
 TODO: Optimize memory usage: 1 file for TWINT uses ~300MB or so; 6 use too much for F2 (now trying F4)
-TODO: return a meaningful '200' message? Now it says it fails; and it indeed shows an error/timeout; but it does update results file
+TODO: return a meaningful '200' message?
 TODO: Set custom entrypoint (gunicorn, nginx)- some incomplete info: https://stackoverflow.com/questions/67463034/google-app-engine-using-custom-entry-point-with-python
 '''
 

@@ -14,30 +14,43 @@ files:
     search: TD_Canada
   - filename: laurentian.json
     search: laurentian_b
+    historyfill: Yes
   - filename: laurentienne.json
     search: BLaurentienne
+    historyfill: Yes
   - filename: desjardins.json
     search: DesjardinsCoop
+    historyfill: Yes
   - filename: desjardinsgroup.json
     search: DesjardinsGroup
+    historyfill: Yes
   - filename: transat.json
     search: airtransat
     historyfill: Yes
   - filename: ac.json
     search: AirCanada
+    historyfill: Yes
   - filename: rouge.json
     search: AirCanadaRouge
+    historyfill: Yes
   - filename: acvac.json
     search: AirCanadaVac
+    historyfill: Yes
   - filename: westjet.json
     search: WestJet
+    historyfill: Yes
   - filename: swoop.json
     search: FlySwoop
+    historyfill: Yes
   - filename: sunwingv.json
     search: SunwingVacay
+    historyfill: Yes
   - filename: sunwing.json
     search: sunwing
+    historyfill: Yes
   - filename: flair.json
     search: FlairAirlines
+    historyfill: Yes
   - filename: owg.json
     search: owgvoyages
+    historyfill: Yes
