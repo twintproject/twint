@@ -1,4 +1,4 @@
 cron:
 - description: "add tweets to JSON file"
   url: /updategcp
-  schedule: every 3 hours
+  schedule: every 3 hours # alternative schedule at 6:30, 14:30, 22:30

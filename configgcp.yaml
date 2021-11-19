@@ -54,3 +54,6 @@ files:
   - filename: owg.json
     search: owgvoyages
     historyfill: Yes
+  - filename: lynx.json
+    search: Lynx_Air
+    historyfill: Yes
