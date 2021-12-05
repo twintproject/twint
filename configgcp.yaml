@@ -2,16 +2,22 @@ version: 1
 files:
   - filename: cibc.json
     search: cibc
+    historyfill: No
   - filename: bmo.json
     search: BMO
+    historyfill: No
   - filename: scotia.json
     search: scotiabank
+    historyfill: No
   - filename: national.json
     search: nationalbank
+    historyfill: No
   - filename: rbc.json
     search: RBC
+    historyfill: No
   - filename: td.json
     search: TD_Canada
+    historyfill: No
   - filename: laurentian.json
     search: laurentian_b
     historyfill: Yes
@@ -56,4 +62,7 @@ files:
     historyfill: Yes
   - filename: lynx.json
     search: Lynx_Air
+    historyfill: Yes
+  - filename: jetlines.json
+    search: CA_Jetlines
     historyfill: Yes
