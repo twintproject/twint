@@ -29,7 +29,7 @@ files:
     historyfill: Yes
   - filename: ac.json
     search: AirCanada
-    historyfill: Yes
+    historyfill: No
   - filename: rouge.json
     search: AirCanadaRouge
     historyfill: Yes
