@@ -2,8 +2,17 @@ import sqlite3
 import sys
 import time
 import hashlib
+import re
+# import nltk
 
+from textblob import TextBlob
+# from nltk.stem.porter import PorterStemmer
+# from nltk.stem import WordNetLemmatizer
+# from nltk.tokenize import TweetTokenizer
 from datetime import datetime
+
+# tk = TweetTokenizer()
+# nltk.download()
 
 def Conn(database):
     if database:
@@ -56,6 +65,8 @@ def init(db):
                     id integer not null,
                     id_str text not null,
                     tweet text default '',
+                    polarity float not null,
+                    sentiment text default '',
                     language text default '',
                     conversation_id text not null,
                     created_at integer not null,
@@ -243,40 +254,64 @@ def tweets(conn, Tweet, config):
     try:
         time_ms = round(time.time()*1000)
         cursor = conn.cursor()
+        # pre-processing tweets before inserting them to db
+        tweet = Tweet.tweet.lower()
+        # remove https links
+        tweet = re.sub(r'https?:\/\/\S+', '', tweet)
+        # remove links without https
+        tweet = re.sub(r"www\.[a-z]?\.?(com)+|[a-z]+\.(com)", '', tweet)
+        # html reference
+        tweet = re.sub(r'&[a-z]+;', '', tweet)
+        # non letter
+        tweet = re.sub(r"[^a-z\s\(\-:\)\\\/\];='#]", '', tweet)
+        # mentions
+        tweet = re.sub(r'@mention', '', tweet)
+        # adding polarity and sentiment values
+        # tokenized_tweet = tk.tokenize(tweet)
+        polarity = TextBlob(tweet).sentiment.polarity
+        if polarity > 0:
+            sentiment = "positive"
+        elif polarity < 0:
+            sentiment = "negative"
+        else:
+            sentiment = "neutral"
+        
         entry = (Tweet.id,
-                    Tweet.id_str,
-                    Tweet.tweet,
-                    Tweet.lang,
-                    Tweet.conversation_id,
+                    str(Tweet.id_str),
+                    str(tweet),
+                    polarity,
+                    str(sentiment),
+                    str(Tweet.lang),
+                    str(Tweet.conversation_id),
                     Tweet.datetime,
-                    Tweet.datestamp,
-                    Tweet.timestamp,
-                    Tweet.timezone,
-                    Tweet.place,
+                    str(Tweet.datestamp),
+                    str(Tweet.timestamp),
+                    str(Tweet.timezone),
+                    str(Tweet.place),
                     Tweet.replies_count,
                     Tweet.likes_count,
                     Tweet.retweets_count,
                     Tweet.user_id,
-                    Tweet.user_id_str,
-                    Tweet.username,
-                    Tweet.name,
-                    Tweet.link,
-                    ",".join(Tweet.mentions),
-                    ",".join(Tweet.hashtags),
-                    ",".join(Tweet.cashtags),
-                    ",".join(Tweet.urls),
-                    ",".join(Tweet.photos),
-                    Tweet.thumbnail,
-                    Tweet.quote_url,
+                    str(Tweet.user_id_str),
+                    str(Tweet.username),
+                    str(Tweet.name),
+                    str(Tweet.link),
+                    ",".join(str(Tweet.mentions)),
+                    ",".join(str(Tweet.hashtags)),
+                    ",".join(str(Tweet.cashtags)),
+                    ",".join(str(Tweet.urls)),
+                    ",".join(str(Tweet.photos)),
+                    str(Tweet.thumbnail),
+                    str(Tweet.quote_url),
                     Tweet.video,
-                    Tweet.geo,
-                    Tweet.near,
-                    Tweet.source,
+                    str(Tweet.geo),
+                    str(Tweet.near),
+                    str(Tweet.source),
                     time_ms,
-                    Tweet.translate,
-                    Tweet.trans_src,
-                    Tweet.trans_dest)
-        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
+                    str(Tweet.translate),
+                    str(Tweet.trans_src),
+                    str(Tweet.trans_dest))
+        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
 
         if config.Favorites:
             query = 'INSERT INTO favorites VALUES(?,?)'
