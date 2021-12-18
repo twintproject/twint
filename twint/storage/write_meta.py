@@ -1,24 +1,24 @@
 import re             
 import string 
+import nltk
 import preprocessor as p
+
+from nltk.stem.snowball import SnowballStemmer
+from nltk.tokenize import TweetTokenizer, RegexpTokenizer
+
+nltk.download('stopwords')
+
+stemmer = SnowballStemmer("english", ignore_stopwords=True)
+token = RegexpTokenizer(r'[a-zA-Z0-9]+')
 
 def tweetData(t):
     t.tweet = t.tweet.lower()
-    t.tweet = p.clean(t.tweet)
-
     
-    # t.tweet = t.tweet.lower()
-    # t.tweet = re.sub(r'https?:\/\/\S+', '', t.tweet)
-    # t.tweet = re.sub(r"www\.[a-z]?\.?(com)+|[a-z]+\.(com)", '', t.tweet)
-    # t.tweet = re.sub(r'&[a-z]+;', '', t.tweet)
-    # t.tweet = re.sub(r"[^a-z\s\(\-:\)\\\/\];='#]", '', t.tweet)
-    # polarity = TextBlob(t.tweet).sentiment.polarity
-    # if polarity < -0.25:
-    #     sentiment = "Negative"
-    # elif polarity > 0.25:
-    #     sentiment = "Positive"
-    # else:
-    #     sentiment = "Neutral"
+   # tokenizing and stemming
+    t.tweet = p.clean(t.tweet)
+    t.tweet = token.tokenize(t.tweet)
+    t.tweet = [stemmer.stem(word) for word in t.tweet]
+    
     data = {
             # "id": int(t.id),
             # "conversation_id": t.conversation_id,
