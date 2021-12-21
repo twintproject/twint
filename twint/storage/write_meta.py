@@ -18,6 +18,7 @@ def tweetData(t):
     t.tweet = p.clean(t.tweet)
     t.tweet = token.tokenize(t.tweet)
     t.tweet = [stemmer.stem(word) for word in t.tweet]
+    t.tweet = " ".join(t.tweet)
     
     data = {
             # "id": int(t.id),
