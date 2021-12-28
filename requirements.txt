@@ -1,7 +1,7 @@
 aiohttp
 aiodns
 beautifulsoup4
-cchardet
+# cchardet
 dataclasses
 elasticsearch
 pysocks
