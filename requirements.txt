@@ -1,0 +1,13 @@
+aiohttp
+aiodns
+beautifulsoup4
+cchardet
+dataclasses
+elasticsearch
+pysocks
+pandas>=0.23.0
+aiohttp_socks==0.7.1
+schedule
+geopy
+fake-useragent
+googletransx
