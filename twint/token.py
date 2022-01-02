@@ -9,11 +9,11 @@ class TokenExpiryException(Exception):
     def __init__(self, msg):
         super().__init__(msg)
 
-        
+
 class RefreshTokenException(Exception):
     def __init__(self, msg):
         super().__init__(msg)
-        
+
 
 class Token:
     def __init__(self, config):
@@ -88,7 +88,8 @@ class Token:
             res = self._session.send(req, allow_redirects=True, timeout=self._timeout)
             match = re.search(r'{"guest_token":"(\d+)"}', res.text)
             if match:
+                logme.debug('Found guest token in JSON')
                 self.config.Guest_token = str(match.group(1))
             else:
                 self.config.Guest_token = None
-                raise RefreshTokenException('Could not find the Guest token in HTML')
+                raise RefreshTokenException('Could not find the Guest token in JSON')
