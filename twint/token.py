@@ -9,11 +9,11 @@ class TokenExpiryException(Exception):
     def __init__(self, msg):
         super().__init__(msg)
 
-        
+
 class RefreshTokenException(Exception):
     def __init__(self, msg):
         super().__init__(msg)
-        
+
 
 class Token:
     def __init__(self, config):
@@ -65,5 +65,31 @@ class Token:
             logme.debug('Found guest token in HTML')
             self.config.Guest_token = str(match.group(1))
         else:
-            self.config.Guest_token = None
-            raise RefreshTokenException('Could not find the Guest token in HTML')
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101 Firefox/78.0',
+                'authority': 'api.twitter.com',
+                'content-length': '0',
+                'authorization': self.config.Bearer_token,
+                'x-twitter-client-language': 'en',
+                'x-csrf-token': res.cookies.get("ct0"),
+                'x-twitter-active-user': 'yes',
+                'content-type': 'application/x-www-form-urlencoded',
+                'accept': '*/*',
+                'sec-gpc': '1',
+                'origin': 'https://twitter.com',
+                'sec-fetch-site': 'same-site',
+                'sec-fetch-mode': 'cors',
+                'sec-fetch-dest': 'empty',
+                'referer': 'https://twitter.com/',
+                'accept-language': 'en-US',
+            }
+            self._session.headers.update(headers)
+            req = self._session.prepare_request(requests.Request('POST', 'https://api.twitter.com/1.1/guest/activate.json'))
+            res = self._session.send(req, allow_redirects=True, timeout=self._timeout)
+            match = re.search(r'{"guest_token":"(\d+)"}', res.text)
+            if match:
+                logme.debug('Found guest token in JSON')
+                self.config.Guest_token = str(match.group(1))
+            else:
+                self.config.Guest_token = None
+                raise RefreshTokenException('Could not find the Guest token in JSON')
