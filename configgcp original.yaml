@@ -1,11 +1,41 @@
 version: 1
 files:
+  - filename: cibc.json
+    search: cibc
+    historyfill: No
+  - filename: bmo.json
+    search: BMO
+    historyfill: No
+  - filename: scotia.json
+    search: scotiabank
+    historyfill: No
+  - filename: national.json
+    search: nationalbank
+    historyfill: No
+  - filename: rbc.json
+    search: RBC
+    historyfill: No
+  - filename: td.json
+    search: TD_Canada
+    historyfill: No
+  - filename: laurentian.json
+    search: laurentian_b
+    historyfill: Yes
+  - filename: laurentienne.json
+    search: BLaurentienne
+    historyfill: Yes
+  - filename: desjardins.json
+    search: DesjardinsCoop
+    historyfill: Yes
+  - filename: desjardinsgroup.json
+    search: DesjardinsGroup
+    historyfill: Yes
   - filename: transat.json
     search: airtransat
     historyfill: Yes
   - filename: ac.json
     search: AirCanada
-    historyfill: Yes
+    historyfill: No
   - filename: rouge.json
     search: AirCanadaRouge
     historyfill: Yes
