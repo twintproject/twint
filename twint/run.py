@@ -380,7 +380,7 @@ def Lookup(config):
     config.Profile = False
     config.Lookup = True
     config.Favorites = False
-    config.FOllowing = False
+    config.Following = False
     config.Followers = False
     config.TwitterSearch = False
     run(config)
@@ -410,3 +410,17 @@ def Search(config, callback=None):
     run(config, callback)
     if config.Pandas_au:
         storage.panda._autoget("tweet")
+
+def getCustomData(config):
+    if config.Username != None:
+        if config.Custom["tweet"] != None:
+            Search(config)
+        if config.Custom["user"] != None:
+            Lookup(config)
+    else:
+        Search(config)
+                
+
+
+
+
