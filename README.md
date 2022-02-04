@@ -39,6 +39,7 @@ Twitter limits scrolls while browsing the user timeline. This means that with `.
 - py-googletransx.
 
 ## Installing
+Though you can use any terminal/coding environment you prefer you can also use <a href="https://cloud.google.com/shell">Google Cluoud Shell</a> It is also free and doesnt require much set up. For this you would use the git installation method
 
 **Git:**
 ```bash
