@@ -29,12 +29,12 @@ c.Search = "covid vaccine OR corona vaccine OR vaccine OR vaccination OR covid-1
             virus OR covid virus OR virus OR corona OR chinese virus"
 # c.Search = "covid"
 # c.Since = get_real_time()
-c.Since = "2021-12-1"
-c.Until = "2022-1-1"
+c.Since = "2022-1-1"
+c.Until = "2022-1-12"
 c.Lang = "en"
 c.Store_csv = True
 
-c.Output = "covid-december.csv"
+c.Output = "covid-january.csv"
 
 c.Pandas = True
 

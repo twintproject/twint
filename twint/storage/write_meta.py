@@ -14,11 +14,13 @@ token = RegexpTokenizer(r'[a-zA-Z0-9]+')
 def tweetData(t):
     t.tweet = t.tweet.lower()
     
+    
+    
    # tokenizing and stemming
-    t.tweet = p.clean(t.tweet)
-    t.tweet = token.tokenize(t.tweet)
-    t.tweet = [stemmer.stem(word) for word in t.tweet]
-    t.tweet = " ".join(t.tweet)
+    tweet_processed = p.clean(t.tweet)
+    tweet_processed = token.tokenize(t.tweet)
+    tweet_processed = [stemmer.stem(word) for word in t.tweet]
+    tweet_processed = " ".join(t.tweet)
     
     data = {
             # "id": int(t.id),
@@ -31,7 +33,8 @@ def tweetData(t):
             # "username": t.username,
             # "name": t.name,
             # "place": t.place,
-            "tweet": t.tweet,
+            "tweet": tweet_processed,
+            "OriginalTweet": t.tweet,
             "sentiment": 2,
             # "language": t.lang,
             # "mentions": t.mentions,
