@@ -34,7 +34,7 @@ def tweetData(t):
             # "name": t.name,
             # "place": t.place,
             "tweet": tweet_processed,
-            "OriginalTweet": t.tweet,
+            # "OriginalTweet": t.tweet,
             "sentiment": 2,
             # "language": t.lang,
             # "mentions": t.mentions,

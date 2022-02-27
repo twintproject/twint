@@ -5,7 +5,7 @@ import hashlib
 import re
 # import nltk
 
-from textblob import TextBlob
+# from textblob import TextBlob
 # from nltk.stem.porter import PorterStemmer
 # from nltk.stem import WordNetLemmatizer
 # from nltk.tokenize import TweetTokenizer
@@ -268,19 +268,19 @@ def tweets(conn, Tweet, config):
         tweet = re.sub(r'@mention', '', tweet)
         # adding polarity and sentiment values
         # tokenized_tweet = tk.tokenize(tweet)
-        polarity = TextBlob(tweet).sentiment.polarity
-        if polarity > 0:
-            sentiment = "positive"
-        elif polarity < 0:
-            sentiment = "negative"
-        else:
-            sentiment = "neutral"
+        # polarity = TextBlob(tweet).sentiment.polarity
+        # if polarity > 0:
+        #     sentiment = "positive"
+        # elif polarity < 0:
+        #     sentiment = "negative"
+        # else:
+        #     sentiment = "neutral"
         
         entry = (Tweet.id,
                     str(Tweet.id_str),
                     str(tweet),
-                    polarity,
-                    str(sentiment),
+                    # polarity,
+                    # str(sentiment),
                     str(Tweet.lang),
                     str(Tweet.conversation_id),
                     Tweet.datetime,
@@ -311,7 +311,7 @@ def tweets(conn, Tweet, config):
                     str(Tweet.translate),
                     str(Tweet.trans_src),
                     str(Tweet.trans_dest))
-        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
+        cursor.execute('INSERT INTO tweets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', entry)
 
         if config.Favorites:
             query = 'INSERT INTO favorites VALUES(?,?)'
