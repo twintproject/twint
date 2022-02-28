@@ -25,16 +25,16 @@ c = twint.Config()
 # c.Database = "covid.db"
 c.Search = "covid vaccine OR corona vaccine OR vaccine OR vaccination OR covid-19\
             vaccination OR covid-19 vaccine OR corona\
-            vaccination OR biontech OR bion-tech OR sinovac OR covid OR covid-19 OR corona\
-            virus OR covid virus OR virus OR corona OR chinese virus"
+            vaccination OR biontech OR bion-tech OR sinovac"
 # c.Search = "covid"
 # c.Since = get_real_time()
-c.Since = "2022-1-1"
-c.Until = "2022-1-12"
+c.Since = "2022-2-1"
+c.Until = "2022-2-28"
 c.Lang = "en"
+c.Count = True
 c.Store_csv = True
 
-c.Output = "covid-january.csv"
+c.Output = "covid-february-elastitest.csv"
 
 c.Pandas = True
 

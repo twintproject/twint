@@ -20,7 +20,7 @@ def tweetData(t):
     tweet_processed = p.clean(t.tweet)
     tweet_processed = token.tokenize(t.tweet)
     tweet_processed = [stemmer.stem(word) for word in t.tweet]
-    tweet_processed = " ".join(t.tweet)
+    tweet_processed = "".join(t.tweet)
     
     data = {
             # "id": int(t.id),
