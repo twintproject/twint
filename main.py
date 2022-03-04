@@ -34,10 +34,12 @@ c.Lang = "en"
 c.Count = True
 c.Store_csv = True
 
-c.Output = "covid-february-elastitest.csv"
+c.Output = "covid-february.csv"
 
 c.Pandas = True
 
 
 # Run
 twint.run.Search(c)
+
+

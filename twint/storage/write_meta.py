@@ -17,10 +17,11 @@ def tweetData(t):
     
     
    # tokenizing and stemming
+    p.set_options(p.OPT.URL, p.OPT.MENTION, p.OPT.HASHTAG)
     tweet_processed = p.clean(t.tweet)
-    tweet_processed = token.tokenize(t.tweet)
-    tweet_processed = [stemmer.stem(word) for word in t.tweet]
-    tweet_processed = "".join(t.tweet)
+    tweet_processed = token.tokenize(tweet_processed)
+    tweet_processed = [stemmer.stem(word) for word in tweet_processed]
+    tweet_processed = " ".join(tweet_processed)
     
     data = {
             # "id": int(t.id),
