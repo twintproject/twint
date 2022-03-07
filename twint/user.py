@@ -24,29 +24,35 @@ def User(ur):
         raise KeyError(msg)
     _usr = user()
     _usr.id = ur['data']['user']['rest_id']
-    _usr.name = ur['data']['user']['legacy']['name']
-    _usr.username = ur['data']['user']['legacy']['screen_name']
-    _usr.bio = ur['data']['user']['legacy']['description']
-    _usr.location = ur['data']['user']['legacy']['location']
-    _usr.url = ur['data']['user']['legacy']['url']
-    # parsing date to user-friendly format
-    _dt = ur['data']['user']['legacy']['created_at']
-    _dt = datetime.datetime.strptime(_dt, '%a %b %d %H:%M:%S %z %Y')
-    # date is of the format year,
-    _usr.join_date = _dt.strftime(User_formats['join_date'])
-    _usr.join_time = _dt.strftime(User_formats['join_time'])
 
-    # :type `int`
-    _usr.tweets = int(ur['data']['user']['legacy']['statuses_count'])
-    _usr.following = int(ur['data']['user']['legacy']['friends_count'])
-    _usr.followers = int(ur['data']['user']['legacy']['followers_count'])
-    _usr.likes = int(ur['data']['user']['legacy']['favourites_count'])
-    _usr.media_count = int(ur['data']['user']['legacy']['media_count'])
+    if ur['data']['user'].get('legacy'):
+        _usr.name = ur['data']['user']['legacy'].get('name', '')
+        _usr.username = ur['data']['user']['legacy'].get('screen_name', '')
+        _usr.bio = ur['data']['user']['legacy'].get('description', '')
+        _usr.location = ur['data']['user']['legacy'].get('location', '')
+        _usr.url = ur['data']['user']['legacy'].get('url', '')
+        # parsing date to user-friendly format
+        _dt = ur['data']['user']['legacy'].get('created_at')
+        if _dt:
+            _dt = datetime.datetime.strptime(_dt, '%a %b %d %H:%M:%S %z %Y')
+            # date is of the format year,
+            _usr.join_date = _dt.strftime(User_formats['join_date'])
+            _usr.join_time = _dt.strftime(User_formats['join_time'])
 
-    _usr.is_private = ur['data']['user']['legacy']['protected']
-    _usr.is_verified = ur['data']['user']['legacy']['verified']
-    _usr.avatar = ur['data']['user']['legacy']['profile_image_url_https']
-    _usr.background_image = ur['data']['user']['legacy']['profile_banner_url']
+        # :type `int`
+        _usr.tweets = int(ur['data']['user']['legacy'].get('statuses_count', 0))
+        _usr.following = int(ur['data']['user']['legacy'].get('friends_count', 0))
+        _usr.followers = int(ur['data']['user']['legacy'].get('followers_count', 0))
+        _usr.likes = int(ur['data']['user']['legacy'].get('favourites_count', 0))
+        _usr.media_count = int(ur['data']['user']['legacy'].get('media_count', 0))
+        _usr.listed_count = int(ur['data']['user']['legacy'].get('listed_count', 0))
+
+        _usr.is_private = ur['data']['user']['legacy'].get('protected')
+        _usr.is_verified = ur['data']['user']['legacy'].get('verified')
+        _usr.avatar = ur['data']['user']['legacy'].get('profile_image_url_https', '')
+        _usr.background_image = ur['data']['user']['legacy'].get('profile_banner_url')
+        _usr.entities = ur['data']['user']['legacy'].get('entities')
+
     # TODO : future implementation
     # legacy_extended_profile is also available in some cases which can be used to get DOB of user
     return _usr

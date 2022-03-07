@@ -61,14 +61,15 @@ def _get_reply_to(tw):
     return reply_to
 
 
-def getText(tw):
+def getText(tw, config):
     """Replace some text
     """
     logme.debug(__name__ + ':getText')
     text = tw['full_text']
     text = text.replace("http", " http")
     text = text.replace("pic.twitter", " pic.twitter")
-    text = text.replace("\n", " ")
+    if config.StripeTweetText:
+        text = text.replace("\n", " ")
 
     return text
 
@@ -115,7 +116,7 @@ def Tweet(tw, config):
         t.thumbnail = tw['extended_entities']['media'][0]['media_url_https']
     except KeyError:
         t.thumbnail = ''
-    t.tweet = getText(tw)
+    t.tweet = getText(tw, config)
     t.lang = tw['lang']
     try:
         t.hashtags = [hashtag['text'] for hashtag in tw['entities']['hashtags']]
