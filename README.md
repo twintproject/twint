@@ -207,6 +207,7 @@ Notes:
 - [Google translate has some quotas](https://cloud.google.com/translate/quotas)
 
 ## Featured Blog Posts:
+- [How to analyze Twitter account data using OSINT](https://relevance.ai/twitter-data-workflow-how-to-run-twitter-account-data-analysis/)
 - [How to use Twint as an OSINT tool](https://pielco11.ovh/posts/twint-osint/)
 - [Basic tutorial made by Null Byte](https://null-byte.wonderhowto.com/how-to/mine-twitter-for-targeted-information-with-twint-0193853/)
 - [Analyzing Tweets with NLP in minutes with Spark, Optimus and Twint](https://towardsdatascience.com/analyzing-tweets-with-nlp-in-minutes-with-spark-optimus-and-twint-a0c96084995f)
