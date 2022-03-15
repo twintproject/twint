@@ -1,3 +1,6 @@
+import string
+import re
+from nltk.corpus import stopwords
 import re             
 import string 
 import nltk
@@ -11,17 +14,72 @@ nltk.download('stopwords')
 stemmer = SnowballStemmer("english", ignore_stopwords=True)
 token = RegexpTokenizer(r'[a-zA-Z0-9]+')
 
+
+# Preprocessing
+
+RE_EMOJI = re.compile('[\U00010000-\U0010ffff]', flags=re.UNICODE)
+
+
+def strip_emoji(text):
+    return RE_EMOJI.sub(r'', text)
+
+def remove_URL(text):
+    url = re.compile(r"https?://\S+|www\.\S+")
+    return url.sub(r"", text)
+
+
+def remove_punct(text):
+    translator = str.maketrans("", "", string.punctuation)
+    return text.translate(translator)
+
+
+def remove_mention(text):
+    return re.sub("@[A-Za-z0-9]+", "", text)
+
+
+def stem_tweets(tweet):
+    tokens = tweet.split()
+    stemmed_tokens = [stemmer.stem(token) for token in tokens]
+    return ' '.join(stemmed_tokens)
+
+
+def lemmatize_tweets(tweet):
+    tokens = tweet.split()
+    lemmatized_tokens = [lemmatizer.lemmatize(token) for token in tokens]
+    return ' '.join(lemmatized_tokens)
+
+# remove stopwords
+
+
+stop = set(stopwords.words("english"))
+
+
+def remove_stopwords(text):
+    stop = set(stopwords.words("english"))
+
+    filtered_words = [word.lower()
+                      for word in text.split() if word.lower() not in stop]
+    return " ".join(filtered_words)
+
+
+def preprocess_tweets(tweet):
+    tweet = strip_emoji(tweet)
+    tweet = remove_mention(tweet)
+    tweet = remove_URL(tweet)
+    tweet = remove_punct(tweet)
+    tweet = stem_tweets(tweet)
+    # tweet = lemmatize_tweets(tweet)
+    tweet = remove_stopwords(tweet)
+    return tweet
+
+
 def tweetData(t):
     t.tweet = t.tweet.lower()
     
     
     
-   # tokenizing and stemming
-    p.set_options(p.OPT.URL, p.OPT.MENTION, p.OPT.HASHTAG)
-    tweet_processed = p.clean(t.tweet)
-    tweet_processed = token.tokenize(tweet_processed)
-    tweet_processed = [stemmer.stem(word) for word in tweet_processed]
-    tweet_processed = " ".join(tweet_processed)
+    # pre-processing
+    tweet_processed = preprocess_tweets(t.tweet)
     
     data = {
             # "id": int(t.id),
