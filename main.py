@@ -1,11 +1,7 @@
 '''
 Main for Flask app in Google Cloud's AppEngine
 
-
-
-TODO: Optimize memory usage: 1 file for TWINT uses ~300MB or so; 6 use too much for F2 (now trying F4)
-TODO: return a meaningful '200' message?
-TODO: Set custom entrypoint (gunicorn, nginx)- some incomplete info: https://stackoverflow.com/questions/67463034/google-app-engine-using-custom-entry-point-with-python
+TODO: Maybe can specify a file name instead of relying on 'main.py'?
 '''
 
 import twint
@@ -47,10 +43,10 @@ def TweetSearch():
     return tweets
 
 
-@app.route("/configgcp", methods=["GET"])
-def gcp_TestConfig():
-    '''
-    Returns a representation of what is contained in the configgcp.yaml
+'''
+TODO: Optimize memory usage: 1 file for TWINT uses ~300MB or so; 6 use too much for F2 (now trying F4)
+TODO: return a meaningful '200' message?
+TODO: Set custom entrypoint (gunicorn, nginx)- some incomplete info: https://stackoverflow.com/questions/67463034/google-app-engine-using-custom-entry-point-with-python
     configuration file.
     '''
     result = ParseFilesFromConfig(ReadConfigFileGCP())
