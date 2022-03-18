@@ -1,5 +1,6 @@
 import sys, os, datetime
 from asyncio import get_event_loop, TimeoutError, ensure_future, new_event_loop, set_event_loop
+from tqdm import tqdm
 
 from . import datelock, feed, get, output, verbose, storage
 from .token import TokenExpiryException
@@ -29,6 +30,7 @@ class Twint:
         self.count = 0
         self.user_agent = ""
         self.config = config
+        self.progress_bar = tqdm(total=int(config.Limit), desc="Tweets")
         self.config.Bearer_token = bearer
         # TODO might have to make some adjustments for it to work with multi-treading
         # USAGE : to get a new guest token simply do `self.token.refresh()`
@@ -45,6 +47,9 @@ class Twint:
         if self.config.Pandas_clean:
             logme.debug(__name__ + ':Twint:__init__:pandas_clean')
             storage.panda.clean()
+
+    def __del__(self):
+        self.progress_bar.close()
 
     def get_resume(self, resumeFile):
         if not os.path.exists(resumeFile):
@@ -149,11 +154,14 @@ class Twint:
         await self.Feed()
         if self.config.User_full:
             logme.debug(__name__ + ':Twint:follow:userFull')
-            self.count += await get.Multi(self.feed, self.config, self.conn)
+            foo = await get.Multi(self.feed, self.config, self.conn)
+            self.count += foo
+            self.progress_bar.update(foo)
         else:
             logme.debug(__name__ + ':Twint:follow:notUserFull')
             for user in self.feed:
                 self.count += 1
+                self.progress_bar.update(1)
                 username = user.find("a")["name"]
                 await output.Username(username, self.config, self.conn)
 
@@ -164,6 +172,7 @@ class Twint:
         for tweet in self.feed:
             tweet_dict = {}
             self.count += 1
+            self.progress_bar.update(1)
             try:
                 tweet_dict['data-item-id'] = tweet.find("div", {"class": "tweet-text"})['data-id']
                 t_url = tweet.find("span", {"class": "metadata"}).find("a")["href"]
@@ -211,6 +220,7 @@ class Twint:
         logme.debug(__name__ + ':Twint:profile')
         for tweet in self.feed:
             self.count += 1
+            self.progress_bar.update(1)
             await output.Tweets(tweet, self.config, self.conn)
 
     async def tweets(self):
@@ -218,11 +228,14 @@ class Twint:
         # TODO : need to take care of this later
         if self.config.Location:
             logme.debug(__name__ + ':Twint:tweets:location')
-            self.count += await get.Multi(self.feed, self.config, self.conn)
+            foo = await get.Multi(self.feed, self.config, self.conn)
+            self.count += foo
+            self.progress_bar.update(foo)
         else:
             logme.debug(__name__ + ':Twint:tweets:notLocation')
             for tweet in self.feed:
                 self.count += 1
+                self.progress_bar.update(1)
                 await output.Tweets(tweet, self.config, self.conn)
 
     async def main(self, callback=None):
