@@ -6,7 +6,7 @@ dataclasses
 elasticsearch
 pysocks
 pandas>=0.23.0
-aiohttp_socks<=0.4.1
+aiohttp_socks
 schedule
 geopy
 fake-useragent
