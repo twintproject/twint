@@ -1,38 +1,50 @@
 version: 1
 files:
   - filename: transat.json
+    groupentityid: AirTransat
     search: airtransat
     historyfill: Yes
   - filename: ac.json
+    groupentityid: AirCanada
     search: AirCanada
     historyfill: Yes
   - filename: rouge.json
+    groupentityid: Rouge
     search: AirCanadaRouge
     historyfill: Yes
   - filename: acvac.json
+    groupentityid: AirCanadaVacations
     search: AirCanadaVac
     historyfill: Yes
   - filename: westjet.json
+    groupentityid: WestJet
     search: WestJet
     historyfill: Yes
   - filename: swoop.json
+    groupentityid: Swoop
     search: FlySwoop
     historyfill: Yes
   - filename: sunwingv.json
+    groupentityid: SunwingVacations
     search: SunwingVacay
     historyfill: Yes
   - filename: sunwing.json
+    groupentityid: Sunwing
     search: sunwing
     historyfill: Yes
   - filename: flair.json
+    groupentityid: Flair
     search: FlairAirlines
     historyfill: Yes
   - filename: owg.json
+    groupentityid: OWG
     search: owgvoyages
     historyfill: Yes
   - filename: lynx.json
+    groupentityid: LynxAir
     search: Lynx_Air
     historyfill: Yes
   - filename: jetlines.json
+    groupentityid: Jetlines
     search: CA_Jetlines
     historyfill: Yes

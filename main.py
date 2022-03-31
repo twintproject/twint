@@ -8,20 +8,24 @@ TODO: return a meaningful '200' message?
 TODO: Set custom entrypoint (gunicorn, nginx)- some incomplete info: https://stackoverflow.com/questions/67463034/google-app-engine-using-custom-entry-point-with-python
 '''
 
-import twint
 import pandas
 import flask
-
-from google.cloud import storage
-
-from shutil import copyfile
-from datetime import datetime, timedelta, timezone
 import json
-import yaml
 import os
+import requests
+import yaml
 
+from datetime import datetime, timedelta, timezone
+from google.cloud import storage
 from os import listdir
- 
+from shutil import copyfile
+
+import main_dbcontroller
+import twint
+
+# TODO: put in a config file?
+URL_LATEST_TWEET = 'https://dbcontroller-7zupgnxiba-uc.a.run.app/latesttweet'
+URL_CAPTURE_TWEETS = 'https://dbcontroller-7zupgnxiba-uc.a.run.app/tweets'
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
@@ -56,7 +60,62 @@ def gcp_TestConfig():
     result = ParseFilesFromConfig(ReadConfigFileGCP())
     return str(result)
 
+@app.route("/updategcp_db", methods=["GET"])
+def gcp_tweets_to_db():
+    """Reads search handles from config file, searches Twitter, and sends search results to
+    database (using dbcontroller webservice call."""
+    # TODO: Can this time out? What to do about it? (touch the webservice first, try multiple times at the start of this call)
+    # TODO: [L] Do it without saving to file first? But pandas seems to have a different Tweet data structure?
+    # TODO: Promote into app engine; test against dev datbase, and redirect this function to work with GCP.
+    # TODO: The promote Cloud run again, against prod database. Build prod databaes first.
+    # TODO: change this URL so that the existing CRON job works? Or maybe I want both to run for a while? (But becomes expensive.)
+    # TODO: Can I reduce the instance to F2 or so if we don't have to deal with large files?
 
+    # setup connection to webservice
+    url_latest_tweet = URL_LATEST_TWEET
+    url_capture_tweets = URL_CAPTURE_TWEETS
+    comment = "TWINT webserver."
+    
+    # TODO: set to GCP before deployment
+    # entities = ParseFilesFromConfig(ReadConfigFileLocal())
+    entities = ParseFilesFromConfig(ReadConfigFileGCP())
+
+    for entity in entities:
+        group_entity_id = entity["group_entity_id"]
+        group_search_id = entity["search"]
+        filepath = entity["localfilepath"]
+        params = {'group_entity_id': group_entity_id}
+
+        # Find most recent Tweet date
+        response = requests.get(url = url_latest_tweet, params = params)
+        most_recent_tweet_date = response.text
+        if most_recent_tweet_date == 'None': most_recent_tweet_date = None
+
+        # TODO: Remove this log, only here for trouble shooting
+        # print("Is {} found: {}.".format(filepath, os.path.isfile(filepath)))
+        
+        # Search tweets, save in file.
+        search_newer_tweets(filepath, group_search_id, most_recent_tweet_date)
+
+        # TODO: Remove this log.
+        print("{} Search done. Now saving in dbase.".format(group_entity_id)) 
+
+        # obtain tweet in JSON format from file
+        if  os.path.isfile(filepath):
+            tweet_json = main_dbcontroller.tweets_file_to_JSON(filepath, group_entity_id, group_search_id, comment)
+            os.remove(filepath)
+
+            # capture tweets in datbase
+            headers = {'Accept' : 'application/json', 'Content-Type' : 'application/json'} # 'Content-Type' is essential; 'Accept' not sure.
+            response = requests.post(url_capture_tweets, data=tweet_json.encode('utf-8'), headers = headers) # .encode('utf-8') is essential
+        
+        # TODO: Remove this log.
+        print("Progress for {}: {}. Latest tweet: {}.".format(group_entity_id, response, most_recent_tweet_date))
+    return "Completed."
+
+
+# NOTE: This is the original webservice to capture tweet results into files
+# We can use GCP traffic direction to switch between two services
 @app.route("/updategcp", methods=["GET"])
 def gcp_AppendToFilesJSON():
     '''
@@ -164,6 +223,29 @@ def SearchNewerTweets(filename_str, search_str):
 	c.Output = filename_str
 	c.Hide_output = True
 	twint.run.Search(c)
+
+
+def search_newer_tweets(filename_str, search_str, from_date = None):
+    """Search tweets more recent than the given date. Results will be captured in
+    the file given.
+    
+    filename_str --
+    search_str --
+    from_date --
+    """
+    # TODO: Handle date properly
+    if from_date is None: from_date = datetime(1990, 1, 1)
+
+    c = twint.Config()
+    c.Search = search_str
+    #c.Until
+    c.Since = str(from_date)
+    c.Limit = 2000 
+    c.Store_json = True
+    c.Output = filename_str
+    c.Hide_output = True
+
+    twint.run.Search(c)
 
 
 def SearchEarlierTweets(filename_str, search_str):
@@ -278,6 +360,8 @@ def ParseFilesFromConfig(configdict):
         f['bucketfilepath'] = os.path.join(bucket_dir, f.get('filename', 'nothing found in config file'))
         f['localfilepath'] = os.path.join(local_dir, f.get('filename', 'nothing found in config file'))
         f['historyfill'] = f.get('historyfill', False)
+        f['group_entity_id'] = f.get('groupentityid', "") # TODO: Remove any spaces? Not sure if it truly matters.
+        f['search'] = f.get('search', "")
 
     return filesinfo
 
