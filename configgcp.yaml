@@ -7,7 +7,7 @@ files:
   - filename: ac.json
     groupentityid: AirCanada
     search: AirCanada
-    historyfill: Yes
+    historyfill: No
   - filename: rouge.json
     groupentityid: Rouge
     search: AirCanadaRouge

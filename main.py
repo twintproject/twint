@@ -115,7 +115,8 @@ def gcp_tweets_to_db():
 
 
 # NOTE: This is the original webservice to capture tweet results into files
-# We can use GCP traffic direction to switch between two services
+# We should migrate to the DB version.
+# NOTE: For now this also runs the database function (gcp_tweets_to_db)
 @app.route("/updategcp", methods=["GET"])
 def gcp_AppendToFilesJSON():
     '''
@@ -125,6 +126,9 @@ def gcp_AppendToFilesJSON():
     The function may take a long time to run. There is no meaningful return value.
     This works in Google Cloud App Engine environment.
     '''
+    # TODO: Maybe not combine these; for now it is expedient.
+    gcp_tweets_to_db()
+
     files = ParseFilesFromConfig(ReadConfigFileGCP())
 
     #TODO: use GCP credentials; would allow for local testing
