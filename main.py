@@ -77,7 +77,7 @@ def gcp_tweets_to_db():
     comment = "TWINT webserver."
     
     # TODO: set to GCP before deployment
-    # entities = ParseFilesFromConfig(ReadConfigFileLocal())
+    #entities = ParseFilesFromConfig(ReadConfigFileLocal())
     entities = ParseFilesFromConfig(ReadConfigFileGCP())
 
     for entity in entities:
