@@ -62,6 +62,15 @@ pip3 install --user --upgrade git+https://github.com/twintproject/twint.git@orig
 ```bash
 pipenv install git+https://github.com/twintproject/twint.git#egg=twint
 ```
+**Docker Using Dockerfile**:
+```bash
+git clone --depth=1 https://github.com/twintproject/twint.git
+cd twint
+docker build -t twint . 
+docker run -it twint /bin/bash
+```
+
+
 
 ### March 2, 2021 Update
 
