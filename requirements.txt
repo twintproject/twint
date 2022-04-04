@@ -14,3 +14,5 @@ googletransx
 Flask==2.0.1
 google-cloud-storage
 pyyaml
+pydantic
+python-dotenv

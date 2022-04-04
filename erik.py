@@ -51,4 +51,6 @@ print(testread())
 So save in file first; then 
 """
 
+import main 
+print(main.gcp_TestConfig())
 

@@ -21,6 +21,7 @@ from os import listdir
 from shutil import copyfile
 
 import main_dbcontroller
+from settings import app_settings
 import twint
 
 # TODO: put in a config file?
@@ -57,7 +58,7 @@ def gcp_TestConfig():
     Returns a representation of what is contained in the configgcp.yaml
     configuration file.
     '''
-    result = ParseFilesFromConfig(ReadConfigFileGCP())
+    result = ParseFilesFromConfig(read_config_file())
     return str(result)
 
 @app.route("/updategcp_db", methods=["GET"])
@@ -68,7 +69,6 @@ def gcp_tweets_to_db():
     # TODO: [L] Do it without saving to file first? But pandas seems to have a different Tweet data structure?
     # TODO: Promote into app engine; test against dev datbase, and redirect this function to work with GCP.
     # TODO: The promote Cloud run again, against prod database. Build prod databaes first.
-    # TODO: change this URL so that the existing CRON job works? Or maybe I want both to run for a while? (But becomes expensive.)
     # TODO: Can I reduce the instance to F2 or so if we don't have to deal with large files?
 
     # setup connection to webservice
@@ -77,8 +77,8 @@ def gcp_tweets_to_db():
     comment = "TWINT webserver."
     
     # TODO: set to GCP before deployment
-    #entities = ParseFilesFromConfig(ReadConfigFileLocal())
-    entities = ParseFilesFromConfig(ReadConfigFileGCP())
+    entities = ParseFilesFromConfig(read_config_file())
+    #entities = ParseFilesFromConfig(ReadConfigFileGCP())
 
     for entity in entities:
         group_entity_id = entity["group_entity_id"]
@@ -132,7 +132,7 @@ def gcp_AppendToFilesJSON():
     # TODO: Maybe not combine these; for now it is expedient.
     gcp_tweets_to_db()
 
-    files = ParseFilesFromConfig(ReadConfigFileGCP())
+    files = ParseFilesFromConfig(read_config_file())
 
     #TODO: use GCP credentials; would allow for local testing
     storage_client = storage.Client()
@@ -141,14 +141,15 @@ def gcp_AppendToFilesJSON():
 
 
     for f in files:
-        #TODO: prevent copying if file already exists in /tmp
-        #TODO: logging: adding tweets to file xyz
-        _gcp_CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], bucket)
-        SearchNewerTweets(f['localfilepath'], f['search'])
-        if f.get('historyfill', False):
-            SearchEarlierTweets(f['localfilepath'], f['search'])
-        _gcp_CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], bucket)
-        #TODO: logging: completed adding tweets to file xyz
+        if f['captureinfile']: # Don't save into file if we don't want to
+            #TODO: prevent copying if file already exists in /tmp
+            #TODO: logging: adding tweets to file xyz
+            _gcp_CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], bucket)
+            SearchNewerTweets(f['localfilepath'], f['search'])
+            if f.get('historyfill', False):
+                SearchEarlierTweets(f['localfilepath'], f['search'])
+            _gcp_CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], bucket)
+            #TODO: logging: completed adding tweets to file xyz
     
     return '200' # has to be a string
 
@@ -169,10 +170,11 @@ def AppendToFilesJSON():
     files.append(fileinfo)
 
     for f in files:
-        #TODO: prevent copying if file already exists in /tmp
-        _CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], '')
-        SearchNewerTweets(f['localfilepath'], f['search'])
-        _CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], '') 
+        if f['captureinfile']: # Don't save into file if we don't want to
+            #TODO: prevent copying if file already exists in /tmp
+            _CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], '')
+            SearchNewerTweets(f['localfilepath'], f['search'])
+            _CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], '') 
 
     return '200'
 
@@ -346,6 +348,19 @@ def ReadConfigFileLocal():
 
     return configdict
 
+def read_config_file():
+    """Reads the config file, either from Google Storage - if executing in
+    GCP environment - or locally.
+    
+    Returns the contents as a Python dict.
+    """
+    if app_settings.Environment_GCP:
+        configdict = ReadConfigFileGCP()
+    else:
+        configdict = ReadConfigFileLocal()
+
+    return configdict
+
 def ParseFilesFromConfig(configdict):
     '''
     Read file information from configgcp file
@@ -369,6 +384,7 @@ def ParseFilesFromConfig(configdict):
         f['historyfill'] = f.get('historyfill', False)
         f['group_entity_id'] = f.get('groupentityid', "") # TODO: Remove any spaces? Not sure if it truly matters.
         f['search'] = f.get('search', "")
+        f['captureinfile'] = f.get('captureinfile', False)
 
     return filesinfo
 
