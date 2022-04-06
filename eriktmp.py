@@ -1,6 +1,8 @@
 import main
 
-print(main.gcp_tweets_to_db())
+#print(main.gcp_tweets_to_db())
+
+#print(main.gcp_AppendToFilesJSON())
 
 # TODO: Deal with this error:
 """
@@ -34,3 +36,65 @@ found 0 deleted tweets in this search.
 OWG Search done. Now saving in dbase.
 Error opening file /tmp/owg.json: [Errno 2] No such file or directory: '/tmp/owg.json'
 """
+
+# ####################
+# THIS WORKS
+# Based on https://gist.github.com/Zearin/2f40b7b9cfc51132851a
+# ####################
+def make_cloud_safe(src, dst, func, *args):
+    print(src)
+    func(*args)
+    print(dst)
+
+def speak(txt: str, n: int):
+    for i in range(n):
+        print(txt)
+
+make_cloud_safe('From here', 'to here.', speak, "hi", 2)
+
+# ####################
+# A Class equivalent
+# ####################
+
+class MakeCloudSafe():
+    def __init__(self, src, dst) -> None:
+        self.src = src
+        self.dst = dst
+
+    def bucket_file(self, func, *args, **kwargs):
+        print(self.src)
+        func(*args, **kwargs)
+        print(self.dst)
+
+def speak(txt: str, n: int = 0):
+    for i in range(n):
+        print(txt)
+
+#erik = MakeCloudSafe('From here', 'to here.')
+##erik.bucket_file(speak, "hello", 3) # this does work
+
+#MakeCloudSafe('From here', 'to here.').bucket_file(speak, "hoi", n=3)
+
+# ####################
+# Is there a decorator equivalent?
+# ####################
+"""def foo():
+    def bar(func):
+        def make_cloud_safe(src, dst, *args):
+            print(src)
+            func(src, dst, *args)
+            #print(*args)
+            print(dst)
+            return func
+        return make_cloud_safe
+    return bar
+
+@foo
+def speak(src, dest, txt: str, n: int = 0):
+    for i in range(n):
+        print(txt)
+
+speak('From here', 'to here', txt='hi', n='2')"""
+
+
+main.gcp_tweets_to_file()

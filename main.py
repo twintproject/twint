@@ -20,6 +20,7 @@ from google.cloud import storage
 from os import listdir
 from shutil import copyfile
 
+import decorators
 import main_dbcontroller
 from settings import app_settings
 import twint
@@ -120,7 +121,8 @@ def gcp_tweets_to_db():
 # NOTE: This is the original webservice to capture tweet results into files
 # We should migrate to the DB version.
 # NOTE: For now this also runs the database function (gcp_tweets_to_db)
-@app.route("/updategcp", methods=["GET"])
+# TODO: THIS IS NOW OLD. RETIRE?
+@app.route("/updategcp_OLD", methods=["GET"])
 def gcp_AppendToFilesJSON():
     '''
     Adds tweets to files specified in configgcp.yalm (on Google Storage)
@@ -153,7 +155,30 @@ def gcp_AppendToFilesJSON():
     
     return '200' # has to be a string
 
+# TODO: Provide comment. Clean up.
+@app.route("/updategcp", methods=["GET"])
+def gcp_tweets_to_file():
+    
+    gcp_tweets_to_db()
+    
+    files = ParseFilesFromConfig(read_config_file())
 
+    for f in files:
+        if f['captureinfile']: # Don't save into file if we don't want to
+            #TODO: prevent copying if file already exists in /tmp
+            #TODO: logging: adding tweets to file xyz
+            ##_gcp_CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], bucket)
+            decorators.MakeCloudSafe(f['bucketfilepath'], f['localfilepath']).bucket_file(SearchNewerTweets, f['localfilepath'], f['search'])
+            #SearchNewerTweets(f['localfilepath'], f['search'])
+            if f.get('historyfill', False):
+                ##SearchEarlierTweets(f['localfilepath'], f['search'])
+                decorators.MakeCloudSafe(f['bucketfilepath'], f['localfilepath']).bucket_file(SearchEarlierTweets, f['localfilepath'], f['search'])
+            ##_gcp_CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], bucket)
+            #TODO: logging: completed adding tweets to file xyz
+
+    return '200' # TODO: Can we return something useful?
+
+# TODO: This should now be redundant (as /updategcp should cover both)
 @app.route("/update", methods=["GET"])
 def AppendToFilesJSON():
     '''

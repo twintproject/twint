@@ -65,3 +65,48 @@ files:
     search: cibc
     historyfill: No
     captureinfile: No
+  - filename: bmo.json
+    groupentityid: BMO
+    search: BMO
+    historyfill: No
+    captureinfile: No
+  - filename: scotia.json
+    groupentityid: Scotia
+    search: scotiabank
+    historyfill: No
+    captureinfile: No
+  - filename: national.json
+    groupentityid: National
+    search: nationalbank
+    historyfill: No
+    captureinfile: No
+  - filename: rbc.json
+    groupentityid: RBC
+    search: RBC
+    historyfill: No
+    captureinfile: No
+  - filename: td.json
+    groupentityid: TD
+    search: TD_Canada
+    historyfill: No
+    captureinfile: No
+  - filename: laurentian.json
+    groupentityid: Laurentian
+    search: laurentian_b
+    historyfill: Yes
+    captureinfile: No
+  - filename: laurentienne.json
+    groupentityid: Laurentian
+    search: BLaurentienne
+    historyfill: Yes
+    captureinfile: No
+  - filename: desjardins.json
+    groupentityid: Desjardins
+    search: DesjardinsCoop
+    historyfill: Yes
+    captureinfile: No
+  - filename: desjardinsgroup.json
+    groupentityid: Desjardins
+    search: DesjardinsGroup
+    historyfill: Yes
+    captureinfile: No
