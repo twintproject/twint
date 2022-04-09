@@ -119,7 +119,7 @@ def gcp_tweets_to_db():
         # TODO: Remove this log.
         print("Progress for {}: {}. Latest tweet: {}.".format(group_entity_id, response, most_recent_tweet_date))
 
-    response = requests.get(url_capture_tweets) # TODO: This has not really been tested!
+    response = requests.get(URL_UPDATE_METRICS_FILES) # TODO: This has not really been tested!
 
     return "Completed."
 
