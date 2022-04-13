@@ -16,3 +16,4 @@ google-cloud-storage
 pyyaml
 pydantic
 python-dotenv
+python-dateutil

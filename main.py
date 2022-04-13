@@ -18,6 +18,7 @@ import yaml
 from datetime import datetime, timedelta, timezone
 from google.cloud import storage
 from os import listdir
+import dateutil.parser
 from shutil import copyfile
 
 import decorators
@@ -95,7 +96,11 @@ def gcp_tweets_to_db():
 
         # Find most recent Tweet date
         response = requests.get(url = url_latest_tweet, params = params)
-        most_recent_tweet_date = response.text
+       # TODO: No longer works with dbcontroller Flaks implementation (does worh with FastAPI)
+        if response.json() is not None:
+            most_recent_tweet_date = dateutil.parser.isoparse(response.json())
+        else:
+            most_recent_tweet_date = None
         if most_recent_tweet_date == 'None': most_recent_tweet_date = None
 
         # TODO: Remove this log, only here for trouble shooting
