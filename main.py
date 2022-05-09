@@ -59,32 +59,30 @@ def TweetSearch():
 def gcp_TestConfig():
     '''
     Returns a representation of what is contained in the configgcp.yaml
-    configuration file.
+    configuration file. Output is not formatted.
     '''
-    result = ParseFilesFromConfig(read_config_file())
+    result = parse_files_from_config(read_config_file())
     return str(result)
+
 
 @app.route("/updategcp_db", methods=["GET"])
 def gcp_tweets_to_db():
     """Reads search handles from config file, searches Twitter, and sends search results to
-    database (using dbcontroller webservice call.
+    database (using dbcontroller webservice call).
     
     Also updates/creates metrics .csv file for the dashboard"""
     # TODO: Can this time out? What to do about it? (touch the webservice first, try multiple times at the start of this call)
-    # TODO: [L] Do it without saving to file first? But pandas seems to have a different Tweet data structure?
-    # TODO: Promote into app engine; test against dev datbase, and redirect this function to work with GCP.
-    # TODO: The promote Cloud run again, against prod database. Build prod databaes first.
     # TODO: Can I reduce the instance to F2 or so if we don't have to deal with large files?
 
-    # setup connection to webservice
+    # setup connection to webservice URLs for the database that captures the results
     url_latest_tweet = URL_LATEST_TWEET
     url_capture_tweets = URL_CAPTURE_TWEETS
     comment = "TWINT webserver."
     
-    # TODO: set to GCP before deployment
-    entities = ParseFilesFromConfig(read_config_file())
-    #entities = ParseFilesFromConfig(ReadConfigFileGCP())
-
+    # read part of config file
+    entities = parse_files_from_config(read_config_file())
+    
+    # process config file (i.e. perform Twitter Search, capture results)
     for entity in entities:
         group_entity_id = entity["group_entity_id"]
         group_search_id = entity["search"]
@@ -96,16 +94,13 @@ def gcp_tweets_to_db():
 
         # Find most recent Tweet date
         response = requests.get(url = url_latest_tweet, params = params)
-       # TODO: No longer works with dbcontroller Flaks implementation (does worh with FastAPI)
+        # TODO: No longer works with dbcontroller Flask implementation (does worh with FastAPI)
         if response.json() is not None:
             most_recent_tweet_date = dateutil.parser.isoparse(response.json())
         else:
             most_recent_tweet_date = None
         if most_recent_tweet_date == 'None': most_recent_tweet_date = None
 
-        # TODO: Remove this log, only here for trouble shooting
-        # print("Is {} found: {}.".format(filepath, os.path.isfile(filepath)))
-        
         # Search tweets, save in file.
         search_newer_tweets(filepath, group_search_id, most_recent_tweet_date)
 
@@ -124,98 +119,45 @@ def gcp_tweets_to_db():
         # TODO: Remove this log.
         print("Progress for {}: {}. Latest tweet: {}.".format(group_entity_id, response, most_recent_tweet_date))
 
-    response = requests.get(URL_UPDATE_METRICS_FILES) # TODO: This has not really been tested!
+    response = requests.get(URL_UPDATE_METRICS_FILES)
 
     return "Completed."
 
 
-# NOTE: This is the original webservice to capture tweet results into files
-# We should migrate to the DB version.
-# NOTE: For now this also runs the database function (gcp_tweets_to_db)
-# TODO: THIS IS NOW OLD. RETIRE?
-@app.route("/updategcp_OLD", methods=["GET"])
-def gcp_AppendToFilesJSON():
-    '''
-    Adds tweets to files specified in configgcp.yalm (on Google Storage)
-
-    The files are captured on Google Storage. If no file exists it will be created.
-    The function may take a long time to run. There is no meaningful return value.
-    This works in Google Cloud App Engine environment.
-    '''
-    # TODO: Maybe not combine these; for now it is expedient.
-    gcp_tweets_to_db()
-
-    files = ParseFilesFromConfig(read_config_file())
-
-    #TODO: use GCP credentials; would allow for local testing
-    storage_client = storage.Client()
-    bucketName = 'industrious-eye-330414.appspot.com'
-    bucket = storage_client.get_bucket(bucketName)
-
-
-    for f in files:
-        if f['captureinfile']: # Don't save into file if we don't want to
-            #TODO: prevent copying if file already exists in /tmp
-            #TODO: logging: adding tweets to file xyz
-            _gcp_CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], bucket)
-            SearchNewerTweets(f['localfilepath'], f['search'])
-            if f.get('historyfill', False):
-                SearchEarlierTweets(f['localfilepath'], f['search'])
-            _gcp_CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], bucket)
-            #TODO: logging: completed adding tweets to file xyz
-    
-    return '200' # has to be a string
-
-# TODO: Provide comment. Clean up.
 @app.route("/updategcp", methods=["GET"])
-def gcp_tweets_to_file():
+def search_and_save_tweets():
+    """Searches twitter and saves results into database; optionally additionally into files.
+
+    The config file specifies what to search for and whether files should be created
+    in addition to the database results.
+    """
     
+    # Update database with twitter search results. 
     gcp_tweets_to_db()
     
-    files = ParseFilesFromConfig(read_config_file())
+    # Also save twitter search results into files (depending on config settings).
+    files = parse_files_from_config(read_config_file())
 
     for f in files:
         if f['captureinfile']: # Don't save into file if we don't want to
             #TODO: prevent copying if file already exists in /tmp
             #TODO: logging: adding tweets to file xyz
-            ##_gcp_CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], bucket)
-            decorators.MakeCloudSafe(f['bucketfilepath'], f['localfilepath']).bucket_file(SearchNewerTweets, f['localfilepath'], f['search'])
-            #SearchNewerTweets(f['localfilepath'], f['search'])
+            decorators.MakeCloudSafe(f['bucketfilepath'], f['localfilepath']).bucket_file(search_newer_tweets, f['localfilepath'], f['search'])
             if f.get('historyfill', False):
-                ##SearchEarlierTweets(f['localfilepath'], f['search'])
                 decorators.MakeCloudSafe(f['bucketfilepath'], f['localfilepath']).bucket_file(SearchEarlierTweets, f['localfilepath'], f['search'])
-            ##_gcp_CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], bucket)
             #TODO: logging: completed adding tweets to file xyz
 
     return '200' # TODO: Can we return something useful?
 
-# TODO: This should now be redundant (as /updategcp should cover both)
-@app.route("/update", methods=["GET"])
-def AppendToFilesJSON():
-    '''
-    Similar to gcp_AppendToFilesJSON above, but uses local files only.
 
-    Not maintained.
-    TODO: just remove?
-    '''
-    bucket_dir = os.path.join('tmpdata', 'src')
-    local_dir = os.path.join('tmpdata', 'dst')
+#################################################
+#################################################
+## Utility functions
+#################################################
+#################################################
 
-    fileinfo = {'bucketfilepath' : os.path.join(bucket_dir, 'cibc.json'), 'localfilepath' : os.path.join(local_dir, 'cibc.json'), 'search': 'cibc'}
-    files = []
-    files.append(fileinfo)
-
-    for f in files:
-        if f['captureinfile']: # Don't save into file if we don't want to
-            #TODO: prevent copying if file already exists in /tmp
-            _CopyFileFromBucket(f['bucketfilepath'], f['localfilepath'], '')
-            SearchNewerTweets(f['localfilepath'], f['search'])
-            _CopyFileToBucket(f['localfilepath'], f['bucketfilepath'], '') 
-
-    return '200'
-
-
-def _gcp_CopyFileFromBucket(srcfilepath, destfilepath, bucket):
+# TODO: Remove next (4?) functions
+def DELETE_gcp_CopyFileFromBucket(srcfilepath, destfilepath, bucket):
     #TODO: error handling (log when file does not exist; but continue)
     blob = bucket.blob(srcfilepath)
 
@@ -224,23 +166,23 @@ def _gcp_CopyFileFromBucket(srcfilepath, destfilepath, bucket):
 
     return 0
 
-def _gcp_CopyFileToBucket(srcfilepath, destfilepath, bucket):
+def DELETE_gcp_CopyFileToBucket(srcfilepath, destfilepath, bucket):
     #TODO: error handling (log when file does not exist; but continue)
     blob = bucket.blob(destfilepath)
     blob.upload_from_filename(srcfilepath)
     return 0
 
-def _CopyFileFromBucket(srcfilepath, destfilepath, bucket):
+def DELETE_CopyFileFromBucket(srcfilepath, destfilepath, bucket):
     #TODO: error handling (log when file does not exist; but continue)
     copyfile(srcfilepath, destfilepath)
     return 0
 
-def _CopyFileToBucket(srcfilepath, destfilepath, bucket):
+def DELETE_CopyFileToBucket(srcfilepath, destfilepath, bucket):
     #TODO: error handling (log when file does not exist; but continue)
     copyfile(srcfilepath, destfilepath)
     return 0
 
-def SearchNewerTweets(filename_str, search_str):
+def DELETE_SearchNewerTweets(filename_str, search_str):
 	'''Searches for new tweets after the latest tweet present in the file.
 
     Since TWINT returns a limited and undefined number of tweets, there 
@@ -279,7 +221,8 @@ def search_newer_tweets(filename_str, search_str, from_date = None):
     from_date --
     """
     # TODO: Handle date properly
-    if from_date is None: from_date = datetime(1990, 1, 1)
+    #if from_date is None: from_date = datetime(1990, 1, 1)
+    if from_date is None: from_date = latest_tweet_in_file(filename_str)
 
     c = twint.Config()
     c.Search = search_str
@@ -304,17 +247,20 @@ def SearchEarlierTweets(filename_str, search_str):
     c.Hide_output = True
     twint.run.Search(c) 
 
+
 def latest_tweet_in_file(filename_str):
     #TODO: Rename to LatestTweetDateInFile
-    _, result = _EarliestLatestTweetDateInFile(filename_str)
+    _, result = _earliest_and_latest_tweet_date_in_file(filename_str)
     return result
+
 
 def earliest_tweet_in_file(filename_str):
     #TODO: Rename to EarliestTweetDateInFile
-    result, _ = _EarliestLatestTweetDateInFile(filename_str)
+    result, _ = _earliest_and_latest_tweet_date_in_file(filename_str)
     return result
 
-def _EarliestLatestTweetDateInFile(filename_str):
+
+def _earliest_and_latest_tweet_date_in_file(filename_str):
     '''
     Given a file with tweets (as generated by TWINT), returns the datetime
     of the earliest and most recent tweet in the file.
@@ -322,7 +268,7 @@ def _EarliestLatestTweetDateInFile(filename_str):
     Note that a second is subtracted/added to this time.
     '''
     #TODO: not optimized
-    #TODO: not sure of time zones are dealt with properly
+    #TODO: not sure whether time zones are dealt with properly
     tweetsmetad = []
     latest_tweet_dt = datetime(1990, 5, 17) # arbitraty, but Twitter did not exist at this date
     earliest_tweet_dt = datetime.now()
@@ -348,7 +294,7 @@ def _EarliestLatestTweetDateInFile(filename_str):
 ## Logic for Configuration file
 #################################################
 #################################################
-def ReadConfigFileGCP():
+def read_config_file_gcp():
     '''
     Reads the config file from Google Storage
 
@@ -356,7 +302,6 @@ def ReadConfigFileGCP():
     '''
     CONFIG_FILE = 'configgcp.yaml'
 
-    #TODO: use GCP credentials; would allow for local testing
     storage_client = storage.Client()
     bucketName = 'industrious-eye-330414.appspot.com'
     bucket = storage_client.get_bucket(bucketName)
@@ -370,7 +315,7 @@ def ReadConfigFileGCP():
     return configdict
 
 
-def ReadConfigFileLocal():
+def read_config_file_local():
     ''' 
     Reads the config file from local storage
 
@@ -384,22 +329,26 @@ def ReadConfigFileLocal():
 
     return configdict
 
+
 def read_config_file():
     """Reads the config file, either from Google Storage - if executing in
     GCP environment - or locally.
+
+    Reads from configgcp.yaml
     
     Returns the contents as a Python dict.
     """
     if app_settings.Environment_GCP:
-        configdict = ReadConfigFileGCP()
+        configdict = read_config_file_gcp()
     else:
-        configdict = ReadConfigFileLocal()
+        configdict = read_config_file_local()
 
     return configdict
 
-def ParseFilesFromConfig(configdict):
+
+def parse_files_from_config(configdict):
     '''
-    Read file information from configgcp file
+    Interpret file information from config information
     
     arguments:
     - configdict: dictionary containing the configfile info
@@ -418,15 +367,21 @@ def ParseFilesFromConfig(configdict):
         f['bucketfilepath'] = os.path.join(bucket_dir, f.get('filename', 'nothing found in config file'))
         f['localfilepath'] = os.path.join(local_dir, f.get('filename', 'nothing found in config file'))
         f['historyfill'] = f.get('historyfill', False)
-        f['group_entity_id'] = f.get('groupentityid', "") # TODO: Remove any spaces? Not sure if it truly matters.
+        f['group_entity_id'] = f.get('groupentityid', "")
         f['search'] = f.get('search', "")
         f['captureinfile'] = f.get('captureinfile', False)
 
     return filesinfo
 
+
 if __name__ == "__main__":
-    # Used when running locally only. When deploying to Google App
+    # Comment from Google examples at:
+    # https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/appengine/standard_python3/building-an-app/building-an-app-1/main.py
+    # This is used when running locally only. When deploying to Google App
     # Engine, a webserver process such as Gunicorn will serve the app. This
     # can be configured by adding an `entrypoint` to app.yaml.
-    
+    # Flask's development server will automatically serve static files in
+    # the "static" directory. See:
+    # http://flask.pocoo.org/docs/1.0/quickstart/#static-files. Once deployed,
+    # App Engine itself will serve those files as configured in app.yaml.   
     app.run(host="localhost", port=8080, debug=True)

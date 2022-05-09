@@ -23,7 +23,7 @@ files:
   - filename: westjet.json
     groupentityid: WestJet
     search: WestJet
-    historyfill: Yes
+    historyfill: No
     captureinfile: Yes
   - filename: swoop.json
     groupentityid: Swoop
@@ -33,12 +33,12 @@ files:
   - filename: sunwingv.json
     groupentityid: SunwingVacations
     search: SunwingVacay
-    historyfill: Yes
+    historyfill: No
     captureinfile: Yes
   - filename: sunwing.json
     groupentityid: Sunwing
     search: sunwing
-    historyfill: Yes
+    historyfill: No
     captureinfile: Yes
   - filename: flair.json
     groupentityid: Flair

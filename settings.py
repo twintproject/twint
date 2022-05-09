@@ -37,16 +37,6 @@ class Settings(BaseSettings):
         Environment_GCP = False
 
 
-    # TODO: should be in init? But it does not seem work
-    """try:
-        #storage_client = storage.Client()
-        #bucketName = 'industrious-eye-330414.appspot.com'
-        #bucket = storage_client.get_bucket(bucketName)
-        Environment_GCP = True
-    except:
-        Environment_GCP = False"""
-
-
     class Config:
         env_prefix = "tern"  # Not sure what the effect is. defaults to no prefix, i.e. ""
         case_sensitive = False # Will always be False in Windows
