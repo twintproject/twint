@@ -89,10 +89,8 @@ def tweetData(t):
     c.User_full = True
 
     twint.run.Lookup(c)
-    
-    user_location = twint.output.users_list[0].location if 'location' in twint.output.users_list[0].__dict__.keys() else "-"
-    
-    print("TESTOOO", user_location)
+    user = next((user for user in twint.output.users_list if str(user.id) == str(t.user_id)), None)
+    user_location = user.location if user is not None else "-"
     
     data = {
             # "id": int(t.id),
@@ -110,6 +108,7 @@ def tweetData(t):
             "sentiment": 2,
             "language": t.lang,
             "userid": t.user_id,
+            "location": user_location,
             # "mentions": t.mentions,
             # "urls": t.urls,
             # "photos": t.photos,
@@ -154,6 +153,7 @@ def tweetFieldnames():
             "sentiment",
             "language",
             "userid",
+            "location",
             # "mentions",
             # "urls",
             # "photos",
