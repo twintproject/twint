@@ -24,18 +24,19 @@ def get_real_time():
 
 # you can change the name of each "job" after "def" if you'd like.
 def get_tweets():
-	c = twint.Config()
-	c.Search = "chickens rule"
-	c.Limit = "5000"
-	c.Since = get_real_time()
-	c.Store_csv = True
-
-	c.Output = "covid_real_time_test8.csv"
-
-	c.Pandas = True
- 
-	# Run
-	twint.run.Search(c)
+    c = twint.Config()
+    c.Search = "ukraine OR russia OR russian invasion OR ukraine war OR russian war OR zelensky OR putin OR vladimir putin OR volodymyr zelensky OR ukraine russia OR defence of ukraine"
+    
+    c.Limit = 1000
+    c.Since = get_real_time()
+    c.Store_csv = True
+    
+    c.Output = "war-realtime.csv"
+    
+    c.Pandas = True
+    
+    # Run
+    twint.run.Search(c)
 
 
 # run once when you start the program

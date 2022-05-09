@@ -4,7 +4,6 @@ from nltk.corpus import stopwords
 import re             
 import string 
 import nltk
-import preprocessor as p
 
 from nltk.stem.snowball import SnowballStemmer
 from nltk.tokenize import TweetTokenizer, RegexpTokenizer
@@ -81,6 +80,8 @@ def tweetData(t):
     # pre-processing
     tweet_processed = preprocess_tweets(t.tweet)
     
+    will_be_removed = len(tweet_processed.split(' ')) < 3
+    
     data = {
             # "id": int(t.id),
             # "conversation_id": t.conversation_id,
@@ -91,11 +92,11 @@ def tweetData(t):
             # "user_id": t.user_id,
             # "username": t.username,
             # "name": t.name,
-            # "place": t.place,
-            "tweet": tweet_processed,
-            # "OriginalTweet": t.tweet,
+            "place": t.place,
+            "tweet": tweet_processed if not will_be_removed else "",
+            "OriginalTweet": t.tweet,
             "sentiment": 2,
-            # "language": t.lang,
+            "language": t.lang,
             # "mentions": t.mentions,
             # "urls": t.urls,
             # "photos": t.photos,
@@ -109,17 +110,17 @@ def tweetData(t):
             # "quote_url": t.quote_url,
             # "video": t.video,
             # "thumbnail": t.thumbnail,
-            # "near": t.near,
-            # "geo": t.geo,
+            "near": t.near,
+            "geo": t.geo,
             # "source": t.source,
             # "user_rt_id": t.user_rt_id,
             # "user_rt": t.user_rt,
             # "retweet_id": t.retweet_id,
             # "reply_to": t.reply_to,
             # "retweet_date": t.retweet_date,
-            # "translate": t.translate,
-            # "trans_src": t.trans_src,
-            # "trans_dest": t.trans_dest,
+            "translate": t.translate,
+            "trans_src": t.trans_src,
+            "trans_dest": t.trans_dest,
             }
     return data
 
@@ -134,10 +135,11 @@ def tweetFieldnames():
             # "user_id",
             # "username",
             # "name",
-            # "place",
+            "place",
             "tweet",
+            "OriginalTweet",
             "sentiment",
-            # "language",
+            "language",
             # "mentions",
             # "urls",
             # "photos",
@@ -151,17 +153,17 @@ def tweetFieldnames():
             # "quote_url",
             # "video",
             # "thumbnail",
-            # "near",
-            # "geo",
+            "near",
+            "geo",
             # "source",
             # "user_rt_id",
             # "user_rt",
             # "retweet_id",
             # "reply_to",
             # "retweet_date",
-            # "translate",
-            # "trans_src",
-            # "trans_dest"
+            "translate",
+            "trans_src",
+            "trans_dest"
             ]
     return fieldnames
 

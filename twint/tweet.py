@@ -2,7 +2,7 @@ from time import strftime, localtime
 from datetime import datetime, timezone
 
 import logging as logme
-from googletransx import Translator
+from googletrans import Translator
 # ref. 
 # - https://github.com/x0rzkov/py-googletrans#basic-usage
 translator = Translator()
