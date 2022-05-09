@@ -1,4 +1,11 @@
 .gcloudignore
 .git
 .gitignore
+/.vscode/
+/.github/
+/.devcontainer/
+/_pycache_/
 /tmpdata/
+/not-used/
+Dockerfile
+Dockerfile_GIT

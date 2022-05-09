@@ -4,7 +4,6 @@ Main for Flask app in Google Cloud's AppEngine
 
 
 TODO: Optimize memory usage: 1 file for TWINT uses ~300MB or so; 6 use too much for F2 (now trying F4)
-TODO: return a meaningful '200' message?
 TODO: Set custom entrypoint (gunicorn, nginx)- some incomplete info: https://stackoverflow.com/questions/67463034/google-app-engine-using-custom-entry-point-with-python
 '''
 
@@ -74,9 +73,6 @@ def gcp_tweets_to_db():
     # TODO: Can this time out? What to do about it? (touch the webservice first, try multiple times at the start of this call)
     # TODO: Can I reduce the instance to F2 or so if we don't have to deal with large files?
 
-    # setup connection to webservice URLs for the database that captures the results
-    url_latest_tweet = URL_LATEST_TWEET
-    url_capture_tweets = URL_CAPTURE_TWEETS
     comment = "TWINT webserver."
     
     # read part of config file
@@ -93,7 +89,7 @@ def gcp_tweets_to_db():
         if os.path.isfile(filepath): os.remove(filepath) 
 
         # Find most recent Tweet date
-        response = requests.get(url = url_latest_tweet, params = params)
+        response = requests.get(url = URL_LATEST_TWEET, params = params)
         # TODO: No longer works with dbcontroller Flask implementation (does worh with FastAPI)
         if response.json() is not None:
             most_recent_tweet_date = dateutil.parser.isoparse(response.json())
@@ -114,7 +110,7 @@ def gcp_tweets_to_db():
 
             # capture tweets in datbase
             headers = {'Accept' : 'application/json', 'Content-Type' : 'application/json'} # 'Content-Type' is essential; 'Accept' not sure.
-            response = requests.post(url_capture_tweets, data=tweet_json.encode('utf-8'), headers = headers) # .encode('utf-8') is essential
+            response = requests.post(URL_CAPTURE_TWEETS, data=tweet_json.encode('utf-8'), headers = headers) # .encode('utf-8') is essential
         
         # TODO: Remove this log.
         print("Progress for {}: {}. Latest tweet: {}.".format(group_entity_id, response, most_recent_tweet_date))
@@ -155,63 +151,6 @@ def search_and_save_tweets():
 ## Utility functions
 #################################################
 #################################################
-
-# TODO: Remove next (4?) functions
-def DELETE_gcp_CopyFileFromBucket(srcfilepath, destfilepath, bucket):
-    #TODO: error handling (log when file does not exist; but continue)
-    blob = bucket.blob(srcfilepath)
-
-    if blob.exists():
-        blob.download_to_filename(destfilepath)
-
-    return 0
-
-def DELETE_gcp_CopyFileToBucket(srcfilepath, destfilepath, bucket):
-    #TODO: error handling (log when file does not exist; but continue)
-    blob = bucket.blob(destfilepath)
-    blob.upload_from_filename(srcfilepath)
-    return 0
-
-def DELETE_CopyFileFromBucket(srcfilepath, destfilepath, bucket):
-    #TODO: error handling (log when file does not exist; but continue)
-    copyfile(srcfilepath, destfilepath)
-    return 0
-
-def DELETE_CopyFileToBucket(srcfilepath, destfilepath, bucket):
-    #TODO: error handling (log when file does not exist; but continue)
-    copyfile(srcfilepath, destfilepath)
-    return 0
-
-def DELETE_SearchNewerTweets(filename_str, search_str):
-	'''Searches for new tweets after the latest tweet present in the file.
-
-    Since TWINT returns a limited and undefined number of tweets, there 
-    is no guarantee that this results in a full file. Hence this would
-    need to be run consistently and frequently to build histor.
-    TODO: logic to ensure all tweets are obtained... (not worth it - only start from 'now'; history requires manual work)
-	'''
-
-	c = twint.Config()
-	# choose username (optional)
-	#c.Username = "insert username here"
-	# choose search term (optional)
-	c.Search = search_str
-	# choose beginning time (narrow results)
-	#c.Until = str(earliest_tweet_in_file())
-	c.Since = str(latest_tweet_in_file(filename_str))
-	# set limit on total tweets
-	c.Limit = 2000 
-	# no idea, but makes the csv format properly
-	#c.Store_csv = True
-	# format of the csv
-	#c.Custom = ["date", "time", "username", "tweet", "link", "likes", "retweets", "replies", "mentions", "hashtags"]
-	c.Store_json = True
-	# change the name of the output file
-	c.Output = filename_str
-	c.Hide_output = True
-	twint.run.Search(c)
-
-
 def search_newer_tweets(filename_str, search_str, from_date = None):
     """Search tweets more recent than the given date. Results will be captured in
     the file given.
