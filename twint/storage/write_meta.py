@@ -4,6 +4,10 @@ from nltk.corpus import stopwords
 import re             
 import string 
 import nltk
+import twint
+import nest_asyncio
+nest_asyncio.apply()
+# __import__('IPython').embed()
 
 from nltk.stem.snowball import SnowballStemmer
 from nltk.tokenize import TweetTokenizer, RegexpTokenizer
@@ -71,16 +75,24 @@ def preprocess_tweets(tweet):
     tweet = remove_stopwords(tweet)
     return tweet
 
-
 def tweetData(t):
     t.tweet = t.tweet.lower()
-    
-    
     
     # pre-processing
     tweet_processed = preprocess_tweets(t.tweet)
     
     will_be_removed = len(tweet_processed.split(' ')) < 3
+    
+    c = twint.Config()
+    c.User_id = t.user_id
+    c.Store_object = True
+    c.User_full = True
+
+    twint.run.Lookup(c)
+    
+    user_location = twint.output.users_list[0].location if 'location' in twint.output.users_list[0].__dict__.keys() else "-"
+    
+    print("TESTOOO", user_location)
     
     data = {
             # "id": int(t.id),
@@ -90,13 +102,14 @@ def tweetData(t):
             # "time": t.timestamp,
             # "timezone": t.timezone,
             # "user_id": t.user_id,
-            # "username": t.username,
+            "username": t.username,
             # "name": t.name,
-            "place": t.place,
+            # "place": t.place,
             "tweet": tweet_processed if not will_be_removed else "",
             "OriginalTweet": t.tweet,
             "sentiment": 2,
             "language": t.lang,
+            "userid": t.user_id,
             # "mentions": t.mentions,
             # "urls": t.urls,
             # "photos": t.photos,
@@ -110,8 +123,8 @@ def tweetData(t):
             # "quote_url": t.quote_url,
             # "video": t.video,
             # "thumbnail": t.thumbnail,
-            "near": t.near,
-            "geo": t.geo,
+            # "near": t.near,
+            # "geo": t.geo,
             # "source": t.source,
             # "user_rt_id": t.user_rt_id,
             # "user_rt": t.user_rt,
@@ -133,13 +146,14 @@ def tweetFieldnames():
             # "time",
             # "timezone",
             # "user_id",
-            # "username",
+            "username",
             # "name",
-            "place",
+            # "place",
             "tweet",
             "OriginalTweet",
             "sentiment",
             "language",
+            "userid",
             # "mentions",
             # "urls",
             # "photos",
@@ -153,8 +167,8 @@ def tweetFieldnames():
             # "quote_url",
             # "video",
             # "thumbnail",
-            "near",
-            "geo",
+            # "near",
+            # "geo",
             # "source",
             # "user_rt_id",
             # "user_rt",
@@ -170,44 +184,44 @@ def tweetFieldnames():
 def userData(u):
     data = {
             "id": int(u.id),
-            "name": u.name,
+            # "name": u.name,
             "username": u.username,
-            "bio": u.bio,
+            # "bio": u.bio,
             "location": u.location,
-            "url": u.url,
-            "join_date": u.join_date,
-            "join_time": u.join_time,
-            "tweets": int(u.tweets),
-            "following": int(u.following),
-            "followers": int(u.followers),
-            "likes": int(u.likes),
-            "media": int(u.media_count),
-            "private": u.is_private,
-            "verified": u.is_verified,
-            "profile_image_url": u.avatar,
-            "background_image": u.background_image
+            # "url": u.url,
+            # "join_date": u.join_date,
+            # "join_time": u.join_time,
+            # "tweets": int(u.tweets),
+            # "following": int(u.following),
+            # "followers": int(u.followers),
+            # "likes": int(u.likes),
+            # "media": int(u.media_count),
+            # "private": u.is_private,
+            # "verified": u.is_verified,
+            # "profile_image_url": u.avatar,
+            # "background_image": u.background_image
             }
     return data
 
 def userFieldnames():
     fieldnames = [
             "id",
-            "name",
+            # "name",
             "username",
-            "bio",
+            # "bio",
             "location",
-            "url",
-            "join_date",
-            "join_time",
-            "tweets",
-            "following",
-            "followers",
-            "likes",
-            "media",
-            "private",
-            "verified",
-            "profile_image_url",
-            "background_image"
+            # "url",
+            # "join_date",
+            # "join_time",
+            # "tweets",
+            # "following",
+            # "followers",
+            # "likes",
+            # "media",
+            # "private",
+            # "verified",
+            # "profile_image_url",
+            # "background_image"
             ]
     return fieldnames
 
