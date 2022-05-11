@@ -7,18 +7,18 @@ TODO: Optimize memory usage: 1 file for TWINT uses ~300MB or so; 6 use too much 
 TODO: Set custom entrypoint (gunicorn, nginx)- some incomplete info: https://stackoverflow.com/questions/67463034/google-app-engine-using-custom-entry-point-with-python
 '''
 
-import pandas
-import flask
-import json
-import os
-import requests
-import yaml
-
+#import pandas
 from datetime import datetime, timedelta, timezone
-from google.cloud import storage
-from os import listdir
 import dateutil.parser
+import flask
+from google.cloud import storage
+import json
+import logging as logme
+import os
+from os import listdir
+import requests
 from shutil import copyfile
+import yaml
 
 import decorators
 import main_dbcontroller
@@ -26,9 +26,10 @@ from settings import app_settings
 import twint
 
 # TODO: put in a config file?
-URL_LATEST_TWEET = 'https://dbcontroller-7zupgnxiba-uc.a.run.app/latesttweet'
-URL_CAPTURE_TWEETS = 'https://dbcontroller-7zupgnxiba-uc.a.run.app/tweets'
-URL_UPDATE_METRICS_FILES = 'https://dbcontroller-7zupgnxiba-uc.a.run.app/metrics'
+URL_LATEST_TWEET =  app_settings.URL_LATEST_TWEET
+URL_CAPTURE_TWEETS = app_settings.URL_CAPTURE_TWEETS
+URL_UPDATE_METRICS_FILES = app_settings.URL_UPDATE_METRICS_FILES
+GCP_BUCKET = app_settings.GCP_BUCKET
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
@@ -65,7 +66,7 @@ def gcp_TestConfig():
 
 
 @app.route("/updategcp_db", methods=["GET"])
-def gcp_tweets_to_db():
+def tweets_to_db():
     """Reads search handles from config file, searches Twitter, and sends search results to
     database (using dbcontroller webservice call).
     
@@ -73,6 +74,7 @@ def gcp_tweets_to_db():
     # TODO: Can this time out? What to do about it? (touch the webservice first, try multiple times at the start of this call)
     # TODO: Can I reduce the instance to F2 or so if we don't have to deal with large files?
 
+    logme.info("Start capturing searches in database.")
     comment = "TWINT webserver."
     
     # read part of config file
@@ -85,12 +87,11 @@ def gcp_tweets_to_db():
         filepath = entity["localfilepath"]
         params = {'group_entity_id': group_entity_id}
 
-        # don't want interference with same file names from file function
+        # avoid interference with same file names from file function
         if os.path.isfile(filepath): os.remove(filepath) 
 
         # Find most recent Tweet date
         response = requests.get(url = URL_LATEST_TWEET, params = params)
-        # TODO: No longer works with dbcontroller Flask implementation (does worh with FastAPI)
         if response.json() is not None:
             most_recent_tweet_date = dateutil.parser.isoparse(response.json())
         else:
@@ -100,10 +101,9 @@ def gcp_tweets_to_db():
         # Search tweets, save in file.
         search_newer_tweets(filepath, group_search_id, most_recent_tweet_date)
 
-        # TODO: Remove this log.
-        print("{} Search done. Now saving in dbase.".format(group_entity_id)) 
+        logme.info("{} search done. Saving to database.".format(group_entity_id)) 
 
-        # obtain tweet in JSON format from file
+        # obtain tweets in JSON format from file
         if  os.path.isfile(filepath):
             tweet_json = main_dbcontroller.tweets_file_to_JSON(filepath, group_entity_id, group_search_id, comment)
             os.remove(filepath)
@@ -112,9 +112,13 @@ def gcp_tweets_to_db():
             headers = {'Accept' : 'application/json', 'Content-Type' : 'application/json'} # 'Content-Type' is essential; 'Accept' not sure.
             response = requests.post(URL_CAPTURE_TWEETS, data=tweet_json.encode('utf-8'), headers = headers) # .encode('utf-8') is essential
         
-        # TODO: Remove this log.
-        print("Progress for {}: {}. Latest tweet: {}.".format(group_entity_id, response, most_recent_tweet_date))
+            logme.info("Progress for {}: {}. Latest tweet: {}.".format(group_entity_id, response, most_recent_tweet_date))
+        else:
+            logme.info("No results saved to database for {}.".format(group_entity_id))
 
+    logme.info("Completed capturing searches in database.")
+    
+    logme.info("Creating updated metrics files.")
     response = requests.get(URL_UPDATE_METRICS_FILES)
 
     return "Completed."
@@ -129,19 +133,19 @@ def search_and_save_tweets():
     """
     
     # Update database with twitter search results. 
-    gcp_tweets_to_db()
+    tweets_to_db()
     
-    # Also save twitter search results into files (depending on config settings).
+    # Update files with twitter search results (depending on config settings).
     files = parse_files_from_config(read_config_file())
 
+    logme.info("Start capturing searches in file(s).")
     for f in files:
         if f['captureinfile']: # Don't save into file if we don't want to
             #TODO: prevent copying if file already exists in /tmp
-            #TODO: logging: adding tweets to file xyz
             decorators.MakeCloudSafe(f['bucketfilepath'], f['localfilepath']).bucket_file(search_newer_tweets, f['localfilepath'], f['search'])
             if f.get('historyfill', False):
                 decorators.MakeCloudSafe(f['bucketfilepath'], f['localfilepath']).bucket_file(SearchEarlierTweets, f['localfilepath'], f['search'])
-            #TODO: logging: completed adding tweets to file xyz
+    logme.info("Completed capturing searches in file(s).")
 
     return '200' # TODO: Can we return something useful?
 
@@ -160,7 +164,6 @@ def search_newer_tweets(filename_str, search_str, from_date = None):
     from_date --
     """
     # TODO: Handle date properly
-    #if from_date is None: from_date = datetime(1990, 1, 1)
     if from_date is None: from_date = latest_tweet_in_file(filename_str)
 
     c = twint.Config()
@@ -242,7 +245,7 @@ def read_config_file_gcp():
     CONFIG_FILE = 'configgcp.yaml'
 
     storage_client = storage.Client()
-    bucketName = 'industrious-eye-330414.appspot.com'
+    bucketName = GCP_BUCKET
     bucket = storage_client.get_bucket(bucketName)
     
     # TODO: Confirm file exists; or log error    

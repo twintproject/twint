@@ -17,3 +17,4 @@ pyyaml
 pydantic
 python-dotenv
 python-dateutil
+google-cloud-logging

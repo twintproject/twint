@@ -3,6 +3,7 @@
 """
 
 import json
+import logging as logme
 import sys
 
 # exists in dbcontroller
@@ -17,8 +18,7 @@ def tweets_from_file(filepath):
         for line in open(filepath, 'r', encoding="utf8"): # without this encoding french characters don't show right; also causes errors for others
             tweets_from_file.append(json.loads(line))
     except IOError as e: 
-        print(f"Error opening file {filepath}: {e}")
-        #logger.error('file cannot be found: %s' %filepath)
+        logme.error(f"Error opening file {filepath}: {e}")
         sys.exit(1)
 
     # Remove duplicates in source file
