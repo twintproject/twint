@@ -25,7 +25,7 @@ import main_dbcontroller
 from settings import app_settings
 import twint
 
-# TODO: put in a config file?
+
 URL_LATEST_TWEET =  app_settings.URL_LATEST_TWEET
 URL_CAPTURE_TWEETS = app_settings.URL_CAPTURE_TWEETS
 URL_UPDATE_METRICS_FILES = app_settings.URL_UPDATE_METRICS_FILES

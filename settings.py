@@ -4,6 +4,7 @@ Some core application settings.
 import google.cloud.logging
 from google.cloud import storage
 from dotenv import load_dotenv
+import logging as logme
 import os
 from pydantic import (
     BaseModel,
@@ -15,6 +16,7 @@ from pydantic import (
     Field,
 )
 
+logme.basicConfig(level=logme.INFO)
 
 load_dotenv()
 
@@ -27,10 +29,12 @@ class Settings(BaseSettings):
     # Whether executing in Google Cloud Environment
     Environment_GCP: bool = False
 
-    URL_LATEST_TWEET: str = 'https://dbcontroller-7zupgnxiba-uc.a.run.app/latesttweet'
-    URL_CAPTURE_TWEETS: str = 'https://dbcontroller-7zupgnxiba-uc.a.run.app/tweets'
-    URL_UPDATE_METRICS_FILES: str = 'https://dbcontroller-7zupgnxiba-uc.a.run.app/metrics'
-    GCP_BUCKET: str = 'industrious-eye-330414.appspot.com'
+    # Secrets are stored in ENV variables.
+    # https://stackoverflow.com/questions/22669528/securely-storing-environment-variables-in-gae-with-app-yaml
+    URL_LATEST_TWEET: str
+    URL_CAPTURE_TWEETS: str
+    URL_UPDATE_METRICS_FILES: str
+    GCP_BUCKET: str
 
     # Determine whether we run in GCP environment
     if os.getenv('GAE_ENV', 'NA').startswith('standard') or (os.getenv('K_SERVICE', 'NA') != 'NA'):

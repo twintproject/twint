@@ -1,2 +1,5 @@
+includes:
+  - env_variables.yaml
+
 runtime: python39
 instance_class: F4 # Costs more than F1..

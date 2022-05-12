@@ -1,12 +1,12 @@
 # TWINT - Twitter Intelligence Tool
 [TWINT](https://github.com/twintproject/twint) tool with specific additions:
 - search results are captured in a database (see below for requirements)
-- searches are defined in a config file (configgcp.yaml)
+- searches are defined in a config file (configgcp.yaml, in the main folder of Google Cloud Bucket when running on GCP)
 - webservice to initiate the search (at /updategcp)
 - can be hosted on Google Cloud Platform (from main folder: `gcloud app deploy`)
 
 ## Purpose
-The direct purpose of these modifications is create a twitter sentiment dashboard (XXX PUT GITHUB LINK + SCREENSHOT XXX)
+The direct purpose of these modifications is to create a twitter sentiment dashboard like: (XXX PUT GITHUB LINK + SCREENSHOT XXX)
 
 ## Dependencies
 - webservices exposed by dbcontroller (XXX PUT GITHUB LINK XXX)
@@ -14,7 +14,13 @@ The direct purpose of these modifications is create a twitter sentiment dashboar
 - for the dashboard, dasht (XXX PUT GITHUB LINK XXX) running on a webserver
 
 ## Setup
-- the ip address of the dbcontroller webservices need to be specified AS AN ENVIRONMENT VARIABLE OR .ENV FILE (XXX TODO XXX)
+The following secrets need to be specified
+- ip address of the dbcontroller webservices needs to be specified as an environment variable (or .env file):
+  - URL_LATEST_TWEET = 'https://your-url/latesttweet'
+  - URL_CAPTURE_TWEETS = 'https://your-url/tweets'
+  - URL_UPDATE_METRICS_FILES = 'https://your-url/metrics'
+- name of the bucket in Google Cloud needs to be specified as an environment variable (or .env file). This is used to read the configgcp.yaml file and to put files with search results:
+  - GCP_BUCKET = 'your-google-bucket'
 
 ## Consideration
 The TWINT project is non-active. Issues arrising with TWINT may never get addressed.
