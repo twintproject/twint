@@ -1,21 +1,22 @@
 # TWINT - Twitter Intelligence Tool
-[TWINT](https://github.com/twintproject/twint) tool with specific additions:
-- search results are captured in a database (see below for requirements)
-- searches are defined in a config file (configgcp.yaml, in the main folder of Google Cloud Bucket when running on GCP)
-- webservice to initiate the search (at /updategcp)
+Build on [TWINT](https://github.com/twintproject/twint) tool with specific additions:
+- search results are captured in a database
+- searches are defined in a config file (configgcp.yaml, in the root folder of a Google Cloud Bucket when running on GCP)
+- webservice to initiate the search (at https://your-url/updategcp)
 - can be hosted on Google Cloud Platform (from main folder: `gcloud app deploy`)
 
 ## Purpose
-The direct purpose of these modifications is to create a twitter sentiment dashboard like: (XXX PUT GITHUB LINK + SCREENSHOT XXX)
+The purpose of these modifications is to create a twitter sentiment [dashboard](https://github.com/EJOOSTEROP/dasht):
+![dashboard examples](dasht.png "Dasht")
 
 ## Dependencies
-- webservices exposed by dbcontroller (XXX PUT GITHUB LINK XXX)
+- webservices exposed by [dbcontroller](https://github.com/EJOOSTEROP/dbcontroller)
   - these webservices in turn require a database
-- for the dashboard, dasht (XXX PUT GITHUB LINK XXX) running on a webserver
+- dashboard implementation, [dasht](https://github.com/EJOOSTEROP/dasht)
 
 ## Setup
 The following secrets need to be specified
-- ip address of the dbcontroller webservices needs to be specified as an environment variable (or .env file):
+- URLs of the dbcontroller webservices need to be specified as environment variables (or .env file):
   - URL_LATEST_TWEET = 'https://your-url/latesttweet'
   - URL_CAPTURE_TWEETS = 'https://your-url/tweets'
   - URL_UPDATE_METRICS_FILES = 'https://your-url/metrics'
@@ -25,7 +26,8 @@ The following secrets need to be specified
 ## Consideration
 The TWINT project is non-active. Issues arrising with TWINT may never get addressed.
 
-# Original from TWINT
+For information on TWINT itself refer to its [repository](https://github.com/twintproject/twint). 
+
 # TWINT - Twitter Intelligence Tool
 ![2](https://i.imgur.com/iaH3s7z.png)
 ![3](https://i.imgur.com/hVeCrqL.png)

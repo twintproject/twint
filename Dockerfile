@@ -1,28 +1,10 @@
-# Use the official lightweight Python image.
-# https://hub.docker.com/_/python
-# FROM python:3.10-slim
 FROM python:3.6-buster
+LABEL maintainer="codyzacharias@pm.me"
 
-# Allow statements and log messages to immediately appear in the Knative logs
-ENV PYTHONUNBUFFERED True
+WORKDIR /root
 
-# Copy local code to the container image.
-ENV APP_HOME /app
-WORKDIR $APP_HOME
-COPY . ./
+RUN git clone --depth=1 https://github.com/ejoosterop/twint.git && \
+	cd /root/twint && \
+	pip3 install . -r requirements.txt
 
-# Install production dependencies.
-RUN pip install --no-cache-dir -r requirements.txt
-
-
-# Run the web service on container startup. Here we use the gunicorn
-# webserver, with one worker process and 8 threads.
-# For environments with multiple CPU cores, increase the number of workers
-# to be equal to the cores available.
-# Timeout is set to 0 to disable the timeouts of the workers to allow Cloud Run to handle instance scaling.
-
-# NOTE: Disable for local Docker verification; essential for Cloud Run deploy.
-# CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
-
-# ERIK: Note the main:app  --> the first is the file name (without .py), the second is the callable in that file.
-#CMD /bin/bash
+CMD /bin/bash

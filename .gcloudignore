@@ -1,11 +1,14 @@
 .gcloudignore
 .git
 .gitignore
+.travis.yaml
 /.vscode/
 /.github/
 /.devcontainer/
-/_pycache_/
+/__pycache__/
 /tmpdata/
 /not-used/
 Dockerfile
 Dockerfile_GIT
+dasht.png
+README.md
