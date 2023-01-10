@@ -85,3 +85,5 @@ class Config:
     Bearer_token: str = None
     Guest_token: str = None
     deleted: list = None
+    user_agent: str = None
+
