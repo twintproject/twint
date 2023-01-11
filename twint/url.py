@@ -94,7 +94,7 @@ async def Search(config, init):
         ('cursor', str(init)),
         ('spelling_corrections', '1'),
         ('ext', 'mediaStats%2ChighlightedLabel'),
-        ('tweet_search_mode', 'live'),  # this can be handled better, maybe take an argument and set it then
+        # ('tweet_search_mode', 'live'),  # this can be handled better, maybe take an argument and set it then
     ]
     if not config.Popular_tweets:
         params.append(('f', 'tweets'))
