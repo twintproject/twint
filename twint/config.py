@@ -86,4 +86,5 @@ class Config:
     Guest_token: str = None
     deleted: list = None
     user_agent: str = None
+    timeout: int = 30
 

@@ -21,7 +21,7 @@ class Token:
         self._session.headers.update({'User-Agent': config.user_agent if config.user_agent else 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101 Firefox/78.0'})
         self.config = config
         self._retries = 5
-        self._timeout = 10
+        self._timeout = config.timeout
         self.url = 'https://twitter.com'
 
     def _request(self):
