@@ -81,7 +81,7 @@ def get_connector(config):
                 _type = ProxyType.SOCKS4
             elif config.Proxy_type.lower() == "http":
                 global httpproxy
-                httpproxy = "http://" + config.Proxy_host + ":" + str(config.Proxy_port)
+                httpproxy = random.choice(config.Proxies)
                 return _connector
             else:
                 logme.critical("get_connector:proxy-type-error")
