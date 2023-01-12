@@ -29,9 +29,12 @@ class Token:
         for attempt in range(self._retries + 1):
             # The request is newly prepared on each retry because of potential cookie updates.
             req = self._session.prepare_request(requests.Request('POST', self.url, headers={'authorization': self.config.Bearer_token}))
-            if self.config.Proxies:
-                proxy = random.choice(self.config.Proxies)
-                self._session.proxies = {'https': proxy, 'http': proxy}
+            if self.config.Proxy_host or self.config.Proxies:
+                if self.config.Proxy_type == 'http' and self.config.Proxies:
+                    proxy_url = random.choice(self.config.Proxies)
+                else:
+                    proxy_url = f'{self.config.Proxy_type}://{self.config.Proxy_host}:{self.config.Proxy_port}'
+                self._session.proxies = {'https': proxy_url, 'http': proxy_url}
             logme.debug(f'Retrieving {req.url}')
             try:
                 r = self._session.send(req, allow_redirects=True, timeout=15)
