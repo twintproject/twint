@@ -37,7 +37,7 @@ class Token:
                 self._session.proxies = {'https': proxy_url, 'http': proxy_url}
             logme.debug(f'Retrieving {req.url}')
             try:
-                r = self._session.send(req, allow_redirects=True, timeout=15)
+                r = self._session.send(req, allow_redirects=True, timeout=self.config.timeout)
             except requests.exceptions.RequestException as exc:
                 if attempt < self._retries:
                     retrying = ', retrying'
