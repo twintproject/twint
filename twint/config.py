@@ -3,6 +3,7 @@ from typing import Optional
 
 @dataclass
 class Config:
+    Proxies: Optional[list] = None
     Username: Optional[str] = None
     User_id: Optional[str] = None
     Search: Optional[str] = None
@@ -85,3 +86,6 @@ class Config:
     Bearer_token: str = None
     Guest_token: str = None
     deleted: list = None
+    user_agent: str = None
+    timeout: int = 30
+
